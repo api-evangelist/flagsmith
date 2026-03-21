@@ -1,0 +1,292 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://flagsmith.com/schemas/flagsmith/feature-flag.json",
+  "title": "Flagsmith Feature Flag",
+  "description": "A feature flag definition in Flagsmith including its metadata, type, default configuration, and multivariate options. Feature flags are the core primitive in Flagsmith for controlling feature rollouts and remote configuration.",
+  "type": "object",
+  "required": ["name"],
+  "properties": {
+    "id": {
+      "type": "integer",
+      "description": "The unique identifier for this feature flag"
+    },
+    "name": {
+      "type": "string",
+      "description": "The name of the feature flag, used as the key in SDK lookups",
+      "pattern": "^[-_.a-zA-Z0-9]+$",
+      "maxLength": 2000,
+      "minLength": 1
+    },
+    "description": {
+      "type": ["string", "null"],
+      "description": "A human-readable description of the feature flag and its purpose"
+    },
+    "created_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "The date and time the feature flag was created"
+    },
+    "initial_value": {
+      "type": ["string", "null"],
+      "description": "The initial value assigned to the feature when it was created"
+    },
+    "default_enabled": {
+      "type": "boolean",
+      "description": "Whether the feature flag is enabled by default in new environments"
+    },
+    "type": {
+      "type": "string",
+      "enum": ["STANDARD", "MULTIVARIATE"],
+      "description": "The type of feature flag. STANDARD for simple on/off flags with an optional value, MULTIVARIATE for flags with multiple weighted value variations"
+    },
+    "project": {
+      "type": "integer",
+      "description": "The ID of the project this feature flag belongs to"
+    },
+    "is_archived": {
+      "type": "boolean",
+      "description": "Whether the feature flag is archived and hidden from the dashboard by default"
+    },
+    "owners": {
+      "type": "array",
+      "description": "The users who are designated as owners of this feature flag",
+      "items": {
+        "$ref": "#/$defs/FeatureOwner"
+      }
+    },
+    "tags": {
+      "type": "array",
+      "description": "The IDs of tags associated with this feature flag for organization",
+      "items": {
+        "type": "integer"
+      }
+    },
+    "multivariate_options": {
+      "type": "array",
+      "description": "The multivariate value options available for this feature flag when the type is MULTIVARIATE",
+      "items": {
+        "$ref": "#/$defs/MultivariateOption"
+      }
+    }
+  },
+  "$defs": {
+    "FeatureOwner": {
+      "type": "object",
+      "description": "A user designated as an owner of a feature flag",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "The unique identifier for the user"
+        },
+        "email": {
+          "type": "string",
+          "format": "email",
+          "description": "The email address of the user"
+        }
+      }
+    },
+    "MultivariateOption": {
+      "type": "object",
+      "description": "A value variation for a multivariate feature flag with a percentage allocation",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "The unique identifier for this multivariate option"
+        },
+        "type": {
+          "type": "string",
+          "description": "The data type of the option value"
+        },
+        "string_value": {
+          "type": ["string", "null"],
+          "description": "The string value of this option"
+        },
+        "integer_value": {
+          "type": ["integer", "null"],
+          "description": "The integer value of this option"
+        },
+        "boolean_value": {
+          "type": ["boolean", "null"],
+          "description": "The boolean value of this option"
+        },
+        "default_percentage_allocation": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "The default percentage of users who will receive this value variation"
+        }
+      }
+    },
+    "FeatureState": {
+      "type": "object",
+      "description": "The state of a feature flag within a specific environment, including its enabled status and current value",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "The unique identifier for this feature state"
+        },
+        "feature": {
+          "type": "integer",
+          "description": "The ID of the feature flag"
+        },
+        "enabled": {
+          "type": "boolean",
+          "description": "Whether the feature flag is currently enabled in this environment"
+        },
+        "feature_state_value": {
+          "description": "The current value of the feature flag in this environment",
+          "type": ["string", "integer", "boolean", "null"]
+        },
+        "environment": {
+          "type": "integer",
+          "description": "The ID of the environment"
+        },
+        "identity": {
+          "type": ["integer", "null"],
+          "description": "The identity ID if this is an identity-specific override"
+        },
+        "feature_segment": {
+          "type": ["integer", "null"],
+          "description": "The feature segment ID if this is a segment override"
+        }
+      }
+    },
+    "Segment": {
+      "type": "object",
+      "description": "A segment defining a group of users based on trait-based rules for targeted flag delivery",
+      "required": ["name", "rules"],
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "The unique identifier for this segment"
+        },
+        "name": {
+          "type": "string",
+          "description": "The name of the segment"
+        },
+        "description": {
+          "type": ["string", "null"],
+          "description": "A description of the segment and its targeting criteria"
+        },
+        "project": {
+          "type": "integer",
+          "description": "The ID of the project this segment belongs to"
+        },
+        "rules": {
+          "type": "array",
+          "description": "The rules that define membership in this segment",
+          "items": {
+            "$ref": "#/$defs/SegmentRule"
+          }
+        }
+      }
+    },
+    "SegmentRule": {
+      "type": "object",
+      "description": "A rule within a segment combining conditions with logical operators",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["ALL", "ANY", "NONE"],
+          "description": "The logical operator for combining conditions. ALL requires all conditions to match, ANY requires at least one, NONE requires none to match"
+        },
+        "rules": {
+          "type": "array",
+          "description": "Nested sub-rules for complex targeting logic",
+          "items": {
+            "$ref": "#/$defs/SegmentRule"
+          }
+        },
+        "conditions": {
+          "type": "array",
+          "description": "The trait-based conditions that make up this rule",
+          "items": {
+            "$ref": "#/$defs/SegmentCondition"
+          }
+        }
+      }
+    },
+    "SegmentCondition": {
+      "type": "object",
+      "description": "A condition evaluating a user trait against a value using a comparison operator",
+      "properties": {
+        "operator": {
+          "type": "string",
+          "enum": [
+            "EQUAL",
+            "NOT_EQUAL",
+            "GREATER_THAN",
+            "GREATER_THAN_INCLUSIVE",
+            "LESS_THAN",
+            "LESS_THAN_INCLUSIVE",
+            "CONTAINS",
+            "NOT_CONTAINS",
+            "REGEX",
+            "PERCENTAGE_SPLIT",
+            "IS_SET",
+            "IS_NOT_SET",
+            "IN"
+          ],
+          "description": "The comparison operator to use when evaluating the trait"
+        },
+        "property_": {
+          "type": "string",
+          "description": "The trait key to evaluate against"
+        },
+        "value": {
+          "type": "string",
+          "description": "The value to compare the trait against"
+        }
+      }
+    },
+    "Identity": {
+      "type": "object",
+      "description": "A user identity within an environment with associated traits",
+      "required": ["identifier"],
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "The unique identifier for this identity"
+        },
+        "identifier": {
+          "type": "string",
+          "description": "The user-provided identifier for this identity, typically a user ID or email"
+        },
+        "environment": {
+          "type": "integer",
+          "description": "The ID of the environment this identity belongs to"
+        },
+        "traits": {
+          "type": "array",
+          "description": "The traits associated with this identity",
+          "items": {
+            "$ref": "#/$defs/Trait"
+          }
+        }
+      }
+    },
+    "Trait": {
+      "type": "object",
+      "description": "A key-value pair associated with an identity used for segment evaluation and personalized flag delivery",
+      "required": ["trait_key", "trait_value"],
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "The unique identifier for this trait"
+        },
+        "trait_key": {
+          "type": "string",
+          "description": "The key name of the trait"
+        },
+        "trait_value": {
+          "description": "The value of the trait, which can be a string, integer, float, or boolean",
+          "type": ["string", "integer", "number", "boolean"]
+        },
+        "transient": {
+          "type": "boolean",
+          "description": "When true, this trait is used for evaluation only and is not persisted"
+        }
+      }
+    }
+  }
+}

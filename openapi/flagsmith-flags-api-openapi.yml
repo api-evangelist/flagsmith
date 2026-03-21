@@ -1,0 +1,447 @@
+openapi: 3.1.0
+info:
+  title: Flagsmith Flags API
+  description: >-
+    The Flagsmith Flags API is the public-facing REST API that client-side and
+    server-side SDKs use to retrieve feature flag values and remote
+    configuration for environments and users. It uses a non-secret Environment
+    Key for authentication and is designed to be fast, scalable, and publicly
+    accessible. The Edge API endpoint at edge.api.flagsmith.com serves requests
+    from AWS Lambda functions running in data centers near the client, providing
+    low-latency global access to flag evaluations.
+  version: '1.0'
+  contact:
+    name: Flagsmith Support
+    url: https://www.flagsmith.com/contact-us
+  termsOfService: https://www.flagsmith.com/terms-of-service
+externalDocs:
+  description: Flagsmith Flags API Documentation
+  url: https://docs.flagsmith.com/clients/rest
+servers:
+  - url: https://edge.api.flagsmith.com/api/v1
+    description: Flagsmith Edge API (SaaS)
+  - url: https://api.flagsmith.com/api/v1
+    description: Flagsmith Core API
+tags:
+  - name: Flags
+    description: >-
+      Retrieve feature flags for an environment. Returns the current state of
+      all feature flags including their enabled status and values.
+  - name: Identities
+    description: >-
+      Retrieve feature flags and traits for a specific user identity. Allows
+      personalized flag evaluation based on user attributes and segment
+      membership.
+security:
+  - environmentKey: []
+paths:
+  /flags/:
+    get:
+      operationId: listFlags
+      summary: List all flags for an environment
+      description: >-
+        Retrieves all feature flags for the environment associated with the
+        provided Environment Key. Returns an array of flag objects, each
+        containing the feature definition, its enabled state, and any
+        associated value. This endpoint is used by client-side SDKs to
+        initialize flag state.
+      tags:
+        - Flags
+      parameters:
+        - $ref: '#/components/parameters/FeatureNameQuery'
+      responses:
+        '200':
+          description: Successful response containing all flags for the environment
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Flag'
+        '401':
+          description: Unauthorized - invalid or missing Environment Key
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /identities/:
+    get:
+      operationId: getIdentityFlags
+      summary: Get flags and traits for an identity
+      description: >-
+        Retrieves all feature flags and traits for a specific user identity.
+        The flags returned may differ from the environment defaults based on
+        the identity's traits and segment membership. If the identity does not
+        exist, it will be created. This endpoint also supports transient
+        identities and traits that are used for evaluation but not persisted.
+      tags:
+        - Identities
+      parameters:
+        - $ref: '#/components/parameters/IdentifierQuery'
+        - $ref: '#/components/parameters/TransientQuery'
+      responses:
+        '200':
+          description: Successful response containing flags and traits for the identity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IdentityResponse'
+        '400':
+          description: Bad request - missing identifier parameter
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized - invalid or missing Environment Key
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    post:
+      operationId: identifyUserAndGetFlags
+      summary: Identify a user and get flags with traits
+      description: >-
+        Identifies a user by providing an identifier and optional traits in the
+        request body. Returns the evaluated flags for that identity based on
+        the provided traits and any existing traits. Traits provided in the
+        request body are persisted for the identity unless marked as transient.
+        This endpoint performs the entire SDK identity workflow in a single
+        call.
+      tags:
+        - Identities
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IdentityRequest'
+      responses:
+        '200':
+          description: Successful response containing evaluated flags and persisted traits
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IdentityResponse'
+        '400':
+          description: Bad request - missing or invalid identifier
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized - invalid or missing Environment Key
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /traits/:
+    post:
+      operationId: setTraits
+      summary: Set traits for an identity
+      description: >-
+        Sets one or more trait values for a given identity. If the identity
+        does not exist, it will be created. Traits are key-value pairs
+        associated with an identity that can be used for segment evaluation
+        and personalized flag delivery.
+      tags:
+        - Identities
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TraitRequest'
+      responses:
+        '200':
+          description: Successful response confirming the trait was set
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Trait'
+        '400':
+          description: Bad request - missing or invalid trait data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized - invalid or missing Environment Key
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /traits/bulk/:
+    put:
+      operationId: setBulkTraits
+      summary: Set multiple traits for an identity in bulk
+      description: >-
+        Sets multiple trait values for a given identity in a single API call.
+        This is more efficient than making individual trait requests when
+        updating multiple traits at once. If a trait value is set to null, the
+        trait will be deleted.
+      tags:
+        - Identities
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/TraitRequest'
+      responses:
+        '200':
+          description: Successful response confirming the traits were set
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Trait'
+        '400':
+          description: Bad request - missing or invalid trait data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized - invalid or missing Environment Key
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+components:
+  securitySchemes:
+    environmentKey:
+      type: apiKey
+      in: header
+      name: X-Environment-Key
+      description: >-
+        A non-secret environment key used to identify which Flagsmith
+        environment to evaluate flags against. This key is safe to include
+        in client-side code.
+  parameters:
+    FeatureNameQuery:
+      name: feature
+      in: query
+      description: >-
+        Optional feature name to filter flags. When provided, returns only the
+        flag matching the specified feature name.
+      required: false
+      schema:
+        type: string
+    IdentifierQuery:
+      name: identifier
+      in: query
+      description: >-
+        The unique identifier for the user identity. This is typically a user
+        ID, email, or other unique string that identifies the user in your
+        application.
+      required: true
+      schema:
+        type: string
+    TransientQuery:
+      name: transient
+      in: query
+      description: >-
+        When set to true, the identity is treated as transient and will not be
+        persisted. The identity will be used for flag evaluation only.
+      required: false
+      schema:
+        type: boolean
+  schemas:
+    Flag:
+      type: object
+      description: >-
+        A feature flag object containing the feature definition, its enabled
+        state, and any associated value for the environment.
+      properties:
+        id:
+          type: integer
+          description: The unique identifier for this feature state
+        feature:
+          $ref: '#/components/schemas/Feature'
+        feature_state_value:
+          description: >-
+            The value associated with this feature state. Can be a string,
+            integer, boolean, or null depending on the feature configuration.
+          oneOf:
+            - type: string
+            - type: integer
+            - type: boolean
+            - type: 'null'
+        enabled:
+          type: boolean
+          description: Whether this feature flag is currently enabled
+        environment:
+          type: integer
+          description: The ID of the environment this flag belongs to
+        identity:
+          type: integer
+          nullable: true
+          description: >-
+            The identity ID if this is an identity-specific override, or null
+            for environment defaults
+        feature_segment:
+          type: integer
+          nullable: true
+          description: >-
+            The feature segment ID if this flag state is a segment override,
+            or null otherwise
+    Feature:
+      type: object
+      description: >-
+        A feature definition containing metadata about the feature flag
+        including its name, type, and default configuration.
+      properties:
+        id:
+          type: integer
+          description: The unique identifier for this feature
+        name:
+          type: string
+          description: The name of the feature flag
+        created_date:
+          type: string
+          format: date-time
+          description: The date and time the feature was created
+        description:
+          type: string
+          nullable: true
+          description: A human-readable description of the feature
+        initial_value:
+          type: string
+          nullable: true
+          description: The initial value assigned to the feature when created
+        default_enabled:
+          type: boolean
+          description: Whether the feature is enabled by default
+        type:
+          type: string
+          enum:
+            - STANDARD
+            - MULTIVARIATE
+          description: >-
+            The type of feature flag. STANDARD for simple on/off flags,
+            MULTIVARIATE for flags with multiple value variations.
+    IdentityResponse:
+      type: object
+      description: >-
+        The response object for an identity flags request, containing the
+        evaluated flags and traits for the specified identity.
+      properties:
+        flags:
+          type: array
+          description: The evaluated feature flags for this identity
+          items:
+            $ref: '#/components/schemas/Flag'
+        traits:
+          type: array
+          description: The traits associated with this identity
+          items:
+            $ref: '#/components/schemas/Trait'
+    IdentityRequest:
+      type: object
+      description: >-
+        The request body for identifying a user and optionally setting traits.
+      required:
+        - identifier
+      properties:
+        identifier:
+          type: string
+          description: >-
+            The unique identifier for the user identity in your application.
+        traits:
+          type: array
+          description: >-
+            An optional array of traits to set for this identity. Traits are
+            used for segment evaluation and personalized flag delivery.
+          items:
+            $ref: '#/components/schemas/TraitInput'
+        transient:
+          type: boolean
+          description: >-
+            When true, the identity is transient and will not be persisted.
+    Trait:
+      type: object
+      description: >-
+        A trait is a key-value pair associated with an identity, used for
+        segment evaluation and personalization.
+      properties:
+        id:
+          type: integer
+          description: The unique identifier for this trait
+        trait_key:
+          type: string
+          description: The key name of the trait
+        trait_value:
+          description: >-
+            The value of the trait. Can be a string, integer, float, or boolean.
+          oneOf:
+            - type: string
+            - type: integer
+            - type: number
+            - type: boolean
+    TraitInput:
+      type: object
+      description: >-
+        Input object for setting a trait value on an identity.
+      required:
+        - trait_key
+        - trait_value
+      properties:
+        trait_key:
+          type: string
+          description: The key name of the trait to set
+        trait_value:
+          description: >-
+            The value to set for the trait. Can be a string, integer, float,
+            or boolean. Set to null to delete the trait.
+          oneOf:
+            - type: string
+            - type: integer
+            - type: number
+            - type: boolean
+            - type: 'null'
+        transient:
+          type: boolean
+          description: >-
+            When true, this trait is transient and will be used for evaluation
+            but not persisted.
+    TraitRequest:
+      type: object
+      description: >-
+        Request body for setting a trait on an identity.
+      required:
+        - identity
+        - trait_key
+        - trait_value
+      properties:
+        identity:
+          type: object
+          description: The identity to set the trait on
+          required:
+            - identifier
+          properties:
+            identifier:
+              type: string
+              description: The unique identifier for the user identity
+        trait_key:
+          type: string
+          description: The key name of the trait to set
+        trait_value:
+          description: >-
+            The value to set for the trait. Set to null to delete the trait.
+          oneOf:
+            - type: string
+            - type: integer
+            - type: number
+            - type: boolean
+            - type: 'null'
+    Error:
+      type: object
+      description: An error response from the API
+      properties:
+        detail:
+          type: string
+          description: A human-readable error message

@@ -1,0 +1,257 @@
+asyncapi: 2.6.0
+info:
+  title: Flagsmith Webhook Events
+  description: >-
+    Flagsmith provides two types of webhooks for receiving event notifications.
+    Environment webhooks automatically send flag evaluations for identified
+    users whenever an identity's flags are evaluated via the Get Identity Flags
+    endpoint. Organisation webhooks send audit log events whenever changes are
+    made to feature flags, environments, or other resources across the
+    organisation. Both webhook types support HMAC-SHA256 signature verification
+    using a configurable secret.
+  version: '1.0'
+  contact:
+    name: Flagsmith Support
+    url: https://www.flagsmith.com/contact-us
+servers:
+  webhookReceiver:
+    url: '{webhookUrl}'
+    protocol: https
+    description: >-
+      Your webhook receiver endpoint. Flagsmith sends POST requests to this
+      URL when events occur. The URL is configured per environment or per
+      organisation in the Flagsmith dashboard or via the Admin API.
+    variables:
+      webhookUrl:
+        description: The URL configured to receive webhook events
+    security:
+      - hmacSignature: []
+channels:
+  /environment-webhook:
+    description: >-
+      Environment webhooks receive flag evaluation data for identified users.
+      Every time an identity's flags are evaluated via the Get Identity Flags
+      endpoint, Flagsmith sends the full set of flag evaluations, traits, and
+      segments for that user to the configured webhook URL.
+    publish:
+      operationId: receiveEnvironmentWebhook
+      summary: Receive flag evaluation events for identified users
+      message:
+        $ref: '#/components/messages/EnvironmentWebhookEvent'
+  /organisation-webhook:
+    description: >-
+      Organisation webhooks receive audit log events when changes are made
+      to resources across the organisation. This includes feature flag
+      changes, environment updates, segment modifications, and other
+      administrative actions performed via the dashboard or Admin API.
+    publish:
+      operationId: receiveOrganisationWebhook
+      summary: Receive audit log events for organisation changes
+      message:
+        $ref: '#/components/messages/OrganisationWebhookEvent'
+components:
+  securitySchemes:
+    hmacSignature:
+      type: httpApiKey
+      name: X-Flagsmith-Signature
+      in: header
+      description: >-
+        HMAC-SHA256 signature computed using the webhook secret as the key
+        and the request body as the message. When a webhook secret is
+        configured, Flagsmith includes this signature header with each
+        webhook request so the receiver can verify the payload authenticity.
+  messages:
+    EnvironmentWebhookEvent:
+      name: EnvironmentWebhookEvent
+      title: Environment Webhook Event
+      summary: >-
+        Flag evaluation data sent when an identity's flags are evaluated
+      description: >-
+        Contains the complete set of flag evaluations for an identified user,
+        including the enabled state and value of each feature flag. This
+        payload is sent as a POST request to the configured environment
+        webhook URL whenever the Get Identity Flags endpoint is called.
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/EnvironmentWebhookPayload'
+    OrganisationWebhookEvent:
+      name: OrganisationWebhookEvent
+      title: Organisation Webhook Event
+      summary: >-
+        Audit log event sent when changes occur within the organisation
+      description: >-
+        Contains details about a change made within the organisation, such
+        as creating, updating, or deleting a feature flag, environment, or
+        other resource. The event includes information about what changed,
+        who made the change, and when it occurred.
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/OrganisationWebhookPayload'
+  schemas:
+    EnvironmentWebhookPayload:
+      type: object
+      description: >-
+        The payload sent to environment webhooks containing flag evaluation
+        data for an identified user.
+      properties:
+        data:
+          type: array
+          description: >-
+            Array of flag evaluation results for the identified user
+          items:
+            $ref: '#/components/schemas/FlagEvaluation'
+        event_type:
+          type: string
+          const: FLAG_UPDATED
+          description: The type of event that triggered the webhook
+        timestamp:
+          type: string
+          format: date-time
+          description: When the event occurred
+    FlagEvaluation:
+      type: object
+      description: >-
+        A single flag evaluation result containing the feature definition,
+        its state, and the associated value for the identity.
+      properties:
+        id:
+          type: integer
+          description: The unique identifier for this feature state
+        enabled:
+          type: boolean
+          description: Whether the flag is enabled for this identity
+        environment:
+          type: integer
+          description: The ID of the environment
+        feature:
+          $ref: '#/components/schemas/WebhookFeature'
+        feature_segment:
+          type: integer
+          nullable: true
+          description: >-
+            The feature segment ID if this evaluation is a segment override
+        feature_state_value:
+          description: >-
+            The evaluated value of the flag for this identity
+          oneOf:
+            - type: string
+            - type: integer
+            - type: boolean
+            - type: 'null'
+        identity:
+          type: integer
+          nullable: true
+          description: The identity ID this evaluation applies to
+    WebhookFeature:
+      type: object
+      description: >-
+        Feature metadata included in webhook payloads describing the feature
+        flag definition.
+      properties:
+        id:
+          type: integer
+          description: The unique identifier for the feature
+        name:
+          type: string
+          description: The name of the feature flag
+        created_date:
+          type: string
+          format: date-time
+          description: When the feature was created
+        description:
+          type: string
+          nullable: true
+          description: A description of the feature
+        initial_value:
+          type: string
+          nullable: true
+          description: The initial value of the feature
+        default_enabled:
+          type: boolean
+          description: Whether the feature is enabled by default
+        type:
+          type: string
+          enum:
+            - STANDARD
+            - MULTIVARIATE
+          description: The type of feature flag
+    OrganisationWebhookPayload:
+      type: object
+      description: >-
+        The payload sent to organisation webhooks containing audit log event
+        data about changes made within the organisation.
+      properties:
+        data:
+          $ref: '#/components/schemas/AuditLogEntry'
+        event_type:
+          type: string
+          enum:
+            - FLAG_UPDATED
+            - FLAG_DELETED
+            - AUDIT_LOG_CREATED
+          description: The type of event that triggered the webhook
+        timestamp:
+          type: string
+          format: date-time
+          description: When the event occurred
+    AuditLogEntry:
+      type: object
+      description: >-
+        An audit log entry recording a change made within the organisation,
+        including what was changed, who made the change, and the resulting
+        state.
+      properties:
+        id:
+          type: integer
+          description: The unique identifier for this audit log entry
+        created_date:
+          type: string
+          format: date-time
+          description: When the change was recorded
+        log:
+          type: string
+          description: >-
+            A human-readable description of the change that was made
+        author:
+          $ref: '#/components/schemas/AuditLogAuthor'
+        environment:
+          type: string
+          nullable: true
+          description: The name of the environment affected by the change
+        project:
+          type: string
+          nullable: true
+          description: The name of the project affected by the change
+        related_object_id:
+          type: integer
+          nullable: true
+          description: The ID of the object that was changed
+        related_object_type:
+          type: string
+          nullable: true
+          enum:
+            - FEATURE
+            - FEATURE_STATE
+            - SEGMENT
+            - ENVIRONMENT
+            - CHANGE_REQUEST
+          description: The type of object that was changed
+    AuditLogAuthor:
+      type: object
+      description: >-
+        Information about the user who made the change recorded in the
+        audit log.
+      properties:
+        id:
+          type: integer
+          description: The unique identifier for the user
+        email:
+          type: string
+          format: email
+          description: The email address of the user
+        first_name:
+          type: string
+          description: The first name of the user
+        last_name:
+          type: string
+          description: The last name of the user

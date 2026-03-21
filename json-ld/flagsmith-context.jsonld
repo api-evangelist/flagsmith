@@ -1,0 +1,221 @@
+{
+  "@context": {
+    "@version": 1.1,
+    "flagsmith": "https://flagsmith.com/ns/",
+    "schema": "https://schema.org/",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+    "dcterms": "http://purl.org/dc/terms/",
+
+    "Organisation": {
+      "@id": "flagsmith:Organisation",
+      "@context": {
+        "name": "schema:name",
+        "createdDate": {
+          "@id": "dcterms:created",
+          "@type": "xsd:dateTime"
+        },
+        "webhookNotificationEmail": {
+          "@id": "flagsmith:webhookNotificationEmail",
+          "@type": "xsd:string"
+        },
+        "numSeats": {
+          "@id": "flagsmith:numSeats",
+          "@type": "xsd:integer"
+        },
+        "persistTraitData": {
+          "@id": "flagsmith:persistTraitData",
+          "@type": "xsd:boolean"
+        }
+      }
+    },
+
+    "Project": {
+      "@id": "flagsmith:Project",
+      "@context": {
+        "name": "schema:name",
+        "createdDate": {
+          "@id": "dcterms:created",
+          "@type": "xsd:dateTime"
+        },
+        "organisation": {
+          "@id": "flagsmith:organisation",
+          "@type": "@id"
+        },
+        "hideDisabledFlags": {
+          "@id": "flagsmith:hideDisabledFlags",
+          "@type": "xsd:boolean"
+        },
+        "enableRealtimeUpdates": {
+          "@id": "flagsmith:enableRealtimeUpdates",
+          "@type": "xsd:boolean"
+        }
+      }
+    },
+
+    "Environment": {
+      "@id": "flagsmith:Environment",
+      "@context": {
+        "name": "schema:name",
+        "description": "schema:description",
+        "apiKey": {
+          "@id": "flagsmith:apiKey",
+          "@type": "xsd:string"
+        },
+        "project": {
+          "@id": "flagsmith:project",
+          "@type": "@id"
+        },
+        "allowClientTraits": {
+          "@id": "flagsmith:allowClientTraits",
+          "@type": "xsd:boolean"
+        },
+        "minimumChangeRequestApprovals": {
+          "@id": "flagsmith:minimumChangeRequestApprovals",
+          "@type": "xsd:integer"
+        }
+      }
+    },
+
+    "Feature": {
+      "@id": "flagsmith:Feature",
+      "@context": {
+        "name": "schema:name",
+        "description": "schema:description",
+        "createdDate": {
+          "@id": "dcterms:created",
+          "@type": "xsd:dateTime"
+        },
+        "featureType": {
+          "@id": "flagsmith:featureType",
+          "@type": "xsd:string"
+        },
+        "defaultEnabled": {
+          "@id": "flagsmith:defaultEnabled",
+          "@type": "xsd:boolean"
+        },
+        "initialValue": {
+          "@id": "flagsmith:initialValue",
+          "@type": "xsd:string"
+        },
+        "isArchived": {
+          "@id": "flagsmith:isArchived",
+          "@type": "xsd:boolean"
+        },
+        "project": {
+          "@id": "flagsmith:project",
+          "@type": "@id"
+        },
+        "owners": {
+          "@id": "flagsmith:owners",
+          "@container": "@set"
+        },
+        "tags": {
+          "@id": "flagsmith:tags",
+          "@container": "@set"
+        }
+      }
+    },
+
+    "FeatureState": {
+      "@id": "flagsmith:FeatureState",
+      "@context": {
+        "enabled": {
+          "@id": "flagsmith:enabled",
+          "@type": "xsd:boolean"
+        },
+        "featureStateValue": {
+          "@id": "flagsmith:featureStateValue"
+        },
+        "feature": {
+          "@id": "flagsmith:feature",
+          "@type": "@id"
+        },
+        "environment": {
+          "@id": "flagsmith:environment",
+          "@type": "@id"
+        },
+        "identity": {
+          "@id": "flagsmith:identity",
+          "@type": "@id"
+        },
+        "featureSegment": {
+          "@id": "flagsmith:featureSegment",
+          "@type": "@id"
+        }
+      }
+    },
+
+    "Segment": {
+      "@id": "flagsmith:Segment",
+      "@context": {
+        "name": "schema:name",
+        "description": "schema:description",
+        "project": {
+          "@id": "flagsmith:project",
+          "@type": "@id"
+        },
+        "rules": {
+          "@id": "flagsmith:rules",
+          "@container": "@set"
+        }
+      }
+    },
+
+    "Identity": {
+      "@id": "flagsmith:Identity",
+      "@context": {
+        "identifier": {
+          "@id": "schema:identifier",
+          "@type": "xsd:string"
+        },
+        "environment": {
+          "@id": "flagsmith:environment",
+          "@type": "@id"
+        },
+        "traits": {
+          "@id": "flagsmith:traits",
+          "@container": "@set"
+        }
+      }
+    },
+
+    "Trait": {
+      "@id": "flagsmith:Trait",
+      "@context": {
+        "traitKey": {
+          "@id": "flagsmith:traitKey",
+          "@type": "xsd:string"
+        },
+        "traitValue": {
+          "@id": "flagsmith:traitValue"
+        },
+        "transient": {
+          "@id": "flagsmith:transient",
+          "@type": "xsd:boolean"
+        }
+      }
+    },
+
+    "Webhook": {
+      "@id": "flagsmith:Webhook",
+      "@context": {
+        "url": {
+          "@id": "schema:url",
+          "@type": "@id"
+        },
+        "enabled": {
+          "@id": "flagsmith:enabled",
+          "@type": "xsd:boolean"
+        },
+        "createdAt": {
+          "@id": "dcterms:created",
+          "@type": "xsd:dateTime"
+        },
+        "updatedAt": {
+          "@id": "dcterms:modified",
+          "@type": "xsd:dateTime"
+        }
+      }
+    }
+  }
+}
