@@ -1,5 +1,6 @@
 aid: flagsmith
-url: https://raw.githubusercontent.com/api-evangelist/flagsmith/refs/heads/main/apis.yml
+url: 
+  https://raw.githubusercontent.com/api-evangelist/flagsmith/refs/heads/main/apis.yml
 apis:
   - aid: flagsmith:flags-api
     name: Flagsmith Flags API
@@ -9,7 +10,8 @@ apis:
       - Flags
       - SDKs
       - Edge
-    image: https://kinlane-productions2.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+    image: 
+      https://kinlane-productions2.s3.amazonaws.com/apis-json/apis-json-logo.jpg
     baseURL: https://edge.api.flagsmith.com
     humanURL: https://docs.flagsmith.com/clients/rest
     properties:
@@ -33,11 +35,14 @@ apis:
       - Projects
       - Environments
       - Segments
-    image: https://kinlane-productions2.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+    image: 
+      https://kinlane-productions2.s3.amazonaws.com/apis-json/apis-json-logo.jpg
     baseURL: https://api.flagsmith.com/api/v1
-    humanURL: https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/admin-api
+    humanURL: 
+      https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/admin-api
     properties:
-      - url: https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/admin-api
+      - url: 
+          https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/admin-api
         type: Documentation
       - url: openapi/flagsmith-admin-api-openapi.yml
         type: OpenAPI
@@ -57,3 +62,6 @@ common:
   - type: JSONSchema
     url: json-schema/flagsmith-feature-flag-schema.json
 modified: '2026-03-20'
+description: >-
+  Flagsmith is an open-source feature flag and remote configuration platform that
+  helps developers manage feature flags across web, mobile, and server-side applications.
