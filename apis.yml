@@ -1,17 +1,15 @@
 aid: flagsmith
-url: 
-  https://raw.githubusercontent.com/api-evangelist/flagsmith/refs/heads/main/apis.yml
+url: https://raw.githubusercontent.com/api-evangelist/flagsmith/refs/heads/main/apis.yml
 apis:
   - aid: flagsmith:flags-api
     name: Flagsmith Flags API
     tags:
-      - Feature Flags
-      - Remote Config
-      - Flags
-      - SDKs
       - Edge
-    image: 
-      https://kinlane-productions2.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+      - Feature Flags
+      - Flags
+      - Remote Config
+      - SDKs
+    image: https://kinlane-productions2.s3.amazonaws.com/apis-json/apis-json-logo.jpg
     baseURL: https://edge.api.flagsmith.com
     humanURL: https://docs.flagsmith.com/clients/rest
     properties:
@@ -30,19 +28,16 @@ apis:
   - aid: flagsmith:admin-api
     name: Flagsmith Admin API
     tags:
-      - Feature Flags
       - Administration
-      - Projects
       - Environments
+      - Feature Flags
+      - Projects
       - Segments
-    image: 
-      https://kinlane-productions2.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+    image: https://kinlane-productions2.s3.amazonaws.com/apis-json/apis-json-logo.jpg
     baseURL: https://api.flagsmith.com/api/v1
-    humanURL: 
-      https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/admin-api
+    humanURL: https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/admin-api
     properties:
-      - url: 
-          https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/admin-api
+      - url: https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/admin-api
         type: Documentation
       - url: openapi/flagsmith-admin-api-openapi.yml
         type: OpenAPI

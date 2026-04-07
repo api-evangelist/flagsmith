@@ -21,14 +21,6 @@ servers:
   - url: https://api.flagsmith.com/api/v1
     description: Flagsmith Production API
 tags:
-  - name: Organisations
-    description: >-
-      Manage organisations within Flagsmith. Organisations are the top-level
-      container for projects, users, and billing.
-  - name: Projects
-    description: >-
-      Manage projects within an organisation. Projects contain environments
-      and feature flags.
   - name: Environments
     description: >-
       Manage environments within a project. Environments represent deployment
@@ -37,14 +29,22 @@ tags:
     description: >-
       Manage feature flags within a project. Features can be toggled on or off
       and can have remote configuration values.
-  - name: Segments
-    description: >-
-      Manage segments within a project. Segments define groups of users based
-      on traits and rules for targeted flag delivery.
   - name: Identities
     description: >-
       Manage user identities within an environment. Identities represent
       individual users and their associated traits.
+  - name: Organisations
+    description: >-
+      Manage organisations within Flagsmith. Organisations are the top-level
+      container for projects, users, and billing.
+  - name: Projects
+    description: >-
+      Manage projects within an organisation. Projects contain environments
+      and feature flags.
+  - name: Segments
+    description: >-
+      Manage segments within a project. Segments define groups of users based
+      on traits and rules for targeted flag delivery.
   - name: Users
     description: >-
       Manage organisation users and their permissions within Flagsmith.
