@@ -56,7 +56,7 @@ common:
     url: json-ld/flagsmith-context.jsonld
   - type: JSONSchema
     url: json-schema/flagsmith-feature-flag-schema.json
-modified: '2026-03-20'
+modified: '2026-04-28'
 description: >-
   Flagsmith is an open-source feature flag and remote configuration platform that
   helps developers manage feature flags across web, mobile, and server-side applications.
