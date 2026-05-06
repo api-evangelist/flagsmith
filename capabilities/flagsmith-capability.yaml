@@ -1,0 +1,931 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Flagsmith Admin API
+  description: The Flagsmith Admin API allows developers to programmatically manage all aspects of their Flagsmith projects.
+    Anything that can be done through the Flagsmith dashboard can also be accomplished via this API, including creating, updating,
+    and deleting projects, environments, feature flags, segments, and users. It uses a secret Organisation API Token for authentication
+    and provides a Swagger interface at api.flagsmith.com/api/v1/docs for interactive exploration.
+  tags:
+  - Flagsmith
+  - API
+  created: '2026-05-06'
+  modified: '2026-05-06'
+capability:
+  consumes:
+  - type: http
+    namespace: flagsmith
+    baseUri: https://api.flagsmith.com/api/v1
+    description: Flagsmith Admin API HTTP API.
+    authentication:
+      type: apikey
+      in: header
+      name: Authorization
+      value: '{{FLAGSMITH_TOKEN}}'
+    resources:
+    - name: organisations
+      path: /organisations/
+      operations:
+      - name: listorganisations
+        method: GET
+        description: List organisations
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: organisations-organisation-id
+      path: /organisations/{organisation_id}/
+      operations:
+      - name: getorganisation
+        method: GET
+        description: Get an organisation
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: projects
+      path: /projects/
+      operations:
+      - name: listprojects
+        method: GET
+        description: List projects
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+      - name: createproject
+        method: POST
+        description: Create a project
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: projects-project-id
+      path: /projects/{project_id}/
+      operations:
+      - name: getproject
+        method: GET
+        description: Get a project
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+      - name: updateproject
+        method: PUT
+        description: Update a project
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+      - name: deleteproject
+        method: DELETE
+        description: Delete a project
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: environments
+      path: /environments/
+      operations:
+      - name: listenvironments
+        method: GET
+        description: List environments
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: environments-environment-api-key
+      path: /environments/{environment_api_key}/
+      operations:
+      - name: getenvironment
+        method: GET
+        description: Get an environment
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+      - name: updateenvironment
+        method: PUT
+        description: Update an environment
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: projects-project-id-features
+      path: /projects/{project_id}/features/
+      operations:
+      - name: listfeatures
+        method: GET
+        description: List features for a project
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+      - name: createfeature
+        method: POST
+        description: Create a feature flag
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: projects-project-id-features-feature-id
+      path: /projects/{project_id}/features/{feature_id}/
+      operations:
+      - name: getfeature
+        method: GET
+        description: Get a feature flag
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+      - name: updatefeature
+        method: PUT
+        description: Update a feature flag
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+      - name: deletefeature
+        method: DELETE
+        description: Delete a feature flag
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: environments-environment-api-key-featurestates
+      path: /environments/{environment_api_key}/featurestates/
+      operations:
+      - name: listfeaturestates
+        method: GET
+        description: List feature states for an environment
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: environments-environment-api-key-featurestates-f
+      path: /environments/{environment_api_key}/featurestates/{feature_state_id}/
+      operations:
+      - name: updatefeaturestate
+        method: PATCH
+        description: Update a feature state
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: projects-project-id-segments
+      path: /projects/{project_id}/segments/
+      operations:
+      - name: listsegments
+        method: GET
+        description: List segments for a project
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+      - name: createsegment
+        method: POST
+        description: Create a segment
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: projects-project-id-segments-segment-id
+      path: /projects/{project_id}/segments/{segment_id}/
+      operations:
+      - name: getsegment
+        method: GET
+        description: Get a segment
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+      - name: updatesegment
+        method: PUT
+        description: Update a segment
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+      - name: deletesegment
+        method: DELETE
+        description: Delete a segment
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: environments-environment-api-key-identities
+      path: /environments/{environment_api_key}/identities/
+      operations:
+      - name: listidentities
+        method: GET
+        description: List identities for an environment
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: environments-environment-api-key-identities-iden
+      path: /environments/{environment_api_key}/identities/{identity_id}/
+      operations:
+      - name: getidentity
+        method: GET
+        description: Get an identity
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+      - name: deleteidentity
+        method: DELETE
+        description: Delete an identity
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: organisations-organisation-id-users
+      path: /organisations/{organisation_id}/users/
+      operations:
+      - name: listorganisationusers
+        method: GET
+        description: List organisation users
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: environments-environment-api-key-webhooks
+      path: /environments/{environment_api_key}/webhooks/
+      operations:
+      - name: listenvironmentwebhooks
+        method: GET
+        description: List environment webhooks
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+      - name: createenvironmentwebhook
+        method: POST
+        description: Create an environment webhook
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: organisations-organisation-id-webhooks
+      path: /organisations/{organisation_id}/webhooks/
+      operations:
+      - name: listorganisationwebhooks
+        method: GET
+        description: List organisation webhooks
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+      - name: createorganisationwebhook
+        method: POST
+        description: Create an organisation webhook
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+  exposes:
+  - type: rest
+    port: 8080
+    namespace: flagsmith-rest
+    description: REST adapter for Flagsmith Admin API.
+    resources:
+    - path: /organisations/
+      name: listorganisations
+      operations:
+      - method: GET
+        name: listorganisations
+        description: List organisations
+        call: flagsmith.listorganisations
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /organisations/{organisation_id}/
+      name: getorganisation
+      operations:
+      - method: GET
+        name: getorganisation
+        description: Get an organisation
+        call: flagsmith.getorganisation
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /projects/
+      name: listprojects
+      operations:
+      - method: GET
+        name: listprojects
+        description: List projects
+        call: flagsmith.listprojects
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /projects/
+      name: createproject
+      operations:
+      - method: POST
+        name: createproject
+        description: Create a project
+        call: flagsmith.createproject
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /projects/{project_id}/
+      name: getproject
+      operations:
+      - method: GET
+        name: getproject
+        description: Get a project
+        call: flagsmith.getproject
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /projects/{project_id}/
+      name: updateproject
+      operations:
+      - method: PUT
+        name: updateproject
+        description: Update a project
+        call: flagsmith.updateproject
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /projects/{project_id}/
+      name: deleteproject
+      operations:
+      - method: DELETE
+        name: deleteproject
+        description: Delete a project
+        call: flagsmith.deleteproject
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /environments/
+      name: listenvironments
+      operations:
+      - method: GET
+        name: listenvironments
+        description: List environments
+        call: flagsmith.listenvironments
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /environments/{environment_api_key}/
+      name: getenvironment
+      operations:
+      - method: GET
+        name: getenvironment
+        description: Get an environment
+        call: flagsmith.getenvironment
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /environments/{environment_api_key}/
+      name: updateenvironment
+      operations:
+      - method: PUT
+        name: updateenvironment
+        description: Update an environment
+        call: flagsmith.updateenvironment
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /projects/{project_id}/features/
+      name: listfeatures
+      operations:
+      - method: GET
+        name: listfeatures
+        description: List features for a project
+        call: flagsmith.listfeatures
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /projects/{project_id}/features/
+      name: createfeature
+      operations:
+      - method: POST
+        name: createfeature
+        description: Create a feature flag
+        call: flagsmith.createfeature
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /projects/{project_id}/features/{feature_id}/
+      name: getfeature
+      operations:
+      - method: GET
+        name: getfeature
+        description: Get a feature flag
+        call: flagsmith.getfeature
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /projects/{project_id}/features/{feature_id}/
+      name: updatefeature
+      operations:
+      - method: PUT
+        name: updatefeature
+        description: Update a feature flag
+        call: flagsmith.updatefeature
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /projects/{project_id}/features/{feature_id}/
+      name: deletefeature
+      operations:
+      - method: DELETE
+        name: deletefeature
+        description: Delete a feature flag
+        call: flagsmith.deletefeature
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /environments/{environment_api_key}/featurestates/
+      name: listfeaturestates
+      operations:
+      - method: GET
+        name: listfeaturestates
+        description: List feature states for an environment
+        call: flagsmith.listfeaturestates
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /environments/{environment_api_key}/featurestates/{feature_state_id}/
+      name: updatefeaturestate
+      operations:
+      - method: PATCH
+        name: updatefeaturestate
+        description: Update a feature state
+        call: flagsmith.updatefeaturestate
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /projects/{project_id}/segments/
+      name: listsegments
+      operations:
+      - method: GET
+        name: listsegments
+        description: List segments for a project
+        call: flagsmith.listsegments
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /projects/{project_id}/segments/
+      name: createsegment
+      operations:
+      - method: POST
+        name: createsegment
+        description: Create a segment
+        call: flagsmith.createsegment
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /projects/{project_id}/segments/{segment_id}/
+      name: getsegment
+      operations:
+      - method: GET
+        name: getsegment
+        description: Get a segment
+        call: flagsmith.getsegment
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /projects/{project_id}/segments/{segment_id}/
+      name: updatesegment
+      operations:
+      - method: PUT
+        name: updatesegment
+        description: Update a segment
+        call: flagsmith.updatesegment
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /projects/{project_id}/segments/{segment_id}/
+      name: deletesegment
+      operations:
+      - method: DELETE
+        name: deletesegment
+        description: Delete a segment
+        call: flagsmith.deletesegment
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /environments/{environment_api_key}/identities/
+      name: listidentities
+      operations:
+      - method: GET
+        name: listidentities
+        description: List identities for an environment
+        call: flagsmith.listidentities
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /environments/{environment_api_key}/identities/{identity_id}/
+      name: getidentity
+      operations:
+      - method: GET
+        name: getidentity
+        description: Get an identity
+        call: flagsmith.getidentity
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /environments/{environment_api_key}/identities/{identity_id}/
+      name: deleteidentity
+      operations:
+      - method: DELETE
+        name: deleteidentity
+        description: Delete an identity
+        call: flagsmith.deleteidentity
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /organisations/{organisation_id}/users/
+      name: listorganisationusers
+      operations:
+      - method: GET
+        name: listorganisationusers
+        description: List organisation users
+        call: flagsmith.listorganisationusers
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /environments/{environment_api_key}/webhooks/
+      name: listenvironmentwebhooks
+      operations:
+      - method: GET
+        name: listenvironmentwebhooks
+        description: List environment webhooks
+        call: flagsmith.listenvironmentwebhooks
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /environments/{environment_api_key}/webhooks/
+      name: createenvironmentwebhook
+      operations:
+      - method: POST
+        name: createenvironmentwebhook
+        description: Create an environment webhook
+        call: flagsmith.createenvironmentwebhook
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /organisations/{organisation_id}/webhooks/
+      name: listorganisationwebhooks
+      operations:
+      - method: GET
+        name: listorganisationwebhooks
+        description: List organisation webhooks
+        call: flagsmith.listorganisationwebhooks
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /organisations/{organisation_id}/webhooks/
+      name: createorganisationwebhook
+      operations:
+      - method: POST
+        name: createorganisationwebhook
+        description: Create an organisation webhook
+        call: flagsmith.createorganisationwebhook
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    port: 9090
+    namespace: flagsmith-mcp
+    transport: http
+    description: MCP adapter for Flagsmith Admin API for AI agent use.
+    tools:
+    - name: listorganisations
+      description: List organisations
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: flagsmith.listorganisations
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: getorganisation
+      description: Get an organisation
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: flagsmith.getorganisation
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: listprojects
+      description: List projects
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: flagsmith.listprojects
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: createproject
+      description: Create a project
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: flagsmith.createproject
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: getproject
+      description: Get a project
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: flagsmith.getproject
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: updateproject
+      description: Update a project
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: flagsmith.updateproject
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: deleteproject
+      description: Delete a project
+      hints:
+        readOnly: false
+        destructive: true
+        idempotent: true
+      call: flagsmith.deleteproject
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: listenvironments
+      description: List environments
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: flagsmith.listenvironments
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: getenvironment
+      description: Get an environment
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: flagsmith.getenvironment
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: updateenvironment
+      description: Update an environment
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: flagsmith.updateenvironment
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: listfeatures
+      description: List features for a project
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: flagsmith.listfeatures
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: createfeature
+      description: Create a feature flag
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: flagsmith.createfeature
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: getfeature
+      description: Get a feature flag
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: flagsmith.getfeature
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: updatefeature
+      description: Update a feature flag
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: flagsmith.updatefeature
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: deletefeature
+      description: Delete a feature flag
+      hints:
+        readOnly: false
+        destructive: true
+        idempotent: true
+      call: flagsmith.deletefeature
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: listfeaturestates
+      description: List feature states for an environment
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: flagsmith.listfeaturestates
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: updatefeaturestate
+      description: Update a feature state
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: flagsmith.updatefeaturestate
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: listsegments
+      description: List segments for a project
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: flagsmith.listsegments
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: createsegment
+      description: Create a segment
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: flagsmith.createsegment
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: getsegment
+      description: Get a segment
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: flagsmith.getsegment
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: updatesegment
+      description: Update a segment
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: flagsmith.updatesegment
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: deletesegment
+      description: Delete a segment
+      hints:
+        readOnly: false
+        destructive: true
+        idempotent: true
+      call: flagsmith.deletesegment
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: listidentities
+      description: List identities for an environment
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: flagsmith.listidentities
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: getidentity
+      description: Get an identity
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: flagsmith.getidentity
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: deleteidentity
+      description: Delete an identity
+      hints:
+        readOnly: false
+        destructive: true
+        idempotent: true
+      call: flagsmith.deleteidentity
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: listorganisationusers
+      description: List organisation users
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: flagsmith.listorganisationusers
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: listenvironmentwebhooks
+      description: List environment webhooks
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: flagsmith.listenvironmentwebhooks
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: createenvironmentwebhook
+      description: Create an environment webhook
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: flagsmith.createenvironmentwebhook
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: listorganisationwebhooks
+      description: List organisation webhooks
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: flagsmith.listorganisationwebhooks
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: createorganisationwebhook
+      description: Create an organisation webhook
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: flagsmith.createorganisationwebhook
+      outputParameters:
+      - type: object
+        mapping: $.
+binds:
+- namespace: env
+  keys:
+    FLAGSMITH_TOKEN: FLAGSMITH_TOKEN
