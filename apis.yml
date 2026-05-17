@@ -52,7 +52,7 @@ apis:
       authentication and provides a Swagger interface at
       api.flagsmith.com/api/v1/docs for interactive exploration.
 common:
-  - type: JSON-LD
+  - type: JSONLD
     url: json-ld/flagsmith-context.jsonld
   - type: JSONSchema
     url: json-schema/flagsmith-feature-flag-schema.json
