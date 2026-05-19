@@ -1,0 +1,191 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Flagsmith Flags API — Identities
+  description: 'Flagsmith Flags API — Identities. 4 operations. Lead operation: Get flags and traits for an identity. Self-contained
+    Naftiko capability covering one Flagsmith business surface.'
+  tags:
+  - Flagsmith
+  - Identities
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    FLAGSMITH_API_KEY: FLAGSMITH_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: flags-identities
+    baseUri: https://edge.api.flagsmith.com/api/v1
+    description: Flagsmith Flags API — Identities business capability. Self-contained, no shared references.
+    resources:
+    - name: identities
+      path: /identities/
+      operations:
+      - name: getidentityflags
+        method: GET
+        description: Get flags and traits for an identity
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+      - name: identifyuserandgetflags
+        method: POST
+        description: Identify a user and get flags with traits
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: traits
+      path: /traits/
+      operations:
+      - name: settraits
+        method: POST
+        description: Set traits for an identity
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: traits-bulk
+      path: /traits/bulk/
+      operations:
+      - name: setbulktraits
+        method: PUT
+        description: Set multiple traits for an identity in bulk
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    authentication:
+      type: apikey
+      key: X-Environment-Key
+      value: '{{env.FLAGSMITH_API_KEY}}'
+      placement: header
+  exposes:
+  - type: rest
+    namespace: flags-identities-rest
+    port: 8080
+    description: REST adapter for Flagsmith Flags API — Identities. One Spectral-compliant resource per consumed operation,
+      prefixed with /v1.
+    resources:
+    - path: /v1/identities
+      name: identities
+      description: REST surface for identities.
+      operations:
+      - method: GET
+        name: getidentityflags
+        description: Get flags and traits for an identity
+        call: flags-identities.getidentityflags
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: POST
+        name: identifyuserandgetflags
+        description: Identify a user and get flags with traits
+        call: flags-identities.identifyuserandgetflags
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/traits
+      name: traits
+      description: REST surface for traits.
+      operations:
+      - method: POST
+        name: settraits
+        description: Set traits for an identity
+        call: flags-identities.settraits
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/traits/bulk
+      name: traits-bulk
+      description: REST surface for traits-bulk.
+      operations:
+      - method: PUT
+        name: setbulktraits
+        description: Set multiple traits for an identity in bulk
+        call: flags-identities.setbulktraits
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: flags-identities-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Flagsmith Flags API — Identities. One tool per consumed operation, routed inline through
+      this capability's consumes block.
+    tools:
+    - name: get-flags-and-traits-identity
+      description: Get flags and traits for an identity
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: flags-identities.getidentityflags
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: identify-user-and-get-flags
+      description: Identify a user and get flags with traits
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: false
+      call: flags-identities.identifyuserandgetflags
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: set-traits-identity
+      description: Set traits for an identity
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: flags-identities.settraits
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: set-multiple-traits-identity-bulk
+      description: Set multiple traits for an identity in bulk
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: flags-identities.setbulktraits
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.

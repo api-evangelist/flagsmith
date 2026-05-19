@@ -1,0 +1,104 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Flagsmith Admin API — Organisations
+  description: 'Flagsmith Admin API — Organisations. 2 operations. Lead operation: List organisations. Self-contained Naftiko
+    capability covering one Flagsmith business surface.'
+  tags:
+  - Flagsmith
+  - Organisations
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    FLAGSMITH_API_KEY: FLAGSMITH_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: admin-organisations
+    baseUri: https://api.flagsmith.com/api/v1
+    description: Flagsmith Admin API — Organisations business capability. Self-contained, no shared references.
+    resources:
+    - name: organisations
+      path: /organisations/
+      operations:
+      - name: listorganisations
+        method: GET
+        description: List organisations
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: organisations-organisation_id
+      path: /organisations/{organisation_id}/
+      operations:
+      - name: getorganisation
+        method: GET
+        description: Get an organisation
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    authentication:
+      type: apikey
+      key: Authorization
+      value: '{{env.FLAGSMITH_API_KEY}}'
+      placement: header
+  exposes:
+  - type: rest
+    namespace: admin-organisations-rest
+    port: 8080
+    description: REST adapter for Flagsmith Admin API — Organisations. One Spectral-compliant resource per consumed operation,
+      prefixed with /v1.
+    resources:
+    - path: /v1/organisations
+      name: organisations
+      description: REST surface for organisations.
+      operations:
+      - method: GET
+        name: listorganisations
+        description: List organisations
+        call: admin-organisations.listorganisations
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organisations/{organisation-id}
+      name: organisations-organisation-id
+      description: REST surface for organisations-organisation_id.
+      operations:
+      - method: GET
+        name: getorganisation
+        description: Get an organisation
+        call: admin-organisations.getorganisation
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: admin-organisations-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Flagsmith Admin API — Organisations. One tool per consumed operation, routed inline through
+      this capability's consumes block.
+    tools:
+    - name: list-organisations
+      description: List organisations
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: admin-organisations.listorganisations
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: get-organisation
+      description: Get an organisation
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: admin-organisations.getorganisation
+      outputParameters:
+      - type: object
+        mapping: $.

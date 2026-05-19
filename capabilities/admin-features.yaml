@@ -1,0 +1,273 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Flagsmith Admin API — Features
+  description: 'Flagsmith Admin API — Features. 7 operations. Lead operation: List feature states for an environment. Self-contained
+    Naftiko capability covering one Flagsmith business surface.'
+  tags:
+  - Flagsmith
+  - Features
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    FLAGSMITH_API_KEY: FLAGSMITH_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: admin-features
+    baseUri: https://api.flagsmith.com/api/v1
+    description: Flagsmith Admin API — Features business capability. Self-contained, no shared references.
+    resources:
+    - name: environments-environment_api_key-featurestates
+      path: /environments/{environment_api_key}/featurestates/
+      operations:
+      - name: listfeaturestates
+        method: GET
+        description: List feature states for an environment
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: environments-environment_api_key-featurestates-feature_state_id
+      path: /environments/{environment_api_key}/featurestates/{feature_state_id}/
+      operations:
+      - name: updatefeaturestate
+        method: PATCH
+        description: Update a feature state
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: projects-project_id-features
+      path: /projects/{project_id}/features/
+      operations:
+      - name: listfeatures
+        method: GET
+        description: List features for a project
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+      - name: createfeature
+        method: POST
+        description: Create a feature flag
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: projects-project_id-features-feature_id
+      path: /projects/{project_id}/features/{feature_id}/
+      operations:
+      - name: getfeature
+        method: GET
+        description: Get a feature flag
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+      - name: updatefeature
+        method: PUT
+        description: Update a feature flag
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+      - name: deletefeature
+        method: DELETE
+        description: Delete a feature flag
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    authentication:
+      type: apikey
+      key: Authorization
+      value: '{{env.FLAGSMITH_API_KEY}}'
+      placement: header
+  exposes:
+  - type: rest
+    namespace: admin-features-rest
+    port: 8080
+    description: REST adapter for Flagsmith Admin API — Features. One Spectral-compliant resource per consumed operation,
+      prefixed with /v1.
+    resources:
+    - path: /v1/environments/{environment-api-key}/featurestates
+      name: environments-environment-api-key-featurestates
+      description: REST surface for environments-environment_api_key-featurestates.
+      operations:
+      - method: GET
+        name: listfeaturestates
+        description: List feature states for an environment
+        call: admin-features.listfeaturestates
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/environments/{environment-api-key}/featurestates/{feature-state-id}
+      name: environments-environment-api-key-featurestates-feature-state-id
+      description: REST surface for environments-environment_api_key-featurestates-feature_state_id.
+      operations:
+      - method: PATCH
+        name: updatefeaturestate
+        description: Update a feature state
+        call: admin-features.updatefeaturestate
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/projects/{project-id}/features
+      name: projects-project-id-features
+      description: REST surface for projects-project_id-features.
+      operations:
+      - method: GET
+        name: listfeatures
+        description: List features for a project
+        call: admin-features.listfeatures
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: POST
+        name: createfeature
+        description: Create a feature flag
+        call: admin-features.createfeature
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/projects/{project-id}/features/{feature-id}
+      name: projects-project-id-features-feature-id
+      description: REST surface for projects-project_id-features-feature_id.
+      operations:
+      - method: GET
+        name: getfeature
+        description: Get a feature flag
+        call: admin-features.getfeature
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: PUT
+        name: updatefeature
+        description: Update a feature flag
+        call: admin-features.updatefeature
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: DELETE
+        name: deletefeature
+        description: Delete a feature flag
+        call: admin-features.deletefeature
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: admin-features-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Flagsmith Admin API — Features. One tool per consumed operation, routed inline through this
+      capability's consumes block.
+    tools:
+    - name: list-feature-states-environment
+      description: List feature states for an environment
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: admin-features.listfeaturestates
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: update-feature-state
+      description: Update a feature state
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: admin-features.updatefeaturestate
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: list-features-project
+      description: List features for a project
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: admin-features.listfeatures
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: create-feature-flag
+      description: Create a feature flag
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: admin-features.createfeature
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: get-feature-flag
+      description: Get a feature flag
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: admin-features.getfeature
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: update-feature-flag
+      description: Update a feature flag
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: admin-features.updatefeature
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: delete-feature-flag
+      description: Delete a feature flag
+      hints:
+        readOnly: false
+        destructive: true
+        idempotent: true
+      call: admin-features.deletefeature
+      outputParameters:
+      - type: object
+        mapping: $.
