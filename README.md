@@ -1,68 +1,63 @@
-# Flagsmith (flagsmith)
-Flagsmith is a feature flag and remote configuration platform that enables teams to manage feature releases, A/B tests, and application configuration across web, mobile, and server-side applications. Their developer platform provides both a public-facing Edge API for low-latency flag evaluation and an Admin API for programmatic management of projects, environments, segments, and feature flags.
+# flagsmith (flagsmith)
 
-**URL:** [Visit APIs.json URL](https://raw.githubusercontent.com/api-evangelist/flagsmith/refs/heads/main/apis.yml)
+Flagsmith is an open-source feature flag and remote configuration platform that helps developers manage feature flags across web, mobile, and server-side applications.
 
-## Scope
-
-- **Type:** Contract
-- **Position:** Consuming
-- **Access:** 3rd-Party
-
-## Tags:
-
- - Feature Flags, Remote Config, SDKs, Administration, Segments
+**APIs.json:** [https://raw.githubusercontent.com/api-evangelist/flagsmith/refs/heads/main/apis.yml](https://raw.githubusercontent.com/api-evangelist/flagsmith/refs/heads/main/apis.yml)
 
 ## Timestamps
 
-- **Created:** 2026-03-20
-- **Modified:** 2026-04-28
+- **Modified:** 2026-05-19
 
 ## APIs
 
 ### Flagsmith Flags API
+
 The Flagsmith Flags API is the public-facing REST API that client-side and server-side SDKs use to retrieve feature flag values and remote configuration for environments and users. It uses a non-secret Environment Key for authentication and is designed to be fast, scalable, and publicly accessible. The Edge API endpoint at edge.api.flagsmith.com serves requests from AWS Lambda functions running in data centers near the client, providing low-latency global access to flag evaluations.
 
-**Human URL:** [https://docs.flagsmith.com/clients/rest](https://docs.flagsmith.com/clients/rest)
+- **Human URL:** [https://docs.flagsmith.com/clients/rest](https://docs.flagsmith.com/clients/rest)
+- **Base URL:** `https://edge.api.flagsmith.com`
 
+#### Tags
 
-#### Tags:
-
- - Feature Flags, Remote Config, Flags, SDKs, Edge
+- Edge
+- Feature Flags
+- Flags
+- Remote Config
+- SDKs
 
 #### Properties
 
 - [Documentation](https://docs.flagsmith.com/clients/rest)
-- [OpenAPI](openapi/flagsmith-flags-api-openapi.yml)
+- [OpenAPI](openapi/flagsmith-flags-api-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
+- [Postman Collection](collections/flagsmith-flags-api.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
+- [Open Collection](collections/flagsmith-flags-api.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
 
 ### Flagsmith Admin API
+
 The Flagsmith Admin API allows developers to programmatically manage all aspects of their Flagsmith projects. Anything that can be done through the Flagsmith dashboard can also be accomplished via this API, including creating, updating, and deleting projects, environments, feature flags, segments, and users. It uses a secret Organisation API Token for authentication and provides a Swagger interface at api.flagsmith.com/api/v1/docs for interactive exploration.
 
-**Human URL:** [https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/admin-api](https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/admin-api)
+- **Human URL:** [https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/admin-api](https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/admin-api)
+- **Base URL:** `https://api.flagsmith.com/api/v1`
 
+#### Tags
 
-#### Tags:
-
- - Feature Flags, Administration, Projects, Environments, Segments
+- Administration
+- Environments
+- Feature Flags
+- Projects
+- Segments
 
 #### Properties
 
 - [Documentation](https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/admin-api)
-- [OpenAPI](openapi/flagsmith-admin-api-openapi.yml)
-- [AsyncAPI](asyncapi/flagsmith-webhooks-asyncapi.yml)
+- [OpenAPI](openapi/flagsmith-admin-api-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
+- [Postman Collection](collections/flagsmith-admin-api.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
+- [Open Collection](collections/flagsmith-admin-api.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
+- [AsyncAPI](asyncapi/flagsmith-webhooks-asyncapi.yml) — [AsyncAPI Specification](https://www.asyncapi.com/docs/reference/specification/latest)
 
 ## Common Properties
 
-- [Portal](https://docs.flagsmith.com/)
-- [Documentation](https://docs.flagsmith.com/docs)
-- [Website](https://flagsmith.com/)
-- [PrivacyPolicy](https://flagsmith.com/privacy-policy)
-- [TermsOfService](https://flagsmith.com/terms-of-service)
-- [Blog](https://flagsmith.com/blog)
-- [Login](https://app.flagsmith.com/)
-
-## Maintainers
-
-**FN:** API Evangelist
-
-**Email:** info@apievangelist.com
+- [GitHub Organization](https://github.com/Flagsmith)
+- [LinkedIn](https://www.linkedin.com/company/flagsmith)
+- [JSON-LD](json-ld/flagsmith-context.jsonld) — [JSON-LD](https://www.w3.org/TR/json-ld11/)
+- [JSON Schema](json-schema/flagsmith-feature-flag-schema.json) — [JSON Schema](https://json-schema.org/specification)
