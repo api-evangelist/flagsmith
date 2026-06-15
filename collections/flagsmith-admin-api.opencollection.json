@@ -1,0 +1,714 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Flagsmith Admin API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "Authorization",
+      "value": "{{Authorization}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Organisations",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List organisations",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.flagsmith.com/api/v1/organisations/"
+          },
+          "docs": "Retrieves a list of all organisations the authenticated user has access to. Returns organisation details including name, subscription information, and feature usage."
+        },
+        {
+          "info": {
+            "name": "Get an organisation",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.flagsmith.com/api/v1/organisations/:organisation_id/",
+            "params": [
+              {
+                "name": "organisation_id",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier for the organisation"
+              }
+            ]
+          },
+          "docs": "Retrieves the details of a specific organisation by its ID, including the organisation name, subscription plan, and feature usage limits."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Projects",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List projects",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.flagsmith.com/api/v1/projects/"
+          },
+          "docs": "Retrieves a list of all projects the authenticated user has access to across all organisations."
+        },
+        {
+          "info": {
+            "name": "Create a project",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.flagsmith.com/api/v1/projects/",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a new project within an organisation. Projects are containers for environments and feature flags."
+        },
+        {
+          "info": {
+            "name": "Get a project",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.flagsmith.com/api/v1/projects/:project_id/",
+            "params": [
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier for the project"
+              }
+            ]
+          },
+          "docs": "Retrieves the details of a specific project by its ID, including its name, organisation, and associated environments."
+        },
+        {
+          "info": {
+            "name": "Update a project",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.flagsmith.com/api/v1/projects/:project_id/",
+            "params": [
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier for the project"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Updates the details of an existing project. Allows modification of the project name and other configurable properties."
+        },
+        {
+          "info": {
+            "name": "Delete a project",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.flagsmith.com/api/v1/projects/:project_id/",
+            "params": [
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier for the project"
+              }
+            ]
+          },
+          "docs": "Permanently deletes a project and all associated environments, feature flags, and data. This action cannot be undone."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Environments",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List environments",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.flagsmith.com/api/v1/environments/"
+          },
+          "docs": "Retrieves a list of all environments the authenticated user has access to. Environments represent deployment stages within a project."
+        },
+        {
+          "info": {
+            "name": "Get an environment",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.flagsmith.com/api/v1/environments/:environment_api_key/",
+            "params": [
+              {
+                "name": "environment_api_key",
+                "value": "",
+                "type": "path",
+                "description": "The API key for the environment"
+              }
+            ]
+          },
+          "docs": "Retrieves the details of a specific environment by its API key, including its name, project, and feature states."
+        },
+        {
+          "info": {
+            "name": "Update an environment",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.flagsmith.com/api/v1/environments/:environment_api_key/",
+            "params": [
+              {
+                "name": "environment_api_key",
+                "value": "",
+                "type": "path",
+                "description": "The API key for the environment"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Updates the details of an existing environment including its name, description, and configuration properties."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Features",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List features for a project",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.flagsmith.com/api/v1/projects/:project_id/features/",
+            "params": [
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier for the project"
+              }
+            ]
+          },
+          "docs": "Retrieves a list of all feature flags defined within a specific project. Returns feature metadata including name, type, description, and default values."
+        },
+        {
+          "info": {
+            "name": "Create a feature flag",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.flagsmith.com/api/v1/projects/:project_id/features/",
+            "params": [
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier for the project"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a new feature flag within a project. The feature will be created across all environments with the specified default values."
+        },
+        {
+          "info": {
+            "name": "Get a feature flag",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.flagsmith.com/api/v1/projects/:project_id/features/:feature_id/",
+            "params": [
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier for the project"
+              },
+              {
+                "name": "feature_id",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier for the feature"
+              }
+            ]
+          },
+          "docs": "Retrieves the details of a specific feature flag by its ID within a project, including its configuration and multivariate options."
+        },
+        {
+          "info": {
+            "name": "Update a feature flag",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.flagsmith.com/api/v1/projects/:project_id/features/:feature_id/",
+            "params": [
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier for the project"
+              },
+              {
+                "name": "feature_id",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier for the feature"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Updates the details of an existing feature flag including its name, description, type, and multivariate options."
+        },
+        {
+          "info": {
+            "name": "Delete a feature flag",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.flagsmith.com/api/v1/projects/:project_id/features/:feature_id/",
+            "params": [
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier for the project"
+              },
+              {
+                "name": "feature_id",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier for the feature"
+              }
+            ]
+          },
+          "docs": "Permanently deletes a feature flag from a project. This removes the feature from all environments. This action cannot be undone."
+        },
+        {
+          "info": {
+            "name": "List feature states for an environment",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.flagsmith.com/api/v1/environments/:environment_api_key/featurestates/",
+            "params": [
+              {
+                "name": "environment_api_key",
+                "value": "",
+                "type": "path",
+                "description": "The API key for the environment"
+              }
+            ]
+          },
+          "docs": "Retrieves a list of all feature states within a specific environment. Feature states represent the enabled status and value of each feature flag within the environment."
+        },
+        {
+          "info": {
+            "name": "Update a feature state",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.flagsmith.com/api/v1/environments/:environment_api_key/featurestates/:feature_state_id/",
+            "params": [
+              {
+                "name": "environment_api_key",
+                "value": "",
+                "type": "path",
+                "description": "The API key for the environment"
+              },
+              {
+                "name": "feature_state_id",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier for the feature state"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Updates the state of a feature flag within a specific environment. Allows toggling the enabled status and changing the feature value."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Segments",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List segments for a project",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.flagsmith.com/api/v1/projects/:project_id/segments/",
+            "params": [
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier for the project"
+              }
+            ]
+          },
+          "docs": "Retrieves a list of all segments defined within a specific project. Segments define groups of users based on trait-based rules for targeted flag delivery."
+        },
+        {
+          "info": {
+            "name": "Create a segment",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.flagsmith.com/api/v1/projects/:project_id/segments/",
+            "params": [
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier for the project"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a new segment within a project. Segments define groups of users based on trait-based rules and conditions for targeted feature flag delivery."
+        },
+        {
+          "info": {
+            "name": "Get a segment",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.flagsmith.com/api/v1/projects/:project_id/segments/:segment_id/",
+            "params": [
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier for the project"
+              },
+              {
+                "name": "segment_id",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier for the segment"
+              }
+            ]
+          },
+          "docs": "Retrieves the details of a specific segment by its ID within a project, including its rules and conditions."
+        },
+        {
+          "info": {
+            "name": "Update a segment",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.flagsmith.com/api/v1/projects/:project_id/segments/:segment_id/",
+            "params": [
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier for the project"
+              },
+              {
+                "name": "segment_id",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier for the segment"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Updates the details of an existing segment including its name, description, and rules."
+        },
+        {
+          "info": {
+            "name": "Delete a segment",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.flagsmith.com/api/v1/projects/:project_id/segments/:segment_id/",
+            "params": [
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier for the project"
+              },
+              {
+                "name": "segment_id",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier for the segment"
+              }
+            ]
+          },
+          "docs": "Permanently deletes a segment from a project. Any segment overrides associated with this segment will also be removed. This action cannot be undone."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Identities",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List identities for an environment",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.flagsmith.com/api/v1/environments/:environment_api_key/identities/",
+            "params": [
+              {
+                "name": "environment_api_key",
+                "value": "",
+                "type": "path",
+                "description": "The API key for the environment"
+              }
+            ]
+          },
+          "docs": "Retrieves a paginated list of all user identities within a specific environment. Identities represent individual users with their associated traits and flag overrides."
+        },
+        {
+          "info": {
+            "name": "Get an identity",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.flagsmith.com/api/v1/environments/:environment_api_key/identities/:identity_id/",
+            "params": [
+              {
+                "name": "environment_api_key",
+                "value": "",
+                "type": "path",
+                "description": "The API key for the environment"
+              },
+              {
+                "name": "identity_id",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier for the identity"
+              }
+            ]
+          },
+          "docs": "Retrieves the details of a specific identity by its ID within an environment, including its identifier and associated traits."
+        },
+        {
+          "info": {
+            "name": "Delete an identity",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.flagsmith.com/api/v1/environments/:environment_api_key/identities/:identity_id/",
+            "params": [
+              {
+                "name": "environment_api_key",
+                "value": "",
+                "type": "path",
+                "description": "The API key for the environment"
+              },
+              {
+                "name": "identity_id",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier for the identity"
+              }
+            ]
+          },
+          "docs": "Permanently deletes an identity and all associated traits and flag overrides from an environment. This action cannot be undone."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Users",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List organisation users",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.flagsmith.com/api/v1/organisations/:organisation_id/users/",
+            "params": [
+              {
+                "name": "organisation_id",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier for the organisation"
+              }
+            ]
+          },
+          "docs": "Retrieves a list of all users belonging to a specific organisation, including their roles and permissions."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Webhooks",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List environment webhooks",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.flagsmith.com/api/v1/environments/:environment_api_key/webhooks/",
+            "params": [
+              {
+                "name": "environment_api_key",
+                "value": "",
+                "type": "path",
+                "description": "The API key for the environment"
+              }
+            ]
+          },
+          "docs": "Retrieves a list of all webhooks configured for a specific environment. Environment webhooks receive flag evaluation data for identified users."
+        },
+        {
+          "info": {
+            "name": "Create an environment webhook",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.flagsmith.com/api/v1/environments/:environment_api_key/webhooks/",
+            "params": [
+              {
+                "name": "environment_api_key",
+                "value": "",
+                "type": "path",
+                "description": "The API key for the environment"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a new webhook for an environment. The webhook will receive POST requests containing flag evaluation data whenever identities are evaluated."
+        },
+        {
+          "info": {
+            "name": "List organisation webhooks",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.flagsmith.com/api/v1/organisations/:organisation_id/webhooks/",
+            "params": [
+              {
+                "name": "organisation_id",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier for the organisation"
+              }
+            ]
+          },
+          "docs": "Retrieves a list of all webhooks configured for a specific organisation. Organisation webhooks receive audit log events for changes made across the organisation."
+        },
+        {
+          "info": {
+            "name": "Create an organisation webhook",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.flagsmith.com/api/v1/organisations/:organisation_id/webhooks/",
+            "params": [
+              {
+                "name": "organisation_id",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier for the organisation"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a new webhook for an organisation. The webhook will receive POST requests containing audit log events for changes made across the organisation."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}
