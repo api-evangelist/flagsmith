@@ -9,7 +9,7 @@ apis:
       - Flags
       - Remote Config
       - SDKs
-    image: https://kinlane-productions2.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+    image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
     baseURL: https://edge.api.flagsmith.com
     humanURL: https://docs.flagsmith.com/clients/rest
     properties:
@@ -31,7 +31,7 @@ apis:
       - Feature Flags
       - Projects
       - Segments
-    image: https://kinlane-productions2.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+    image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
     baseURL: https://api.flagsmith.com/api/v1
     humanURL: https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/admin-api
     properties:
