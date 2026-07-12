@@ -48,6 +48,10 @@ apis:
       Organisation API Token for authentication and provides a Swagger interface at api.flagsmith.com/api/v1/docs for
       interactive exploration.
 common:
+  - type: DomainSecurity
+    url: security/flagsmith-domain-security.yml
+  - type: Authentication
+    url: authentication/flagsmith-authentication.yml
   - type: GitHubOrganization
     url: https://github.com/Flagsmith
   - type: LinkedIn
@@ -56,6 +60,8 @@ common:
     url: json-ld/flagsmith-context.jsonld
   - type: JSONSchema
     url: json-schema/flagsmith-feature-flag-schema.json
+  - url: https://flagsmith.com/blog
+    type: Blog
 modified: '2026-05-19'
 description: >-
   Flagsmith is an open-source feature flag and remote configuration platform that helps developers manage feature flags

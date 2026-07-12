@@ -1,0 +1,25 @@
+generated: '2026-07-11'
+method: derived
+source: openapi/flagsmith-admin-api-openapi.yml, openapi/flagsmith-flags-api-openapi.yml
+summary:
+  types:
+  - apiKey
+  api_key_in:
+  - header
+schemes:
+- name: apiKeyAuth
+  type: apiKey
+  in: header
+  parameter: Authorization
+  description: A secret Organisation API Token prefixed with 'Api-Key'. For example, 'Api-Key
+    your-token-here'. This token should never be exposed in client-side code.
+  sources:
+  - openapi/flagsmith-admin-api-openapi.yml
+- name: environmentKey
+  type: apiKey
+  in: header
+  parameter: X-Environment-Key
+  description: A non-secret environment key used to identify which Flagsmith environment to
+    evaluate flags against. This key is safe to include in client-side code.
+  sources:
+  - openapi/flagsmith-flags-api-openapi.yml
