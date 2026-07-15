@@ -48,6 +48,8 @@ apis:
       Organisation API Token for authentication and provides a Swagger interface at api.flagsmith.com/api/v1/docs for
       interactive exploration.
 common:
+  - type: AgenticAccess
+    url: agentic-access/flagsmith-agentic-access.yml
   - type: DomainSecurity
     url: security/flagsmith-domain-security.yml
   - type: Authentication
