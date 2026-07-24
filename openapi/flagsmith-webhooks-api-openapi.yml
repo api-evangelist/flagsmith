@@ -1,0 +1,175 @@
+openapi: 3.1.0
+info:
+  title: Flagsmith Admin Environments Webhooks API
+  description: The Flagsmith Admin API allows developers to programmatically manage all aspects of their Flagsmith projects. Anything that can be done through the Flagsmith dashboard can also be accomplished via this API, including creating, updating, and deleting projects, environments, feature flags, segments, and users. It uses a secret Organisation API Token for authentication and provides a Swagger interface at api.flagsmith.com/api/v1/docs for interactive exploration.
+  version: '1.0'
+  contact:
+    name: Flagsmith Support
+    url: https://www.flagsmith.com/contact-us
+  termsOfService: https://www.flagsmith.com/terms-of-service
+servers:
+- url: https://api.flagsmith.com/api/v1
+  description: Flagsmith Production API
+security:
+- apiKeyAuth: []
+tags:
+- name: Webhooks
+  description: Configure webhooks for environments and organisations to receive notifications about flag changes and audit log events.
+paths:
+  /environments/{environment_api_key}/webhooks/:
+    get:
+      operationId: listEnvironmentWebhooks
+      summary: List environment webhooks
+      description: Retrieves a list of all webhooks configured for a specific environment. Environment webhooks receive flag evaluation data for identified users.
+      tags:
+      - Webhooks
+      parameters:
+      - $ref: '#/components/parameters/EnvironmentApiKey'
+      responses:
+        '200':
+          description: Successful response containing a list of webhooks
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Webhook'
+        '401':
+          description: Unauthorized - invalid or missing API token
+    post:
+      operationId: createEnvironmentWebhook
+      summary: Create an environment webhook
+      description: Creates a new webhook for an environment. The webhook will receive POST requests containing flag evaluation data whenever identities are evaluated.
+      tags:
+      - Webhooks
+      parameters:
+      - $ref: '#/components/parameters/EnvironmentApiKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WebhookInput'
+      responses:
+        '201':
+          description: Webhook created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Webhook'
+        '400':
+          description: Bad request - validation error
+        '401':
+          description: Unauthorized - invalid or missing API token
+  /organisations/{organisation_id}/webhooks/:
+    get:
+      operationId: listOrganisationWebhooks
+      summary: List organisation webhooks
+      description: Retrieves a list of all webhooks configured for a specific organisation. Organisation webhooks receive audit log events for changes made across the organisation.
+      tags:
+      - Webhooks
+      parameters:
+      - $ref: '#/components/parameters/OrganisationId'
+      responses:
+        '200':
+          description: Successful response containing a list of webhooks
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Webhook'
+        '401':
+          description: Unauthorized - invalid or missing API token
+    post:
+      operationId: createOrganisationWebhook
+      summary: Create an organisation webhook
+      description: Creates a new webhook for an organisation. The webhook will receive POST requests containing audit log events for changes made across the organisation.
+      tags:
+      - Webhooks
+      parameters:
+      - $ref: '#/components/parameters/OrganisationId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WebhookInput'
+      responses:
+        '201':
+          description: Webhook created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Webhook'
+        '400':
+          description: Bad request - validation error
+        '401':
+          description: Unauthorized - invalid or missing API token
+components:
+  schemas:
+    WebhookInput:
+      type: object
+      description: Input object for creating or updating a webhook
+      required:
+      - url
+      properties:
+        url:
+          type: string
+          format: uri
+          description: The URL to send webhook events to
+        enabled:
+          type: boolean
+          description: Whether the webhook should be enabled
+        secret:
+          type: string
+          description: Optional secret for signing webhook payloads with HMAC-SHA256
+    Webhook:
+      type: object
+      description: A webhook configuration for receiving event notifications from Flagsmith.
+      properties:
+        id:
+          type: integer
+          description: The unique identifier for this webhook
+        url:
+          type: string
+          format: uri
+          description: The URL to send webhook events to
+        enabled:
+          type: boolean
+          description: Whether the webhook is currently enabled
+        created_at:
+          type: string
+          format: date-time
+          description: When the webhook was created
+        updated_at:
+          type: string
+          format: date-time
+          description: When the webhook was last updated
+        secret:
+          type: string
+          description: Optional secret used to sign webhook payloads with HMAC-SHA256 for verification
+  parameters:
+    OrganisationId:
+      name: organisation_id
+      in: path
+      description: The unique identifier for the organisation
+      required: true
+      schema:
+        type: integer
+    EnvironmentApiKey:
+      name: environment_api_key
+      in: path
+      description: The API key for the environment
+      required: true
+      schema:
+        type: string
+  securitySchemes:
+    apiKeyAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: A secret Organisation API Token prefixed with 'Api-Key'. For example, 'Api-Key your-token-here'. This token should never be exposed in client-side code.
+externalDocs:
+  description: Flagsmith Admin API Documentation
+  url: https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/admin-api

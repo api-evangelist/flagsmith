@@ -1,0 +1,119 @@
+openapi: 3.1.0
+info:
+  title: Flagsmith Admin Environments Organisations API
+  description: The Flagsmith Admin API allows developers to programmatically manage all aspects of their Flagsmith projects. Anything that can be done through the Flagsmith dashboard can also be accomplished via this API, including creating, updating, and deleting projects, environments, feature flags, segments, and users. It uses a secret Organisation API Token for authentication and provides a Swagger interface at api.flagsmith.com/api/v1/docs for interactive exploration.
+  version: '1.0'
+  contact:
+    name: Flagsmith Support
+    url: https://www.flagsmith.com/contact-us
+  termsOfService: https://www.flagsmith.com/terms-of-service
+servers:
+- url: https://api.flagsmith.com/api/v1
+  description: Flagsmith Production API
+security:
+- apiKeyAuth: []
+tags:
+- name: Organisations
+  description: Manage organisations within Flagsmith. Organisations are the top-level container for projects, users, and billing.
+paths:
+  /organisations/:
+    get:
+      operationId: listOrganisations
+      summary: List organisations
+      description: Retrieves a list of all organisations the authenticated user has access to. Returns organisation details including name, subscription information, and feature usage.
+      tags:
+      - Organisations
+      responses:
+        '200':
+          description: Successful response containing a list of organisations
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedResponse'
+        '401':
+          description: Unauthorized - invalid or missing API token
+  /organisations/{organisation_id}/:
+    get:
+      operationId: getOrganisation
+      summary: Get an organisation
+      description: Retrieves the details of a specific organisation by its ID, including the organisation name, subscription plan, and feature usage limits.
+      tags:
+      - Organisations
+      parameters:
+      - $ref: '#/components/parameters/OrganisationId'
+      responses:
+        '200':
+          description: Successful response containing the organisation details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Organisation'
+        '401':
+          description: Unauthorized - invalid or missing API token
+        '404':
+          description: Organisation not found
+components:
+  schemas:
+    Organisation:
+      type: object
+      description: An organisation in Flagsmith, the top-level container for projects, users, and billing.
+      properties:
+        id:
+          type: integer
+          description: The unique identifier for this organisation
+        name:
+          type: string
+          description: The name of the organisation
+        created_date:
+          type: string
+          format: date-time
+          description: When the organisation was created
+        webhook_notification_email:
+          type: string
+          nullable: true
+          description: Email address for webhook failure notifications
+        num_seats:
+          type: integer
+          description: Number of available seats in the organisation
+        persist_trait_data:
+          type: boolean
+          description: Whether trait data is persisted for identities
+    PaginatedResponse:
+      type: object
+      description: A paginated response wrapper containing the results count and navigation links.
+      properties:
+        count:
+          type: integer
+          description: The total number of results
+        next:
+          type: string
+          nullable: true
+          format: uri
+          description: URL to the next page of results
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          description: URL to the previous page of results
+        results:
+          type: array
+          description: The array of result objects for this page
+          items:
+            type: object
+  parameters:
+    OrganisationId:
+      name: organisation_id
+      in: path
+      description: The unique identifier for the organisation
+      required: true
+      schema:
+        type: integer
+  securitySchemes:
+    apiKeyAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: A secret Organisation API Token prefixed with 'Api-Key'. For example, 'Api-Key your-token-here'. This token should never be exposed in client-side code.
+externalDocs:
+  description: Flagsmith Admin API Documentation
+  url: https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/admin-api

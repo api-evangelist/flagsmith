@@ -1,0 +1,151 @@
+openapi: 3.1.0
+info:
+  title: Flagsmith Admin Environments API
+  description: The Flagsmith Admin API allows developers to programmatically manage all aspects of their Flagsmith projects. Anything that can be done through the Flagsmith dashboard can also be accomplished via this API, including creating, updating, and deleting projects, environments, feature flags, segments, and users. It uses a secret Organisation API Token for authentication and provides a Swagger interface at api.flagsmith.com/api/v1/docs for interactive exploration.
+  version: '1.0'
+  contact:
+    name: Flagsmith Support
+    url: https://www.flagsmith.com/contact-us
+  termsOfService: https://www.flagsmith.com/terms-of-service
+servers:
+- url: https://api.flagsmith.com/api/v1
+  description: Flagsmith Production API
+security:
+- apiKeyAuth: []
+tags:
+- name: Environments
+  description: Manage environments within a project. Environments represent deployment stages such as development, staging, and production.
+paths:
+  /environments/:
+    get:
+      operationId: listEnvironments
+      summary: List environments
+      description: Retrieves a list of all environments the authenticated user has access to. Environments represent deployment stages within a project.
+      tags:
+      - Environments
+      responses:
+        '200':
+          description: Successful response containing a list of environments
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Environment'
+        '401':
+          description: Unauthorized - invalid or missing API token
+  /environments/{environment_api_key}/:
+    get:
+      operationId: getEnvironment
+      summary: Get an environment
+      description: Retrieves the details of a specific environment by its API key, including its name, project, and feature states.
+      tags:
+      - Environments
+      parameters:
+      - $ref: '#/components/parameters/EnvironmentApiKey'
+      responses:
+        '200':
+          description: Successful response containing the environment details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Environment'
+        '401':
+          description: Unauthorized - invalid or missing API token
+        '404':
+          description: Environment not found
+    put:
+      operationId: updateEnvironment
+      summary: Update an environment
+      description: Updates the details of an existing environment including its name, description, and configuration properties.
+      tags:
+      - Environments
+      parameters:
+      - $ref: '#/components/parameters/EnvironmentApiKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EnvironmentInput'
+      responses:
+        '200':
+          description: Environment updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Environment'
+        '400':
+          description: Bad request - validation error
+        '401':
+          description: Unauthorized - invalid or missing API token
+        '404':
+          description: Environment not found
+components:
+  schemas:
+    EnvironmentInput:
+      type: object
+      description: Input object for updating an environment
+      required:
+      - name
+      properties:
+        name:
+          type: string
+          description: The name of the environment
+        description:
+          type: string
+          nullable: true
+          description: A description of the environment
+        allow_client_traits:
+          type: boolean
+          description: Whether client-side SDKs can set traits
+        hide_sensitive_data:
+          type: boolean
+          description: Whether sensitive data is hidden in the dashboard
+    Environment:
+      type: object
+      description: An environment in Flagsmith representing a deployment stage such as development, staging, or production.
+      properties:
+        id:
+          type: integer
+          description: The unique identifier for this environment
+        name:
+          type: string
+          description: The name of the environment
+        api_key:
+          type: string
+          description: The client-side API key for this environment
+        description:
+          type: string
+          nullable: true
+          description: A description of the environment
+        project:
+          type: integer
+          description: The ID of the project this environment belongs to
+        minimum_change_request_approvals:
+          type: integer
+          nullable: true
+          description: Minimum number of approvals required for change requests in this environment
+        allow_client_traits:
+          type: boolean
+          description: Whether client-side SDKs can set traits
+        hide_sensitive_data:
+          type: boolean
+          description: Whether sensitive data is hidden in the dashboard
+  parameters:
+    EnvironmentApiKey:
+      name: environment_api_key
+      in: path
+      description: The API key for the environment
+      required: true
+      schema:
+        type: string
+  securitySchemes:
+    apiKeyAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: A secret Organisation API Token prefixed with 'Api-Key'. For example, 'Api-Key your-token-here'. This token should never be exposed in client-side code.
+externalDocs:
+  description: Flagsmith Admin API Documentation
+  url: https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/admin-api

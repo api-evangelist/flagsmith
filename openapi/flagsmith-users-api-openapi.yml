@@ -1,0 +1,82 @@
+openapi: 3.1.0
+info:
+  title: Flagsmith Admin Environments Users API
+  description: The Flagsmith Admin API allows developers to programmatically manage all aspects of their Flagsmith projects. Anything that can be done through the Flagsmith dashboard can also be accomplished via this API, including creating, updating, and deleting projects, environments, feature flags, segments, and users. It uses a secret Organisation API Token for authentication and provides a Swagger interface at api.flagsmith.com/api/v1/docs for interactive exploration.
+  version: '1.0'
+  contact:
+    name: Flagsmith Support
+    url: https://www.flagsmith.com/contact-us
+  termsOfService: https://www.flagsmith.com/terms-of-service
+servers:
+- url: https://api.flagsmith.com/api/v1
+  description: Flagsmith Production API
+security:
+- apiKeyAuth: []
+tags:
+- name: Users
+  description: Manage organisation users and their permissions within Flagsmith.
+paths:
+  /organisations/{organisation_id}/users/:
+    get:
+      operationId: listOrganisationUsers
+      summary: List organisation users
+      description: Retrieves a list of all users belonging to a specific organisation, including their roles and permissions.
+      tags:
+      - Users
+      parameters:
+      - $ref: '#/components/parameters/OrganisationId'
+      responses:
+        '200':
+          description: Successful response containing a list of users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OrganisationUser'
+        '401':
+          description: Unauthorized - invalid or missing API token
+        '404':
+          description: Organisation not found
+components:
+  schemas:
+    OrganisationUser:
+      type: object
+      description: A user within an organisation including their role and permissions.
+      properties:
+        id:
+          type: integer
+          description: The unique identifier for this user
+        email:
+          type: string
+          format: email
+          description: The user's email address
+        first_name:
+          type: string
+          description: The user's first name
+        last_name:
+          type: string
+          description: The user's last name
+        role:
+          type: string
+          enum:
+          - ADMIN
+          - USER
+          description: The user's role within the organisation
+  parameters:
+    OrganisationId:
+      name: organisation_id
+      in: path
+      description: The unique identifier for the organisation
+      required: true
+      schema:
+        type: integer
+  securitySchemes:
+    apiKeyAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: A secret Organisation API Token prefixed with 'Api-Key'. For example, 'Api-Key your-token-here'. This token should never be exposed in client-side code.
+externalDocs:
+  description: Flagsmith Admin API Documentation
+  url: https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/admin-api

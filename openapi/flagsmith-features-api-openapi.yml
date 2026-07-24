@@ -1,0 +1,409 @@
+openapi: 3.1.0
+info:
+  title: Flagsmith Admin Environments Features API
+  description: The Flagsmith Admin API allows developers to programmatically manage all aspects of their Flagsmith projects. Anything that can be done through the Flagsmith dashboard can also be accomplished via this API, including creating, updating, and deleting projects, environments, feature flags, segments, and users. It uses a secret Organisation API Token for authentication and provides a Swagger interface at api.flagsmith.com/api/v1/docs for interactive exploration.
+  version: '1.0'
+  contact:
+    name: Flagsmith Support
+    url: https://www.flagsmith.com/contact-us
+  termsOfService: https://www.flagsmith.com/terms-of-service
+servers:
+- url: https://api.flagsmith.com/api/v1
+  description: Flagsmith Production API
+security:
+- apiKeyAuth: []
+tags:
+- name: Features
+  description: Manage feature flags within a project. Features can be toggled on or off and can have remote configuration values.
+paths:
+  /projects/{project_id}/features/:
+    get:
+      operationId: listFeatures
+      summary: List features for a project
+      description: Retrieves a list of all feature flags defined within a specific project. Returns feature metadata including name, type, description, and default values.
+      tags:
+      - Features
+      parameters:
+      - $ref: '#/components/parameters/ProjectId'
+      responses:
+        '200':
+          description: Successful response containing a list of features
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedResponse'
+        '401':
+          description: Unauthorized - invalid or missing API token
+        '404':
+          description: Project not found
+    post:
+      operationId: createFeature
+      summary: Create a feature flag
+      description: Creates a new feature flag within a project. The feature will be created across all environments with the specified default values.
+      tags:
+      - Features
+      parameters:
+      - $ref: '#/components/parameters/ProjectId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FeatureInput'
+      responses:
+        '201':
+          description: Feature created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdminFeature'
+        '400':
+          description: Bad request - validation error
+        '401':
+          description: Unauthorized - invalid or missing API token
+        '404':
+          description: Project not found
+  /projects/{project_id}/features/{feature_id}/:
+    get:
+      operationId: getFeature
+      summary: Get a feature flag
+      description: Retrieves the details of a specific feature flag by its ID within a project, including its configuration and multivariate options.
+      tags:
+      - Features
+      parameters:
+      - $ref: '#/components/parameters/ProjectId'
+      - $ref: '#/components/parameters/FeatureId'
+      responses:
+        '200':
+          description: Successful response containing the feature details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdminFeature'
+        '401':
+          description: Unauthorized - invalid or missing API token
+        '404':
+          description: Feature or project not found
+    put:
+      operationId: updateFeature
+      summary: Update a feature flag
+      description: Updates the details of an existing feature flag including its name, description, type, and multivariate options.
+      tags:
+      - Features
+      parameters:
+      - $ref: '#/components/parameters/ProjectId'
+      - $ref: '#/components/parameters/FeatureId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FeatureInput'
+      responses:
+        '200':
+          description: Feature updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdminFeature'
+        '400':
+          description: Bad request - validation error
+        '401':
+          description: Unauthorized - invalid or missing API token
+        '404':
+          description: Feature or project not found
+    delete:
+      operationId: deleteFeature
+      summary: Delete a feature flag
+      description: Permanently deletes a feature flag from a project. This removes the feature from all environments. This action cannot be undone.
+      tags:
+      - Features
+      parameters:
+      - $ref: '#/components/parameters/ProjectId'
+      - $ref: '#/components/parameters/FeatureId'
+      responses:
+        '204':
+          description: Feature deleted successfully
+        '401':
+          description: Unauthorized - invalid or missing API token
+        '404':
+          description: Feature or project not found
+  /environments/{environment_api_key}/featurestates/:
+    get:
+      operationId: listFeatureStates
+      summary: List feature states for an environment
+      description: Retrieves a list of all feature states within a specific environment. Feature states represent the enabled status and value of each feature flag within the environment.
+      tags:
+      - Features
+      parameters:
+      - $ref: '#/components/parameters/EnvironmentApiKey'
+      responses:
+        '200':
+          description: Successful response containing a list of feature states
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedResponse'
+        '401':
+          description: Unauthorized - invalid or missing API token
+        '404':
+          description: Environment not found
+  /environments/{environment_api_key}/featurestates/{feature_state_id}/:
+    patch:
+      operationId: updateFeatureState
+      summary: Update a feature state
+      description: Updates the state of a feature flag within a specific environment. Allows toggling the enabled status and changing the feature value.
+      tags:
+      - Features
+      parameters:
+      - $ref: '#/components/parameters/EnvironmentApiKey'
+      - $ref: '#/components/parameters/FeatureStateId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FeatureStateInput'
+      responses:
+        '200':
+          description: Feature state updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FeatureState'
+        '400':
+          description: Bad request - validation error
+        '401':
+          description: Unauthorized - invalid or missing API token
+        '404':
+          description: Feature state or environment not found
+components:
+  schemas:
+    FeatureState:
+      type: object
+      description: The state of a feature flag within a specific environment, including its enabled status and current value.
+      properties:
+        id:
+          type: integer
+          description: The unique identifier for this feature state
+        feature:
+          type: integer
+          description: The ID of the feature
+        enabled:
+          type: boolean
+          description: Whether the feature is currently enabled
+        feature_state_value:
+          description: The current value of the feature state
+          oneOf:
+          - type: string
+          - type: integer
+          - type: boolean
+          - type: 'null'
+        environment:
+          type: integer
+          description: The ID of the environment
+        identity:
+          type: integer
+          nullable: true
+          description: The identity ID for identity overrides
+        feature_segment:
+          type: integer
+          nullable: true
+          description: The feature segment ID for segment overrides
+    FeatureStateInput:
+      type: object
+      description: Input object for updating a feature state
+      properties:
+        enabled:
+          type: boolean
+          description: Whether the feature should be enabled
+        feature_state_value:
+          description: The value to set for this feature state
+          oneOf:
+          - type: string
+          - type: integer
+          - type: boolean
+          - type: 'null'
+    FeatureInput:
+      type: object
+      description: Input object for creating or updating a feature flag
+      required:
+      - name
+      properties:
+        name:
+          type: string
+          description: The name of the feature flag
+          maxLength: 2000
+          pattern: ^[-_.a-zA-Z0-9]+$
+        description:
+          type: string
+          nullable: true
+          description: A human-readable description of the feature
+        initial_value:
+          type: string
+          nullable: true
+          description: The initial value for the feature
+        default_enabled:
+          type: boolean
+          description: Whether the feature is enabled by default
+        type:
+          type: string
+          enum:
+          - STANDARD
+          - MULTIVARIATE
+          description: The type of feature flag
+        is_archived:
+          type: boolean
+          description: Whether the feature is archived
+        tags:
+          type: array
+          description: Tag IDs to associate with this feature
+          items:
+            type: integer
+    MultivariateOption:
+      type: object
+      description: A multivariate option representing one of the possible values for a multivariate feature flag.
+      properties:
+        id:
+          type: integer
+          description: The unique identifier for this option
+        type:
+          type: string
+          description: The data type of the option value
+        string_value:
+          type: string
+          nullable: true
+          description: The string value of this option
+        integer_value:
+          type: integer
+          nullable: true
+          description: The integer value of this option
+        boolean_value:
+          type: boolean
+          nullable: true
+          description: The boolean value of this option
+        default_percentage_allocation:
+          type: number
+          format: float
+          minimum: 0
+          maximum: 100
+          description: The default percentage of users who will receive this option
+    PaginatedResponse:
+      type: object
+      description: A paginated response wrapper containing the results count and navigation links.
+      properties:
+        count:
+          type: integer
+          description: The total number of results
+        next:
+          type: string
+          nullable: true
+          format: uri
+          description: URL to the next page of results
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          description: URL to the previous page of results
+        results:
+          type: array
+          description: The array of result objects for this page
+          items:
+            type: object
+    AdminFeature:
+      type: object
+      description: A feature flag definition in the admin API containing full metadata and configuration options.
+      properties:
+        id:
+          type: integer
+          description: The unique identifier for this feature
+        name:
+          type: string
+          description: The name of the feature flag
+        created_date:
+          type: string
+          format: date-time
+          description: When the feature was created
+        description:
+          type: string
+          nullable: true
+          description: A human-readable description of the feature
+        initial_value:
+          type: string
+          nullable: true
+          description: The initial value assigned to the feature
+        default_enabled:
+          type: boolean
+          description: Whether the feature is enabled by default
+        type:
+          type: string
+          enum:
+          - STANDARD
+          - MULTIVARIATE
+          description: The type of feature flag
+        project:
+          type: integer
+          description: The ID of the project this feature belongs to
+        is_archived:
+          type: boolean
+          description: Whether the feature is archived
+        owners:
+          type: array
+          description: Users who own this feature
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                description: The user ID
+              email:
+                type: string
+                description: The user email
+        tags:
+          type: array
+          description: Tags associated with this feature
+          items:
+            type: integer
+        multivariate_options:
+          type: array
+          description: Multivariate options for this feature
+          items:
+            $ref: '#/components/schemas/MultivariateOption'
+  parameters:
+    ProjectId:
+      name: project_id
+      in: path
+      description: The unique identifier for the project
+      required: true
+      schema:
+        type: integer
+    FeatureId:
+      name: feature_id
+      in: path
+      description: The unique identifier for the feature
+      required: true
+      schema:
+        type: integer
+    FeatureStateId:
+      name: feature_state_id
+      in: path
+      description: The unique identifier for the feature state
+      required: true
+      schema:
+        type: integer
+    EnvironmentApiKey:
+      name: environment_api_key
+      in: path
+      description: The API key for the environment
+      required: true
+      schema:
+        type: string
+  securitySchemes:
+    apiKeyAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: A secret Organisation API Token prefixed with 'Api-Key'. For example, 'Api-Key your-token-here'. This token should never be exposed in client-side code.
+externalDocs:
+  description: Flagsmith Admin API Documentation
+  url: https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/admin-api

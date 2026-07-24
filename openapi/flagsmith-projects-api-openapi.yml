@@ -1,0 +1,177 @@
+openapi: 3.1.0
+info:
+  title: Flagsmith Admin Environments Projects API
+  description: The Flagsmith Admin API allows developers to programmatically manage all aspects of their Flagsmith projects. Anything that can be done through the Flagsmith dashboard can also be accomplished via this API, including creating, updating, and deleting projects, environments, feature flags, segments, and users. It uses a secret Organisation API Token for authentication and provides a Swagger interface at api.flagsmith.com/api/v1/docs for interactive exploration.
+  version: '1.0'
+  contact:
+    name: Flagsmith Support
+    url: https://www.flagsmith.com/contact-us
+  termsOfService: https://www.flagsmith.com/terms-of-service
+servers:
+- url: https://api.flagsmith.com/api/v1
+  description: Flagsmith Production API
+security:
+- apiKeyAuth: []
+tags:
+- name: Projects
+  description: Manage projects within an organisation. Projects contain environments and feature flags.
+paths:
+  /projects/:
+    get:
+      operationId: listProjects
+      summary: List projects
+      description: Retrieves a list of all projects the authenticated user has access to across all organisations.
+      tags:
+      - Projects
+      responses:
+        '200':
+          description: Successful response containing a list of projects
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Project'
+        '401':
+          description: Unauthorized - invalid or missing API token
+    post:
+      operationId: createProject
+      summary: Create a project
+      description: Creates a new project within an organisation. Projects are containers for environments and feature flags.
+      tags:
+      - Projects
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProjectInput'
+      responses:
+        '201':
+          description: Project created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+        '400':
+          description: Bad request - validation error
+        '401':
+          description: Unauthorized - invalid or missing API token
+  /projects/{project_id}/:
+    get:
+      operationId: getProject
+      summary: Get a project
+      description: Retrieves the details of a specific project by its ID, including its name, organisation, and associated environments.
+      tags:
+      - Projects
+      parameters:
+      - $ref: '#/components/parameters/ProjectId'
+      responses:
+        '200':
+          description: Successful response containing the project details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+        '401':
+          description: Unauthorized - invalid or missing API token
+        '404':
+          description: Project not found
+    put:
+      operationId: updateProject
+      summary: Update a project
+      description: Updates the details of an existing project. Allows modification of the project name and other configurable properties.
+      tags:
+      - Projects
+      parameters:
+      - $ref: '#/components/parameters/ProjectId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProjectInput'
+      responses:
+        '200':
+          description: Project updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+        '400':
+          description: Bad request - validation error
+        '401':
+          description: Unauthorized - invalid or missing API token
+        '404':
+          description: Project not found
+    delete:
+      operationId: deleteProject
+      summary: Delete a project
+      description: Permanently deletes a project and all associated environments, feature flags, and data. This action cannot be undone.
+      tags:
+      - Projects
+      parameters:
+      - $ref: '#/components/parameters/ProjectId'
+      responses:
+        '204':
+          description: Project deleted successfully
+        '401':
+          description: Unauthorized - invalid or missing API token
+        '404':
+          description: Project not found
+components:
+  schemas:
+    Project:
+      type: object
+      description: A project in Flagsmith, containing environments and feature flag definitions.
+      properties:
+        id:
+          type: integer
+          description: The unique identifier for this project
+        name:
+          type: string
+          description: The name of the project
+        created_date:
+          type: string
+          format: date-time
+          description: When the project was created
+        organisation:
+          type: integer
+          description: The ID of the organisation this project belongs to
+        hide_disabled_flags:
+          type: boolean
+          description: Whether to hide disabled flags from SDK responses
+        enable_realtime_updates:
+          type: boolean
+          description: Whether real-time flag updates are enabled
+    ProjectInput:
+      type: object
+      description: Input object for creating or updating a project
+      required:
+      - name
+      - organisation
+      properties:
+        name:
+          type: string
+          description: The name of the project
+          maxLength: 2000
+        organisation:
+          type: integer
+          description: The ID of the organisation to create the project in
+  parameters:
+    ProjectId:
+      name: project_id
+      in: path
+      description: The unique identifier for the project
+      required: true
+      schema:
+        type: integer
+  securitySchemes:
+    apiKeyAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: A secret Organisation API Token prefixed with 'Api-Key'. For example, 'Api-Key your-token-here'. This token should never be exposed in client-side code.
+externalDocs:
+  description: Flagsmith Admin API Documentation
+  url: https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/admin-api

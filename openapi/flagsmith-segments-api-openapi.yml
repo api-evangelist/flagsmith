@@ -1,0 +1,271 @@
+openapi: 3.1.0
+info:
+  title: Flagsmith Admin Environments Segments API
+  description: The Flagsmith Admin API allows developers to programmatically manage all aspects of their Flagsmith projects. Anything that can be done through the Flagsmith dashboard can also be accomplished via this API, including creating, updating, and deleting projects, environments, feature flags, segments, and users. It uses a secret Organisation API Token for authentication and provides a Swagger interface at api.flagsmith.com/api/v1/docs for interactive exploration.
+  version: '1.0'
+  contact:
+    name: Flagsmith Support
+    url: https://www.flagsmith.com/contact-us
+  termsOfService: https://www.flagsmith.com/terms-of-service
+servers:
+- url: https://api.flagsmith.com/api/v1
+  description: Flagsmith Production API
+security:
+- apiKeyAuth: []
+tags:
+- name: Segments
+  description: Manage segments within a project. Segments define groups of users based on traits and rules for targeted flag delivery.
+paths:
+  /projects/{project_id}/segments/:
+    get:
+      operationId: listSegments
+      summary: List segments for a project
+      description: Retrieves a list of all segments defined within a specific project. Segments define groups of users based on trait-based rules for targeted flag delivery.
+      tags:
+      - Segments
+      parameters:
+      - $ref: '#/components/parameters/ProjectId'
+      responses:
+        '200':
+          description: Successful response containing a list of segments
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedResponse'
+        '401':
+          description: Unauthorized - invalid or missing API token
+        '404':
+          description: Project not found
+    post:
+      operationId: createSegment
+      summary: Create a segment
+      description: Creates a new segment within a project. Segments define groups of users based on trait-based rules and conditions for targeted feature flag delivery.
+      tags:
+      - Segments
+      parameters:
+      - $ref: '#/components/parameters/ProjectId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SegmentInput'
+      responses:
+        '201':
+          description: Segment created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Segment'
+        '400':
+          description: Bad request - validation error
+        '401':
+          description: Unauthorized - invalid or missing API token
+        '404':
+          description: Project not found
+  /projects/{project_id}/segments/{segment_id}/:
+    get:
+      operationId: getSegment
+      summary: Get a segment
+      description: Retrieves the details of a specific segment by its ID within a project, including its rules and conditions.
+      tags:
+      - Segments
+      parameters:
+      - $ref: '#/components/parameters/ProjectId'
+      - $ref: '#/components/parameters/SegmentId'
+      responses:
+        '200':
+          description: Successful response containing the segment details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Segment'
+        '401':
+          description: Unauthorized - invalid or missing API token
+        '404':
+          description: Segment or project not found
+    put:
+      operationId: updateSegment
+      summary: Update a segment
+      description: Updates the details of an existing segment including its name, description, and rules.
+      tags:
+      - Segments
+      parameters:
+      - $ref: '#/components/parameters/ProjectId'
+      - $ref: '#/components/parameters/SegmentId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SegmentInput'
+      responses:
+        '200':
+          description: Segment updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Segment'
+        '400':
+          description: Bad request - validation error
+        '401':
+          description: Unauthorized - invalid or missing API token
+        '404':
+          description: Segment or project not found
+    delete:
+      operationId: deleteSegment
+      summary: Delete a segment
+      description: Permanently deletes a segment from a project. Any segment overrides associated with this segment will also be removed. This action cannot be undone.
+      tags:
+      - Segments
+      parameters:
+      - $ref: '#/components/parameters/ProjectId'
+      - $ref: '#/components/parameters/SegmentId'
+      responses:
+        '204':
+          description: Segment deleted successfully
+        '401':
+          description: Unauthorized - invalid or missing API token
+        '404':
+          description: Segment or project not found
+components:
+  schemas:
+    Segment:
+      type: object
+      description: A segment defines a group of users based on trait-based rules for targeted feature flag delivery.
+      properties:
+        id:
+          type: integer
+          description: The unique identifier for this segment
+        name:
+          type: string
+          description: The name of the segment
+        description:
+          type: string
+          nullable: true
+          description: A description of the segment
+        project:
+          type: integer
+          description: The ID of the project this segment belongs to
+        rules:
+          type: array
+          description: The rules that define segment membership
+          items:
+            $ref: '#/components/schemas/SegmentRule'
+    SegmentInput:
+      type: object
+      description: Input object for creating or updating a segment
+      required:
+      - name
+      - project
+      - rules
+      properties:
+        name:
+          type: string
+          description: The name of the segment
+        description:
+          type: string
+          nullable: true
+          description: A description of the segment
+        project:
+          type: integer
+          description: The ID of the project
+        rules:
+          type: array
+          description: The rules that define segment membership
+          items:
+            $ref: '#/components/schemas/SegmentRule'
+    PaginatedResponse:
+      type: object
+      description: A paginated response wrapper containing the results count and navigation links.
+      properties:
+        count:
+          type: integer
+          description: The total number of results
+        next:
+          type: string
+          nullable: true
+          format: uri
+          description: URL to the next page of results
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          description: URL to the previous page of results
+        results:
+          type: array
+          description: The array of result objects for this page
+          items:
+            type: object
+    SegmentRule:
+      type: object
+      description: A rule within a segment that defines conditions for membership. Rules can be combined with AND/OR logic.
+      properties:
+        type:
+          type: string
+          enum:
+          - ALL
+          - ANY
+          - NONE
+          description: The logical operator for combining conditions within this rule. ALL requires all conditions to match, ANY requires at least one, NONE requires none to match.
+        rules:
+          type: array
+          description: Nested sub-rules for complex logic
+          items:
+            $ref: '#/components/schemas/SegmentRule'
+        conditions:
+          type: array
+          description: The conditions that make up this rule
+          items:
+            $ref: '#/components/schemas/SegmentCondition'
+    SegmentCondition:
+      type: object
+      description: A condition within a segment rule that evaluates a trait against a value using an operator.
+      properties:
+        operator:
+          type: string
+          enum:
+          - EQUAL
+          - NOT_EQUAL
+          - GREATER_THAN
+          - GREATER_THAN_INCLUSIVE
+          - LESS_THAN
+          - LESS_THAN_INCLUSIVE
+          - CONTAINS
+          - NOT_CONTAINS
+          - REGEX
+          - PERCENTAGE_SPLIT
+          - IS_SET
+          - IS_NOT_SET
+          - IN
+          description: The comparison operator to use
+        property_:
+          type: string
+          description: The trait key to evaluate
+        value:
+          type: string
+          description: The value to compare against
+  parameters:
+    SegmentId:
+      name: segment_id
+      in: path
+      description: The unique identifier for the segment
+      required: true
+      schema:
+        type: integer
+    ProjectId:
+      name: project_id
+      in: path
+      description: The unique identifier for the project
+      required: true
+      schema:
+        type: integer
+  securitySchemes:
+    apiKeyAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: A secret Organisation API Token prefixed with 'Api-Key'. For example, 'Api-Key your-token-here'. This token should never be exposed in client-side code.
+externalDocs:
+  description: Flagsmith Admin API Documentation
+  url: https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/admin-api
