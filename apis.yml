@@ -1,52 +1,166 @@
 aid: flagsmith
+accessModel:
+  pricing: freemium
+  onboarding: self-serve
+  trial: false
+  try_now: true
+  public: false
+  label: Freemium · Self-serve signup
+  confidence: high
+  source:
+  - plans
+  - authentication
+  generated: '2026-07-22'
+  method: derived
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/flagsmith.png
 url: https://raw.githubusercontent.com/api-evangelist/flagsmith/refs/heads/main/apis.yml
 apis:
-  - aid: flagsmith:flags-api
-    name: Flagsmith Flags API
-    tags:
-      - Edge
-      - Feature Flags
-      - Flags
-      - Remote Config
-      - SDKs
-    image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-    baseURL: https://edge.api.flagsmith.com
-    humanURL: https://docs.flagsmith.com/clients/rest
-    properties:
-      - url: https://docs.flagsmith.com/clients/rest
-        type: Documentation
-      - url: openapi/flagsmith-flags-api-openapi.yml
-        type: OpenAPI
-    description: >-
-      The Flagsmith Flags API is the public-facing REST API that client-side and server-side SDKs use to retrieve
-      feature flag values and remote configuration for environments and users. It uses a non-secret Environment Key for
-      authentication and is designed to be fast, scalable, and publicly accessible. The Edge API endpoint at
-      edge.api.flagsmith.com serves requests from AWS Lambda functions running in data centers near the client,
-      providing low-latency global access to flag evaluations.
-  - aid: flagsmith:admin-api
-    name: Flagsmith Admin API
-    tags:
-      - Administration
-      - Environments
-      - Feature Flags
-      - Projects
-      - Segments
-    image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-    baseURL: https://api.flagsmith.com/api/v1
-    humanURL: https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/admin-api
-    properties:
-      - url: https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/admin-api
-        type: Documentation
-      - url: openapi/flagsmith-admin-api-openapi.yml
-        type: OpenAPI
-      - url: asyncapi/flagsmith-webhooks-asyncapi.yml
-        type: AsyncAPI
-    description: >-
-      The Flagsmith Admin API allows developers to programmatically manage all aspects of their Flagsmith projects.
-      Anything that can be done through the Flagsmith dashboard can also be accomplished via this API, including
-      creating, updating, and deleting projects, environments, feature flags, segments, and users. It uses a secret
-      Organisation API Token for authentication and provides a Swagger interface at api.flagsmith.com/api/v1/docs for
-      interactive exploration.
+- aid: flagsmith:flags-api
+  name: Flagsmith Flags API
+  tags:
+  - Edge
+  - Feature Flags
+  - Flags
+  - Remote Config
+  - SDKs
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  baseURL: https://edge.api.flagsmith.com
+  humanURL: https://docs.flagsmith.com/clients/rest
+  properties:
+  - url: https://docs.flagsmith.com/clients/rest
+    type: Documentation
+  - url: openapi/flagsmith-flags-api-openapi.yml
+    type: OpenAPI
+  description: >-
+    The Flagsmith Flags API is the public-facing REST API that client-side and server-side SDKs use to
+    retrieve feature flag values and remote configuration for environments and users. It uses a non-secret
+    Environment Key for authentication and is designed to be fast, scalable, and publicly accessible.
+    The Edge API endpoint at edge.api.flagsmith.com serves requests from AWS Lambda functions running
+    in data centers near the client, providing low-latency global access to flag evaluations.
+- aid: flagsmith:flagsmith-environments-api
+  name: flagsmith Environments API
+  description: >-
+    Manage environments within a project. Environments represent deployment stages such as development,
+    staging, and production.
+  humanURL: https://docs.flagsmith.com/clients/rest
+  baseURL: https://edge.api.flagsmith.com
+  tags:
+  - Environments
+  properties:
+  - type: OpenAPI
+    url: openapi/flagsmith-environments-api-openapi.yml
+  - type: Documentation
+    url: https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/admin-api
+  - type: AsyncAPI
+    url: asyncapi/flagsmith-webhooks-asyncapi.yml
+- aid: flagsmith:flagsmith-features-api
+  name: flagsmith Features API
+  description: >-
+    Manage feature flags within a project. Features can be toggled on or off and can have remote configuration
+    values.
+  humanURL: https://docs.flagsmith.com/clients/rest
+  baseURL: https://edge.api.flagsmith.com
+  tags:
+  - Features
+  properties:
+  - type: OpenAPI
+    url: openapi/flagsmith-features-api-openapi.yml
+  - type: Documentation
+    url: https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/admin-api
+  - type: AsyncAPI
+    url: asyncapi/flagsmith-webhooks-asyncapi.yml
+- aid: flagsmith:flagsmith-identities-api
+  name: flagsmith Identities API
+  description: >-
+    Manage user identities within an environment. Identities represent individual users and their associated
+    traits.
+  humanURL: https://docs.flagsmith.com/clients/rest
+  baseURL: https://edge.api.flagsmith.com
+  tags:
+  - Identities
+  properties:
+  - type: OpenAPI
+    url: openapi/flagsmith-identities-api-openapi.yml
+  - type: Documentation
+    url: https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/admin-api
+  - type: AsyncAPI
+    url: asyncapi/flagsmith-webhooks-asyncapi.yml
+- aid: flagsmith:flagsmith-organisations-api
+  name: flagsmith Organisations API
+  description: >-
+    Manage organisations within Flagsmith. Organisations are the top-level container for projects, users,
+    and billing.
+  humanURL: https://docs.flagsmith.com/clients/rest
+  baseURL: https://edge.api.flagsmith.com
+  tags:
+  - Organisations
+  properties:
+  - type: OpenAPI
+    url: openapi/flagsmith-organisations-api-openapi.yml
+  - type: Documentation
+    url: https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/admin-api
+  - type: AsyncAPI
+    url: asyncapi/flagsmith-webhooks-asyncapi.yml
+- aid: flagsmith:flagsmith-projects-api
+  name: flagsmith Projects API
+  description: Manage projects within an organisation. Projects contain environments and feature flags.
+  humanURL: https://docs.flagsmith.com/clients/rest
+  baseURL: https://edge.api.flagsmith.com
+  tags:
+  - Projects
+  properties:
+  - type: OpenAPI
+    url: openapi/flagsmith-projects-api-openapi.yml
+  - type: Documentation
+    url: https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/admin-api
+  - type: AsyncAPI
+    url: asyncapi/flagsmith-webhooks-asyncapi.yml
+- aid: flagsmith:flagsmith-segments-api
+  name: flagsmith Segments API
+  description: >-
+    Manage segments within a project. Segments define groups of users based on traits and rules for targeted
+    flag delivery.
+  humanURL: https://docs.flagsmith.com/clients/rest
+  baseURL: https://edge.api.flagsmith.com
+  tags:
+  - Segments
+  properties:
+  - type: OpenAPI
+    url: openapi/flagsmith-segments-api-openapi.yml
+  - type: Documentation
+    url: https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/admin-api
+  - type: AsyncAPI
+    url: asyncapi/flagsmith-webhooks-asyncapi.yml
+- aid: flagsmith:flagsmith-users-api
+  name: flagsmith Users API
+  description: Manage organisation users and their permissions within Flagsmith.
+  humanURL: https://docs.flagsmith.com/clients/rest
+  baseURL: https://edge.api.flagsmith.com
+  tags:
+  - Users
+  properties:
+  - type: OpenAPI
+    url: openapi/flagsmith-users-api-openapi.yml
+  - type: Documentation
+    url: https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/admin-api
+  - type: AsyncAPI
+    url: asyncapi/flagsmith-webhooks-asyncapi.yml
+- aid: flagsmith:flagsmith-webhooks-api
+  name: flagsmith Webhooks API
+  description: >-
+    Configure webhooks for environments and organisations to receive notifications about flag changes
+    and audit log events.
+  humanURL: https://docs.flagsmith.com/clients/rest
+  baseURL: https://edge.api.flagsmith.com
+  tags:
+  - Webhooks
+  properties:
+  - type: OpenAPI
+    url: openapi/flagsmith-webhooks-api-openapi.yml
+  - type: Documentation
+    url: https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/admin-api
+  - type: AsyncAPI
+    url: asyncapi/flagsmith-webhooks-asyncapi.yml
 common:
   - type: AgenticAccess
     url: agentic-access/flagsmith-agentic-access.yml
