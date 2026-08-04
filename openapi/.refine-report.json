@@ -1,0 +1,30 @@
+{
+  "provider": "flagsmith",
+  "sources": [
+    "flagsmith-environments-api-openapi.yml",
+    "flagsmith-features-api-openapi.yml",
+    "flagsmith-flags-api-openapi.yml",
+    "flagsmith-identities-api-openapi.yml",
+    "flagsmith-organisations-api-openapi.yml",
+    "flagsmith-projects-api-openapi.yml",
+    "flagsmith-segments-api-openapi.yml",
+    "flagsmith-users-api-openapi.yml",
+    "flagsmith-webhooks-api-openapi.yml"
+  ],
+  "outputs": [
+    "flagsmith-environments-api-openapi.yml",
+    "flagsmith-features-api-openapi.yml",
+    "flagsmith-flags-api-openapi.yml",
+    "flagsmith-identities-api-openapi.yml",
+    "flagsmith-organisations-api-openapi.yml",
+    "flagsmith-projects-api-openapi.yml",
+    "flagsmith-segments-api-openapi.yml",
+    "flagsmith-users-api-openapi.yml",
+    "flagsmith-webhooks-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [],
+  "skipped": []
+}
