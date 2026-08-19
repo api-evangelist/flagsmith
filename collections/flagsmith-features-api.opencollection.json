@@ -1,0 +1,195 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Flagsmith Admin Environments Features API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "Authorization",
+      "value": "{{Authorization}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Features",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List features for a project",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.flagsmith.com/api/v1/projects/:project_id/features/",
+            "params": [
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier for the project"
+              }
+            ]
+          },
+          "docs": "Retrieves a list of all feature flags defined within a specific project. Returns feature metadata including name, type, description, and default values."
+        },
+        {
+          "info": {
+            "name": "Create a feature flag",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.flagsmith.com/api/v1/projects/:project_id/features/",
+            "params": [
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier for the project"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a new feature flag within a project. The feature will be created across all environments with the specified default values."
+        },
+        {
+          "info": {
+            "name": "Get a feature flag",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.flagsmith.com/api/v1/projects/:project_id/features/:feature_id/",
+            "params": [
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier for the project"
+              },
+              {
+                "name": "feature_id",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier for the feature"
+              }
+            ]
+          },
+          "docs": "Retrieves the details of a specific feature flag by its ID within a project, including its configuration and multivariate options."
+        },
+        {
+          "info": {
+            "name": "Update a feature flag",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.flagsmith.com/api/v1/projects/:project_id/features/:feature_id/",
+            "params": [
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier for the project"
+              },
+              {
+                "name": "feature_id",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier for the feature"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Updates the details of an existing feature flag including its name, description, type, and multivariate options."
+        },
+        {
+          "info": {
+            "name": "Delete a feature flag",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.flagsmith.com/api/v1/projects/:project_id/features/:feature_id/",
+            "params": [
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier for the project"
+              },
+              {
+                "name": "feature_id",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier for the feature"
+              }
+            ]
+          },
+          "docs": "Permanently deletes a feature flag from a project. This removes the feature from all environments. This action cannot be undone."
+        },
+        {
+          "info": {
+            "name": "List feature states for an environment",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.flagsmith.com/api/v1/environments/:environment_api_key/featurestates/",
+            "params": [
+              {
+                "name": "environment_api_key",
+                "value": "",
+                "type": "path",
+                "description": "The API key for the environment"
+              }
+            ]
+          },
+          "docs": "Retrieves a list of all feature states within a specific environment. Feature states represent the enabled status and value of each feature flag within the environment."
+        },
+        {
+          "info": {
+            "name": "Update a feature state",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.flagsmith.com/api/v1/environments/:environment_api_key/featurestates/:feature_state_id/",
+            "params": [
+              {
+                "name": "environment_api_key",
+                "value": "",
+                "type": "path",
+                "description": "The API key for the environment"
+              },
+              {
+                "name": "feature_state_id",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier for the feature state"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Updates the state of a feature flag within a specific environment. Allows toggling the enabled status and changing the feature value."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

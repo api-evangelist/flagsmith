@@ -1,0 +1,365 @@
+{
+  "item": [
+    {
+      "id": "1850def8-de97-480a-a22e-3b0d9519d424",
+      "name": "Organisations",
+      "description": {
+        "content": "Manage organisations within Flagsmith. Organisations are the top-level container for projects, users, and billing.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "b455ff55-7e43-472c-b9f8-1c3bac50e0c7",
+          "name": "List organisations",
+          "request": {
+            "name": "List organisations",
+            "description": {
+              "content": "Retrieves a list of all organisations the authenticated user has access to. Returns organisation details including name, subscription information, and feature usage.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "organisations",
+                ""
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "7d9b6c17-3417-4d13-abc4-552f772757e6",
+              "name": "Successful response containing a list of organisations",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "organisations",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"count\": 695,\n  \"next\": \"https://Isk.nmmEm9mCOvRxGXdUkv0zTUMAa1VLFKb\",\n  \"previous\": \"http://hiQ.uaade25NzVtjZKe.eaF9VA+\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "f6f1b694-c93c-4e3a-b53d-03b32b429fbb",
+              "name": "Unauthorized - invalid or missing API token",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "organisations",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "29d39334-2352-44bd-ba6c-a0c62d1ab662",
+          "name": "Get an organisation",
+          "request": {
+            "name": "Get an organisation",
+            "description": {
+              "content": "Retrieves the details of a specific organisation by its ID, including the organisation name, subscription plan, and feature usage limits.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "organisations",
+                ":organisation_id",
+                ""
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "organisation_id",
+                  "description": "(Required) The unique identifier for the organisation"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "fdf2c640-c4af-4aaf-a7ba-995f9129105b",
+              "name": "Successful response containing the organisation details",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "organisations",
+                    ":organisation_id",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "organisation_id",
+                      "description": "(Required) The unique identifier for the organisation"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": 7622,\n  \"name\": \"string\",\n  \"created_date\": \"1955-01-14T22:52:58.326Z\",\n  \"webhook_notification_email\": \"string\",\n  \"num_seats\": 2731,\n  \"persist_trait_data\": true\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "6b7ec97a-0008-4a70-9a87-4b077b460819",
+              "name": "Unauthorized - invalid or missing API token",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "organisations",
+                    ":organisation_id",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "organisation_id",
+                      "description": "(Required) The unique identifier for the organisation"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "ed267ea0-b06f-4ab3-81db-9a7ac91d89a1",
+              "name": "Organisation not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "organisations",
+                    ":organisation_id",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "organisation_id",
+                      "description": "(Required) The unique identifier for the organisation"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.flagsmith.com/api/v1",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "Authorization"
+      },
+      {
+        "key": "value",
+        "value": "{{apiKey}}"
+      },
+      {
+        "key": "in",
+        "value": "header"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "df90e0c2-ba40-4581-9b09-17716bd65ab2",
+    "name": "Flagsmith Admin Environments Organisations API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "The Flagsmith Admin API allows developers to programmatically manage all aspects of their Flagsmith projects. Anything that can be done through the Flagsmith dashboard can also be accomplished via this API, including creating, updating, and deleting projects, environments, feature flags, segments, and users. It uses a secret Organisation API Token for authentication and provides a Swagger interface at api.flagsmith.com/api/v1/docs for interactive exploration.\n\nContact Support:\n Name: Flagsmith Support",
+      "type": "text/plain"
+    }
+  }
+}

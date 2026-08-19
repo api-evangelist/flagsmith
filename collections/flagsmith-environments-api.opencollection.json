@@ -1,0 +1,79 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Flagsmith Admin Environments API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "Authorization",
+      "value": "{{Authorization}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Environments",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List environments",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.flagsmith.com/api/v1/environments/"
+          },
+          "docs": "Retrieves a list of all environments the authenticated user has access to. Environments represent deployment stages within a project."
+        },
+        {
+          "info": {
+            "name": "Get an environment",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.flagsmith.com/api/v1/environments/:environment_api_key/",
+            "params": [
+              {
+                "name": "environment_api_key",
+                "value": "",
+                "type": "path",
+                "description": "The API key for the environment"
+              }
+            ]
+          },
+          "docs": "Retrieves the details of a specific environment by its API key, including its name, project, and feature states."
+        },
+        {
+          "info": {
+            "name": "Update an environment",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.flagsmith.com/api/v1/environments/:environment_api_key/",
+            "params": [
+              {
+                "name": "environment_api_key",
+                "value": "",
+                "type": "path",
+                "description": "The API key for the environment"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Updates the details of an existing environment including its name, description, and configuration properties."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

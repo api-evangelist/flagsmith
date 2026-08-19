@@ -1,0 +1,1530 @@
+{
+  "item": [
+    {
+      "id": "9099bcab-a53d-4e70-807a-46bc575e32fe",
+      "name": "Identities",
+      "description": {
+        "content": "Manage user identities within an environment. Identities represent individual users and their associated traits.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "bb62d3f5-81f4-49cd-ad2f-1699fde07a04",
+          "name": "List identities for an environment",
+          "request": {
+            "name": "List identities for an environment",
+            "description": {
+              "content": "Retrieves a paginated list of all user identities within a specific environment. Identities represent individual users with their associated traits and flag overrides.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "environments",
+                ":environment_api_key",
+                "identities",
+                ""
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "environment_api_key",
+                  "description": "(Required) The API key for the environment"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "e3aa9b60-6f19-40f6-b46e-4486f65169d1",
+              "name": "Successful response containing a list of identities",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "environments",
+                    ":environment_api_key",
+                    "identities",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "environment_api_key",
+                      "description": "(Required) The API key for the environment"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"count\": 5409,\n  \"next\": \"https://qhpVVk.xssyFUHRYcRQK+ygu0Edk\",\n  \"previous\": \"http://NeFd.epxwO9mDtiN36fdtkM0\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "2c0c4970-e286-4e96-8ba5-58e07407f09e",
+              "name": "Unauthorized - invalid or missing API token",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "environments",
+                    ":environment_api_key",
+                    "identities",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "environment_api_key",
+                      "description": "(Required) The API key for the environment"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "3e13f0bf-558e-4bd4-b2a2-045f2c9face6",
+              "name": "Environment not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "environments",
+                    ":environment_api_key",
+                    "identities",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "environment_api_key",
+                      "description": "(Required) The API key for the environment"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "150e20c0-1322-44e0-acb5-91398a00114e",
+          "name": "Get an identity",
+          "request": {
+            "name": "Get an identity",
+            "description": {
+              "content": "Retrieves the details of a specific identity by its ID within an environment, including its identifier and associated traits.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "environments",
+                ":environment_api_key",
+                "identities",
+                ":identity_id",
+                ""
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "environment_api_key",
+                  "description": "(Required) The API key for the environment"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "identity_id",
+                  "description": "(Required) The unique identifier for the identity"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "2d9d434d-788b-4379-a60e-349cd29d0dab",
+              "name": "Successful response containing the identity details",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "environments",
+                    ":environment_api_key",
+                    "identities",
+                    ":identity_id",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "environment_api_key",
+                      "description": "(Required) The API key for the environment"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "identity_id",
+                      "description": "(Required) The unique identifier for the identity"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": 6251,\n  \"identifier\": \"string\",\n  \"environment\": 2992\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "fbf15bee-63bb-4d71-8e8a-366514893336",
+              "name": "Unauthorized - invalid or missing API token",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "environments",
+                    ":environment_api_key",
+                    "identities",
+                    ":identity_id",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "environment_api_key",
+                      "description": "(Required) The API key for the environment"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "identity_id",
+                      "description": "(Required) The unique identifier for the identity"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "28f46979-2ae9-4188-836e-e5d4e7e22488",
+              "name": "Identity or environment not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "environments",
+                    ":environment_api_key",
+                    "identities",
+                    ":identity_id",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "environment_api_key",
+                      "description": "(Required) The API key for the environment"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "identity_id",
+                      "description": "(Required) The unique identifier for the identity"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "a44cfa79-5c19-4428-84fc-167b053b5d86",
+          "name": "Delete an identity",
+          "request": {
+            "name": "Delete an identity",
+            "description": {
+              "content": "Permanently deletes an identity and all associated traits and flag overrides from an environment. This action cannot be undone.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "environments",
+                ":environment_api_key",
+                "identities",
+                ":identity_id",
+                ""
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "environment_api_key",
+                  "description": "(Required) The API key for the environment"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "identity_id",
+                  "description": "(Required) The unique identifier for the identity"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "001ad95c-ec35-4a35-a435-5a0cac9a88ba",
+              "name": "Identity deleted successfully",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "environments",
+                    ":environment_api_key",
+                    "identities",
+                    ":identity_id",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "environment_api_key",
+                      "description": "(Required) The API key for the environment"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "identity_id",
+                      "description": "(Required) The unique identifier for the identity"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "No Content",
+              "code": 204,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "d22f0178-f177-42e7-881c-216985829085",
+              "name": "Unauthorized - invalid or missing API token",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "environments",
+                    ":environment_api_key",
+                    "identities",
+                    ":identity_id",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "environment_api_key",
+                      "description": "(Required) The API key for the environment"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "identity_id",
+                      "description": "(Required) The unique identifier for the identity"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "969c624b-65c2-4d36-ae69-4b048a2d5e48",
+              "name": "Identity or environment not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "environments",
+                    ":environment_api_key",
+                    "identities",
+                    ":identity_id",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "environment_api_key",
+                      "description": "(Required) The API key for the environment"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "identity_id",
+                      "description": "(Required) The unique identifier for the identity"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "5e9b220e-a8fe-44e3-952a-16a86aa0380b",
+          "name": "Get flags and traits for an identity",
+          "request": {
+            "name": "Get flags and traits for an identity",
+            "description": {
+              "content": "Retrieves all feature flags and traits for a specific user identity. The flags returned may differ from the environment defaults based on the identity's traits and segment membership. If the identity does not exist, it will be created. This endpoint also supports transient identities and traits that are used for evaluation but not persisted.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "identities",
+                ""
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "identifier",
+                  "value": "<string>",
+                  "description": "(Required) The unique identifier for the user identity. This is typically a user ID, email, or other unique string that identifies the user in your application."
+                },
+                {
+                  "disabled": false,
+                  "key": "transient",
+                  "value": "<boolean>",
+                  "description": "When set to true, the identity is treated as transient and will not be persisted. The identity will be used for flag evaluation only."
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "bfe3d844-2e34-4856-92a6-ea208c06a237",
+              "name": "Successful response containing flags and traits for the identity",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "identities",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "identifier",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "transient",
+                      "value": "<boolean>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"flags\": [\n    {\n      \"id\": 8645,\n      \"feature\": {\n        \"id\": 7060,\n        \"name\": \"string\",\n        \"created_date\": \"1962-01-27T02:16:44.538Z\",\n        \"description\": \"string\",\n        \"initial_value\": \"string\",\n        \"default_enabled\": true,\n        \"type\": \"MULTIVARIATE\"\n      },\n      \"feature_state_value\": \"string\",\n      \"enabled\": false,\n      \"environment\": 3270,\n      \"identity\": 4475,\n      \"feature_segment\": 5148\n    },\n    {\n      \"id\": 2716,\n      \"feature\": {\n        \"id\": 4580,\n        \"name\": \"string\",\n        \"created_date\": \"2009-09-21T10:35:50.097Z\",\n        \"description\": \"string\",\n        \"initial_value\": \"string\",\n        \"default_enabled\": false,\n        \"type\": \"MULTIVARIATE\"\n      },\n      \"feature_state_value\": \"string\",\n      \"enabled\": true,\n      \"environment\": 1862,\n      \"identity\": 7398,\n      \"feature_segment\": 1382\n    }\n  ],\n  \"traits\": [\n    {\n      \"id\": 8020,\n      \"trait_key\": \"string\",\n      \"trait_value\": \"string\"\n    },\n    {\n      \"id\": 3569,\n      \"trait_key\": \"string\",\n      \"trait_value\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "de15603c-b866-4763-a78b-46c017682fd1",
+              "name": "Bad request - missing identifier parameter",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "identities",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "identifier",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "transient",
+                      "value": "<boolean>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "1f20e1a0-b1cd-4508-87ec-9c839e0fe704",
+              "name": "Unauthorized - invalid or missing Environment Key",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "identities",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "identifier",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "transient",
+                      "value": "<boolean>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "c83460e1-3ffd-4e91-92dc-53080870ab6c",
+          "name": "Identify a user and get flags with traits",
+          "request": {
+            "name": "Identify a user and get flags with traits",
+            "description": {
+              "content": "Identifies a user by providing an identifier and optional traits in the request body. Returns the evaluated flags for that identity based on the provided traits and any existing traits. Traits provided in the request body are persisted for the identity unless marked as transient. This endpoint performs the entire SDK identity workflow in a single call.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "identities",
+                ""
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"identifier\": \"<string>\",\n  \"traits\": [\n    {\n      \"trait_key\": \"<string>\",\n      \"trait_value\": \"<string>\",\n      \"transient\": \"<boolean>\"\n    },\n    {\n      \"trait_key\": \"<string>\",\n      \"trait_value\": \"<string>\",\n      \"transient\": \"<boolean>\"\n    }\n  ],\n  \"transient\": \"<boolean>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "834a5a08-9c8b-41be-8eec-2e30e1c5e32c",
+              "name": "Successful response containing evaluated flags and persisted traits",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "identities",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"identifier\": \"<string>\",\n  \"traits\": [\n    {\n      \"trait_key\": \"string\",\n      \"trait_value\": \"string\",\n      \"transient\": true\n    },\n    {\n      \"trait_key\": \"string\",\n      \"trait_value\": \"string\",\n      \"transient\": true\n    }\n  ],\n  \"transient\": \"<boolean>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"flags\": [\n    {\n      \"id\": 8645,\n      \"feature\": {\n        \"id\": 7060,\n        \"name\": \"string\",\n        \"created_date\": \"1962-01-27T02:16:44.538Z\",\n        \"description\": \"string\",\n        \"initial_value\": \"string\",\n        \"default_enabled\": true,\n        \"type\": \"MULTIVARIATE\"\n      },\n      \"feature_state_value\": \"string\",\n      \"enabled\": false,\n      \"environment\": 3270,\n      \"identity\": 4475,\n      \"feature_segment\": 5148\n    },\n    {\n      \"id\": 2716,\n      \"feature\": {\n        \"id\": 4580,\n        \"name\": \"string\",\n        \"created_date\": \"2009-09-21T10:35:50.097Z\",\n        \"description\": \"string\",\n        \"initial_value\": \"string\",\n        \"default_enabled\": false,\n        \"type\": \"MULTIVARIATE\"\n      },\n      \"feature_state_value\": \"string\",\n      \"enabled\": true,\n      \"environment\": 1862,\n      \"identity\": 7398,\n      \"feature_segment\": 1382\n    }\n  ],\n  \"traits\": [\n    {\n      \"id\": 8020,\n      \"trait_key\": \"string\",\n      \"trait_value\": \"string\"\n    },\n    {\n      \"id\": 3569,\n      \"trait_key\": \"string\",\n      \"trait_value\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "97d56446-677d-4d53-989d-1fc46875bda0",
+              "name": "Bad request - missing or invalid identifier",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "identities",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"identifier\": \"<string>\",\n  \"traits\": [\n    {\n      \"trait_key\": \"string\",\n      \"trait_value\": \"string\",\n      \"transient\": true\n    },\n    {\n      \"trait_key\": \"string\",\n      \"trait_value\": \"string\",\n      \"transient\": true\n    }\n  ],\n  \"transient\": \"<boolean>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "e2388790-636c-4816-a856-43e0dca854e7",
+              "name": "Unauthorized - invalid or missing Environment Key",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "identities",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"identifier\": \"<string>\",\n  \"traits\": [\n    {\n      \"trait_key\": \"string\",\n      \"trait_value\": \"string\",\n      \"transient\": true\n    },\n    {\n      \"trait_key\": \"string\",\n      \"trait_value\": \"string\",\n      \"transient\": true\n    }\n  ],\n  \"transient\": \"<boolean>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "d2b084e6-9d66-45bf-a95b-8a11f1869601",
+          "name": "Set traits for an identity",
+          "request": {
+            "name": "Set traits for an identity",
+            "description": {
+              "content": "Sets one or more trait values for a given identity. If the identity does not exist, it will be created. Traits are key-value pairs associated with an identity that can be used for segment evaluation and personalized flag delivery.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "traits",
+                ""
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"identity\": {\n    \"identifier\": \"<string>\"\n  },\n  \"trait_key\": \"<string>\",\n  \"trait_value\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "269a579a-d475-4c84-8c67-efcdbe7ae00f",
+              "name": "Successful response confirming the trait was set",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "traits",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"identity\": {\n    \"identifier\": \"<string>\"\n  },\n  \"trait_key\": \"<string>\",\n  \"trait_value\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": 6487,\n  \"trait_key\": \"string\",\n  \"trait_value\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "6e90d948-b7c5-4a9a-ba73-313c9b0c6c29",
+              "name": "Bad request - missing or invalid trait data",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "traits",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"identity\": {\n    \"identifier\": \"<string>\"\n  },\n  \"trait_key\": \"<string>\",\n  \"trait_value\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "2a91ecd9-ffed-4cb5-9828-eada715ba3a8",
+              "name": "Unauthorized - invalid or missing Environment Key",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "traits",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"identity\": {\n    \"identifier\": \"<string>\"\n  },\n  \"trait_key\": \"<string>\",\n  \"trait_value\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "07068231-8ebe-430a-9479-39be458b2021",
+          "name": "Set multiple traits for an identity in bulk",
+          "request": {
+            "name": "Set multiple traits for an identity in bulk",
+            "description": {
+              "content": "Sets multiple trait values for a given identity in a single API call. This is more efficient than making individual trait requests when updating multiple traits at once. If a trait value is set to null, the trait will be deleted.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "traits",
+                "bulk",
+                ""
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PUT",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "[\n  {\n    \"identity\": {\n      \"identifier\": \"<string>\"\n    },\n    \"trait_key\": \"<string>\",\n    \"trait_value\": \"<string>\"\n  },\n  {\n    \"identity\": {\n      \"identifier\": \"<string>\"\n    },\n    \"trait_key\": \"<string>\",\n    \"trait_value\": \"<string>\"\n  }\n]",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "81a2af6f-2d15-4474-8a52-57984c19ce68",
+              "name": "Successful response confirming the traits were set",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "traits",
+                    "bulk",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "[\n  {\n    \"identity\": {\n      \"identifier\": \"string\"\n    },\n    \"trait_key\": \"string\",\n    \"trait_value\": \"string\"\n  },\n  {\n    \"identity\": {\n      \"identifier\": \"string\"\n    },\n    \"trait_key\": \"string\",\n    \"trait_value\": \"string\"\n  }\n]",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"id\": 84,\n    \"trait_key\": \"string\",\n    \"trait_value\": \"string\"\n  },\n  {\n    \"id\": 8239,\n    \"trait_key\": \"string\",\n    \"trait_value\": \"string\"\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "65890fc3-bf60-4271-aba9-351152e7328c",
+              "name": "Bad request - missing or invalid trait data",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "traits",
+                    "bulk",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "[\n  {\n    \"identity\": {\n      \"identifier\": \"string\"\n    },\n    \"trait_key\": \"string\",\n    \"trait_value\": \"string\"\n  },\n  {\n    \"identity\": {\n      \"identifier\": \"string\"\n    },\n    \"trait_key\": \"string\",\n    \"trait_value\": \"string\"\n  }\n]",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "c2923b52-007e-4390-b7d4-30e200e6459c",
+              "name": "Unauthorized - invalid or missing Environment Key",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "traits",
+                    "bulk",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "[\n  {\n    \"identity\": {\n      \"identifier\": \"string\"\n    },\n    \"trait_key\": \"string\",\n    \"trait_value\": \"string\"\n  },\n  {\n    \"identity\": {\n      \"identifier\": \"string\"\n    },\n    \"trait_key\": \"string\",\n    \"trait_value\": \"string\"\n  }\n]",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.flagsmith.com/api/v1",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "Authorization"
+      },
+      {
+        "key": "value",
+        "value": "{{apiKey}}"
+      },
+      {
+        "key": "in",
+        "value": "header"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "7440559f-6af0-4e43-97b4-c0e26b4cd1d8",
+    "name": "Flagsmith Admin Environments Identities API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "The Flagsmith Admin API allows developers to programmatically manage all aspects of their Flagsmith projects. Anything that can be done through the Flagsmith dashboard can also be accomplished via this API, including creating, updating, and deleting projects, environments, feature flags, segments, and users. It uses a secret Organisation API Token for authentication and provides a Swagger interface at api.flagsmith.com/api/v1/docs for interactive exploration.\n\nContact Support:\n Name: Flagsmith Support",
+      "type": "text/plain"
+    }
+  }
+}

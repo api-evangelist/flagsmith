@@ -1,0 +1,1333 @@
+{
+  "item": [
+    {
+      "id": "59cb317f-1e89-4219-8661-06b20c1cb000",
+      "name": "Segments",
+      "description": {
+        "content": "Manage segments within a project. Segments define groups of users based on traits and rules for targeted flag delivery.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "78ef265a-2ca8-47f3-9ae8-819bf3c5372f",
+          "name": "List segments for a project",
+          "request": {
+            "name": "List segments for a project",
+            "description": {
+              "content": "Retrieves a list of all segments defined within a specific project. Segments define groups of users based on trait-based rules for targeted flag delivery.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "projects",
+                ":project_id",
+                "segments",
+                ""
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "project_id",
+                  "description": "(Required) The unique identifier for the project"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "41864da0-0f2f-4540-a71d-e5ba552ab24a",
+              "name": "Successful response containing a list of segments",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "projects",
+                    ":project_id",
+                    "segments",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "project_id",
+                      "description": "(Required) The unique identifier for the project"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"count\": 5802,\n  \"next\": \"https://oBXQXyVJwCuoPurYTu.wqvd,Yook.s+gquiqul6TEMS8CinOjr,BrV5tI6W4U5Rzesvp3dl5L4TdSeq7MhKkwSXTGe\",\n  \"previous\": \"http://VjMmE.bogusPW9bY-aoZRd9wN7rC\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "ff1d3eaa-aef8-40af-986d-0c2129b6ca24",
+              "name": "Unauthorized - invalid or missing API token",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "projects",
+                    ":project_id",
+                    "segments",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "project_id",
+                      "description": "(Required) The unique identifier for the project"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "cd9f6c70-5dec-41cb-aea5-78f99e8487e5",
+              "name": "Project not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "projects",
+                    ":project_id",
+                    "segments",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "project_id",
+                      "description": "(Required) The unique identifier for the project"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "35d94448-1920-4ce4-88d2-4be1d87ec0fc",
+          "name": "Create a segment",
+          "request": {
+            "name": "Create a segment",
+            "description": {
+              "content": "Creates a new segment within a project. Segments define groups of users based on trait-based rules and conditions for targeted feature flag delivery.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "projects",
+                ":project_id",
+                "segments",
+                ""
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "project_id",
+                  "description": "(Required) The unique identifier for the project"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"<string>\",\n  \"project\": \"<integer>\",\n  \"rules\": [\n    {\n      \"type\": \"<string>\",\n      \"rules\": [\n        {\n          \"value\": \"<Circular reference to #/components/schemas/SegmentRule detected>\"\n        },\n        {\n          \"value\": \"<Circular reference to #/components/schemas/SegmentRule detected>\"\n        }\n      ],\n      \"conditions\": [\n        {\n          \"operator\": \"<string>\",\n          \"property_\": \"<string>\",\n          \"value\": \"<string>\"\n        },\n        {\n          \"operator\": \"<string>\",\n          \"property_\": \"<string>\",\n          \"value\": \"<string>\"\n        }\n      ]\n    },\n    {\n      \"type\": \"<string>\",\n      \"rules\": [\n        {\n          \"value\": \"<Circular reference to #/components/schemas/SegmentRule detected>\"\n        },\n        {\n          \"value\": \"<Circular reference to #/components/schemas/SegmentRule detected>\"\n        }\n      ],\n      \"conditions\": [\n        {\n          \"operator\": \"<string>\",\n          \"property_\": \"<string>\",\n          \"value\": \"<string>\"\n        },\n        {\n          \"operator\": \"<string>\",\n          \"property_\": \"<string>\",\n          \"value\": \"<string>\"\n        }\n      ]\n    }\n  ],\n  \"description\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "ef187ff8-6b3d-45ab-8a65-0ee9aca50d10",
+              "name": "Segment created successfully",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "projects",
+                    ":project_id",
+                    "segments",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "project_id",
+                      "description": "(Required) The unique identifier for the project"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"<string>\",\n  \"project\": \"<integer>\",\n  \"rules\": [\n    {\n      \"type\": \"NONE\",\n      \"rules\": [\n        {\n          \"value\": \"<Circular reference to #/components/schemas/SegmentRule detected>\"\n        },\n        {\n          \"value\": \"<Circular reference to #/components/schemas/SegmentRule detected>\"\n        }\n      ],\n      \"conditions\": [\n        {\n          \"operator\": \"GREATER_THAN_INCLUSIVE\",\n          \"property_\": \"string\",\n          \"value\": \"string\"\n        },\n        {\n          \"operator\": \"IS_NOT_SET\",\n          \"property_\": \"string\",\n          \"value\": \"string\"\n        }\n      ]\n    },\n    {\n      \"type\": \"ALL\",\n      \"rules\": [\n        {\n          \"value\": \"<Circular reference to #/components/schemas/SegmentRule detected>\"\n        },\n        {\n          \"value\": \"<Circular reference to #/components/schemas/SegmentRule detected>\"\n        }\n      ],\n      \"conditions\": [\n        {\n          \"operator\": \"LESS_THAN_INCLUSIVE\",\n          \"property_\": \"string\",\n          \"value\": \"string\"\n        },\n        {\n          \"operator\": \"CONTAINS\",\n          \"property_\": \"string\",\n          \"value\": \"string\"\n        }\n      ]\n    }\n  ],\n  \"description\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": 5646,\n  \"name\": \"string\",\n  \"description\": \"string\",\n  \"project\": 1108,\n  \"rules\": [\n    {\n      \"type\": \"ANY\",\n      \"rules\": [\n        {\n          \"value\": \"<Circular reference to #/components/schemas/SegmentRule detected>\"\n        },\n        {\n          \"value\": \"<Circular reference to #/components/schemas/SegmentRule detected>\"\n        }\n      ],\n      \"conditions\": [\n        {\n          \"operator\": \"IS_SET\",\n          \"property_\": \"string\",\n          \"value\": \"string\"\n        },\n        {\n          \"operator\": \"REGEX\",\n          \"property_\": \"string\",\n          \"value\": \"string\"\n        }\n      ]\n    },\n    {\n      \"type\": \"ANY\",\n      \"rules\": [\n        {\n          \"value\": \"<Circular reference to #/components/schemas/SegmentRule detected>\"\n        },\n        {\n          \"value\": \"<Circular reference to #/components/schemas/SegmentRule detected>\"\n        }\n      ],\n      \"conditions\": [\n        {\n          \"operator\": \"GREATER_THAN\",\n          \"property_\": \"string\",\n          \"value\": \"string\"\n        },\n        {\n          \"operator\": \"CONTAINS\",\n          \"property_\": \"string\",\n          \"value\": \"string\"\n        }\n      ]\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "9700ea61-2f68-4f36-8c3c-946d87a1ae34",
+              "name": "Bad request - validation error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "projects",
+                    ":project_id",
+                    "segments",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "project_id",
+                      "description": "(Required) The unique identifier for the project"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"<string>\",\n  \"project\": \"<integer>\",\n  \"rules\": [\n    {\n      \"type\": \"NONE\",\n      \"rules\": [\n        {\n          \"value\": \"<Circular reference to #/components/schemas/SegmentRule detected>\"\n        },\n        {\n          \"value\": \"<Circular reference to #/components/schemas/SegmentRule detected>\"\n        }\n      ],\n      \"conditions\": [\n        {\n          \"operator\": \"GREATER_THAN_INCLUSIVE\",\n          \"property_\": \"string\",\n          \"value\": \"string\"\n        },\n        {\n          \"operator\": \"IS_NOT_SET\",\n          \"property_\": \"string\",\n          \"value\": \"string\"\n        }\n      ]\n    },\n    {\n      \"type\": \"ALL\",\n      \"rules\": [\n        {\n          \"value\": \"<Circular reference to #/components/schemas/SegmentRule detected>\"\n        },\n        {\n          \"value\": \"<Circular reference to #/components/schemas/SegmentRule detected>\"\n        }\n      ],\n      \"conditions\": [\n        {\n          \"operator\": \"LESS_THAN_INCLUSIVE\",\n          \"property_\": \"string\",\n          \"value\": \"string\"\n        },\n        {\n          \"operator\": \"CONTAINS\",\n          \"property_\": \"string\",\n          \"value\": \"string\"\n        }\n      ]\n    }\n  ],\n  \"description\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "dc2009d0-f4a2-432b-baba-e3ec5da8921b",
+              "name": "Unauthorized - invalid or missing API token",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "projects",
+                    ":project_id",
+                    "segments",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "project_id",
+                      "description": "(Required) The unique identifier for the project"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"<string>\",\n  \"project\": \"<integer>\",\n  \"rules\": [\n    {\n      \"type\": \"NONE\",\n      \"rules\": [\n        {\n          \"value\": \"<Circular reference to #/components/schemas/SegmentRule detected>\"\n        },\n        {\n          \"value\": \"<Circular reference to #/components/schemas/SegmentRule detected>\"\n        }\n      ],\n      \"conditions\": [\n        {\n          \"operator\": \"GREATER_THAN_INCLUSIVE\",\n          \"property_\": \"string\",\n          \"value\": \"string\"\n        },\n        {\n          \"operator\": \"IS_NOT_SET\",\n          \"property_\": \"string\",\n          \"value\": \"string\"\n        }\n      ]\n    },\n    {\n      \"type\": \"ALL\",\n      \"rules\": [\n        {\n          \"value\": \"<Circular reference to #/components/schemas/SegmentRule detected>\"\n        },\n        {\n          \"value\": \"<Circular reference to #/components/schemas/SegmentRule detected>\"\n        }\n      ],\n      \"conditions\": [\n        {\n          \"operator\": \"LESS_THAN_INCLUSIVE\",\n          \"property_\": \"string\",\n          \"value\": \"string\"\n        },\n        {\n          \"operator\": \"CONTAINS\",\n          \"property_\": \"string\",\n          \"value\": \"string\"\n        }\n      ]\n    }\n  ],\n  \"description\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "5f73c134-99ee-49a0-8cd8-aaec26c5fb01",
+              "name": "Project not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "projects",
+                    ":project_id",
+                    "segments",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "project_id",
+                      "description": "(Required) The unique identifier for the project"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"<string>\",\n  \"project\": \"<integer>\",\n  \"rules\": [\n    {\n      \"type\": \"NONE\",\n      \"rules\": [\n        {\n          \"value\": \"<Circular reference to #/components/schemas/SegmentRule detected>\"\n        },\n        {\n          \"value\": \"<Circular reference to #/components/schemas/SegmentRule detected>\"\n        }\n      ],\n      \"conditions\": [\n        {\n          \"operator\": \"GREATER_THAN_INCLUSIVE\",\n          \"property_\": \"string\",\n          \"value\": \"string\"\n        },\n        {\n          \"operator\": \"IS_NOT_SET\",\n          \"property_\": \"string\",\n          \"value\": \"string\"\n        }\n      ]\n    },\n    {\n      \"type\": \"ALL\",\n      \"rules\": [\n        {\n          \"value\": \"<Circular reference to #/components/schemas/SegmentRule detected>\"\n        },\n        {\n          \"value\": \"<Circular reference to #/components/schemas/SegmentRule detected>\"\n        }\n      ],\n      \"conditions\": [\n        {\n          \"operator\": \"LESS_THAN_INCLUSIVE\",\n          \"property_\": \"string\",\n          \"value\": \"string\"\n        },\n        {\n          \"operator\": \"CONTAINS\",\n          \"property_\": \"string\",\n          \"value\": \"string\"\n        }\n      ]\n    }\n  ],\n  \"description\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "b6fbb2e1-a966-4b30-8fc8-1f22bb64e298",
+          "name": "Get a segment",
+          "request": {
+            "name": "Get a segment",
+            "description": {
+              "content": "Retrieves the details of a specific segment by its ID within a project, including its rules and conditions.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "projects",
+                ":project_id",
+                "segments",
+                ":segment_id",
+                ""
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "project_id",
+                  "description": "(Required) The unique identifier for the project"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "segment_id",
+                  "description": "(Required) The unique identifier for the segment"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "c1aa44e8-31c3-4cad-b8fa-ff54de00a622",
+              "name": "Successful response containing the segment details",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "projects",
+                    ":project_id",
+                    "segments",
+                    ":segment_id",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "project_id",
+                      "description": "(Required) The unique identifier for the project"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "segment_id",
+                      "description": "(Required) The unique identifier for the segment"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": 5646,\n  \"name\": \"string\",\n  \"description\": \"string\",\n  \"project\": 1108,\n  \"rules\": [\n    {\n      \"type\": \"ANY\",\n      \"rules\": [\n        {\n          \"value\": \"<Circular reference to #/components/schemas/SegmentRule detected>\"\n        },\n        {\n          \"value\": \"<Circular reference to #/components/schemas/SegmentRule detected>\"\n        }\n      ],\n      \"conditions\": [\n        {\n          \"operator\": \"IS_SET\",\n          \"property_\": \"string\",\n          \"value\": \"string\"\n        },\n        {\n          \"operator\": \"REGEX\",\n          \"property_\": \"string\",\n          \"value\": \"string\"\n        }\n      ]\n    },\n    {\n      \"type\": \"ANY\",\n      \"rules\": [\n        {\n          \"value\": \"<Circular reference to #/components/schemas/SegmentRule detected>\"\n        },\n        {\n          \"value\": \"<Circular reference to #/components/schemas/SegmentRule detected>\"\n        }\n      ],\n      \"conditions\": [\n        {\n          \"operator\": \"GREATER_THAN\",\n          \"property_\": \"string\",\n          \"value\": \"string\"\n        },\n        {\n          \"operator\": \"CONTAINS\",\n          \"property_\": \"string\",\n          \"value\": \"string\"\n        }\n      ]\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "d8b160be-aacf-440b-a8ff-d47e43ccd7ad",
+              "name": "Unauthorized - invalid or missing API token",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "projects",
+                    ":project_id",
+                    "segments",
+                    ":segment_id",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "project_id",
+                      "description": "(Required) The unique identifier for the project"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "segment_id",
+                      "description": "(Required) The unique identifier for the segment"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "c94546df-353e-488b-a1eb-581f30563fb3",
+              "name": "Segment or project not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "projects",
+                    ":project_id",
+                    "segments",
+                    ":segment_id",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "project_id",
+                      "description": "(Required) The unique identifier for the project"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "segment_id",
+                      "description": "(Required) The unique identifier for the segment"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "a05e63a5-76be-435b-ab88-ded7d5491f4d",
+          "name": "Update a segment",
+          "request": {
+            "name": "Update a segment",
+            "description": {
+              "content": "Updates the details of an existing segment including its name, description, and rules.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "projects",
+                ":project_id",
+                "segments",
+                ":segment_id",
+                ""
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "project_id",
+                  "description": "(Required) The unique identifier for the project"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "segment_id",
+                  "description": "(Required) The unique identifier for the segment"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PUT",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"<string>\",\n  \"project\": \"<integer>\",\n  \"rules\": [\n    {\n      \"type\": \"<string>\",\n      \"rules\": [\n        {\n          \"value\": \"<Circular reference to #/components/schemas/SegmentRule detected>\"\n        },\n        {\n          \"value\": \"<Circular reference to #/components/schemas/SegmentRule detected>\"\n        }\n      ],\n      \"conditions\": [\n        {\n          \"operator\": \"<string>\",\n          \"property_\": \"<string>\",\n          \"value\": \"<string>\"\n        },\n        {\n          \"operator\": \"<string>\",\n          \"property_\": \"<string>\",\n          \"value\": \"<string>\"\n        }\n      ]\n    },\n    {\n      \"type\": \"<string>\",\n      \"rules\": [\n        {\n          \"value\": \"<Circular reference to #/components/schemas/SegmentRule detected>\"\n        },\n        {\n          \"value\": \"<Circular reference to #/components/schemas/SegmentRule detected>\"\n        }\n      ],\n      \"conditions\": [\n        {\n          \"operator\": \"<string>\",\n          \"property_\": \"<string>\",\n          \"value\": \"<string>\"\n        },\n        {\n          \"operator\": \"<string>\",\n          \"property_\": \"<string>\",\n          \"value\": \"<string>\"\n        }\n      ]\n    }\n  ],\n  \"description\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "96e1d818-82c1-4931-b056-6a0abb2ab62d",
+              "name": "Segment updated successfully",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "projects",
+                    ":project_id",
+                    "segments",
+                    ":segment_id",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "project_id",
+                      "description": "(Required) The unique identifier for the project"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "segment_id",
+                      "description": "(Required) The unique identifier for the segment"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"<string>\",\n  \"project\": \"<integer>\",\n  \"rules\": [\n    {\n      \"type\": \"NONE\",\n      \"rules\": [\n        {\n          \"value\": \"<Circular reference to #/components/schemas/SegmentRule detected>\"\n        },\n        {\n          \"value\": \"<Circular reference to #/components/schemas/SegmentRule detected>\"\n        }\n      ],\n      \"conditions\": [\n        {\n          \"operator\": \"GREATER_THAN_INCLUSIVE\",\n          \"property_\": \"string\",\n          \"value\": \"string\"\n        },\n        {\n          \"operator\": \"IS_NOT_SET\",\n          \"property_\": \"string\",\n          \"value\": \"string\"\n        }\n      ]\n    },\n    {\n      \"type\": \"ALL\",\n      \"rules\": [\n        {\n          \"value\": \"<Circular reference to #/components/schemas/SegmentRule detected>\"\n        },\n        {\n          \"value\": \"<Circular reference to #/components/schemas/SegmentRule detected>\"\n        }\n      ],\n      \"conditions\": [\n        {\n          \"operator\": \"LESS_THAN_INCLUSIVE\",\n          \"property_\": \"string\",\n          \"value\": \"string\"\n        },\n        {\n          \"operator\": \"CONTAINS\",\n          \"property_\": \"string\",\n          \"value\": \"string\"\n        }\n      ]\n    }\n  ],\n  \"description\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": 5646,\n  \"name\": \"string\",\n  \"description\": \"string\",\n  \"project\": 1108,\n  \"rules\": [\n    {\n      \"type\": \"ANY\",\n      \"rules\": [\n        {\n          \"value\": \"<Circular reference to #/components/schemas/SegmentRule detected>\"\n        },\n        {\n          \"value\": \"<Circular reference to #/components/schemas/SegmentRule detected>\"\n        }\n      ],\n      \"conditions\": [\n        {\n          \"operator\": \"IS_SET\",\n          \"property_\": \"string\",\n          \"value\": \"string\"\n        },\n        {\n          \"operator\": \"REGEX\",\n          \"property_\": \"string\",\n          \"value\": \"string\"\n        }\n      ]\n    },\n    {\n      \"type\": \"ANY\",\n      \"rules\": [\n        {\n          \"value\": \"<Circular reference to #/components/schemas/SegmentRule detected>\"\n        },\n        {\n          \"value\": \"<Circular reference to #/components/schemas/SegmentRule detected>\"\n        }\n      ],\n      \"conditions\": [\n        {\n          \"operator\": \"GREATER_THAN\",\n          \"property_\": \"string\",\n          \"value\": \"string\"\n        },\n        {\n          \"operator\": \"CONTAINS\",\n          \"property_\": \"string\",\n          \"value\": \"string\"\n        }\n      ]\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "d9a05877-f939-4a6e-a7e5-c78afa723648",
+              "name": "Bad request - validation error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "projects",
+                    ":project_id",
+                    "segments",
+                    ":segment_id",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "project_id",
+                      "description": "(Required) The unique identifier for the project"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "segment_id",
+                      "description": "(Required) The unique identifier for the segment"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"<string>\",\n  \"project\": \"<integer>\",\n  \"rules\": [\n    {\n      \"type\": \"NONE\",\n      \"rules\": [\n        {\n          \"value\": \"<Circular reference to #/components/schemas/SegmentRule detected>\"\n        },\n        {\n          \"value\": \"<Circular reference to #/components/schemas/SegmentRule detected>\"\n        }\n      ],\n      \"conditions\": [\n        {\n          \"operator\": \"GREATER_THAN_INCLUSIVE\",\n          \"property_\": \"string\",\n          \"value\": \"string\"\n        },\n        {\n          \"operator\": \"IS_NOT_SET\",\n          \"property_\": \"string\",\n          \"value\": \"string\"\n        }\n      ]\n    },\n    {\n      \"type\": \"ALL\",\n      \"rules\": [\n        {\n          \"value\": \"<Circular reference to #/components/schemas/SegmentRule detected>\"\n        },\n        {\n          \"value\": \"<Circular reference to #/components/schemas/SegmentRule detected>\"\n        }\n      ],\n      \"conditions\": [\n        {\n          \"operator\": \"LESS_THAN_INCLUSIVE\",\n          \"property_\": \"string\",\n          \"value\": \"string\"\n        },\n        {\n          \"operator\": \"CONTAINS\",\n          \"property_\": \"string\",\n          \"value\": \"string\"\n        }\n      ]\n    }\n  ],\n  \"description\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "615e2f24-48b9-4219-83eb-2dd34181bc4a",
+              "name": "Unauthorized - invalid or missing API token",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "projects",
+                    ":project_id",
+                    "segments",
+                    ":segment_id",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "project_id",
+                      "description": "(Required) The unique identifier for the project"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "segment_id",
+                      "description": "(Required) The unique identifier for the segment"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"<string>\",\n  \"project\": \"<integer>\",\n  \"rules\": [\n    {\n      \"type\": \"NONE\",\n      \"rules\": [\n        {\n          \"value\": \"<Circular reference to #/components/schemas/SegmentRule detected>\"\n        },\n        {\n          \"value\": \"<Circular reference to #/components/schemas/SegmentRule detected>\"\n        }\n      ],\n      \"conditions\": [\n        {\n          \"operator\": \"GREATER_THAN_INCLUSIVE\",\n          \"property_\": \"string\",\n          \"value\": \"string\"\n        },\n        {\n          \"operator\": \"IS_NOT_SET\",\n          \"property_\": \"string\",\n          \"value\": \"string\"\n        }\n      ]\n    },\n    {\n      \"type\": \"ALL\",\n      \"rules\": [\n        {\n          \"value\": \"<Circular reference to #/components/schemas/SegmentRule detected>\"\n        },\n        {\n          \"value\": \"<Circular reference to #/components/schemas/SegmentRule detected>\"\n        }\n      ],\n      \"conditions\": [\n        {\n          \"operator\": \"LESS_THAN_INCLUSIVE\",\n          \"property_\": \"string\",\n          \"value\": \"string\"\n        },\n        {\n          \"operator\": \"CONTAINS\",\n          \"property_\": \"string\",\n          \"value\": \"string\"\n        }\n      ]\n    }\n  ],\n  \"description\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "9f912676-2f50-4763-b4fb-64323ae59e83",
+              "name": "Segment or project not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "projects",
+                    ":project_id",
+                    "segments",
+                    ":segment_id",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "project_id",
+                      "description": "(Required) The unique identifier for the project"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "segment_id",
+                      "description": "(Required) The unique identifier for the segment"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"<string>\",\n  \"project\": \"<integer>\",\n  \"rules\": [\n    {\n      \"type\": \"NONE\",\n      \"rules\": [\n        {\n          \"value\": \"<Circular reference to #/components/schemas/SegmentRule detected>\"\n        },\n        {\n          \"value\": \"<Circular reference to #/components/schemas/SegmentRule detected>\"\n        }\n      ],\n      \"conditions\": [\n        {\n          \"operator\": \"GREATER_THAN_INCLUSIVE\",\n          \"property_\": \"string\",\n          \"value\": \"string\"\n        },\n        {\n          \"operator\": \"IS_NOT_SET\",\n          \"property_\": \"string\",\n          \"value\": \"string\"\n        }\n      ]\n    },\n    {\n      \"type\": \"ALL\",\n      \"rules\": [\n        {\n          \"value\": \"<Circular reference to #/components/schemas/SegmentRule detected>\"\n        },\n        {\n          \"value\": \"<Circular reference to #/components/schemas/SegmentRule detected>\"\n        }\n      ],\n      \"conditions\": [\n        {\n          \"operator\": \"LESS_THAN_INCLUSIVE\",\n          \"property_\": \"string\",\n          \"value\": \"string\"\n        },\n        {\n          \"operator\": \"CONTAINS\",\n          \"property_\": \"string\",\n          \"value\": \"string\"\n        }\n      ]\n    }\n  ],\n  \"description\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "465cbc0a-5cdb-4545-924f-5aa9e0eda290",
+          "name": "Delete a segment",
+          "request": {
+            "name": "Delete a segment",
+            "description": {
+              "content": "Permanently deletes a segment from a project. Any segment overrides associated with this segment will also be removed. This action cannot be undone.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "projects",
+                ":project_id",
+                "segments",
+                ":segment_id",
+                ""
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "project_id",
+                  "description": "(Required) The unique identifier for the project"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "segment_id",
+                  "description": "(Required) The unique identifier for the segment"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "fd526509-79ab-4de1-a99d-6ae105f20ec2",
+              "name": "Segment deleted successfully",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "projects",
+                    ":project_id",
+                    "segments",
+                    ":segment_id",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "project_id",
+                      "description": "(Required) The unique identifier for the project"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "segment_id",
+                      "description": "(Required) The unique identifier for the segment"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "No Content",
+              "code": 204,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "1fa332d6-d7bb-4033-bb12-190c098dd0a3",
+              "name": "Unauthorized - invalid or missing API token",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "projects",
+                    ":project_id",
+                    "segments",
+                    ":segment_id",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "project_id",
+                      "description": "(Required) The unique identifier for the project"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "segment_id",
+                      "description": "(Required) The unique identifier for the segment"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "c1106da1-17be-42b2-861e-cd2bc8cfdfc1",
+              "name": "Segment or project not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "projects",
+                    ":project_id",
+                    "segments",
+                    ":segment_id",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "project_id",
+                      "description": "(Required) The unique identifier for the project"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "segment_id",
+                      "description": "(Required) The unique identifier for the segment"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.flagsmith.com/api/v1",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "Authorization"
+      },
+      {
+        "key": "value",
+        "value": "{{apiKey}}"
+      },
+      {
+        "key": "in",
+        "value": "header"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "faa3e9b8-051a-4caf-9b0a-59639a4e98e9",
+    "name": "Flagsmith Admin Environments Segments API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "The Flagsmith Admin API allows developers to programmatically manage all aspects of their Flagsmith projects. Anything that can be done through the Flagsmith dashboard can also be accomplished via this API, including creating, updating, and deleting projects, environments, feature flags, segments, and users. It uses a secret Organisation API Token for authentication and provides a Swagger interface at api.flagsmith.com/api/v1/docs for interactive exploration.\n\nContact Support:\n Name: Flagsmith Support",
+      "type": "text/plain"
+    }
+  }
+}

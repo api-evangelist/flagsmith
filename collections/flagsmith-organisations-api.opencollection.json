@@ -1,0 +1,56 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Flagsmith Admin Environments Organisations API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "Authorization",
+      "value": "{{Authorization}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Organisations",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List organisations",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.flagsmith.com/api/v1/organisations/"
+          },
+          "docs": "Retrieves a list of all organisations the authenticated user has access to. Returns organisation details including name, subscription information, and feature usage."
+        },
+        {
+          "info": {
+            "name": "Get an organisation",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.flagsmith.com/api/v1/organisations/:organisation_id/",
+            "params": [
+              {
+                "name": "organisation_id",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier for the organisation"
+              }
+            ]
+          },
+          "docs": "Retrieves the details of a specific organisation by its ID, including the organisation name, subscription plan, and feature usage limits."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

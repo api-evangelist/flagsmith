@@ -1,0 +1,110 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Flagsmith Admin Environments Webhooks API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "Authorization",
+      "value": "{{Authorization}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Webhooks",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List environment webhooks",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.flagsmith.com/api/v1/environments/:environment_api_key/webhooks/",
+            "params": [
+              {
+                "name": "environment_api_key",
+                "value": "",
+                "type": "path",
+                "description": "The API key for the environment"
+              }
+            ]
+          },
+          "docs": "Retrieves a list of all webhooks configured for a specific environment. Environment webhooks receive flag evaluation data for identified users."
+        },
+        {
+          "info": {
+            "name": "Create an environment webhook",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.flagsmith.com/api/v1/environments/:environment_api_key/webhooks/",
+            "params": [
+              {
+                "name": "environment_api_key",
+                "value": "",
+                "type": "path",
+                "description": "The API key for the environment"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a new webhook for an environment. The webhook will receive POST requests containing flag evaluation data whenever identities are evaluated."
+        },
+        {
+          "info": {
+            "name": "List organisation webhooks",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.flagsmith.com/api/v1/organisations/:organisation_id/webhooks/",
+            "params": [
+              {
+                "name": "organisation_id",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier for the organisation"
+              }
+            ]
+          },
+          "docs": "Retrieves a list of all webhooks configured for a specific organisation. Organisation webhooks receive audit log events for changes made across the organisation."
+        },
+        {
+          "info": {
+            "name": "Create an organisation webhook",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.flagsmith.com/api/v1/organisations/:organisation_id/webhooks/",
+            "params": [
+              {
+                "name": "organisation_id",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier for the organisation"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a new webhook for an organisation. The webhook will receive POST requests containing audit log events for changes made across the organisation."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

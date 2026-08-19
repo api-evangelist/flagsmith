@@ -1,0 +1,45 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Flagsmith Admin Environments Users API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "Authorization",
+      "value": "{{Authorization}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Users",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List organisation users",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.flagsmith.com/api/v1/organisations/:organisation_id/users/",
+            "params": [
+              {
+                "name": "organisation_id",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier for the organisation"
+              }
+            ]
+          },
+          "docs": "Retrieves a list of all users belonging to a specific organisation, including their roles and permissions."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}
