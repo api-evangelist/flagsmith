@@ -23,6 +23,12 @@ apis:
   - Feature Flags
   - Flags
   - Remote Config
+  - SDK
+  tags_raw:
+  - Edge
+  - Feature Flags
+  - Flags
+  - Remote Config
   - SDKs
   image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
   baseURL: https://edge.api.flagsmith.com
@@ -108,6 +114,8 @@ apis:
   humanURL: https://docs.flagsmith.com/clients/rest
   baseURL: https://edge.api.flagsmith.com
   tags:
+  - Project
+  tags_raw:
   - Projects
   properties:
   - type: OpenAPI
@@ -138,6 +146,8 @@ apis:
   humanURL: https://docs.flagsmith.com/clients/rest
   baseURL: https://edge.api.flagsmith.com
   tags:
+  - User
+  tags_raw:
   - Users
   properties:
   - type: OpenAPI
@@ -154,6 +164,8 @@ apis:
   humanURL: https://docs.flagsmith.com/clients/rest
   baseURL: https://edge.api.flagsmith.com
   tags:
+  - Webhook
+  tags_raw:
   - Webhooks
   properties:
   - type: OpenAPI
