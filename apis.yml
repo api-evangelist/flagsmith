@@ -51,17 +51,15 @@ apis:
     type: Documentation
   - url: openapi/flagsmith-flags-api-openapi.yml
     type: OpenAPI
-  description: >-
-    The Flagsmith Flags API is the public-facing REST API that client-side and server-side SDKs use to
-    retrieve feature flag values and remote configuration for environments and users. It uses a non-secret
-    Environment Key for authentication and is designed to be fast, scalable, and publicly accessible.
-    The Edge API endpoint at edge.api.flagsmith.com serves requests from AWS Lambda functions running
-    in data centers near the client, providing low-latency global access to flag evaluations.
+  description: The Flagsmith Flags API is the public-facing REST API that client-side and server-side
+    SDKs use to retrieve feature flag values and remote configuration for environments and users. It uses
+    a non-secret Environment Key for authentication and is designed to be fast, scalable, and publicly
+    accessible. The Edge API endpoint at edge.api.flagsmith.com serves requests from AWS Lambda functions
+    running in data centers near the client, providing low-latency global access to flag evaluations.
 - aid: flagsmith:flagsmith-environments-api
   name: flagsmith Environments API
-  description: >-
-    Manage environments within a project. Environments represent deployment stages such as development,
-    staging, and production.
+  description: Manage environments within a project. Environments represent deployment stages such as
+    development, staging, and production.
   humanURL: https://docs.flagsmith.com/clients/rest
   baseURL: https://edge.api.flagsmith.com
   tags:
@@ -75,9 +73,8 @@ apis:
     url: asyncapi/flagsmith-webhooks-asyncapi.yml
 - aid: flagsmith:flagsmith-features-api
   name: flagsmith Features API
-  description: >-
-    Manage feature flags within a project. Features can be toggled on or off and can have remote configuration
-    values.
+  description: Manage feature flags within a project. Features can be toggled on or off and can have remote
+    configuration values.
   humanURL: https://docs.flagsmith.com/clients/rest
   baseURL: https://edge.api.flagsmith.com
   tags:
@@ -91,9 +88,8 @@ apis:
     url: asyncapi/flagsmith-webhooks-asyncapi.yml
 - aid: flagsmith:flagsmith-identities-api
   name: flagsmith Identities API
-  description: >-
-    Manage user identities within an environment. Identities represent individual users and their associated
-    traits.
+  description: Manage user identities within an environment. Identities represent individual users and
+    their associated traits.
   humanURL: https://docs.flagsmith.com/clients/rest
   baseURL: https://edge.api.flagsmith.com
   tags:
@@ -107,9 +103,8 @@ apis:
     url: asyncapi/flagsmith-webhooks-asyncapi.yml
 - aid: flagsmith:flagsmith-organisations-api
   name: flagsmith Organisations API
-  description: >-
-    Manage organisations within Flagsmith. Organisations are the top-level container for projects, users,
-    and billing.
+  description: Manage organisations within Flagsmith. Organisations are the top-level container for projects,
+    users, and billing.
   humanURL: https://docs.flagsmith.com/clients/rest
   baseURL: https://edge.api.flagsmith.com
   tags:
@@ -139,9 +134,8 @@ apis:
     url: asyncapi/flagsmith-webhooks-asyncapi.yml
 - aid: flagsmith:flagsmith-segments-api
   name: flagsmith Segments API
-  description: >-
-    Manage segments within a project. Segments define groups of users based on traits and rules for targeted
-    flag delivery.
+  description: Manage segments within a project. Segments define groups of users based on traits and rules
+    for targeted flag delivery.
   humanURL: https://docs.flagsmith.com/clients/rest
   baseURL: https://edge.api.flagsmith.com
   tags:
@@ -171,9 +165,8 @@ apis:
     url: asyncapi/flagsmith-webhooks-asyncapi.yml
 - aid: flagsmith:flagsmith-webhooks-api
   name: flagsmith Webhooks API
-  description: >-
-    Configure webhooks for environments and organisations to receive notifications about flag changes
-    and audit log events.
+  description: Configure webhooks for environments and organisations to receive notifications about flag
+    changes and audit log events.
   humanURL: https://docs.flagsmith.com/clients/rest
   baseURL: https://edge.api.flagsmith.com
   tags:
@@ -188,23 +181,24 @@ apis:
   - type: AsyncAPI
     url: asyncapi/flagsmith-webhooks-asyncapi.yml
 common:
-  - type: AgenticAccess
-    url: agentic-access/flagsmith-agentic-access.yml
-  - type: DomainSecurity
-    url: security/flagsmith-domain-security.yml
-  - type: Authentication
-    url: authentication/flagsmith-authentication.yml
-  - type: GitHubOrganization
-    url: https://github.com/Flagsmith
-  - type: LinkedIn
-    url: https://www.linkedin.com/company/flagsmith
-  - type: JSONLD
-    url: json-ld/flagsmith-context.jsonld
-  - type: JSONSchema
-    url: json-schema/flagsmith-feature-flag-schema.json
-  - url: https://flagsmith.com/blog
-    type: Blog
-modified: '2026-05-19'
-description: >-
-  Flagsmith is an open-source feature flag and remote configuration platform that helps developers manage feature flags
-  across web, mobile, and server-side applications.
+- type: Website
+  url: https://flagsmith.com
+- type: AgenticAccess
+  url: agentic-access/flagsmith-agentic-access.yml
+- type: DomainSecurity
+  url: security/flagsmith-domain-security.yml
+- type: Authentication
+  url: authentication/flagsmith-authentication.yml
+- type: GitHubOrganization
+  url: https://github.com/Flagsmith
+- type: LinkedIn
+  url: https://www.linkedin.com/company/flagsmith
+- type: JSONLD
+  url: json-ld/flagsmith-context.jsonld
+- type: JSONSchema
+  url: json-schema/flagsmith-feature-flag-schema.json
+- url: https://flagsmith.com/blog
+  type: Blog
+modified: '2026-09-16'
+description: Flagsmith is an open-source feature flag and remote configuration platform that helps developers
+  manage feature flags across web, mobile, and server-side applications.
