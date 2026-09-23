@@ -1,0 +1,174 @@
+generated: '2026-09-17'
+method: searched
+source: >-
+  https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/management-api/,
+  .../flags-api/authentication, .../governance-and-compliance/system-limits,
+  https://docs.flagsmith.com/managing-flags/feature-versioning,
+  https://docs.flagsmith.com/third-party-integrations/webhook, and derived from
+  openapi/_original/flagsmith-api-openapi.json (615 operations, harvested 2026-09-17).
+description: >-
+  Cross-cutting runtime semantics for the Flagsmith API surface — what an agent needs to know before
+  it makes a call, and what it can rely on after.
+surfaces:
+  sdk_flags_api:
+    base: https://edge.api.flagsmith.com
+    role: Read flag values and write identity traits. Publicly reachable, non-secret key.
+    counts_against_plan_quota: true
+  management_api:
+    base: https://api.flagsmith.com/api/v1
+    role: Everything the dashboard can do. Secret key.
+    counts_against_plan_quota: false
+auth:
+  style: api-key-header (two distinct keys), plus OAuth 2.1 on the MCP surface
+  schemes:
+  - {name: Environment API Key, header: X-Environment-Key, surface: SDK/Flags API, secret: false}
+  - {name: Master API Key, header: 'Authorization: Api-Key <key>', surface: Management API, secret: true}
+  - {name: tokenAuth, header: 'Authorization: Token <key>', surface: Management API (session/user tokens), secret: true}
+  - {name: Cohort Sync Key, header: 'Authorization: Bearer <key>', surface: cohort-sync webhooks (Amplitude)}
+  - {name: Cohort Sync Key (Basic), header: 'Authorization: Basic', surface: cohort-sync webhooks (Mixpanel); key is the password, username ignored}
+  - {name: OAuth 2.1, surface: MCP (https://mcp.flagsmith.com), scopes: [mcp, admin-api], pkce: S256}
+  gotcha: >-
+    The `Api-Key ` prefix is mandatory on the Management API header and is the most common
+    integration mistake; the value must read `Api-Key ser.abc123…`, not the bare key. The two key
+    types are not interchangeable and live on different hosts.
+  see: authentication/flagsmith-authentication.yml, scopes/flagsmith-scopes.yml
+idempotency:
+  coverage: none
+  scope: []
+  mechanism: null
+  header: null
+  retention: null
+  note: >-
+    No replay protection of any kind. Flagsmith documents no Idempotency-Key header, no request-id
+    dedupe, and no client-supplied idempotency token, and none of the 615 operations in the contract
+    declares one. 168 of those operations are POSTs. In practice the mutating surface divides into
+    two: PUT/PATCH updates to a feature state are naturally idempotent because they set an absolute
+    value rather than applying a delta, so a retried `update_feature_state` converges; but every
+    POST that creates something (create_feature, create_project_segment,
+    create_feature_multivariate_option, create_organization_invite,
+    create_environment_feature_version) will create a duplicate on a retried request. An agent
+    retrying after a timeout has no way to tell whether the first attempt landed.
+pagination:
+  style: page-number
+  params: {page: 'integer, 1-based', page_size: integer}
+  response_fields: {count: total items, next: absolute URI or null, previous: absolute URI or null, results: array}
+  envelope_schemas: 49 Paginated*List schemas in components
+  cursor: false
+  note: >-
+    Django REST Framework page-number pagination, consistent across the surface: `page` appears on 55
+    list operations and `page_size` on 16. `next`/`previous` are absolute URIs, so a client can walk
+    pages without reconstructing query strings. There is no cursor/keyset pagination, so deep pages
+    over a mutating collection can skip or repeat rows. One exception worth knowing: the Edge
+    identities endpoints use `last_evaluated_key` (a DynamoDB-style continuation token) instead.
+filtering_and_sorting:
+  note: >-
+    Rich and per-resource rather than generic. list_project_features alone accepts environment,
+    group_owners, identity, is_archived, is_enabled, lifecycle_stage, owners, search, segment,
+    sort_direction, sort_field, tag_strategy, tags, type and value_search. There is no global
+    convention — read the operation.
+field_expansion:
+  supported: false
+  note: >-
+    No `expand`/`fields` sparse-fieldset convention. Related data is fetched with a second call, with
+    one deliberate exception the provider calls out: `list_project_features?environment=<id>` folds
+    each feature's live state for that environment into `environment_feature_state`, saving a fan-out.
+metadata:
+  supported: true
+  note: >-
+    Custom metadata fields are a first-class feature (Metadata tag, 9 operations) with per-model
+    field definitions, so consumers can attach their own structured data to features, segments and
+    environments rather than encoding it in names.
+request_id_tracing:
+  supported: false
+  note: No request-id or correlation-id header is documented or declared in the contract.
+versioning:
+  api_version: v1
+  style: path (/api/v1/)
+  note: >-
+    The API path version has not moved. Product versioning is tracked separately as the Flagsmith
+    release train (currently the 2.x line, released every 1–2 weeks); see
+    changelog/flagsmith-changelog.yml. A separate, confusable concept is FEATURE versioning (v2
+    feature versioning, an opt-in per-environment flag `use_v2_feature_versioning`) which changes
+    WHICH operations apply to an environment — several MCP tools state this explicitly. An agent
+    must read the environment's `use_v2_feature_versioning` before choosing between
+    update_environment_feature_state (v1) and the create/publish version pair (v2).
+error_envelope:
+  media_type: application/json
+  shape: '{"message": "<string>"}'
+  rfc9457: false
+  note: >-
+    Thin, and largely undeclared — 591 of 615 operations declare no error response at all.
+  see: errors/flagsmith-problem-types.yml
+rate_limit_signaling:
+  headers_published: false
+  documented_limit: 500 requests per minute on Management API endpoints
+  note: >-
+    A number in prose with no runtime signal. No X-RateLimit-*, no RateLimit-*, no Retry-After, and
+    no 429 declared on any operation. SDK endpoints are deliberately not rate limited; the constraint
+    there is the monthly plan quota.
+  see: rate-limits/flagsmith-rate-limits.yml
+webhook_signing:
+  header: X-Flagsmith-Signature
+  algorithm: HMAC-SHA256 over the raw UTF-8 request body, keyed with the shared secret
+  note: Verify with a constant-time compare. Secret is configured per environment or per organisation.
+  see: asyncapi/flagsmith-webhooks-asyncapi.yml
+dry_run_mode:
+  supported: false
+  note: >-
+    No dry-run, preview or validate-only mode on any write. The closest analogue is the enterprise
+    change-request workflow, which stages a change for human approval before it commits — a review
+    gate, not a simulation.
+reversibility:
+  grade: documented
+  note: >-
+    Flagsmith is unusually well placed on reversibility in PRODUCT terms and unusually thin on it in
+    CONTRACT terms, and the grade reflects the gap. Reversal paths exist and are real; not one of
+    them carries a stated window in the docs, so nothing here reaches `verified`. NEVER assume a
+    retention period for a feature version or an audit record from this file — the provider does not
+    state one.
+  write_surfaces:
+  - surface: Feature state change in a v2-versioned environment
+    reversal: >-
+      Re-publish an earlier version. Versions are immutable and enumerable
+      (get_environment_feature_versions), and publishing one makes it live again.
+    operations: [get_environment_feature_versions, create_environment_feature_version, publish_environment_feature_version]
+    window: null
+    window_stated: false
+    docs: https://docs.flagsmith.com/managing-flags/feature-versioning
+  - surface: Feature state change in a non-versioned (v1) environment
+    reversal: >-
+      None as an operation. The write is in place; the previous value is recoverable only by reading
+      the audit log and setting it back by hand.
+    operations: [update_environment_feature_state, update_feature_state]
+    window: null
+    window_stated: false
+  - surface: Segment override
+    reversal: delete_feature_segment removes an override created by create_segment_override.
+    operations: [create_segment_override, delete_feature_segment]
+    window: null
+    window_stated: false
+  - surface: Release pipeline publication (enterprise)
+    reversal: api_v1_projects_release_pipelines_unpublish_pipeline_create
+    operations: [api_v1_projects_release_pipelines_publish_pipeline_create, api_v1_projects_release_pipelines_unpublish_pipeline_create]
+    window: null
+    window_stated: false
+  - surface: Change request (enterprise)
+    reversal: >-
+      A change request can be declined or left uncommitted before it applies — prevention rather than
+      reversal. Once committed it is an ordinary feature state change.
+    operations: [create_environment_feature_change_request, api_v1_features_workflows_change_requests_approve_create, api_v1_features_workflows_change_requests_commit_create]
+    window: null
+    window_stated: false
+  - surface: Deletion of a feature, segment, project or environment
+    reversal: >-
+      None published. No restore/undelete operation exists anywhere in the 615-operation contract,
+      and no retention or soft-delete window is documented. An agent should treat every DELETE on
+      this API as permanent.
+    operations: []
+    window: null
+    window_stated: false
+  audit:
+    note: >-
+      Every change is recorded in the audit log (Audit tag, 6 operations; unlimited history on
+      Enterprise), so an agent's actions are always attributable and diffable even where they are not
+      undoable.

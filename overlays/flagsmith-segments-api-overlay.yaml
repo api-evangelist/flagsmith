@@ -1,0 +1,104 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements — Flagsmith Admin Segments API
+  version: 1.0.0
+extends: ../openapi/flagsmith-segments-api-openapi.yml
+x-generated: '2026-09-17'
+x-method: generated
+x-source: API Evangelist enrichment pass 2026-09-17; every value below is read from an artifact in this
+  repository, not invented.
+actions:
+- target: $.info
+  description: Point readers at the first-party contract, which is broader than this split document.
+  update:
+    x-first-party-contract: https://api.flagsmith.com/api/v1/swagger.json
+    x-first-party-contract-local: openapi/_original/flagsmith-api-openapi.json
+    x-first-party-contract-operations: 615
+    x-contract-note: This document is one tag-scoped slice. Flagsmith serves a complete OpenAPI 3.1 (344
+      paths, 615 operations, 476 schemas) anonymously from its own API host, with a live Swagger UI at
+      https://api.flagsmith.com/api/v1/docs/.
+- target: $.info
+  description: Attach the runtime semantics an agent needs and the contract does not state.
+  update:
+    x-conventions: conventions/flagsmith-conventions.yml
+    x-idempotency:
+      coverage: none
+      note: No Idempotency-Key header on any of the 168 POST operations. PUT updates set absolute values
+        and are safe to retry; creates are not.
+    x-reversibility:
+      grade: documented
+      note: 'Re-publishing an earlier EnvironmentFeatureVersion is the only true undo, and only in environments
+        with use_v2_feature_versioning: true. No DELETE has a restore path and no retention window is
+        published.'
+    x-dry-run:
+      supported: false
+      closest: Enterprise change requests stage a write for human approval.
+    x-pagination:
+      style: page-number
+      params:
+      - page
+      - page_size
+      response_fields:
+      - count
+      - next
+      - previous
+      - results
+- target: $.info
+  description: Attach published limits, which appear nowhere in the contract.
+  update:
+    x-rate-limits:
+      management_api: 500 requests per minute
+      sdk_api: not rate limited by design
+      response_headers: null
+      note: Documented in prose only — no rate-limit response headers are emitted and no 429 is declared
+        on any operation.
+      source: https://docs.flagsmith.com/administration-and-security/governance-and-compliance/system-limits
+      artifact: rate-limits/flagsmith-rate-limits.yml
+    x-plans: plans/flagsmith-plans-pricing.yml
+- target: $.info
+  description: Attach the agent surfaces bound to this contract.
+  update:
+    x-mcp-server:
+      endpoint: https://mcp.flagsmith.com
+      mode: both
+      tools: 54
+      auth: 'oauth (scope: mcp) or Authorization: Api-Key'
+      artifact: mcp/flagsmith-mcp.yml
+    x-tool-crosswalk: mcp/flagsmith-tool-crosswalk.yml
+    x-agent-skills: skills/_index.yml
+    x-llms-txt: llms/flagsmith-llms.txt
+- target: $.info
+  description: Attach the discovery documents the contract does not mention. OAuth 2.0 is served by Flagsmith
+    but declared in no securityScheme anywhere in the spec.
+  update:
+    x-oauth-authorization-server: https://api.flagsmith.com/.well-known/oauth-authorization-server
+    x-oauth-protected-resource: https://mcp.flagsmith.com/.well-known/oauth-protected-resource
+    x-oauth-scopes:
+    - mcp
+    - admin-api
+    x-well-known: well-known/flagsmith-well-known.yml
+    x-scopes-artifact: scopes/flagsmith-scopes.yml
+- target: $.info
+  description: Attach the error semantics, which 591 of 615 operations leave undeclared.
+  update:
+    x-error-catalog: errors/flagsmith-problem-types.yml
+    x-error-envelope:
+      media_type: application/json
+      shape: '{"message": string}'
+      rfc9457: false
+- target: $.info
+  description: Attach lifecycle and status signals.
+  update:
+    x-status-page: https://status.flagsmith.com
+    x-status-api: https://status.flagsmith.com/api/v2/status.json
+    x-changelog: https://github.com/Flagsmith/flagsmith/releases
+    x-lifecycle: lifecycle/flagsmith-lifecycle.yml
+    x-deprecation-headers: false
+- target: $.info
+  description: Attach conformance and the domain standard for this market.
+  update:
+    x-conformance: conformance/flagsmith-conformance.yml
+    x-domain-standards:
+    - openfeature
+    - scim2
+    x-data-model: data-model/flagsmith-data-model.yml

@@ -1,0 +1,31 @@
+generated: '2026-09-17'
+method: probed
+source: https://trust.flagsmith.com
+url: https://trust.flagsmith.com
+platform: Vanta
+http_status: 200
+checked: '2026-09-17'
+evidence:
+- {url: 'https://trust.flagsmith.com', status: 200, content_type: 'text/html', observed: 'title "Flagsmith Trust Center"; Vanta-hosted (assets.vanta.com, app.vanta.com document links)'}
+- {url: 'https://flagsmith.com/security', status: 404}
+- {url: 'https://flagsmith.com/trust', status: 404}
+- {url: 'https://www.flagsmith.com/compliance', status: 404}
+- {url: 'https://flagsmith.com/.well-known/security.txt', status: 404}
+description: >-
+  Flagsmith runs a real, dedicated trust center on its own subdomain, built on Vanta. It is
+  discoverable only if you already know the hostname: nothing on flagsmith.com under /security,
+  /trust or /compliance resolves, and there is no security.txt on any host to point at it. That
+  discoverability gap is the finding here — the programme exists and the front door is unsigned.
+certifications:
+  read: false
+  note: >-
+    NOT RECORDED. The certification list and evidence documents are rendered client-side by the Vanta
+    application and gated behind a document request (app.vanta.com/doc?s=…), so no certification name
+    was readable anonymously. Nothing is asserted here — no SOC 2, ISO 27001, HIPAA, PCI or FedRAMP
+    claim is being made on Flagsmith's behalf from a page this probe could not read. Flagsmith's
+    pricing page markets "Features for Maximum Security" and its llms.txt names banking, financial
+    services and healthcare customers, but marketing copy is not a certification and is deliberately
+    not promoted to one.
+  how_to_verify: Open https://trust.flagsmith.com in a browser, or request documents through the Vanta portal.
+documents_gated: true
+subprocessors: null

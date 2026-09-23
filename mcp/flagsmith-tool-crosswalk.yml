@@ -1,0 +1,800 @@
+generated: '2026-09-17'
+method: derived
+source: mcp/flagsmith-mcp.yml (provider-published tool list) x openapi/_original/flagsmith-api-openapi.json
+  (first-party OpenAPI 3.1 harvested from https://api.flagsmith.com/api/v1/swagger.json on 2026-09-17)
+note: 'An unusually clean crosswalk, and the reason is the provider''s, not ours: Flagsmith tags 54 operations
+  `mcp` in its own OpenAPI and gives each the operationId that is also the MCP tool name. Every published
+  tool binds 1:1 to exactly one REST operation with confidence high, and no name/semantics guessing was
+  needed even though the live MCP endpoint is OAuth-gated. What that buys an agent: each tool''s REAL
+  inputSchema is readable today from the contract''s parameters + requestBody for the bound operation,
+  without ever authenticating to the MCP server.'
+surfaces:
+  openapi:
+    url: https://api.flagsmith.com/api/v1/swagger.json
+    local: openapi/_original/flagsmith-api-openapi.json
+    gated: false
+    operations: 615
+  mcp:
+    url: https://mcp.flagsmith.com
+    gated: true
+    gate: 'RFC 9728 / OAuth (scope: mcp) or Authorization: Api-Key'
+  graphql: null
+coverage:
+  tools_total: 54
+  tools_bound: 54
+  tools_unbound: 0
+  rest_operations_total: 615
+  rest_operations_with_a_tool: 54
+  rest_only: 561
+  agent_reach_pct: 8.8
+crosswalk:
+- tool: create_environment_feature_version
+  category: feature-states
+  rest:
+  - create_environment_feature_version
+  binding: POST /api/v1/environments/{environment_pk}/features/{feature_pk}/versions/
+  confidence: high
+  note: The provider tags this operation `mcp` in its own OpenAPI and its operationId IS the tool name;
+    the tool inherits this operation's parameters and requestBody as its inputSchema.
+  inherits:
+    parameters:
+    - environment_pk
+    - feature_pk
+    request_body: true
+- tool: create_environment_feature_version_state
+  category: feature-states
+  rest:
+  - create_environment_feature_version_state
+  binding: POST /api/v1/environments/{environment_pk}/features/{feature_pk}/versions/{environment_feature_version_pk}/featurestates/
+  confidence: high
+  note: The provider tags this operation `mcp` in its own OpenAPI and its operationId IS the tool name;
+    the tool inherits this operation's parameters and requestBody as its inputSchema.
+  inherits:
+    parameters:
+    - environment_feature_version_pk
+    - environment_pk
+    - feature_pk
+    request_body: true
+- tool: create_experiment
+  category: experiments
+  rest:
+  - create_experiment
+  binding: POST /api/v1/environments/{environment_api_key}/experiments/
+  confidence: high
+  note: The provider tags this operation `mcp` in its own OpenAPI and its operationId IS the tool name;
+    the tool inherits this operation's parameters and requestBody as its inputSchema.
+  inherits:
+    parameters:
+    - environment_api_key
+    request_body: true
+- tool: create_feature
+  category: features
+  rest:
+  - create_feature
+  binding: POST /api/v1/projects/{project_pk}/features/
+  confidence: high
+  note: The provider tags this operation `mcp` in its own OpenAPI and its operationId IS the tool name;
+    the tool inherits this operation's parameters and requestBody as its inputSchema.
+  inherits:
+    parameters:
+    - project_pk
+    request_body: true
+- tool: create_feature_multivariate_option
+  category: multivariate
+  rest:
+  - create_feature_multivariate_option
+  binding: POST /api/v1/projects/{project_pk}/features/{feature_pk}/mv-options/
+  confidence: high
+  note: The provider tags this operation `mcp` in its own OpenAPI and its operationId IS the tool name;
+    the tool inherits this operation's parameters and requestBody as its inputSchema.
+  inherits:
+    parameters:
+    - feature_pk
+    - project_pk
+    request_body: true
+- tool: create_metric
+  category: metrics
+  rest:
+  - create_metric
+  binding: POST /api/v1/environments/{environment_api_key}/experiment-metrics/
+  confidence: high
+  note: The provider tags this operation `mcp` in its own OpenAPI and its operationId IS the tool name;
+    the tool inherits this operation's parameters and requestBody as its inputSchema.
+  inherits:
+    parameters:
+    - environment_api_key
+    request_body: true
+- tool: create_organization_invite
+  category: organisations
+  rest:
+  - create_organization_invite
+  binding: POST /api/v1/organisations/{organisation_pk}/invites/
+  confidence: high
+  note: The provider tags this operation `mcp` in its own OpenAPI and its operationId IS the tool name;
+    the tool inherits this operation's parameters and requestBody as its inputSchema.
+  inherits:
+    parameters:
+    - organisation_pk
+    request_body: true
+- tool: create_project_segment
+  category: segments
+  rest:
+  - create_project_segment
+  binding: POST /api/v1/projects/{project_pk}/segments/
+  confidence: high
+  note: The provider tags this operation `mcp` in its own OpenAPI and its operationId IS the tool name;
+    the tool inherits this operation's parameters and requestBody as its inputSchema.
+  inherits:
+    parameters:
+    - project_pk
+    request_body: true
+- tool: create_segment_override
+  category: feature-states
+  rest:
+  - create_segment_override
+  binding: POST /api/v1/environments/{environment_api_key}/features/{feature_pk}/create-segment-override/
+  confidence: high
+  note: The provider tags this operation `mcp` in its own OpenAPI and its operationId IS the tool name;
+    the tool inherits this operation's parameters and requestBody as its inputSchema.
+  inherits:
+    parameters:
+    - environment_api_key
+    - feature_pk
+    request_body: true
+- tool: delete_feature_multivariate_option
+  category: multivariate
+  rest:
+  - delete_feature_multivariate_option
+  binding: DELETE /api/v1/projects/{project_pk}/features/{feature_pk}/mv-options/{id}/
+  confidence: high
+  note: The provider tags this operation `mcp` in its own OpenAPI and its operationId IS the tool name;
+    the tool inherits this operation's parameters and requestBody as its inputSchema.
+  inherits:
+    parameters:
+    - feature_pk
+    - id
+    - project_pk
+    request_body: false
+- tool: delete_feature_segment
+  category: feature-states
+  rest:
+  - delete_feature_segment
+  binding: DELETE /api/v1/features/feature-segments/{id}/
+  confidence: high
+  note: The provider tags this operation `mcp` in its own OpenAPI and its operationId IS the tool name;
+    the tool inherits this operation's parameters and requestBody as its inputSchema.
+  inherits:
+    parameters:
+    - id
+    request_body: false
+- tool: get_environment_feature_version_states
+  category: feature-states
+  rest:
+  - get_environment_feature_version_states
+  binding: GET /api/v1/environments/{environment_pk}/features/{feature_pk}/versions/{environment_feature_version_pk}/featurestates/
+  confidence: high
+  note: The provider tags this operation `mcp` in its own OpenAPI and its operationId IS the tool name;
+    the tool inherits this operation's parameters and requestBody as its inputSchema.
+  inherits:
+    parameters:
+    - environment_feature_version_pk
+    - environment_pk
+    - feature_pk
+    request_body: false
+- tool: get_environment_feature_versions
+  category: feature-states
+  rest:
+  - get_environment_feature_versions
+  binding: GET /api/v1/environments/{environment_pk}/features/{feature_pk}/versions/
+  confidence: high
+  note: The provider tags this operation `mcp` in its own OpenAPI and its operationId IS the tool name;
+    the tool inherits this operation's parameters and requestBody as its inputSchema.
+  inherits:
+    parameters:
+    - environment_pk
+    - feature_pk
+    - page
+    - page_size
+    request_body: false
+- tool: get_experiment
+  category: experiments
+  rest:
+  - get_experiment
+  binding: GET /api/v1/environments/{environment_api_key}/experiments/{experiment_id}/
+  confidence: high
+  note: The provider tags this operation `mcp` in its own OpenAPI and its operationId IS the tool name;
+    the tool inherits this operation's parameters and requestBody as its inputSchema.
+  inherits:
+    parameters:
+    - environment_api_key
+    - experiment_id
+    request_body: false
+- tool: get_experiment_exposures
+  category: experiments
+  rest:
+  - get_experiment_exposures
+  binding: GET /api/v1/environments/{environment_api_key}/experiments/{experiment_id}/exposures/
+  confidence: high
+  note: The provider tags this operation `mcp` in its own OpenAPI and its operationId IS the tool name;
+    the tool inherits this operation's parameters and requestBody as its inputSchema.
+  inherits:
+    parameters:
+    - environment_api_key
+    - experiment_id
+    request_body: false
+- tool: get_experiment_results
+  category: experiments
+  rest:
+  - get_experiment_results
+  binding: GET /api/v1/environments/{environment_api_key}/experiments/{experiment_id}/results/
+  confidence: high
+  note: The provider tags this operation `mcp` in its own OpenAPI and its operationId IS the tool name;
+    the tool inherits this operation's parameters and requestBody as its inputSchema.
+  inherits:
+    parameters:
+    - environment_api_key
+    - experiment_id
+    request_body: false
+- tool: get_feature_code_references
+  category: features
+  rest:
+  - get_feature_code_references
+  binding: GET /api/v1/projects/{project_pk}/features/{feature_pk}/code-references/
+  confidence: high
+  note: The provider tags this operation `mcp` in its own OpenAPI and its operationId IS the tool name;
+    the tool inherits this operation's parameters and requestBody as its inputSchema.
+  inherits:
+    parameters:
+    - feature_pk
+    - project_pk
+    request_body: false
+- tool: get_feature_evaluation_data
+  category: features
+  rest:
+  - get_feature_evaluation_data
+  binding: GET /api/v1/projects/{project_pk}/features/{id}/evaluation-data/
+  confidence: high
+  note: The provider tags this operation `mcp` in its own OpenAPI and its operationId IS the tool name;
+    the tool inherits this operation's parameters and requestBody as its inputSchema.
+  inherits:
+    parameters:
+    - client_application_name
+    - client_application_version
+    - environment_id
+    - id
+    - period
+    - project_pk
+    - user_agent
+    request_body: false
+- tool: get_feature_external_resources
+  category: features
+  rest:
+  - get_feature_external_resources
+  binding: GET /api/v1/projects/{project_pk}/features/{feature_pk}/feature-external-resources/
+  confidence: high
+  note: The provider tags this operation `mcp` in its own OpenAPI and its operationId IS the tool name;
+    the tool inherits this operation's parameters and requestBody as its inputSchema.
+  inherits:
+    parameters:
+    - feature_pk
+    - page
+    - project_pk
+    request_body: false
+- tool: get_feature_flag
+  category: features
+  rest:
+  - get_feature_flag
+  binding: GET /api/v1/projects/{project_pk}/features/{id}/
+  confidence: high
+  note: The provider tags this operation `mcp` in its own OpenAPI and its operationId IS the tool name;
+    the tool inherits this operation's parameters and requestBody as its inputSchema.
+  inherits:
+    parameters:
+    - id
+    - project_pk
+    request_body: false
+- tool: get_feature_health_events
+  category: features
+  rest:
+  - get_feature_health_events
+  binding: GET /api/v1/projects/{project_pk}/feature-health/events/
+  confidence: high
+  note: The provider tags this operation `mcp` in its own OpenAPI and its operationId IS the tool name;
+    the tool inherits this operation's parameters and requestBody as its inputSchema.
+  inherits:
+    parameters:
+    - project_pk
+    request_body: false
+- tool: get_feature_lifecycle_counts
+  category: features
+  rest:
+  - get_feature_lifecycle_counts
+  binding: GET /api/v1/environments/{environment_pk}/feature-lifecycle-counts/
+  confidence: high
+  note: The provider tags this operation `mcp` in its own OpenAPI and its operationId IS the tool name;
+    the tool inherits this operation's parameters and requestBody as its inputSchema.
+  inherits:
+    parameters:
+    - environment_pk
+    request_body: false
+- tool: get_metric
+  category: metrics
+  rest:
+  - get_metric
+  binding: GET /api/v1/environments/{environment_api_key}/experiment-metrics/{id}/
+  confidence: high
+  note: The provider tags this operation `mcp` in its own OpenAPI and its operationId IS the tool name;
+    the tool inherits this operation's parameters and requestBody as its inputSchema.
+  inherits:
+    parameters:
+    - environment_api_key
+    - id
+    request_body: false
+- tool: get_project
+  category: projects
+  rest:
+  - get_project
+  binding: GET /api/v1/projects/{id}/
+  confidence: high
+  note: The provider tags this operation `mcp` in its own OpenAPI and its operationId IS the tool name;
+    the tool inherits this operation's parameters and requestBody as its inputSchema.
+  inherits:
+    parameters:
+    - id
+    request_body: false
+- tool: get_project_segment
+  category: segments
+  rest:
+  - get_project_segment
+  binding: GET /api/v1/projects/{project_pk}/segments/{id}/
+  confidence: high
+  note: The provider tags this operation `mcp` in its own OpenAPI and its operationId IS the tool name;
+    the tool inherits this operation's parameters and requestBody as its inputSchema.
+  inherits:
+    parameters:
+    - id
+    - project_pk
+    request_body: false
+- tool: list_environments
+  category: environments
+  rest:
+  - list_environments
+  binding: GET /api/v1/environments/
+  confidence: high
+  note: The provider tags this operation `mcp` in its own OpenAPI and its operationId IS the tool name;
+    the tool inherits this operation's parameters and requestBody as its inputSchema.
+  inherits:
+    parameters:
+    - page
+    - project
+    request_body: false
+- tool: list_experiments
+  category: experiments
+  rest:
+  - list_experiments
+  binding: GET /api/v1/environments/{environment_api_key}/experiments/
+  confidence: high
+  note: The provider tags this operation `mcp` in its own OpenAPI and its operationId IS the tool name;
+    the tool inherits this operation's parameters and requestBody as its inputSchema.
+  inherits:
+    parameters:
+    - environment_api_key
+    - page
+    - page_size
+    - q
+    - status
+    request_body: false
+- tool: list_feature_multivariate_options
+  category: multivariate
+  rest:
+  - list_feature_multivariate_options
+  binding: GET /api/v1/projects/{project_pk}/features/{feature_pk}/mv-options/
+  confidence: high
+  note: The provider tags this operation `mcp` in its own OpenAPI and its operationId IS the tool name;
+    the tool inherits this operation's parameters and requestBody as its inputSchema.
+  inherits:
+    parameters:
+    - feature_pk
+    - page
+    - project_pk
+    request_body: false
+- tool: list_feature_segments
+  category: feature-states
+  rest:
+  - list_feature_segments
+  binding: GET /api/v1/features/feature-segments/
+  confidence: high
+  note: The provider tags this operation `mcp` in its own OpenAPI and its operationId IS the tool name;
+    the tool inherits this operation's parameters and requestBody as its inputSchema.
+  inherits:
+    parameters:
+    - environment
+    - feature
+    - page
+    request_body: false
+- tool: list_metrics
+  category: metrics
+  rest:
+  - list_metrics
+  binding: GET /api/v1/environments/{environment_api_key}/experiment-metrics/
+  confidence: high
+  note: The provider tags this operation `mcp` in its own OpenAPI and its operationId IS the tool name;
+    the tool inherits this operation's parameters and requestBody as its inputSchema.
+  inherits:
+    parameters:
+    - environment_api_key
+    - page
+    - page_size
+    - q
+    request_body: false
+- tool: list_organization_groups
+  category: organisations
+  rest:
+  - list_organization_groups
+  binding: GET /api/v1/organisations/{organisation_pk}/groups/
+  confidence: high
+  note: The provider tags this operation `mcp` in its own OpenAPI and its operationId IS the tool name;
+    the tool inherits this operation's parameters and requestBody as its inputSchema.
+  inherits:
+    parameters:
+    - organisation_pk
+    - page
+    request_body: false
+- tool: list_organization_invites
+  category: organisations
+  rest:
+  - list_organization_invites
+  binding: GET /api/v1/organisations/{organisation_pk}/invites/
+  confidence: high
+  note: The provider tags this operation `mcp` in its own OpenAPI and its operationId IS the tool name;
+    the tool inherits this operation's parameters and requestBody as its inputSchema.
+  inherits:
+    parameters:
+    - organisation_pk
+    - page
+    request_body: false
+- tool: list_organizations
+  category: organisations
+  rest:
+  - list_organizations
+  binding: GET /api/v1/organisations/
+  confidence: high
+  note: The provider tags this operation `mcp` in its own OpenAPI and its operationId IS the tool name;
+    the tool inherits this operation's parameters and requestBody as its inputSchema.
+  inherits:
+    parameters:
+    - page
+    request_body: false
+- tool: list_project_environments
+  category: environments
+  rest:
+  - list_project_environments
+  binding: GET /api/v1/projects/{id}/environments/
+  confidence: high
+  note: The provider tags this operation `mcp` in its own OpenAPI and its operationId IS the tool name;
+    the tool inherits this operation's parameters and requestBody as its inputSchema.
+  inherits:
+    parameters:
+    - id
+    request_body: false
+- tool: list_project_features
+  category: features
+  rest:
+  - list_project_features
+  binding: GET /api/v1/projects/{project_pk}/features/
+  confidence: high
+  note: The provider tags this operation `mcp` in its own OpenAPI and its operationId IS the tool name;
+    the tool inherits this operation's parameters and requestBody as its inputSchema.
+  inherits:
+    parameters:
+    - environment
+    - group_owners
+    - identity
+    - is_archived
+    - is_enabled
+    - lifecycle_stage
+    - owners
+    - page
+    - page_size
+    - project_pk
+    - search
+    - segment
+    - sort_direction
+    - sort_field
+    - tag_strategy
+    - tags
+    - type
+    - value_search
+    request_body: false
+- tool: list_project_segments
+  category: segments
+  rest:
+  - list_project_segments
+  binding: GET /api/v1/projects/{project_pk}/segments/
+  confidence: high
+  note: The provider tags this operation `mcp` in its own OpenAPI and its operationId IS the tool name;
+    the tool inherits this operation's parameters and requestBody as its inputSchema.
+  inherits:
+    parameters:
+    - identity
+    - include_feature_specific
+    - page
+    - page_size
+    - project_pk
+    - q
+    request_body: false
+- tool: list_projects_in_organization
+  category: projects
+  rest:
+  - list_projects_in_organization
+  binding: GET /api/v1/organisations/{id}/projects/
+  confidence: high
+  note: The provider tags this operation `mcp` in its own OpenAPI and its operationId IS the tool name;
+    the tool inherits this operation's parameters and requestBody as its inputSchema.
+  inherits:
+    parameters:
+    - id
+    request_body: false
+- tool: publish_environment_feature_version
+  category: feature-states
+  rest:
+  - publish_environment_feature_version
+  binding: POST /api/v1/environments/{environment_pk}/features/{feature_pk}/versions/{id}/publish/
+  confidence: high
+  note: The provider tags this operation `mcp` in its own OpenAPI and its operationId IS the tool name;
+    the tool inherits this operation's parameters and requestBody as its inputSchema.
+  inherits:
+    parameters:
+    - environment_pk
+    - feature_pk
+    - id
+    request_body: true
+- tool: update_environment_feature_state
+  category: feature-states
+  rest:
+  - update_environment_feature_state
+  binding: PUT /api/v1/environments/{environment_api_key}/featurestates/{id}/
+  confidence: high
+  note: The provider tags this operation `mcp` in its own OpenAPI and its operationId IS the tool name;
+    the tool inherits this operation's parameters and requestBody as its inputSchema.
+  inherits:
+    parameters:
+    - environment_api_key
+    - id
+    request_body: true
+- tool: update_environment_feature_version_state
+  category: feature-states
+  rest:
+  - update_environment_feature_version_state
+  binding: PUT /api/v1/environments/{environment_pk}/features/{feature_pk}/versions/{environment_feature_version_pk}/featurestates/{id}/
+  confidence: high
+  note: The provider tags this operation `mcp` in its own OpenAPI and its operationId IS the tool name;
+    the tool inherits this operation's parameters and requestBody as its inputSchema.
+  inherits:
+    parameters:
+    - environment_feature_version_pk
+    - environment_pk
+    - feature_pk
+    - id
+    request_body: true
+- tool: update_experiment
+  category: experiments
+  rest:
+  - update_experiment
+  binding: PUT /api/v1/environments/{environment_api_key}/experiments/{experiment_id}/
+  confidence: high
+  note: The provider tags this operation `mcp` in its own OpenAPI and its operationId IS the tool name;
+    the tool inherits this operation's parameters and requestBody as its inputSchema.
+  inherits:
+    parameters:
+    - environment_api_key
+    - experiment_id
+    request_body: true
+- tool: update_feature
+  category: features
+  rest:
+  - update_feature
+  binding: PUT /api/v1/projects/{project_pk}/features/{id}/
+  confidence: high
+  note: The provider tags this operation `mcp` in its own OpenAPI and its operationId IS the tool name;
+    the tool inherits this operation's parameters and requestBody as its inputSchema.
+  inherits:
+    parameters:
+    - id
+    - project_pk
+    request_body: true
+- tool: update_feature_multivariate_option
+  category: multivariate
+  rest:
+  - update_feature_multivariate_option
+  binding: PUT /api/v1/projects/{project_pk}/features/{feature_pk}/mv-options/{id}/
+  confidence: high
+  note: The provider tags this operation `mcp` in its own OpenAPI and its operationId IS the tool name;
+    the tool inherits this operation's parameters and requestBody as its inputSchema.
+  inherits:
+    parameters:
+    - feature_pk
+    - id
+    - project_pk
+    request_body: true
+- tool: update_feature_state
+  category: feature-states
+  rest:
+  - update_feature_state
+  binding: PUT /api/v1/features/featurestates/{id}/
+  confidence: high
+  note: The provider tags this operation `mcp` in its own OpenAPI and its operationId IS the tool name;
+    the tool inherits this operation's parameters and requestBody as its inputSchema.
+  inherits:
+    parameters:
+    - id
+    request_body: true
+- tool: update_metric
+  category: metrics
+  rest:
+  - update_metric
+  binding: PUT /api/v1/environments/{environment_api_key}/experiment-metrics/{id}/
+  confidence: high
+  note: The provider tags this operation `mcp` in its own OpenAPI and its operationId IS the tool name;
+    the tool inherits this operation's parameters and requestBody as its inputSchema.
+  inherits:
+    parameters:
+    - environment_api_key
+    - id
+    request_body: true
+- tool: update_project
+  category: projects
+  rest:
+  - update_project
+  binding: PUT /api/v1/projects/{id}/
+  confidence: high
+  note: The provider tags this operation `mcp` in its own OpenAPI and its operationId IS the tool name;
+    the tool inherits this operation's parameters and requestBody as its inputSchema.
+  inherits:
+    parameters:
+    - id
+    request_body: true
+- tool: update_project_segment
+  category: segments
+  rest:
+  - update_project_segment
+  binding: PUT /api/v1/projects/{project_pk}/segments/{id}/
+  confidence: high
+  note: The provider tags this operation `mcp` in its own OpenAPI and its operationId IS the tool name;
+    the tool inherits this operation's parameters and requestBody as its inputSchema.
+  inherits:
+    parameters:
+    - id
+    - project_pk
+    request_body: true
+- tool: add_feature_to_release_pipeline
+  category: release-pipelines
+  rest:
+  - add_feature_to_release_pipeline
+  binding: POST /api/v1/projects/{project_pk}/release-pipelines/{id}/add-feature/
+  confidence: high
+  note: The provider tags this operation `mcp` in its own OpenAPI and its operationId IS the tool name;
+    the tool inherits this operation's parameters and requestBody as its inputSchema.
+  inherits:
+    parameters:
+    - id
+    - project_pk
+    request_body: true
+- tool: create_environment_feature_change_request
+  category: change-requests
+  rest:
+  - create_environment_feature_change_request
+  binding: POST /api/v1/environments/{environment_api_key}/create-change-request/
+  confidence: high
+  note: The provider tags this operation `mcp` in its own OpenAPI and its operationId IS the tool name;
+    the tool inherits this operation's parameters and requestBody as its inputSchema.
+  inherits:
+    parameters:
+    - environment_api_key
+    request_body: true
+- tool: get_release_pipeline
+  category: release-pipelines
+  rest:
+  - get_release_pipeline
+  binding: GET /api/v1/projects/{project_pk}/release-pipelines/{id}/
+  confidence: high
+  note: The provider tags this operation `mcp` in its own OpenAPI and its operationId IS the tool name;
+    the tool inherits this operation's parameters and requestBody as its inputSchema.
+  inherits:
+    parameters:
+    - id
+    - project_pk
+    request_body: false
+- tool: list_environment_change_requests
+  category: change-requests
+  rest:
+  - list_environment_change_requests
+  binding: GET /api/v1/environments/{environment_api_key}/list-change-requests/
+  confidence: high
+  note: The provider tags this operation `mcp` in its own OpenAPI and its operationId IS the tool name;
+    the tool inherits this operation's parameters and requestBody as its inputSchema.
+  inherits:
+    parameters:
+    - committed
+    - environment_api_key
+    - feature_id
+    - live_from_after
+    - page
+    - page_size
+    - search
+    - segment_id
+    request_body: false
+- tool: list_organization_roles
+  category: organisations
+  rest:
+  - list_organization_roles
+  binding: GET /api/v1/organisations/{organisation_pk}/roles/
+  confidence: high
+  note: The provider tags this operation `mcp` in its own OpenAPI and its operationId IS the tool name;
+    the tool inherits this operation's parameters and requestBody as its inputSchema.
+  inherits:
+    parameters:
+    - organisation_pk
+    - page
+    request_body: false
+- tool: list_project_change_requests
+  category: change-requests
+  rest:
+  - list_project_change_requests
+  binding: GET /api/v1/projects/{project_pk}/change-requests/
+  confidence: high
+  note: The provider tags this operation `mcp` in its own OpenAPI and its operationId IS the tool name;
+    the tool inherits this operation's parameters and requestBody as its inputSchema.
+  inherits:
+    parameters:
+    - committed
+    - page
+    - page_size
+    - project_pk
+    - search
+    - segment_id
+    request_body: false
+- tool: list_project_release_pipelines
+  category: release-pipelines
+  rest:
+  - list_project_release_pipelines
+  binding: GET /api/v1/projects/{project_pk}/release-pipelines/
+  confidence: high
+  note: The provider tags this operation `mcp` in its own OpenAPI and its operationId IS the tool name;
+    the tool inherits this operation's parameters and requestBody as its inputSchema.
+  inherits:
+    parameters:
+    - ordering
+    - page
+    - page_size
+    - project_pk
+    request_body: false
+mcp_only: []
+rest_only_note: '561 of the 615 operations in the Management API have no MCP tool. That is the honest
+  measure of what an agent can and cannot reach: 8.8% of the REST surface is exposed as tools, and the
+  largest excluded groups are Integrations (107 operations), Authentication/account management (59) and
+  Permissions (34) — surfaces the provider has evidently chosen not to hand to an agent. The full list
+  is not enumerated here; read it from the contract by filtering operations that do not carry the `mcp`
+  tag.'
+rest_only_by_tag:
+  Integrations: 107
+  Organisations: 104
+  Authentication: 59
+  Environments: 58
+  Projects: 41
+  Identities: 40
+  Features: 34
+  Permissions: 34
+  Webhooks: 17
+  Feature states: 17
+  Metadata: 9
+  experimental: 7
+  Audit: 6
+  Other: 6
+  Segments: 6
+  Admin dashboard: 5
+  sdk: 5
+  Analytics: 3
+  Onboarding: 1
+  o: 1
+  processor: 1

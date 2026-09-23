@@ -1,0 +1,74 @@
+generated: '2026-09-17'
+method: searched
+source: https://docs.flagsmith.com/integrating-with-flagsmith/CLI,
+  https://github.com/Flagsmith/flagsmith-cli, https://github.com/Flagsmith/setup-cli,
+  https://registry.npmjs.org/@flagsmith/cli
+name: flagsmith
+official: true
+language: Go
+version: v2.0.0
+released: '2026-08-21'
+repository: https://github.com/Flagsmith/flagsmith-cli
+docs: https://docs.flagsmith.com/integrating-with-flagsmith/CLI
+description: >-
+  A first-party command-line client that covers both Flagsmith surfaces from one binary: the
+  Management API (flags, features, segments, organisations, projects, environments) and SDK-style
+  flag evaluation. The 2.0 line is a Go rewrite; the pre-2.0 npm CLI is superseded and documented
+  separately as the Legacy CLI with a migration guide.
+install:
+- {method: homebrew, command: 'brew install Flagsmith/tap/flagsmith', tap: 'https://github.com/Flagsmith/homebrew-tap'}
+- {method: script, command: 'curl -fsSL https://get.flagsmith.com | sh', note: 'installs to $HOME/.local/bin and adds it to PATH'}
+- {method: powershell, command: 'irm https://raw.githubusercontent.com/Flagsmith/flagsmith-cli/main/install.ps1 | iex', platform: Windows}
+- {method: npm, command: 'npm install -g @flagsmith/cli', version: 2.0.0, published: '2026-08-21'}
+- {method: go, command: 'go install', note: stated as supported in the docs}
+- {method: docker, note: stated as supported in the docs}
+- {method: archive, url: 'https://github.com/Flagsmith/flagsmith-cli/releases'}
+config:
+  file: flagsmith.json
+  created_by: flagsmith init
+  note: >-
+    Written into the working directory and explicitly safe to commit — it carries the selected
+    project and environment and no secrets, so a team shares CLI defaults through version control.
+commands:
+- {group: init, example: 'flagsmith init', description: 'Log in, pick a project and environment, write flagsmith.json'}
+- {group: flag, example: 'flagsmith flag list', description: List flags in the current environment}
+- {group: flag, example: 'flagsmith flag enable my_feature', description: Toggle a flag in the current environment}
+- {group: evaluate, example: 'flagsmith evaluate --identity some_user', description: Resolve the flags an SDK would see for an identity}
+- {group: evaluate, example: 'flagsmith eval --js > flags.json', description: Emit the state a frontend SDK hydrates from}
+- {group: environment, example: 'flagsmith environment document', description: Output the local-evaluation environment document}
+- {group: api, example: 'flagsmith api /projects/', description: Call any Flagsmith endpoint with the CLI's credentials}
+- {group: eval, example: 'flagsmith eval canary-deploys --test', description: 'Print the resolved state and exit non-zero when the flag is disabled — gates a pipeline step on a flag'}
+surface_groups: [flags, segments, features, organisations, projects, environments, SDK-style evaluation, raw API access]
+conventions:
+  machine_output: '--json'
+  filter: '--jq <expr>'
+  self_hosted: '--api-url or FLAGSMITH_API_URL'
+credentials:
+  static:
+  - {var: FLAGSMITH_API_KEY, surface: Management API, note: a Master API Key}
+  - {var: FLAGSMITH_ENVIRONMENT_KEY, surface: SDK evaluation}
+  - {var: 'FLAGSMITH_API_KEY_<mangled host>', note: 'self-hosted; e.g. FLAGSMITH_API_KEY_flagsmith_corp__internal_io_8000'}
+  oidc:
+    supported: true
+    note: >-
+      Worth calling out as an agent-relevant capability: the CLI supports OIDC trust relationships,
+      so a CI job can authenticate with a short-lived workload identity instead of a stored API key.
+      A GitHub Actions trust relationship is documented, plus a generic one for GitLab CI/CD,
+      Bitbucket Pipelines, CircleCI, Buildkite, Azure DevOps, Semaphore, Spacelift, HCP Terraform and
+      GCP.
+ci:
+  github_action:
+    name: Flagsmith/setup-cli
+    repository: https://github.com/Flagsmith/setup-cli
+    version: v1
+    example: |
+      jobs:
+        flagsmith:
+          runs-on: ubuntu-latest
+          permissions:
+            id-token: write
+            contents: read
+          steps:
+            - uses: actions/checkout@v7
+            - uses: Flagsmith/setup-cli@v1
+            - run: flagsmith flag list

@@ -3,152 +3,124 @@ specificationVersion: '0.1'
 schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main/schema/api-commons.yml#/$defs/Plans
 provider: flagsmith
 providerId: flagsmith
+generated: '2026-09-17'
+method: searched
+source: https://flagsmith.com/pricing (HTTP 200, fetched 2026-09-17)
 created: '2026-05-04'
-# Provenance stamped 2026-08-11: this artifact was written by the API Evangelist
-# bulk sweep dated 2026-05-04, not harvested from the provider. See roadmap#35.
-method: generated
-modified: '2026-05-04'
-tags: []
-description: Machine-readable plans and pricing scaffold for this API provider. Conforms to the API Commons
-  Plans schema. Tier limits and prices are scaffold defaults; replace with provider-published values.
+modified: '2026-09-17'
+supersedes: >-
+  The 2026-05-04 bulk-sweep scaffold that previously occupied this file, whose tiers and quotas were
+  placeholder defaults (a 1,000-request free tier, a 10 req/min rate cap) bearing no relation to what
+  Flagsmith publishes. Replaced in full with the provider's own pricing page.
+tags:
+- Pricing
+- Plans
+description: >-
+  Flagsmith's published plans. Four tiers, three of them self-serve with prices on the page and a
+  14-day trial on both paid self-serve tiers; Enterprise is contact-sales. The metered unit is API
+  requests per month against four SDK endpoints, and the pricing page states the overage rate
+  openly — unusual, and the reason this artifact carries real numbers rather than "contact us".
+plan_count: 4
+currency: USD
+billing_periods:
+- monthly
+- annual
+annual_discount: '>10% (the provider states annual is paid 12 months up front)'
+metered_unit:
+  name: API requests per month
+  definition: >-
+    Total API requests across all projects in the organisation in a calendar month. Only four
+    endpoints count: /flags, /identities, /traits and /environment-document (the last for
+    server-side local-evaluation SDKs). Management API calls do not count.
+  source: https://flagsmith.com/pricing
 plans:
-  - id: flagsmith-free
-    name: Free
-    type: freemium
-    description: Free entry tier for the flagsmith API surface. Intended for evaluation, prototyping,
-      and low-volume integrations. Real limits and pricing must be reconciled with the provider's published
-      plan documentation.
-    entries:
-      - label: API Requests
-        description: Monthly API request quota across all included endpoints
-        name: api_requests
-        type: quota
-        metric: requests
-        limit: 1000
-        timeFrame: month
-        geo: global
-        domains:
-          - https://edge.api.flagsmith.com
-          - https://api.flagsmith.com/api/v1
-        unit: 1
-        price: '0.00'
-        userMultiplied: false
-      - label: Rate Limit
-        description: Maximum requests per minute on the free tier
-        name: rate_limit
-        type: rate
-        metric: requests_per_minute
-        limit: 10
-        timeFrame: minute
-        geo: global
-        domains:
-          - https://edge.api.flagsmith.com
-          - https://api.flagsmith.com/api/v1
-        unit: 1
-        price: '0.00'
-        userMultiplied: false
-    elements:
-      - name: Public Documentation
-      - name: Community Support
-      - name: Sandbox Access
-      - name: Flagsmith Flags API
-      - name: Flagsmith Admin API
-  - id: flagsmith-pro
-    name: Professional
-    type: paid
-    description: Production tier for flagsmith. Provides higher quotas, priority support, and access to
-      the broader API portfolio. Pricing placeholder; align with the provider's pricing page.
-    entries:
-      - label: API Requests
-        description: Monthly API request quota
-        name: api_requests
-        type: quota
-        metric: requests
-        limit: 100000
-        timeFrame: month
-        geo: global
-        domains:
-          - https://edge.api.flagsmith.com
-          - https://api.flagsmith.com/api/v1
-        unit: 1
-        price: TBD
-        userMultiplied: false
-      - label: Rate Limit
-        description: Maximum requests per minute on the professional tier
-        name: rate_limit
-        type: rate
-        metric: requests_per_minute
-        limit: 100
-        timeFrame: minute
-        geo: global
-        domains:
-          - https://edge.api.flagsmith.com
-          - https://api.flagsmith.com/api/v1
-        unit: 1
-        price: '0.00'
-        userMultiplied: false
-      - label: Overage
-        description: Per-request price after monthly quota is exceeded
-        name: overage
-        type: metered
-        metric: requests
-        limit: -1
-        timeFrame: month
-        geo: global
-        domains:
-          - https://edge.api.flagsmith.com
-          - https://api.flagsmith.com/api/v1
-        unit: 1000
-        price: TBD
-        userMultiplied: false
-    elements:
-      - name: All Production Endpoints
-      - name: Email Support
-      - name: SLA Targets
-      - name: Webhook Subscriptions
-      - name: Flagsmith Flags API
-      - name: Flagsmith Admin API
-  - id: flagsmith-enterprise
-    name: Enterprise
-    type: enterprise
-    description: Custom-negotiated tier for flagsmith. Includes dedicated capacity, contractual SLAs,
-      security review, data residency options, and named technical account management.
-    entries:
-      - label: API Requests
-        description: Negotiated request volume; -1 indicates uncapped subject to fair use
-        name: api_requests
-        type: quota
-        metric: requests
-        limit: -1
-        timeFrame: month
-        geo: configurable
-        domains:
-          - https://edge.api.flagsmith.com
-          - https://api.flagsmith.com/api/v1
-        unit: 1
-        price: custom
-        userMultiplied: false
-      - label: Rate Limit
-        description: Negotiated burst and steady-state rate
-        name: rate_limit
-        type: rate
-        metric: requests_per_minute
-        limit: 1000
-        timeFrame: minute
-        geo: configurable
-        domains:
-          - https://edge.api.flagsmith.com
-          - https://api.flagsmith.com/api/v1
-        unit: 1
-        price: custom
-        userMultiplied: false
-    elements:
-      - name: Unlimited / Negotiated Volume
-      - name: 24/7 Dedicated Support
-      - name: Contractual SLA
-      - name: Security & Compliance Review
-      - name: Dedicated Account Manager
-      - name: Custom Data Residency
-      - name: Flagsmith Flags API
-      - name: Flagsmith Admin API
-maintainers: []
+- id: flagsmith-free
+  name: Free
+  type: freemium
+  price: '0.00'
+  currency: USD
+  period: month
+  self_serve: true
+  description: Feature flags for building on your own.
+  limits:
+  - {name: api_requests, limit: 50000, timeFrame: month}
+  - {name: team_members, limit: 1}
+  - {name: projects, limit: 1}
+  - {name: feature_flags, limit: null, note: Unlimited, fair usage policy applies}
+  - {name: environments, limit: null, note: Unlimited}
+  - {name: identities_and_segments, limit: null, note: Unlimited, fair usage policy applies}
+  includes:
+  - API Access
+  overage:
+    note: >-
+      Free plan does not bill overage. Flagsmith stops answering API requests after a 7-day warning
+      email; the block clears 30 days after the warning or on upgrade.
+- id: flagsmith-start-up
+  name: Start-Up
+  type: subscription
+  price: '40.00'
+  price_monthly_billed_monthly: '45.00'
+  currency: USD
+  period: month
+  self_serve: true
+  trial: 14 day free trial
+  description: Feature flags for small teams.
+  limits:
+  - {name: api_requests, limit: 1000000, timeFrame: month}
+  - {name: team_members, limit: 3}
+  - {name: projects, limit: null, note: Unlimited}
+  includes:
+  - Everything in Free
+  - Email technical support
+  - Scheduled flags
+  - Two-factor authentication (2FA)
+  - A/B and multivariate testing
+  - Third-party integrations
+  overage:
+    rate: $7 per 100,000 requests
+    note: Additional API calls also quoted from $50 per million per month, decreasing with volume.
+- id: flagsmith-scale-up
+  name: Scale-Up
+  type: subscription
+  price: '250.00'
+  price_monthly_billed_monthly: '300.00'
+  currency: USD
+  period: month
+  self_serve: true
+  trial: 14 day free trial
+  description: Feature flags for growing teams.
+  limits:
+  - {name: api_requests, limit: 5000000, timeFrame: month, note: 5,000,000+}
+  - {name: team_members, limit: 5, note: '5 included, up to 20 at $50/member/month (listed as reduced from $60)'}
+  includes:
+  - Everything in Start-Up
+  - SAML/SSO authentication
+  - Governance — roles, permissions, change requests, audit logs
+  - Priority email and chat technical support
+- id: flagsmith-enterprise
+  name: Enterprise
+  type: contact-sales
+  price: null
+  currency: USD
+  period: month
+  self_serve: false
+  description: Maximum security and control. Cloud, private cloud, self-hosted or air-gapped.
+  limits:
+  - {name: api_requests, limit: 5000000, timeFrame: month, note: '5,000,000+, contracted'}
+  - {name: team_members, limit: null, note: 20+}
+  includes:
+  - Everything in Scale-Up
+  - Tailored hosting from cloud to air-gapped
+  - Priority real-time support via chat, Slack optional
+  - 2FA, SAML, Okta, ADFS and LDAP
+  - Unlimited audit log history
+  - On-boarding and training
+  - Enterprise SLA
+  roadmap_items:
+  - {name: LDAP + SCIM, status: announced-soon}
+  - {name: Data-driven releases, status: announced-soon}
+  overage:
+    rate: contracted
+discounts:
+- {audience: open source / not-for-profit / charity, note: 'Discounted plan available on request'}
+- {audience: annual billing, note: '>10% saving, 12 months paid up front'}

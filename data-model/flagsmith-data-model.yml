@@ -1,0 +1,93 @@
+generated: '2026-09-17'
+method: derived
+source: openapi/_original/flagsmith-api-openapi.json (476 component schemas, 344 paths, 615
+  operations; harvested from https://api.flagsmith.com/api/v1/swagger.json 2026-09-17) cross-read
+  against https://docs.flagsmith.com/flagsmith-concepts/platform-architecture
+description: >-
+  The entity graph behind the Flagsmith Management API, derived from schema $refs, path nesting and
+  integer id-reference fields. Flagsmith's model is a strict containment tree —
+  Organisation > Project > Environment — with feature definitions living at the project level and
+  feature VALUES living at the environment level. Getting that split right is the whole mental model:
+  a Feature is a name, and a FeatureState is what that name evaluates to in one environment, for one
+  segment, or for one identity.
+identifiers:
+  style: integer primary keys, with a UUID alongside on several entities (Segment, Tag, EnvironmentFeatureVersion)
+  prefixes: none
+  note: >-
+    No typed or prefixed ids (no `feat_…`, `env_…`). An agent holding a bare integer cannot tell what
+    kind of thing it identifies, so ids must be carried with their type. The exception that matters:
+    an Environment is addressed in paths by its API KEY string (`environment_api_key`) on some
+    routes and by its integer pk (`environment_pk`) on others — both appear in the MCP tool set, and
+    passing the wrong one is the most likely silent failure on this API.
+entities:
+- {name: Organisation, key: id, description: Top-level container for projects, users and billing.}
+- {name: Project, key: id, description: Contains environments, features, segments and tags.}
+- {name: Environment, key: id + api_key, description: 'A deployment stage. Addressed by integer pk or by environment API key depending on the route.'}
+- {name: Feature, key: id, description: 'A flag definition at project scope: name, type (STANDARD or MULTIVARIATE), description, default.'}
+- {name: FeatureState, key: id, description: 'The value of a Feature in one Environment — optionally scoped to a Segment or an Identity. This is the row that actually gets evaluated.'}
+- {name: MultivariateOption, key: id, description: One weighted variant of a multivariate feature.}
+- {name: Segment, key: id + uuid, description: 'A named audience defined by rules. Project-scoped; may be feature-scoped when used as a feature-specific segment.'}
+- {name: SegmentRule, key: id, description: 'A rule group (ALL / ANY / NONE) holding nested rules and conditions.'}
+- {name: Condition, key: id, description: 'A single predicate: property, operator, value.'}
+- {name: Identity, key: id + identifier, description: An end user within one Environment.}
+- {name: Trait, key: id, description: 'A typed key/value on an Identity (integer, string, boolean or float value).'}
+- {name: EnvironmentFeatureVersion, key: uuid, description: 'An immutable, publishable version of a feature''s state in an environment (v2 feature versioning only).'}
+- {name: ChangeRequest, key: id, description: 'A staged, approvable change to feature state (Enterprise).'}
+- {name: ReleasePipeline, key: id, description: 'A staged rollout pipeline features are added to (Enterprise).'}
+- {name: Experiment, key: id, description: 'An experiment on a multivariate feature, with a hypothesis, status and attached metrics (Beta).'}
+- {name: Metric, key: id, description: 'An experiment metric: aggregation, expected direction, event definition (Beta).'}
+- {name: Tag, key: id + uuid, description: Project-scoped label on features; may be a system tag.}
+- {name: Webhook, key: id, description: 'An environment or organisation webhook endpoint with an HMAC secret.'}
+- {name: UserPermissionGroup, key: id, description: 'A permission group; carries external_id for SCIM-pushed groups.'}
+- {name: AuditLog, key: id, description: An immutable record of a change.}
+relationships:
+- {from: Organisation, type: has_many, to: Project, via: project.organisation}
+- {from: Organisation, type: has_many, to: UserPermissionGroup, via: 'path /organisations/{organisation_pk}/groups/'}
+- {from: Organisation, type: has_many, to: Webhook, via: 'path /organisations/{organisation_pk}/webhooks/'}
+- {from: Project, type: belongs_to, to: Organisation, via: organisation}
+- {from: Project, type: has_many, to: Environment, via: 'path /projects/{id}/environments/'}
+- {from: Project, type: has_many, to: Feature, via: 'path /projects/{project_pk}/features/'}
+- {from: Project, type: has_many, to: Segment, via: segment.project}
+- {from: Project, type: has_many, to: Tag, via: tag.project}
+- {from: Project, type: has_many, to: ReleasePipeline, via: release_pipeline.project}
+- {from: Environment, type: belongs_to, to: Project, via: project}
+- {from: Environment, type: has_many, to: FeatureState, via: 'path /environments/{environment_api_key}/featurestates/'}
+- {from: Environment, type: has_many, to: Identity, via: identity.environment}
+- {from: Environment, type: has_many, to: Webhook, via: 'path /environments/{environment_api_key}/webhooks/'}
+- {from: Environment, type: has_many, to: EnvironmentFeatureVersion, via: 'path /environments/{environment_pk}/features/{feature_pk}/versions/'}
+- {from: Environment, type: has_many, to: Experiment, via: 'path /environments/{environment_api_key}/experiments/'}
+- {from: Environment, type: has_many, to: Metric, via: 'path /environments/{environment_api_key}/experiment-metrics/'}
+- {from: Feature, type: belongs_to, to: Project, via: project}
+- {from: Feature, type: has_many, to: FeatureState, via: feature_state.feature}
+- {from: Feature, type: has_many, to: MultivariateOption, via: 'path /projects/{project_pk}/features/{feature_pk}/mv-options/'}
+- {from: Feature, type: has_many, to: Tag, via: feature.tags}
+- {from: Feature, type: has_one, to: Experiment, via: 'experiment.feature (one active experiment per feature)'}
+- {from: FeatureState, type: belongs_to, to: Feature, via: feature}
+- {from: FeatureState, type: belongs_to, to: Environment, via: environment}
+- {from: FeatureState, type: belongs_to, to: Segment, via: 'feature_segment (null for the environment default)'}
+- {from: FeatureState, type: belongs_to, to: Identity, via: 'identity (null unless it is a per-identity override)'}
+- {from: Segment, type: belongs_to, to: Project, via: project}
+- {from: Segment, type: has_many, to: SegmentRule, via: rules}
+- {from: SegmentRule, type: has_many, to: SegmentRule, via: 'rules (nested rule groups)'}
+- {from: SegmentRule, type: has_many, to: Condition, via: conditions}
+- {from: Identity, type: belongs_to, to: Environment, via: environment}
+- {from: Identity, type: has_many, to: Trait, via: traits}
+- {from: EnvironmentFeatureVersion, type: has_many, to: FeatureState, via: 'path .../versions/{environment_feature_version_pk}/featurestates/'}
+- {from: Experiment, type: belongs_to, to: Feature, via: feature}
+- {from: Experiment, type: has_many, to: Metric, via: metrics}
+- {from: ReleasePipeline, type: has_many, to: Feature, via: features}
+- {from: UserPermissionGroup, type: has_many, to: User, via: users}
+evaluation_model:
+  note: >-
+    The precedence an agent needs in order to predict a flag value: an identity override beats a
+    segment override, a segment override beats the environment default, and among competing segments
+    the one with the highest priority wins. Multivariate features add weighted variant selection
+    hashed on the identity, so the same identity gets a stable variant.
+  docs: https://docs.flagsmith.com/flagsmith-concepts/platform-architecture
+versioning_fork:
+  note: >-
+    A structural fork in the model, not a detail: environments carry `use_v2_feature_versioning`. When
+    false, feature state is edited in place (update_feature_state, update_environment_feature_state).
+    When true, feature state is immutable inside an EnvironmentFeatureVersion, and changing a flag
+    means create version -> add/update states -> publish. Half the MCP tool descriptions carry this
+    caveat explicitly. Read the environment before choosing the path.

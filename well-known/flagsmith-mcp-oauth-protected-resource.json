@@ -1,0 +1,1 @@
+{"resource":"https://mcp.flagsmith.com/","authorization_servers":["https://api.flagsmith.com/"],"scopes_supported":["mcp"],"bearer_methods_supported":["header"]}

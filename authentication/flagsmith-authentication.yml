@@ -1,25 +1,110 @@
-generated: '2026-07-11'
-method: derived
-source: openapi/flagsmith-admin-api-openapi.yml, openapi/flagsmith-flags-api-openapi.yml
+generated: '2026-09-17'
+method: searched
+source: >-
+  https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/management-api/authentication,
+  https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/flags-api/authentication,
+  https://docs.flagsmith.com/integrating-with-flagsmith/mcp-server,
+  https://api.flagsmith.com/.well-known/oauth-authorization-server (200), and
+  openapi/_original/flagsmith-api-openapi.json#/components/securitySchemes (six declared schemes).
+docs: https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/
+supersedes: >-
+  The 2026-09-17 derived pass, which read only the nine split specs in openapi/ and saw a single
+  apiKey scheme. The harvested first-party contract declares six, and OAuth 2.0 is declared in none
+  of them — it is only visible in the .well-known metadata.
 summary:
-  types:
-  - apiKey
-  api_key_in:
-  - header
+  types: [apiKey, http, oauth2]
+  api_key_in: [header]
+  oauth2: true
+  mtls: false
+  openid_connect: false
+key_insight: >-
+  Two API surfaces, two different keys, and they are not interchangeable — this is the thing to get
+  right first. The SDK/Flags API on edge.api.flagsmith.com takes a NON-SECRET environment key in
+  X-Environment-Key and is safe in client-side code. The Management API on api.flagsmith.com takes a
+  SECRET organisation key in Authorization with a mandatory `Api-Key ` prefix and must never reach a
+  browser. A third path, OAuth 2.0, exists only for the MCP server and the Management API and is
+  absent from the OpenAPI entirely.
 schemes:
-- name: apiKeyAuth
-  type: apiKey
-  in: header
-  parameter: Authorization
-  description: A secret Organisation API Token prefixed with 'Api-Key'. For example, 'Api-Key
-    your-token-here'. This token should never be exposed in client-side code.
-  sources:
-  - openapi/flagsmith-admin-api-openapi.yml
-- name: environmentKey
+- name: Environment API Key
   type: apiKey
   in: header
   parameter: X-Environment-Key
-  description: A non-secret environment key used to identify which Flagsmith environment to
-    evaluate flags against. This key is safe to include in client-side code.
-  sources:
-  - openapi/flagsmith-flags-api-openapi.yml
+  secret: false
+  surface: SDK / Flags API (https://edge.api.flagsmith.com)
+  description: >-
+    Per-environment client-side key, found in the dashboard under the project's Environments tab.
+    Safe to ship in client-side code by design. SDKs set the header for you on initialisation; direct
+    HTTP callers must set it on every request.
+  docs: https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/flags-api/authentication
+  sources: [openapi/_original/flagsmith-api-openapi.json]
+- name: Master API Key
+  type: apiKey
+  in: header
+  parameter: Authorization
+  value_format: 'Api-Key <key>'
+  secret: true
+  surface: Management API (https://api.flagsmith.com/api/v1)
+  description: >-
+    Organisation-level secret token. The `Api-Key ` prefix is required — the header must read
+    `Api-Key ser.abc123…`, not the bare key. Requests act with the permissions of the key's user, so
+    administrator privileges are not required and RBAC still applies.
+  docs: https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/management-api/authentication
+  sources: [openapi/_original/flagsmith-api-openapi.json]
+- name: tokenAuth
+  type: apiKey
+  in: header
+  parameter: Authorization
+  value_format: 'Token <key>'
+  secret: true
+  surface: Management API
+  description: Django REST Framework token authentication, used by session/user tokens rather than organisation keys.
+  sources: [openapi/_original/flagsmith-api-openapi.json]
+- name: Cohort Sync Key
+  type: http
+  scheme: bearer
+  secret: true
+  surface: Cohort sync webhooks
+  description: For cohort-sync endpoints called by an external cohort source, such as Amplitude.
+  sources: [openapi/_original/flagsmith-api-openapi.json]
+- name: Cohort Sync Key (Basic)
+  type: http
+  scheme: basic
+  secret: true
+  surface: Cohort sync webhooks
+  description: >-
+    For cohort sources that can only send Basic credentials, such as Mixpanel. The key is the
+    password; the username is ignored.
+  sources: [openapi/_original/flagsmith-api-openapi.json]
+- name: basicAuth
+  type: http
+  scheme: basic
+  secret: true
+  surface: Management API (legacy/internal)
+  sources: [openapi/_original/flagsmith-api-openapi.json]
+- name: OAuth 2.0
+  type: oauth2
+  flow: authorization_code
+  pkce: S256
+  scopes: [mcp, admin-api]
+  surface: MCP server (https://mcp.flagsmith.com) and Management API
+  authorization_server: https://api.flagsmith.com
+  discovery: https://api.flagsmith.com/.well-known/oauth-authorization-server
+  dynamic_client_registration: https://api.flagsmith.com/o/register/
+  description: >-
+    Not declared anywhere in the OpenAPI — discoverable only from the RFC 8414 document on the API
+    host and the RFC 9728 document on the MCP host. Interactive MCP clients use it to avoid handling
+    an API key at all.
+  docs: https://docs.flagsmith.com/integrating-with-flagsmith/mcp-server
+  see: scopes/flagsmith-scopes.yml
+sso:
+  note: >-
+    End-user sign-in to the Flagsmith dashboard (not API authentication) supports SAML 2.0, Okta,
+    ADFS, LDAP, Google and GitHub OAuth, plus 2FA. SAML, LDAP and SCIM provisioning are Enterprise;
+    2FA is available from the Start-Up plan.
+  docs: https://docs.flagsmith.com/administration-and-security/access-control/
+  standards: [SAML 2.0, LDAP, SCIM 2.0]
+authorization:
+  model: RBAC
+  note: >-
+    Roles, permission groups and per-project/per-environment permissions gate every Management API
+    call; custom roles are Enterprise. 34 operations in the contract are tagged Permissions.

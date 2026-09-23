@@ -1,21 +1,128 @@
-generated: '2026-09-11'
-method: probed
-source: https://mcp.flagsmith.com/mcp
-status: gated
+generated: '2026-09-17'
+method: searched
+source: https://docs.flagsmith.com/integrating-with-flagsmith/mcp-server
+status: published
+probe:
+  url: https://mcp.flagsmith.com/mcp
+  method: POST tools/list (jsonrpc 2.0, anonymous)
+  http_status: 401
+  www_authenticate: Bearer resource_metadata="https://mcp.flagsmith.com/.well-known/oauth-protected-resource"
+  checked: '2026-09-17'
+  note: >-
+    The live schema is auth-gated behind an RFC 9728 challenge, so inputSchemas were not read from
+    the wire. The tool list below is the PROVIDER'S OWN published list from the MCP docs page, not a
+    derivation from the OpenAPI — and it is corroborated by the contract: all 54 tool names appear
+    verbatim as `operationId` values on operations the provider tags `mcp` in
+    https://api.flagsmith.com/api/v1/swagger.json. Each tool's real inputSchema is that operation's
+    parameters + requestBody; see mcp/flagsmith-tool-crosswalk.yml.
 server:
   name: flagsmith
-  transport: http
-  url: https://mcp.flagsmith.com/mcp
+  transport: streamable-http
+  url: https://mcp.flagsmith.com
+  backs: Flagsmith Management API (https://api.flagsmith.com/api/v1)
 deployment:
-  mode: remote
-  endpoint: https://mcp.flagsmith.com/mcp
+  mode: both
+  endpoint: https://mcp.flagsmith.com
+  install: uvx --from "git+https://github.com/Flagsmith/flagsmith.git@main#subdirectory=mcp" flagsmith-mcp
+  package: https://github.com/Flagsmith/flagsmith/tree/main/mcp
+  auth: oauth
   verified: probed
-  probe: gated
-  checked: '2026-09-11'
-  source: docs-check 2026-09-11 (endpoint found in the provider's own documentation, then probed)
-  probe_why: RFC 9728 challenge on the MCP path only
-tools_note: No tool list captured. This manifest records a PROBED, reachable endpoint only; anonymous
-  tools/list was auth-gated or the server requires an initialize handshake this reachability probe does
-  not perform. Run signals/audit_mcp_authorship.py --probe to enumerate tools and settle platform-vs-provider
-  authorship. Do NOT derive a tool list from the OpenAPI and store it here -- that is a candidate manifest,
-  and it belongs under an X-MCPServerCandidate pointer.
+  checked: '2026-09-17'
+  note: >-
+    Both, and genuinely both. The hosted endpoint is callable by an agent now — a client POSTs to
+    https://mcp.flagsmith.com and completes OAuth with zero configuration, because the RFC 9728
+    protected-resource document on that host points at the RFC 8414 authorization server on
+    api.flagsmith.com. The stdio option is the same server run as a local subprocess via uvx from the
+    main Flagsmith monorepo's `mcp` subdirectory (TRANSPORT=stdio, FLAGSMITH_API_TOKEN); it has no
+    published package on npm or PyPI and is installed straight from git. Self-hosted Flagsmith
+    deployments run the server themselves and substitute their own base URL.
+authentication:
+  methods:
+  - type: oauth2
+    for: interactive clients (IDEs, desktop apps, CLIs)
+    discovery: https://mcp.flagsmith.com/.well-known/oauth-protected-resource
+    authorization_server: https://api.flagsmith.com
+    scope: mcp
+    pkce: S256
+    dynamic_client_registration: https://api.flagsmith.com/o/register/
+  - type: api-key
+    for: CI jobs and headless agents
+    header: 'Authorization: Api-Key <organisation API key>'
+    note: The `Api-Key ` prefix is required; the bare key is rejected.
+tool_count: 54
+tools_note: >-
+  47 core tools available on every deployment; 7 enterprise tools that appear only on paid SaaS plans
+  and self-hosted Enterprise deployments. Descriptions are the provider's own, verbatim from the docs
+  page. Beta tools are marked by the provider.
+tools:
+- {name: create_environment_feature_version, tier: core, description: Creates a new version for a feature flag in a specific environment. Applies to environments with v2 feature versioning.}
+- {name: create_environment_feature_version_state, tier: core, description: Creates a new feature state for a specific version in an environment. Applies to environments with v2 feature versioning.}
+- {name: create_experiment, tier: core, beta: true, description: Creates an experiment for a multivariate feature. Metrics can be attached inline. Only one active experiment per feature is allowed.}
+- {name: create_feature, tier: core, description: Creates a new feature flag in the specified project with default settings.}
+- {name: create_feature_multivariate_option, tier: core, description: Creates a new multivariate option for a feature flag.}
+- {name: create_metric, tier: core, beta: true, description: Creates a metric with name, description, aggregation type, expected direction, and event definition.}
+- {name: create_organization_invite, tier: core, description: Send an invitation to join the organisation with specified role and permissions.}
+- {name: create_project_segment, tier: core, description: Creates a new user segment for audience targeting within the project.}
+- {name: create_segment_override, tier: core, description: Creates a segment override for a feature in an environment in a single call, setting both the segment binding and its value.}
+- {name: delete_feature_multivariate_option, tier: core, description: Deletes a multivariate option.}
+- {name: delete_feature_segment, tier: core, description: Deletes a segment override. Applies to environments without v2 feature versioning.}
+- {name: get_environment_feature_version_states, tier: core, description: Retrieves feature state information for a specific version in an environment.}
+- {name: get_environment_feature_versions, tier: core, description: Retrieves version information for a feature flag in a specific environment.}
+- {name: get_experiment, tier: core, beta: true, description: Retrieves experiment details including feature configuration, attached metrics, and rollout state.}
+- {name: get_experiment_exposures, tier: core, beta: true, description: Retrieves variant exposure counts for an experiment. Returns null if not yet computed.}
+- {name: get_experiment_results, tier: core, beta: true, description: Retrieves statistical results for an experiment's metrics. Returns null if not yet computed.}
+- {name: get_feature_code_references, tier: core, description: Retrieves code references and usage information for the feature flag.}
+- {name: get_feature_evaluation_data, tier: core, description: Retrieves evaluation data and analytics for a specific feature flag.}
+- {name: get_feature_external_resources, tier: core, description: Retrieves external resources linked to the feature flag.}
+- {name: get_feature_flag, tier: core, description: Retrieves detailed information about a specific feature flag.}
+- {name: get_feature_health_events, tier: core, description: Retrieves feature health monitoring events and metrics for the project.}
+- {name: get_feature_lifecycle_counts, tier: core, description: Retrieves the count of features in each lifecycle stage for the specified environment.}
+- {name: get_metric, tier: core, beta: true, description: Retrieves details of a specific metric, including which experiments use it.}
+- {name: get_project, tier: core, description: Retrieves comprehensive information about a specific project including configuration and statistics.}
+- {name: get_project_segment, tier: core, description: Retrieves detailed information about a specific user segment.}
+- {name: list_environments, tier: core, description: Lists all environments the user has access to.}
+- {name: list_experiments, tier: core, beta: true, description: Lists experiments for an environment. Supports filtering by status and searching by experiment or feature name.}
+- {name: list_feature_multivariate_options, tier: core, description: Retrieves all multivariate options for a feature flag.}
+- {name: list_feature_segments, tier: core, description: Lists segment overrides for a feature in an environment.}
+- {name: list_metrics, tier: core, beta: true, description: Lists experiment metrics for an environment. Supports search by name via the q parameter.}
+- {name: list_organization_groups, tier: core, description: Retrieves all permission groups within the organisation.}
+- {name: list_organization_invites, tier: core, description: Retrieves all pending invitations for the organisation.}
+- {name: list_organizations, tier: core, description: Lists all organisations accessible with the provided user API key.}
+- {name: list_project_environments, tier: core, description: Retrieves all environments configured for the specified project.}
+- {name: list_project_features, tier: core, description: Lists a project's feature flags (paginated). Pass environment=<id> to also get each feature's live state for that environment.}
+- {name: list_project_segments, tier: core, description: Retrieves all user segments defined for audience targeting within the project.}
+- {name: list_projects_in_organization, tier: core, description: Retrieves all projects within a specified organisation.}
+- {name: publish_environment_feature_version, tier: core, description: Publishes a feature version to make it live in the environment.}
+- {name: update_environment_feature_state, tier: core, description: Updates a feature state in an environment, including enabled status and value.}
+- {name: update_environment_feature_version_state, tier: core, description: Updates an existing feature state for a specific version in an environment.}
+- {name: update_experiment, tier: core, beta: true, description: Updates an experiment's name or its hypothesis.}
+- {name: update_feature, tier: core, description: Updates feature flag properties such as name and description.}
+- {name: update_feature_multivariate_option, tier: core, description: Updates an existing multivariate option.}
+- {name: update_feature_state, tier: core, description: Updates a feature state, including its enabled status and value.}
+- {name: update_metric, tier: core, beta: true, description: Updates a metric's properties.}
+- {name: update_project, tier: core, description: Updates project configuration settings such as the project name and feature visibility.}
+- {name: update_project_segment, tier: core, description: Updates an existing user segment's properties and rules.}
+- {name: add_feature_to_release_pipeline, tier: enterprise, description: Adds a feature flag to a release pipeline for staged rollout.}
+- {name: create_environment_feature_change_request, tier: enterprise, description: Creates a new change request for feature flag modifications in an environment.}
+- {name: get_release_pipeline, tier: enterprise, description: Retrieves detailed information about a specific release pipeline.}
+- {name: list_environment_change_requests, tier: enterprise, description: Retrieves all change requests for an environment.}
+- {name: list_organization_roles, tier: enterprise, description: Retrieves all custom roles defined within the organisation.}
+- {name: list_project_change_requests, tier: enterprise, description: Retrieves all change requests for a project.}
+- {name: list_project_release_pipelines, tier: enterprise, description: Retrieves all release pipelines configured for the specified project.}
+clients_documented:
+- Claude Code
+- Claude Desktop
+- Cursor
+- Codex CLI
+- Windsurf
+- Gemini CLI
+- VS Code
+deprecation:
+  predecessor: https://app.getgram.ai/mcp/flagsmith-mcp
+  note: >-
+    The previous Flagsmith MCP server was hosted on Gram. The provider states it is deprecated and
+    will be shut down on 30 June 2026; tool names are unchanged and the custom
+    Mcp-Flagsmith-Token-Auth header is replaced by standard Authorization/OAuth.
+  sunset: '2026-06-30'
+maturity: >-
+  The provider labels this an early release and solicits feedback at support@flagsmith.com.

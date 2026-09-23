@@ -1,0 +1,90 @@
+generated: '2026-09-17'
+method: searched
+source: >-
+  https://status.flagsmith.com (and its Statuspage API at /api/v2/status.json),
+  https://docs.flagsmith.com/project-and-community/release-notes,
+  https://docs.flagsmith.com/integrating-with-flagsmith/mcp-server,
+  https://docs.flagsmith.com/integrating-with-flagsmith/CLI,
+  https://flagsmith.com/pricing, and openapi/_original/flagsmith-api-openapi.json.
+status_page:
+  url: https://status.flagsmith.com
+  platform: Atlassian Statuspage
+  machine_readable: true
+  api:
+    summary: https://status.flagsmith.com/api/v2/summary.json
+    status: https://status.flagsmith.com/api/v2/status.json
+    components: https://status.flagsmith.com/api/v2/components.json
+    incidents: https://status.flagsmith.com/api/v2/incidents.json
+  probed:
+    url: https://status.flagsmith.com/api/v2/status.json
+    http_status: 200
+    observed: '{"indicator":"none","description":"All Systems Operational"}'
+    checked: '2026-09-17'
+  note: >-
+    A real machine-readable status surface, not just a status web page — an agent can poll
+    /api/v2/status.json and branch on it before acting.
+versioning:
+  api_version: v1
+  style: path
+  product_release_line: 2.x, released every 1-2 weeks
+  see: changelog/flagsmith-changelog.yml
+deprecation_policy:
+  published: true
+  source: https://docs.flagsmith.com/project-and-community/release-notes
+  sunset_header: false
+  deprecation_header: false
+  rfc8594: false
+  commitments:
+  - Breaking changes announced in advance through the blog and GitHub issues
+  - Migration guides provided
+  - Backward compatibility maintained where possible
+  - Notice given before removing deprecated features
+  note: >-
+    A stated policy with no quantified notice period and no runtime signal — Flagsmith emits neither
+    RFC 8594 `Deprecation` nor `Sunset` response headers, so a client learns about a retirement from
+    a blog post rather than from the API. Where a retirement HAS been announced, though, the provider
+    has done it properly: the MCP server migration below carries a named predecessor URL, a hard
+    date, and an explicit statement that tool names are unchanged.
+deprecations:
+- item: Gram-hosted MCP server
+  url: https://app.getgram.ai/mcp/flagsmith-mcp
+  replacement: https://mcp.flagsmith.com
+  sunset: '2026-06-30'
+  status: announced
+  migration: >-
+    Point the client at the new URL. Tool names are unchanged. The custom Mcp-Flagsmith-Token-Auth
+    header is replaced by standard `Authorization: Api-Key <key>` or OAuth.
+  source: https://docs.flagsmith.com/integrating-with-flagsmith/mcp-server
+- item: Legacy npm-based CLI (@flagsmith/cli 1.x)
+  replacement: The Go CLI, @flagsmith/cli 2.0.0+ / brew install Flagsmith/tap/flagsmith
+  sunset: null
+  status: superseded
+  migration: A migration guide is published alongside the legacy CLI docs.
+  source: https://docs.flagsmith.com/integrating-with-flagsmith/CLI
+- item: InfluxDB-backed usage endpoints
+  operations:
+  - api_v1_organisations_influx_data_retrieve
+  - api_v1_organisations_usage_retrieve
+  - api_v1_projects_features_influx_data_retrieve
+  status: marked deprecated in the contract
+  sunset: null
+  source: openapi/_original/flagsmith-api-openapi.json
+  note: >-
+    The only three of 615 operations carrying `deprecated: true`. No Sunset date is declared on any
+    of them.
+sla:
+  published: false
+  note: >-
+    An "Enterprise SLA" is listed as an Enterprise-plan inclusion on the pricing page, but no SLA
+    document, uptime target or credit schedule is published for any tier.
+  source: https://flagsmith.com/pricing
+support:
+  channels:
+  - {name: Email, value: 'support@flagsmith.com', tiers: [Start-Up, Scale-Up, Enterprise]}
+  - {name: Discord community, url: 'https://discord.gg/hFhxNtXzgm', tiers: [all]}
+  - {name: Chat, tiers: [Scale-Up, Enterprise]}
+  - {name: Slack, tiers: [Enterprise], note: optional}
+  - {name: Contact form, url: 'https://flagsmith.com/contact-us'}
+end_of_life:
+  policy: null
+  note: No published end-of-life policy for API versions; v1 has never been retired.

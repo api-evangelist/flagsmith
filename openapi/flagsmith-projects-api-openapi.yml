@@ -1,6 +1,6 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: Flagsmith Admin Environments Projects API
+  title: Flagsmith Admin Projects API
   description: The Flagsmith Admin API allows developers to programmatically manage all aspects of their Flagsmith projects. Anything that can be done through the Flagsmith dashboard can also be accomplished via this API, including creating, updating, and deleting projects, environments, feature flags, segments, and users. It uses a secret Organisation API Token for authentication and provides a Swagger interface at api.flagsmith.com/api/v1/docs for interactive exploration.
   version: '1.0'
   contact:
@@ -121,6 +121,20 @@ paths:
           description: Project not found
 components:
   schemas:
+    ProjectInput:
+      type: object
+      description: Input object for creating or updating a project
+      required:
+      - name
+      - organisation
+      properties:
+        name:
+          type: string
+          description: The name of the project
+          maxLength: 2000
+        organisation:
+          type: integer
+          description: The ID of the organisation to create the project in
     Project:
       type: object
       description: A project in Flagsmith, containing environments and feature flag definitions.
@@ -144,20 +158,6 @@ components:
         enable_realtime_updates:
           type: boolean
           description: Whether real-time flag updates are enabled
-    ProjectInput:
-      type: object
-      description: Input object for creating or updating a project
-      required:
-      - name
-      - organisation
-      properties:
-        name:
-          type: string
-          description: The name of the project
-          maxLength: 2000
-        organisation:
-          type: integer
-          description: The ID of the organisation to create the project in
   parameters:
     ProjectId:
       name: project_id

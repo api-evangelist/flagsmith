@@ -1,0 +1,150 @@
+generated: '2026-09-17'
+method: searched
+source: >-
+  https://api.flagsmith.com/.well-known/oauth-authorization-server (200),
+  https://mcp.flagsmith.com/.well-known/oauth-protected-resource (200),
+  https://docs.flagsmith.com/administration-and-security/access-control/scim (200),
+  https://docs.flagsmith.com/integrating-with-flagsmith/openfeature/ (200),
+  https://docs.flagsmith.com/integrating-with-flagsmith/mcp-server (200),
+  https://docs.flagsmith.com/third-party-integrations/webhook (200),
+  and openapi/_original/flagsmith-api-openapi.json — all probed/fetched 2026-09-17.
+description: >-
+  Cross-cutting and domain standards the Flagsmith surface conforms to, each with evidence pointing
+  at a fetched document or an exact contract location. Absences are recorded as conforms:false
+  rather than omitted.
+conformance:
+- id: oauth2
+  name: OAuth 2.0
+  conforms: true
+  evidence: https://api.flagsmith.com/.well-known/oauth-authorization-server
+  detail: >-
+    authorization_code and refresh_token grants, response_types [code], client auth via
+    client_secret_basic, client_secret_post and none (public clients).
+- id: rfc8414
+  name: OAuth 2.0 Authorization Server Metadata
+  conforms: true
+  evidence: https://api.flagsmith.com/.well-known/oauth-authorization-server
+  detail: Served at the standard path with issuer https://api.flagsmith.com.
+- id: rfc9728
+  name: OAuth 2.0 Protected Resource Metadata
+  conforms: true
+  evidence: https://mcp.flagsmith.com/.well-known/oauth-protected-resource
+  detail: >-
+    resource https://mcp.flagsmith.com/, authorization_servers [https://api.flagsmith.com/],
+    scopes_supported [mcp], bearer_methods_supported [header]. Also returned as the
+    www-authenticate resource_metadata on an anonymous POST to /mcp (observed HTTP 401, 2026-09-17).
+- id: rfc7636
+  name: PKCE
+  conforms: true
+  evidence: https://api.flagsmith.com/.well-known/oauth-authorization-server
+  detail: code_challenge_methods_supported ["S256"] — S256 only, plain is not offered.
+- id: rfc7591
+  name: OAuth 2.0 Dynamic Client Registration
+  conforms: true
+  evidence: https://api.flagsmith.com/.well-known/oauth-authorization-server
+  detail: registration_endpoint https://api.flagsmith.com/o/register/ — an MCP client can register itself with no human step.
+- id: rfc7662
+  name: OAuth 2.0 Token Introspection
+  conforms: true
+  evidence: https://api.flagsmith.com/.well-known/oauth-authorization-server
+  detail: introspection_endpoint https://api.flagsmith.com/o/introspect/.
+- id: rfc7009
+  name: OAuth 2.0 Token Revocation
+  conforms: true
+  evidence: https://api.flagsmith.com/.well-known/oauth-authorization-server
+  detail: revocation_endpoint https://api.flagsmith.com/o/revoke_token/.
+- id: oidc
+  name: OpenID Connect
+  conforms: false
+  evidence: https://api.flagsmith.com/.well-known/openid-configuration
+  detail: >-
+    404 on every host probed. Flagsmith is an OAuth 2.0 authorization server, not an OIDC provider —
+    it CONSUMES OIDC (an /api/v1/auth/oidc/token/ exchange endpoint and CLI OIDC trust
+    relationships) rather than issuing ID tokens.
+- id: saml2
+  name: SAML 2.0
+  conforms: true
+  evidence: openapi/_original/flagsmith-api-openapi.json#/paths/~1api~1v1~1auth~1saml~1{name}~1metadata~1
+  detail: >-
+    Eight SAML operations including SP metadata, request, response, login and attribute mapping.
+    Enterprise-plan feature.
+- id: mcp
+  name: Model Context Protocol
+  conforms: true
+  evidence: https://docs.flagsmith.com/integrating-with-flagsmith/mcp-server
+  detail: >-
+    Streamable HTTP remote server at https://mcp.flagsmith.com with 54 published tools, plus a stdio
+    build. OAuth discovery works end to end from the MCP URL alone.
+- id: rfc9457
+  name: Problem Details for HTTP APIs
+  conforms: false
+  evidence: openapi/_original/flagsmith-api-openapi.json#/components/schemas/Error
+  detail: >-
+    Errors are application/json {"message": string}. No type, title, status, detail or instance
+    members; no application/problem+json media type anywhere in the contract.
+- id: pagination
+  name: Consistent pagination
+  conforms: true
+  evidence: openapi/_original/flagsmith-api-openapi.json#/components/schemas/PaginatedListFeatureList
+  detail: >-
+    DRF page-number pagination — {count, next, previous, results} across 49 Paginated*List envelope
+    schemas; `page` on 55 list operations. No cursor pagination.
+- id: idempotency
+  name: Idempotent writes
+  conforms: false
+  evidence: openapi/_original/flagsmith-api-openapi.json
+  detail: >-
+    No Idempotency-Key header and no client-supplied dedupe token on any of the 168 POST operations.
+- id: openapi
+  name: OpenAPI 3.1
+  conforms: true
+  evidence: https://api.flagsmith.com/api/v1/swagger.json
+  detail: >-
+    First-party OpenAPI 3.1.0, 344 paths / 615 operations / 476 schemas, served anonymously as JSON
+    and YAML from the API host, with a live Swagger UI at /api/v1/docs/.
+- id: webhook-hmac
+  name: HMAC-SHA256 webhook signing
+  conforms: true
+  evidence: https://docs.flagsmith.com/third-party-integrations/webhook
+  detail: >-
+    X-Flagsmith-Signature, HMAC-SHA256 over the raw UTF-8 body keyed with a per-environment or
+    per-organisation secret, with a constant-time-compare example in the docs.
+domain_standards:
+- id: openfeature
+  name: OpenFeature
+  standard_body: CNCF
+  market: feature flagging / experimentation
+  conforms: true
+  evidence: https://docs.flagsmith.com/integrating-with-flagsmith/openfeature/
+  corroboration:
+  - https://github.com/Flagsmith/flagsmith-openfeature-swift-provider
+  - https://github.com/Flagsmith/flagsmith-openfeature-provider-kotlin
+  - https://github.com/Flagsmith/flagsmith-openfeature-provider-python
+  - https://repo1.maven.org/maven2/dev/openfeature/contrib/providers/flagsmith/ (0.0.10, 2026-04-15, published by OpenFeature)
+  detail: >-
+    OpenFeature is the domain standard for this market and Flagsmith conforms at the layer the
+    standard actually defines. Note precisely where the conformance lives: OpenFeature standardises
+    the SDK-side evaluation API and the provider interface, not a wire format, so the signature is
+    first-party provider implementations rather than a shape inside the REST contract — which is why
+    nothing matching "OpenFeature" appears in swagger.json and its absence there is not a
+    counter-indication. Flagsmith publishes OpenFeature providers for Swift, Kotlin and Python from
+    its own GitHub organisation, contributes to the OpenFeature JS and Python SDK repos, and states
+    the commitment in its own llms.txt ("OpenFeature compatible, preventing vendor lock-in"). The
+    buyer consequence is the one the standard exists for: a team already speaking OpenFeature
+    integrates Flagsmith by swapping a provider, with no bespoke connector.
+- id: scim2
+  name: SCIM 2.0 (RFC 7643 / RFC 7644)
+  standard_body: IETF
+  market: enterprise identity provisioning
+  conforms: true
+  evidence: https://docs.flagsmith.com/administration-and-security/access-control/scim
+  contract_location: openapi/_original/flagsmith-api-openapi.json#/paths/~1api~1v1~1organisations~1{organisation_pk}~1scim~1
+  detail: >-
+    Documented SCIM 2.0 API with /Users and /Groups, the `active` attribute for
+    deactivate/reactivate, push groups, and filtering and pagination on both list endpoints.
+    userName must be the user's email. Explicitly NOT supported: profile sourcing, /Me, /Bulk,
+    sorting and ETag concurrency control. Requires an Enterprise licence and an existing SSO
+    configuration.
+  limits: [no /Me, no /Bulk, no sorting, no ETag concurrency control, no profile sourcing]
+compliance_certifications:
+  see: security/flagsmith-trust-center.yml

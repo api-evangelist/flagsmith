@@ -1,12 +1,12 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: Flagsmith Admin Environments Identities API
-  description: The Flagsmith Admin API allows developers to programmatically manage all aspects of their Flagsmith projects. Anything that can be done through the Flagsmith dashboard can also be accomplished via this API, including creating, updating, and deleting projects, environments, feature flags, segments, and users. It uses a secret Organisation API Token for authentication and provides a Swagger interface at api.flagsmith.com/api/v1/docs for interactive exploration.
+  title: Flagsmith Identities API
   version: '1.0'
   contact:
     name: Flagsmith Support
     url: https://www.flagsmith.com/contact-us
   termsOfService: https://www.flagsmith.com/terms-of-service
+  description: 'Operations tagged Identities across 2 of this provider''s published API definitions: flagsmith-admin-api-openapi.yml, flagsmith-identities-api-openapi.yml. Each path carries the servers of the definition it was published in.'
 servers:
 - url: https://api.flagsmith.com/api/v1
   description: Flagsmith Production API
@@ -36,6 +36,9 @@ paths:
           description: Unauthorized - invalid or missing API token
         '404':
           description: Environment not found
+    servers:
+    - url: https://api.flagsmith.com/api/v1
+      description: Flagsmith Production API
   /environments/{environment_api_key}/identities/{identity_id}/:
     get:
       operationId: getIdentity
@@ -73,7 +76,13 @@ paths:
           description: Unauthorized - invalid or missing API token
         '404':
           description: Identity or environment not found
+    servers:
+    - url: https://api.flagsmith.com/api/v1
+      description: Flagsmith Production API
   /identities/:
+    servers:
+    - url: https://api.flagsmith.com/api/v1
+      description: Flagsmith Production API
     get:
       operationId: getIdentityFlags
       summary: Get flags and traits for an identity
@@ -134,6 +143,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
   /traits/:
+    servers:
+    - url: https://api.flagsmith.com/api/v1
+      description: Flagsmith Production API
     post:
       operationId: setTraits
       summary: Set traits for an identity
@@ -166,6 +178,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
   /traits/bulk/:
+    servers:
+    - url: https://api.flagsmith.com/api/v1
+      description: Flagsmith Production API
     put:
       operationId: setBulkTraits
       summary: Set multiple traits for an identity in bulk
@@ -202,104 +217,71 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 components:
+  parameters:
+    EnvironmentApiKey:
+      name: environment_api_key
+      in: path
+      description: The API key for the environment
+      required: true
+      schema:
+        type: string
+    IdentityId:
+      name: identity_id
+      in: path
+      description: The unique identifier for the identity
+      required: true
+      schema:
+        type: integer
+    TransientQuery:
+      name: transient
+      in: query
+      description: When set to true, the identity is treated as transient and will not be persisted. The identity will be used for flag evaluation only.
+      required: false
+      schema:
+        type: boolean
+    IdentifierQuery:
+      name: identifier
+      in: query
+      description: The unique identifier for the user identity. This is typically a user ID, email, or other unique string that identifies the user in your application.
+      required: true
+      schema:
+        type: string
   schemas:
-    TraitInput:
+    PaginatedResponse:
       type: object
-      description: Input object for setting a trait value on an identity.
-      required:
-      - trait_key
-      - trait_value
+      description: A paginated response wrapper containing the results count and navigation links.
       properties:
-        trait_key:
+        count:
+          type: integer
+          description: The total number of results
+        next:
           type: string
-          description: The key name of the trait to set
-        trait_value:
-          description: The value to set for the trait. Can be a string, integer, float, or boolean. Set to null to delete the trait.
-          oneOf:
-          - type: string
-          - type: integer
-          - type: number
-          - type: boolean
-          - type: 'null'
-        transient:
-          type: boolean
-          description: When true, this trait is transient and will be used for evaluation but not persisted.
-    IdentityRequest:
-      type: object
-      description: The request body for identifying a user and optionally setting traits.
-      required:
-      - identifier
-      properties:
-        identifier:
+          nullable: true
+          format: uri
+          description: URL to the next page of results
+        previous:
           type: string
-          description: The unique identifier for the user identity in your application.
-        traits:
+          nullable: true
+          format: uri
+          description: URL to the previous page of results
+        results:
           type: array
-          description: An optional array of traits to set for this identity. Traits are used for segment evaluation and personalized flag delivery.
+          description: The array of result objects for this page
           items:
-            $ref: '#/components/schemas/TraitInput'
-        transient:
-          type: boolean
-          description: When true, the identity is transient and will not be persisted.
-    TraitRequest:
+            type: object
+    Identity:
       type: object
-      description: Request body for setting a trait on an identity.
-      required:
-      - identity
-      - trait_key
-      - trait_value
-      properties:
-        identity:
-          type: object
-          description: The identity to set the trait on
-          required:
-          - identifier
-          properties:
-            identifier:
-              type: string
-              description: The unique identifier for the user identity
-        trait_key:
-          type: string
-          description: The key name of the trait to set
-        trait_value:
-          description: The value to set for the trait. Set to null to delete the trait.
-          oneOf:
-          - type: string
-          - type: integer
-          - type: number
-          - type: boolean
-          - type: 'null'
-    IdentityResponse:
-      type: object
-      description: The response object for an identity flags request, containing the evaluated flags and traits for the specified identity.
-      properties:
-        flags:
-          type: array
-          description: The evaluated feature flags for this identity
-          items:
-            $ref: '#/components/schemas/Flag'
-        traits:
-          type: array
-          description: The traits associated with this identity
-          items:
-            $ref: '#/components/schemas/Trait'
-    Trait:
-      type: object
-      description: A trait is a key-value pair associated with an identity, used for segment evaluation and personalization.
+      description: A user identity within an environment, representing an individual user with their associated traits.
       properties:
         id:
           type: integer
-          description: The unique identifier for this trait
-        trait_key:
+          description: The unique identifier for this identity
+        identifier:
           type: string
-          description: The key name of the trait
-        trait_value:
-          description: The value of the trait. Can be a string, integer, float, or boolean.
-          oneOf:
-          - type: string
-          - type: integer
-          - type: number
-          - type: boolean
+          description: The user-provided identifier for this identity
+        environment:
+          type: integer
+          description: The ID of the environment this identity belongs to
     Flag:
       type: object
       description: A feature flag object containing the feature definition, its enabled state, and any associated value for the environment.
@@ -330,41 +312,93 @@ components:
           type: integer
           nullable: true
           description: The feature segment ID if this flag state is a segment override, or null otherwise
-    Identity:
+    TraitInput:
       type: object
-      description: A user identity within an environment, representing an individual user with their associated traits.
+      description: Input object for setting a trait value on an identity.
+      required:
+      - trait_key
+      - trait_value
       properties:
-        id:
-          type: integer
-          description: The unique identifier for this identity
+        trait_key:
+          type: string
+          description: The key name of the trait to set
+        trait_value:
+          description: The value to set for the trait. Can be a string, integer, float, or boolean. Set to null to delete the trait.
+          oneOf:
+          - type: string
+          - type: integer
+          - type: number
+          - type: boolean
+          - type: 'null'
+        transient:
+          type: boolean
+          description: When true, this trait is transient and will be used for evaluation but not persisted.
+    IdentityResponse:
+      type: object
+      description: The response object for an identity flags request, containing the evaluated flags and traits for the specified identity.
+      properties:
+        flags:
+          type: array
+          description: The evaluated feature flags for this identity
+          items:
+            $ref: '#/components/schemas/Flag'
+        traits:
+          type: array
+          description: The traits associated with this identity
+          items:
+            $ref: '#/components/schemas/Trait'
+    TraitRequest:
+      type: object
+      description: Request body for setting a trait on an identity.
+      required:
+      - identity
+      - trait_key
+      - trait_value
+      properties:
+        identity:
+          type: object
+          description: The identity to set the trait on
+          required:
+          - identifier
+          properties:
+            identifier:
+              type: string
+              description: The unique identifier for the user identity
+        trait_key:
+          type: string
+          description: The key name of the trait to set
+        trait_value:
+          description: The value to set for the trait. Set to null to delete the trait.
+          oneOf:
+          - type: string
+          - type: integer
+          - type: number
+          - type: boolean
+          - type: 'null'
+    IdentityRequest:
+      type: object
+      description: The request body for identifying a user and optionally setting traits.
+      required:
+      - identifier
+      properties:
         identifier:
           type: string
-          description: The user-provided identifier for this identity
-        environment:
-          type: integer
-          description: The ID of the environment this identity belongs to
-    PaginatedResponse:
-      type: object
-      description: A paginated response wrapper containing the results count and navigation links.
-      properties:
-        count:
-          type: integer
-          description: The total number of results
-        next:
-          type: string
-          nullable: true
-          format: uri
-          description: URL to the next page of results
-        previous:
-          type: string
-          nullable: true
-          format: uri
-          description: URL to the previous page of results
-        results:
+          description: The unique identifier for the user identity in your application.
+        traits:
           type: array
-          description: The array of result objects for this page
+          description: An optional array of traits to set for this identity. Traits are used for segment evaluation and personalized flag delivery.
           items:
-            type: object
+            $ref: '#/components/schemas/TraitInput'
+        transient:
+          type: boolean
+          description: When true, the identity is transient and will not be persisted.
+    Error:
+      type: object
+      description: An error response from the API
+      properties:
+        detail:
+          type: string
+          description: A human-readable error message
     Feature:
       type: object
       description: A feature definition containing metadata about the feature flag including its name, type, and default configuration.
@@ -396,42 +430,23 @@ components:
           - STANDARD
           - MULTIVARIATE
           description: The type of feature flag. STANDARD for simple on/off flags, MULTIVARIATE for flags with multiple value variations.
-    Error:
+    Trait:
       type: object
-      description: An error response from the API
+      description: A trait is a key-value pair associated with an identity, used for segment evaluation and personalization.
       properties:
-        detail:
+        id:
+          type: integer
+          description: The unique identifier for this trait
+        trait_key:
           type: string
-          description: A human-readable error message
-  parameters:
-    TransientQuery:
-      name: transient
-      in: query
-      description: When set to true, the identity is treated as transient and will not be persisted. The identity will be used for flag evaluation only.
-      required: false
-      schema:
-        type: boolean
-    IdentifierQuery:
-      name: identifier
-      in: query
-      description: The unique identifier for the user identity. This is typically a user ID, email, or other unique string that identifies the user in your application.
-      required: true
-      schema:
-        type: string
-    EnvironmentApiKey:
-      name: environment_api_key
-      in: path
-      description: The API key for the environment
-      required: true
-      schema:
-        type: string
-    IdentityId:
-      name: identity_id
-      in: path
-      description: The unique identifier for the identity
-      required: true
-      schema:
-        type: integer
+          description: The key name of the trait
+        trait_value:
+          description: The value of the trait. Can be a string, integer, float, or boolean.
+          oneOf:
+          - type: string
+          - type: integer
+          - type: number
+          - type: boolean
   securitySchemes:
     apiKeyAuth:
       type: apiKey
@@ -441,3 +456,6 @@ components:
 externalDocs:
   description: Flagsmith Admin API Documentation
   url: https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/admin-api
+x-refined-from:
+- flagsmith-admin-api-openapi.yml
+- flagsmith-identities-api-openapi.yml

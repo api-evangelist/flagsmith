@@ -1,0 +1,88 @@
+generated: '2026-09-17'
+method: derived
+source: openapi/_original/flagsmith-api-openapi.json (first-party OpenAPI 3.1 harvested from
+  https://api.flagsmith.com/api/v1/swagger.json, 2026-09-17); docs searched for an error reference
+  page and none exists.
+format: vendor-json
+rfc9457: false
+envelope:
+  media_type: application/json
+  shape: '{"message": "<human-readable string>"}'
+  schema: '#/components/schemas/Error'
+  note: >-
+    A single required string field. There is no machine-readable code, type URI, instance pointer or
+    field-level detail in the general envelope, so an agent cannot branch on the failure — it can
+    only surface the prose. Two narrow variants add a code: MixpanelWebhookError
+    ({message, code:int}) on the Mixpanel cohort-sync webhook, and WorkflowsError on change-request
+    approve/commit.
+finding: >-
+  This is the weakest part of an otherwise strong contract. Of 615 operations, 591 declare no error
+  response at all — only 24 declare any 4xx or 5xx, and 448 declare a 200 and nothing else. The
+  failure modes an integrator actually hits every day (401 on a bad Master API Key, 403 on an
+  insufficient permission, 404 on a wrong project id, 429 on the documented 500 req/min Management
+  API rate limit) are absent from every operation that can return them. The 429 in particular is
+  documented in prose at
+  https://docs.flagsmith.com/administration-and-security/governance-and-compliance/system-limits and
+  appears in no response object anywhere in the spec.
+coverage:
+  operations_total: 615
+  operations_declaring_any_4xx_5xx: 24
+  operations_declaring_only_2xx: 591
+problem_types:
+- status: '400'
+  title: Bad Request
+  occurrences: 13
+  media_type: application/json
+  schemas: [Error, MixpanelWebhookFailureResponse, TestWebhookErrorResponse, WarehouseEventNamesUnsupported, WorkflowsError]
+  description: Request body is invalid.
+  example_operations: [oidc_token_exchange, api_v1_cohort_sync_mixpanel_webhook_create, api_v1_environments_cohorts_sync_csv_create, create_environment_feature_change_request]
+- status: '401'
+  title: Unauthorized
+  occurrences: 2
+  media_type: application/json
+  schemas: [Error]
+  description: Token validation failed, or no trust relationship matches the token.
+  example_operations: [oidc_token_exchange, api_v1_auth_saml_login_create]
+  remediation: >-
+    Management API calls need `Authorization: Api-Key <Master API Key>`; SDK endpoints need
+    `X-Environment-Key`. Declared on only two of the 591 operations that require credentials.
+- status: '403'
+  title: Forbidden
+  occurrences: 4
+  media_type: application/json
+  schemas: [WorkflowsError]
+  description: Caller lacks the permission for this change-request action.
+  example_operations: [api_v1_features_workflows_change_requests_approve_create, api_v1_features_workflows_change_requests_commit_create, api_v1_projects_change_requests_approve_create, api_v1_projects_change_requests_commit_create]
+- status: '404'
+  title: Not Found
+  occurrences: 1
+  media_type: application/json
+  schemas: [MixpanelWebhookFailureResponse]
+  example_operations: [api_v1_cohort_sync_mixpanel_webhook_create]
+- status: '413'
+  title: Payload Too Large
+  occurrences: 1
+  media_type: application/json
+  schemas: [Error]
+  example_operations: [api_v1_environments_cohorts_sync_csv_create]
+  remediation: Split the cohort CSV upload.
+- status: '502'
+  title: Bad Gateway
+  occurrences: 2
+  media_type: application/json
+  schemas: [Error]
+  description: Upstream OAuth provider (GitHub, Google) did not answer.
+  example_operations: [api_v1_auth_oauth_github_create, api_v1_auth_oauth_google_create]
+- status: '503'
+  title: Service Unavailable
+  occurrences: 1
+  media_type: application/json
+  schemas: [WarehouseEventNamesUnavailable]
+  example_operations: [api_v1_environments_warehouse_connections_events_list]
+documented_but_unspecified:
+- status: '429'
+  source: https://docs.flagsmith.com/administration-and-security/governance-and-compliance/system-limits
+  note: >-
+    Management API endpoints are rate limited to 500 requests per minute (self-hosted:
+    USER_THROTTLE_RATE). Documented in prose only — no operation in the contract declares a 429, and
+    no rate-limit response headers are declared anywhere. See rate-limits/flagsmith-rate-limits.yml.

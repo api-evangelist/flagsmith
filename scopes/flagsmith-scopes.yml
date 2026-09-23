@@ -1,0 +1,51 @@
+generated: '2026-09-17'
+method: probed
+source: https://api.flagsmith.com/.well-known/oauth-authorization-server (HTTP 200, fetched 2026-09-17)
+docs: https://docs.flagsmith.com/integrating-with-flagsmith/mcp-server
+authorization_server: https://api.flagsmith.com
+issuer: https://api.flagsmith.com
+endpoints:
+  authorization: https://app.flagsmith.com/oauth/authorize/
+  token: https://api.flagsmith.com/o/token/
+  registration: https://api.flagsmith.com/o/register/
+  revocation: https://api.flagsmith.com/o/revoke_token/
+  introspection: https://api.flagsmith.com/o/introspect/
+grant_types: [authorization_code, refresh_token]
+response_types: [code]
+pkce: [S256]
+token_endpoint_auth_methods: [client_secret_basic, client_secret_post, none]
+scope_count: 2
+note: >-
+  Read from the provider's own RFC 8414 metadata rather than derived — derive-oauth-scopes.py finds
+  nothing because the OpenAPI declares its security schemes as apiKey/http and never as oauth2, so
+  the OAuth surface is invisible from the contract alone. It is only discoverable from the
+  .well-known documents, which is exactly why they were probed. Two scopes, coarse-grained: there is
+  no per-resource or read/write split, so an agent granted `mcp` can reach every tool the deployment
+  exposes, and one granted `admin-api` can reach the Management API within the granting user's own
+  permissions. Fine-grained restriction is done with Flagsmith's RBAC roles and permission groups,
+  not with OAuth scopes.
+scopes:
+- name: mcp
+  description: >-
+    Access to the Flagsmith MCP server at https://mcp.flagsmith.com. This is the scope an MCP client
+    requests during the interactive OAuth flow. Confirmed independently by the RFC 9728
+    protected-resource document on the MCP host, whose scopes_supported is [mcp].
+  surface: https://mcp.flagsmith.com
+  granularity: coarse
+  evidence: https://mcp.flagsmith.com/.well-known/oauth-protected-resource
+- name: admin-api
+  description: >-
+    Access to the Flagsmith Management API at https://api.flagsmith.com/api/v1. Requests act with the
+    permissions of the authorising user — the provider states administrator privileges are not
+    required and that any organisation member can use the Management API within the scope of their
+    own permissions.
+  surface: https://api.flagsmith.com/api/v1
+  granularity: coarse
+  evidence: https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/management-api/
+effective_authorization:
+  model: RBAC
+  note: >-
+    The real authorization boundary is Flagsmith's own role/permission system (Permissions tag, 34
+    operations; custom roles and permission groups on Enterprise), layered under whichever OAuth
+    scope or API key was presented. An OAuth token never widens what its user could already do.
+  see: authentication/flagsmith-authentication.yml

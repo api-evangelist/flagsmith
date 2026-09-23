@@ -1,6 +1,6 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: Flagsmith Admin Environments Segments API
+  title: Flagsmith Admin Segments API
   description: The Flagsmith Admin API allows developers to programmatically manage all aspects of their Flagsmith projects. Anything that can be done through the Flagsmith dashboard can also be accomplished via this API, including creating, updating, and deleting projects, environments, feature flags, segments, and users. It uses a secret Organisation API Token for authentication and provides a Swagger interface at api.flagsmith.com/api/v1/docs for interactive exploration.
   version: '1.0'
   contact:
@@ -130,28 +130,33 @@ paths:
           description: Segment or project not found
 components:
   schemas:
-    Segment:
+    SegmentCondition:
       type: object
-      description: A segment defines a group of users based on trait-based rules for targeted feature flag delivery.
+      description: A condition within a segment rule that evaluates a trait against a value using an operator.
       properties:
-        id:
-          type: integer
-          description: The unique identifier for this segment
-        name:
+        operator:
           type: string
-          description: The name of the segment
-        description:
+          enum:
+          - EQUAL
+          - NOT_EQUAL
+          - GREATER_THAN
+          - GREATER_THAN_INCLUSIVE
+          - LESS_THAN
+          - LESS_THAN_INCLUSIVE
+          - CONTAINS
+          - NOT_CONTAINS
+          - REGEX
+          - PERCENTAGE_SPLIT
+          - IS_SET
+          - IS_NOT_SET
+          - IN
+          description: The comparison operator to use
+        property_:
           type: string
-          nullable: true
-          description: A description of the segment
-        project:
-          type: integer
-          description: The ID of the project this segment belongs to
-        rules:
-          type: array
-          description: The rules that define segment membership
-          items:
-            $ref: '#/components/schemas/SegmentRule'
+          description: The trait key to evaluate
+        value:
+          type: string
+          description: The value to compare against
     SegmentInput:
       type: object
       description: Input object for creating or updating a segment
@@ -170,6 +175,28 @@ components:
         project:
           type: integer
           description: The ID of the project
+        rules:
+          type: array
+          description: The rules that define segment membership
+          items:
+            $ref: '#/components/schemas/SegmentRule'
+    Segment:
+      type: object
+      description: A segment defines a group of users based on trait-based rules for targeted feature flag delivery.
+      properties:
+        id:
+          type: integer
+          description: The unique identifier for this segment
+        name:
+          type: string
+          description: The name of the segment
+        description:
+          type: string
+          nullable: true
+          description: A description of the segment
+        project:
+          type: integer
+          description: The ID of the project this segment belongs to
         rules:
           type: array
           description: The rules that define segment membership
@@ -218,33 +245,6 @@ components:
           description: The conditions that make up this rule
           items:
             $ref: '#/components/schemas/SegmentCondition'
-    SegmentCondition:
-      type: object
-      description: A condition within a segment rule that evaluates a trait against a value using an operator.
-      properties:
-        operator:
-          type: string
-          enum:
-          - EQUAL
-          - NOT_EQUAL
-          - GREATER_THAN
-          - GREATER_THAN_INCLUSIVE
-          - LESS_THAN
-          - LESS_THAN_INCLUSIVE
-          - CONTAINS
-          - NOT_CONTAINS
-          - REGEX
-          - PERCENTAGE_SPLIT
-          - IS_SET
-          - IS_NOT_SET
-          - IN
-          description: The comparison operator to use
-        property_:
-          type: string
-          description: The trait key to evaluate
-        value:
-          type: string
-          description: The value to compare against
   parameters:
     SegmentId:
       name: segment_id

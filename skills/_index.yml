@@ -1,0 +1,28 @@
+generated: '2026-09-17'
+method: generated
+source: openapi/_original/flagsmith-api-openapi.json (615 operations; every operationId referenced in
+  these skills was grepped from that contract and verified present),
+  mcp/flagsmith-tool-crosswalk.yml, conventions/flagsmith-conventions.yml,
+  errors/flagsmith-problem-types.yml, rate-limits/flagsmith-rate-limits.yml
+description: >-
+  Packaged Agent Skills for the Flagsmith Management API, one per marquee flow. Each carries the
+  runtime rules an agent gets wrong on this API in particular: the two-key split, the
+  use_v2_feature_versioning fork that changes which operations apply, the complete absence of
+  idempotency on 168 POSTs, the 500 req/min limit with no response headers, and the fact that DELETE
+  has no undo.
+grounding: >-
+  No operationId in these skills was invented. Each was read out of
+  openapi/_original/flagsmith-api-openapi.json, the first-party OpenAPI 3.1 harvested from
+  https://api.flagsmith.com/api/v1/swagger.json on 2026-09-17.
+provider_published_skills:
+  found: false
+  note: >-
+    Flagsmith publishes github.com/Flagsmith/AGENTS.md (AGENTS.md, CLAUDE.md, PR_COLLABORATION.md),
+    but it is guidance for agents CONTRIBUTING TO the Flagsmith codebase, not for calling the
+    Flagsmith API. It is therefore not saved here as a provider-published Agent Skill — recording
+    it as one would credit Flagsmith with a consumer-facing surface it has not shipped.
+skills:
+- {name: flagsmith-ship-a-flag, file: flagsmith-ship-a-flag.md, flow: 'Create a flag and enable it in one environment', operations: 10}
+- {name: flagsmith-target-a-segment, file: flagsmith-target-a-segment.md, flow: 'Define an audience and override a feature for it', operations: 7}
+- {name: flagsmith-roll-back-a-flag, file: flagsmith-roll-back-a-flag.md, flow: 'Undo a flag change, or find out you cannot', operations: 8}
+- {name: flagsmith-run-an-experiment, file: flagsmith-run-an-experiment.md, flow: 'Multivariate A/B experiment end to end (Beta)', operations: 11}

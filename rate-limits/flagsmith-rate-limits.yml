@@ -3,88 +3,99 @@ specificationVersion: '0.1'
 schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main/schema/api-commons.yml#/$defs/RateLimits
 provider: flagsmith
 providerId: flagsmith
+generated: '2026-09-17'
+method: searched
+source: https://docs.flagsmith.com/administration-and-security/governance-and-compliance/system-limits
+  and https://flagsmith.com/pricing (both fetched 2026-09-17, HTTP 200)
 created: '2026-05-04'
-# Provenance stamped 2026-08-11: this artifact was written by the API Evangelist
-# bulk sweep dated 2026-05-04, not harvested from the provider. See roadmap#35.
-method: generated
-modified: '2026-05-04'
+modified: '2026-09-17'
+supersedes: >-
+  The 2026-05-04 bulk-sweep scaffold that previously occupied this file. That scaffold asserted a
+  10 req/min free-tier limit and a full set of X-RateLimit-* response headers, none of which
+  Flagsmith publishes. Both are removed. The real published numbers are below.
 tags:
-  - Rate Limiting
-  - Quotas
-  - Throttling
-description: Machine-readable rate limit definitions for the flagsmith API surface. Captures per-tier
-  quotas, burst behavior, response signaling, and recovery semantics. Defaults are scaffold values to
-  be replaced with published provider limits.
+- Rate Limiting
+- Quotas
+- Throttling
+description: >-
+  Published rate limits and plan quotas for the Flagsmith API surface. Flagsmith draws an explicit
+  line between the two and the distinction matters to an integrator: "rate limit" means
+  to-the-second throttling, "plan limit" means the monthly request allowance that carries billing
+  consequences.
+limit_count: 3
 headers:
-  limit: X-RateLimit-Limit
-  remaining: X-RateLimit-Remaining
-  reset: X-RateLimit-Reset
-  retryAfter: Retry-After
-  policy: RateLimit-Policy
+  note: >-
+    NOT PUBLISHED. Flagsmith documents no rate-limit response headers — no X-RateLimit-*, no
+    RateLimit-*, no Retry-After — and the first-party OpenAPI declares no 429 response on any of its
+    615 operations. An agent therefore cannot see how close it is to the 500/min Management API
+    limit; it can only discover exhaustion by being throttled. This is the single clearest runtime
+    gap in an otherwise well-documented API.
+  limit: null
+  remaining: null
+  reset: null
+  retryAfter: null
+  policy: null
 responseCodes:
-  throttled: 429
-  quotaExceeded: 429
-  serviceUnavailable: 503
+  throttled: null
+  note: >-
+    The status returned on Management API throttling is not documented and is not declared in the
+    contract. Flagsmith's Management API runs on Django REST Framework's throttling
+    (USER_THROTTLE_RATE is the self-hosted knob), which returns 429, but the provider does not state
+    this so it is recorded as undocumented rather than asserted.
 limits:
-  - tier: free
-    name: Free Tier Default
-    scope: api-key
-    metric: requests_per_minute
-    limit: 10
-    burst: 20
-    timeFrame: minute
-    applies:
-      - Flagsmith Flags API
-      - Flagsmith Admin API
-  - tier: free
-    name: Free Tier Monthly Quota
-    scope: api-key
-    metric: requests_per_month
-    limit: 1000
-    timeFrame: month
-    applies:
-      - Flagsmith Flags API
-      - Flagsmith Admin API
-  - tier: professional
-    name: Professional Tier Default
-    scope: api-key
-    metric: requests_per_minute
-    limit: 100
-    burst: 200
-    timeFrame: minute
-    applies:
-      - Flagsmith Flags API
-      - Flagsmith Admin API
-  - tier: professional
-    name: Professional Tier Monthly Quota
-    scope: api-key
-    metric: requests_per_month
-    limit: 100000
-    timeFrame: month
-    applies:
-      - Flagsmith Flags API
-      - Flagsmith Admin API
-  - tier: enterprise
-    name: Enterprise Negotiated Limit
-    scope: contract
-    metric: requests_per_minute
-    limit: 1000
-    burst: 5000
-    timeFrame: minute
-    applies:
-      - Flagsmith Flags API
-      - Flagsmith Admin API
-policies:
-  - name: Backoff Strategy
-    description: Clients should implement exponential backoff with jitter, honoring the Retry-After header
-      when present.
-  - name: Burst Handling
-    description: Short bursts above the steady-state limit are tolerated up to the documented burst ceiling
-      before throttling engages.
-  - name: Quota Reset
-    description: Monthly quotas reset at the start of each calendar month in UTC. Per-minute and per-second
-      windows reset on a sliding-window basis.
-  - name: Fair Use
-    description: Even on uncapped enterprise tiers, sustained usage that materially impacts shared infrastructure
-      may be subject to fair-use throttling.
-maintainers: []
+- name: Management API rate limit
+  scope: per-user
+  metric: requests_per_minute
+  limit: 500
+  timeFrame: minute
+  applies:
+  - All non-SDK (Management API) endpoints on https://api.flagsmith.com/api/v1
+  configurable: >-
+    Self-hosted deployments can change this with the USER_THROTTLE_RATE environment variable. Not
+    configurable on SaaS.
+  source: https://docs.flagsmith.com/administration-and-security/governance-and-compliance/system-limits
+- name: SDK / Flags API rate limit
+  scope: per-environment
+  metric: requests_per_second
+  limit: null
+  timeFrame: null
+  applies:
+  - https://edge.api.flagsmith.com
+  - /flags, /identities, /traits, /environment-document
+  note: >-
+    Explicitly none. The provider states "Requests made by our SDKs are not rate limited, by design;
+    we can't predict what sort of profile your traffic will look like." The constraint on the SDK
+    surface is the monthly plan limit below, not a per-second throttle.
+  source: https://docs.flagsmith.com/administration-and-security/governance-and-compliance/system-limits
+- name: Monthly plan request quota
+  scope: per-account
+  metric: requests_per_month
+  timeFrame: month
+  tiers:
+  - {tier: Free, limit: 50000}
+  - {tier: Start-Up, limit: 1000000}
+  - {tier: Scale-Up, limit: 5000000}
+  - {tier: Enterprise, limit: 5000000, note: '5,000,000+, contracted'}
+  counted_endpoints:
+  - /flags
+  - /identities
+  - /traits
+  - /environment-document
+  note: >-
+    Only these four SDK endpoints count against the quota; Management API calls do not. Overage is
+    billed, not blocked, on paid plans ($50 per million additional calls, decreasing with volume;
+    Start-Up overage $7 per 100k). On the Free plan, exceeding the quota stops flags being served
+    after a 7-day warning email, cleared 30 days later or on upgrade. Paid plans within 200% of
+    their limit get a 30-day grace period on first breach.
+  source: https://flagsmith.com/pricing
+entity_limits:
+  note: Not rate limits, but the hard system limits an agent will hit when creating resources.
+  source: https://docs.flagsmith.com/administration-and-security/governance-and-compliance/system-limits
+  values:
+  - {name: features_per_project, limit: 1000}
+  - {name: segments_per_project, limit: 500}
+  - {name: segment_overrides_per_environment, limit: 2000}
+  - {name: segment_rule_conditions, limit: 100}
+  - {name: flag_string_value_bytes, limit: 20000}
+  - {name: identity_trait_value_bytes, limit: 2000}
+  - {name: segment_rule_value_bytes, limit: 1000}

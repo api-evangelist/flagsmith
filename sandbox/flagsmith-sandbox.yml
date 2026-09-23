@@ -1,0 +1,49 @@
+generated: '2026-09-17'
+method: searched
+source: https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/management-api/,
+  https://api.flagsmith.com/api/v1/docs/ (HTTP 200, 2026-09-17), https://flagsmith.com/demo,
+  https://flagsmith.com/pricing
+has_test_mode: false
+description: >-
+  Flagsmith publishes no test-mode sandbox in the payments sense — there are no test-vs-live key
+  prefixes, no test fixtures, no time simulation, and no separate sandbox host. That is a reasonable
+  design for a feature-flag platform: the product's own primitive IS the safe place to try things,
+  because an environment (Development, Staging, Production) is free and unlimited on every plan
+  including Free, and flags evaluated in a dev environment cannot reach production traffic.
+surfaces:
+- name: Swagger API Explorer
+  type: interactive-console
+  url: https://api.flagsmith.com/api/v1/docs/
+  http_status: 200
+  auth_required: true
+  note: >-
+    A live, first-party Swagger UI over the full 615-operation Management API, served from the API
+    host itself. Calls go to production with your own key — it is an explorer, not a sandbox.
+- name: OpenAPI download
+  type: contract
+  url: https://api.flagsmith.com/api/v1/swagger.json
+  alt: https://api.flagsmith.com/api/v1/swagger.yaml
+  http_status: 200
+  auth_required: false
+  note: Anonymous. The whole contract is readable without an account.
+- name: Interactive demo
+  type: guided-demo
+  url: https://flagsmith.com/demo
+  http_status: 200
+  auth_required: false
+- name: Free plan
+  type: free-tier
+  url: https://flagsmith.com/pricing
+  note: >-
+    50,000 requests/month, unlimited flags, environments, identities and segments, with API access
+    included — the practical substitute for a sandbox. Self-serve signup, no card.
+- name: Self-hosted local stack
+  type: local
+  url: https://github.com/Flagsmith/self-hosted
+  note: >-
+    The provider publishes a docker-compose project that stands up an entire Flagsmith environment
+    locally. For anyone who needs a throwaway target for destructive API testing, this is it, and it
+    is the closest thing to a true sandbox Flagsmith offers.
+test_values:
+  published: false
+  note: No published test keys, test identities or fixture data. Nothing was invented to fill this.

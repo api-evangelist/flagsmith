@@ -1,6 +1,6 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: Flagsmith Admin Environments Organisations API
+  title: Flagsmith Admin Organisations API
   description: The Flagsmith Admin API allows developers to programmatically manage all aspects of their Flagsmith projects. Anything that can be done through the Flagsmith dashboard can also be accomplished via this API, including creating, updating, and deleting projects, environments, feature flags, segments, and users. It uses a secret Organisation API Token for authentication and provides a Swagger interface at api.flagsmith.com/api/v1/docs for interactive exploration.
   version: '1.0'
   contact:
@@ -53,7 +53,37 @@ paths:
         '404':
           description: Organisation not found
 components:
+  parameters:
+    OrganisationId:
+      name: organisation_id
+      in: path
+      description: The unique identifier for the organisation
+      required: true
+      schema:
+        type: integer
   schemas:
+    PaginatedResponse:
+      type: object
+      description: A paginated response wrapper containing the results count and navigation links.
+      properties:
+        count:
+          type: integer
+          description: The total number of results
+        next:
+          type: string
+          nullable: true
+          format: uri
+          description: URL to the next page of results
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          description: URL to the previous page of results
+        results:
+          type: array
+          description: The array of result objects for this page
+          items:
+            type: object
     Organisation:
       type: object
       description: An organisation in Flagsmith, the top-level container for projects, users, and billing.
@@ -78,36 +108,6 @@ components:
         persist_trait_data:
           type: boolean
           description: Whether trait data is persisted for identities
-    PaginatedResponse:
-      type: object
-      description: A paginated response wrapper containing the results count and navigation links.
-      properties:
-        count:
-          type: integer
-          description: The total number of results
-        next:
-          type: string
-          nullable: true
-          format: uri
-          description: URL to the next page of results
-        previous:
-          type: string
-          nullable: true
-          format: uri
-          description: URL to the previous page of results
-        results:
-          type: array
-          description: The array of result objects for this page
-          items:
-            type: object
-  parameters:
-    OrganisationId:
-      name: organisation_id
-      in: path
-      description: The unique identifier for the organisation
-      required: true
-      schema:
-        type: integer
   securitySchemes:
     apiKeyAuth:
       type: apiKey

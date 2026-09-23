@@ -1,0 +1,120 @@
+generated: '2026-09-19'
+method: probed
+source: live HTTP probes of every host in apis.yml, every OpenAPI servers[] host, the docs/console host
+  and the MCP host, 2026-09-17
+note: 'Five discovery paths were probed on six hosts (36 probes). Two real documents are served, both
+  on the API/MCP hosts rather than the website: RFC 8414 OAuth authorization server metadata on api.flagsmith.com,
+  and RFC 9728 OAuth protected resource metadata on mcp.flagsmith.com (which names api.flagsmith.com as
+  its authorization server — the pair is what lets an MCP client complete OAuth against Flagsmith with
+  no configuration). No security.txt, api-catalog, openid-configuration or ai-plugin.json is served on
+  any host. Every 404 recorded below is a real 404 body, not an SPA shell.
+
+
+  MCP-host OAuth discovery added 2026-09-19 (roadmap#321/#337): the harvest visits a provider''s primary
+  hosts, and RFC 9728 protected-resource metadata lives on the MCP host, so these documents existed and
+  were invisible to the scorer. Fetched live and validated on `resource`/`issuer`; one negative control
+  per host.'
+hosts:
+- host: flagsmith.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+- host: www.flagsmith.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+- host: docs.flagsmith.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+- host: api.flagsmith.com
+  documents:
+  - path: /.well-known/oauth-authorization-server
+    status: 200
+    file: flagsmith-oauth-authorization-server.json
+    content_type: application/json
+    note: RFC 8414. Issuer https://api.flagsmith.com; authorization endpoint on app.flagsmith.com; PKCE
+      S256 only; dynamic client registration (RFC 7591) at /o/register/; scopes_supported [mcp, admin-api].
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+  - path: /.well-known/oauth-protected-resource
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 200
+    file: flagsmith-api-oauth-authorization-server.json
+    bytes: 717
+  path_echo_control: passed
+- host: edge.api.flagsmith.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+- host: mcp.flagsmith.com
+  documents:
+  - path: /.well-known/oauth-protected-resource
+    status: 200
+    file: flagsmith-mcp-oauth-protected-resource.json
+    content_type: application/json
+    note: RFC 9728. resource https://mcp.flagsmith.com/, authorization_servers [https://api.flagsmith.com/],
+      scopes_supported [mcp], bearer_methods_supported [header]. Returned as the www-authenticate resource_metadata
+      on an anonymous POST to /mcp.
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+  path_echo_control: passed
+x-mcp-probe:
+  probed: '2026-09-19'
+  issue: roadmap#321, roadmap#337
+  documents:
+  - host: https://mcp.flagsmith.com
+    path: /.well-known/oauth-protected-resource
+    file: flagsmith-mcp-oauth-protected-resource.json
+  - host: https://api.flagsmith.com
+    path: /.well-known/oauth-authorization-server
+    file: flagsmith-api-oauth-authorization-server.json
+  validated_on: resource (RFC 9728) / issuer (RFC 8414, OIDC)
+  negative_control: one per host; a 2xx JSON object at an impossible path discards the host

@@ -1,0 +1,192 @@
+generated: '2026-09-17'
+method: searched
+source: >-
+  registry.npmjs.org, pypi.org, repo1.maven.org, azuresearch-usnc.nuget.org + api.nuget.org,
+  proxy.golang.org, rubygems.org, repo.packagist.org, crates.io, hex.pm, pub.dev,
+  trunk.cocoapods.org and api.github.com/orgs/Flagsmith/repos — all queried unauthenticated
+  2026-09-17. SDK inventory cross-checked against
+  https://docs.flagsmith.com/integrating-with-flagsmith/sdks/
+provider: Flagsmith
+note: >-
+  Flagsmith publishes first-party clients across thirteen ecosystems, every one of them from the
+  github.com/Flagsmith organisation, so `official: true` is a repository-ownership fact rather than a
+  judgement. Currency is uneven and the structured `published:` dates make it legible: the JS, PHP,
+  Go, Python, Java, .NET, Rust and Elixir clients are current, while the Ruby gem (4.3.0,
+  2024-12-06) and the standalone Kotlin (non-Android) client (5.0.2, 2022-08-09) have not shipped a
+  release in over a year against an API whose own changelog moves every one to two weeks.
+official_count: 16
+packages:
+- name: flagsmith
+  registry: npm
+  url: https://www.npmjs.com/package/flagsmith
+  repository: https://github.com/Flagsmith/flagsmith-js-client
+  language: JavaScript
+  official: true
+  version: 10.0.0
+  published: '2025-12-10'
+  note: Core JavaScript/TypeScript client; the React and React Native bindings ship from the same repo.
+- name: react-native-flagsmith
+  registry: npm
+  url: https://www.npmjs.com/package/react-native-flagsmith
+  repository: https://github.com/Flagsmith/flagsmith-js-client
+  language: JavaScript
+  official: true
+  version: 10.0.0
+  published: '2025-12-10'
+- name: flagsmith-nodejs
+  registry: npm
+  url: https://www.npmjs.com/package/flagsmith-nodejs
+  repository: https://github.com/Flagsmith/flagsmith-nodejs-client
+  language: TypeScript
+  official: true
+  version: 8.1.2
+  published: '2026-07-08'
+  note: Server-side Node client with local (offline) flag evaluation.
+- name: '@flagsmith/cli'
+  registry: npm
+  url: https://www.npmjs.com/package/@flagsmith/cli
+  repository: https://github.com/Flagsmith/flagsmith-cli
+  language: Go
+  official: true
+  version: 2.0.0
+  published: '2026-08-21'
+  note: >-
+    npm is one distribution channel for the Go CLI binary (Homebrew, an install script and GitHub
+    Releases are the others). The 2.0.0 line is the rewritten Go CLI; the pre-2.0 npm package was a
+    different, now-legacy Node CLI. See cli/flagsmith-cli.yml.
+- name: flagsmith
+  registry: pypi
+  url: https://pypi.org/project/flagsmith/
+  repository: https://github.com/Flagsmith/flagsmith-python-client
+  language: Python
+  official: true
+  version: 6.2.3
+  published: '2026-08-31'
+- name: com.flagsmith:flagsmith-java-client
+  registry: maven
+  url: https://repo1.maven.org/maven2/com/flagsmith/flagsmith-java-client/
+  repository: https://github.com/Flagsmith/flagsmith-java-client
+  language: Java
+  official: true
+  version: 8.1.1
+  published: '2026-05-08'
+- name: com.flagsmith:flagsmith-kotlin-android-client
+  registry: maven
+  url: https://repo1.maven.org/maven2/com/flagsmith/flagsmith-kotlin-android-client/
+  repository: https://github.com/Flagsmith/flagsmith-kotlin-android-client
+  language: Kotlin
+  official: true
+  version: 1.9.0
+  published: '2026-04-15'
+- name: com.flagsmith:flagsmith-kotlin-client
+  registry: maven
+  url: https://repo1.maven.org/maven2/com/flagsmith/flagsmith-kotlin-client/
+  repository: https://github.com/Flagsmith/flagsmith-kotlin-client
+  language: Kotlin
+  official: true
+  version: 5.0.2
+  published: '2022-08-09'
+  note: >-
+    Last release 2022-08-09 — superseded in practice by flagsmith-kotlin-android-client. Recorded
+    because it is still resolvable from Maven Central; treat the Android client as the live one.
+- name: Flagsmith
+  registry: nuget
+  url: https://www.nuget.org/packages/Flagsmith/
+  repository: https://github.com/Flagsmith/flagsmith-dotnet-client
+  language: C#
+  official: true
+  version: 9.0.0
+  published: '2025-12-05'
+- name: github.com/Flagsmith/flagsmith-go-client/v5
+  registry: go
+  url: https://pkg.go.dev/github.com/Flagsmith/flagsmith-go-client/v5
+  repository: https://github.com/Flagsmith/flagsmith-go-client
+  language: Go
+  official: true
+  version: v5.2.0
+  published: '2026-08-07'
+  note: >-
+    Major-version module path. The /v3 path still resolves (v3.7.0, 2024-09-30) and the /v4 path
+    resolves to v4.4.0 (2025-06-26); v5 is current.
+- name: flagsmith
+  registry: rubygems
+  url: https://rubygems.org/gems/flagsmith
+  repository: https://github.com/Flagsmith/flagsmith-ruby-client
+  language: Ruby
+  official: true
+  version: 4.3.0
+  published: '2024-12-06'
+  note: >-
+    Oldest current release of any first-party Flagsmith client — no gem push since 2024-12-06, though
+    the repository itself was pushed to 2026-09-05. The gem, not the repo, is what a Ruby consumer
+    gets.
+- name: flagsmith/flagsmith-php-client
+  registry: packagist
+  url: https://packagist.org/packages/flagsmith/flagsmith-php-client
+  repository: https://github.com/Flagsmith/flagsmith-php-client
+  language: PHP
+  official: true
+  version: 5.1.2
+  published: '2026-09-15'
+- name: flagsmith
+  registry: crates
+  url: https://crates.io/crates/flagsmith
+  repository: https://github.com/Flagsmith/flagsmith-rust-client
+  language: Rust
+  official: true
+  version: 3.1.1
+  published: '2026-08-27'
+- name: flagsmith_engine
+  registry: hex
+  url: https://hex.pm/packages/flagsmith_engine
+  repository: https://github.com/Flagsmith/flagsmith-elixir-client
+  language: Elixir
+  official: true
+  version: 2.3.1
+  published: '2025-11-10'
+  note: >-
+    The Elixir client ships as the flagsmith_engine package. A second Hex package,
+    flagsmith_elixir_sdk (0.1.2, 2021-11-01), is an abandoned earlier attempt.
+- name: flagsmith
+  registry: pub
+  url: https://pub.dev/packages/flagsmith
+  repository: https://github.com/Flagsmith/flagsmith-flutter-client
+  language: Dart
+  official: true
+  version: 6.1.1
+  published: '2026-05-18'
+- name: FlagsmithClient
+  registry: cocoapods
+  url: https://cocoapods.org/pods/FlagsmithClient
+  repository: https://github.com/Flagsmith/flagsmith-ios-client
+  language: Swift
+  official: true
+  version: 3.9.0
+  published: '2025-10-31'
+  note: >-
+    CocoaPods trunk lags the repository: GitHub Releases carries v3.10.0 (2026-04-15), which is
+    distributed through Swift Package Manager. SPM has no version metadata endpoint, so the SPM
+    consumer's version is the git tag v3.10.0 (2026-04-15).
+related:
+- name: dev.openfeature.contrib.providers:flagsmith
+  registry: maven
+  url: https://repo1.maven.org/maven2/dev/openfeature/contrib/providers/flagsmith/
+  language: Java
+  official: false
+  version: 0.0.10
+  published: '2026-04-15'
+  note: >-
+    OpenFeature Java provider for Flagsmith. Published by the OpenFeature project, not by Flagsmith —
+    recorded as related rather than official. Flagsmith DOES publish its own OpenFeature providers
+    for Swift, Kotlin and Python from its own org (flagsmith-openfeature-swift-provider,
+    flagsmith-openfeature-provider-kotlin, flagsmith-openfeature-provider-python); those ship from
+    GitHub/SPM rather than a versioned registry we could read a date from.
+- name: clearlyip/laravel-flagsmith
+  registry: packagist
+  url: https://packagist.org/packages/clearlyip/laravel-flagsmith
+  language: PHP
+  official: false
+  version: null
+  note: >-
+    Third-party Laravel wrapper (401k downloads). Version deliberately not recorded — it is not a
+    Flagsmith release and its currency says nothing about the provider.

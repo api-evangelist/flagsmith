@@ -1,0 +1,88 @@
+# Flagsmith
+
+> Flagsmith is a feature flag and remote configuration platform built for teams of any size, from startups to large enterprises. Flagsmith is flexible by design: teams can use it as a hosted cloud service, self-host it on their own infrastructure, or run it in a private cloud. The core product is also open source, making it a strong choice for organisations that want full control over their stack, whether they're scaling fast or operating in regulated industries such as banking, financial services, and healthcare.
+
+Flagsmith lets development teams release features safely, run A/B tests, and segment users without redeploying code. It provides granular controls for progressive rollouts, canary releases, and kill switches, giving teams the confidence to ship continuously without putting users at risk. This extends to AI-powered features: Flagsmith lets teams control, gate, test, and roll back AI functionality with the same reliability as any other feature. Flagsmith also provides an MCP (Model Context Protocol) server, enabling AI agents and LLM-powered tooling to interact with feature flags directly.
+
+Flagsmith is built by Bullet Train Ltd. Customers include KB, Okta, Citi, and Vontobel.
+
+Key facts:
+- Create and manage feature flags and remote config across web, mobile, and server-side applications
+- Supports boolean flags, multivariate flags, and remote configuration values
+- User segmentation allows targeted rollouts by attribute, percentage, or identity
+- Integrates with analytics, APM, and project management tools, including Datadog, New Relic, Amplitude, and Jira
+- SDKs available for JavaScript, React, Node.js, Python, Java, Go, Ruby, .NET, Flutter, iOS (Swift), Android (Kotlin), PHP, and more
+- OpenFeature compatible, preventing vendor lock-in
+- Trusted by engineering teams at enterprises with 500+ employees, particularly in banking, FinServ, HealthTech, and SaaS
+- The server is compatible with MCP-enabled IDE extensions (such as Cursor), CLI tools (such as Claude Code), and custom AI agents integrated into CI/CD pipelines
+
+## Sitemap
+
+https://www.flagsmith.com/sitemap.xml
+
+## Docs
+
+- [Getting Started / Quickstart](https://docs.flagsmith.com/getting-started/quick-start): Create your first project and feature flag
+- [Feature Flags Explainer](https://docs.flagsmith.com/getting-started/feature-flags): Core concepts and use cases
+- [Platform Architecture](https://docs.flagsmith.com/flagsmith-concepts/platform-architecture): How Flagsmith works and its components
+- [Basic Flag Management](https://docs.flagsmith.com/managing-flags/core-management): Create, edit, and manage flags
+- [Managing Segments](https://docs.flagsmith.com/basic-features/managing-segments): Target users by attributes and rules
+- [Managing Identities](https://docs.flagsmith.com/basic-features/managing-identities): Per-user flag overrides
+- [A/B Testing](https://docs.flagsmith.com/advanced-use/ab-testing): Run experiments with multivariate flags
+- [Client-Side SDKs](https://docs.flagsmith.com/integrating-with-flagsmith/sdks/client-side-sdks/): JavaScript, React, React Native, iOS, Android
+- [Server-Side SDKs](https://docs.flagsmith.com/integrating-with-flagsmith/sdks/server-side): Node.js, Python, Java, Go, Ruby, .NET, PHP
+- [Flagsmith REST API](https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/admin-api/): Admin API reference
+- [OpenFeature Integration](https://docs.flagsmith.com/integrating-with-flagsmith/openfeature/): Use Flagsmith as an OpenFeature provider
+- [Self-Hosting & Deployment](https://docs.flagsmith.com/deployment-self-hosting/): On-premise and private cloud setup
+- [Third-Party Integrations](https://docs.flagsmith.com/third-party-integrations): Datadog, New Relic, Amplitude, Heap, Segment, Mixpanel, Jira, and more
+- [Administration & Security](https://docs.flagsmith.com/administration-and-security/): Authentication, permissions, RBAC, SSO
+- [Release Notes](https://docs.flagsmith.com/project-and-community/release-notes/): What's new in Flagsmith
+- [MCP Server](https://docs.flagsmith.com/integrating-with-flagsmith/mcp-server): Connect AI tools and more to Flagsmith with the MCP 
+
+## Product pages
+
+- [Feature Flags & Remote Config](https://www.flagsmith.com/feature-flags-and-remote-config): Core feature overview
+- [Segmentation](https://www.flagsmith.com/segmentation): Targeting users and groups
+- [A/B & Multivariate Testing](https://www.flagsmith.com/a-b-and-multivariate-testing): Experimentation capabilities
+- [Role-Based Access, Change Control & Security](https://www.flagsmith.com/role-based-access-change-control-security): Governance features
+- [Advanced Governance](https://www.flagsmith.com/feature-flag-governance): Approvals, audit logs, and change management
+- [Risk Reduction](https://www.flagsmith.com/reduce-risk-with-feature-flags): Safe releases and kill switches
+- [Flagsmith for AI](https://www.flagsmith.com/ship-trustworthy-ai-powered-features): Feature flags for AI-powered applications
+- [Edge API](https://www.flagsmith.com/edge-api): Low-latency global flag evaluation
+- [Real-Time Flags](https://www.flagsmith.com/real-time-feature-flags): Server-sent events for instant flag updates
+- [SDKs overview](https://www.flagsmith.com/sdks): All supported languages and frameworks
+- [Integrations overview](https://www.flagsmith.com/integrations): Third-party tool connections
+- [MCP Server](https://www.flagsmith.com/mcp-server): Flagsmith Model Context Protocol server
+
+## Deployment options
+
+- [Cloud (SaaS)](https://www.flagsmith.com/cloud): Hosted by Flagsmith
+- [Self-Hosted](https://www.flagsmith.com/self-hosted): Deploy on your own infrastructure
+- [Private Cloud](https://www.flagsmith.com/private-cloud-feature-flags): Single-tenant hosted by Flagsmith
+- [Open Source](https://www.flagsmith.com/open-source): MIT-licensed, GitHub-hosted
+
+## Solutions
+
+- [Enterprise](https://www.flagsmith.com/enterprise): Large-scale deployments with advanced security
+- [Banking & Financial Services](https://www.flagsmith.com/feature-flag-bank-financial-services): Regulated-industry use cases
+- [Use Cases](https://www.flagsmith.com/use-cases): Canary releases, trunk-based development, progressive rollouts
+- [Build vs Buy](https://www.flagsmith.com/build-vs-buy): Flagsmith vs building in-house
+
+## Pricing
+
+- [Pricing](https://www.flagsmith.com/pricing): Free, Start-up ($45/month), and Enterprise tiers. Free plan includes unlimited flags, unlimited environments, and up to 50,000 monthly requests.
+
+## Resources & learning
+
+- [Blog](https://www.flagsmith.com/blog): Engineering articles on feature flags, deployment strategies, and release management
+- [Guides & eBooks](https://www.flagsmith.com/ebooks): Long-form guides on feature management
+- [Case Studies](https://www.flagsmith.com/case-studies): Customer stories
+- [Podcast](https://www.flagsmith.com/podcast): Discussions on open-source software and engineering
+- [Interactive Demo](https://www.flagsmith.com/demo): Try Flagsmith in the browser without signing up
+
+## Optional
+
+- [GitHub Repository](https://github.com/Flagsmith/flagsmith): Source code, issues, and contributions
+- [Discord Community](https://discord.gg/hFhxNtXzgm): Community support channel
+- [Status Page](https://status.flagsmith.com/): Uptime and incident history
+- [Contact / Sales](https://www.flagsmith.com/contact-us): Enterprise and private cloud enquiries

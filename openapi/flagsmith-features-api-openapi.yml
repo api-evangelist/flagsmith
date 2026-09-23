@@ -1,6 +1,6 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: Flagsmith Admin Environments Features API
+  title: Flagsmith Admin Features API
   description: The Flagsmith Admin API allows developers to programmatically manage all aspects of their Flagsmith projects. Anything that can be done through the Flagsmith dashboard can also be accomplished via this API, including creating, updating, and deleting projects, environments, feature flags, segments, and users. It uses a secret Organisation API Token for authentication and provides a Swagger interface at api.flagsmith.com/api/v1/docs for interactive exploration.
   version: '1.0'
   contact:
@@ -210,20 +210,6 @@ components:
           type: integer
           nullable: true
           description: The feature segment ID for segment overrides
-    FeatureStateInput:
-      type: object
-      description: Input object for updating a feature state
-      properties:
-        enabled:
-          type: boolean
-          description: Whether the feature should be enabled
-        feature_state_value:
-          description: The value to set for this feature state
-          oneOf:
-          - type: string
-          - type: integer
-          - type: boolean
-          - type: 'null'
     FeatureInput:
       type: object
       description: Input object for creating or updating a feature flag
@@ -260,34 +246,20 @@ components:
           description: Tag IDs to associate with this feature
           items:
             type: integer
-    MultivariateOption:
+    FeatureStateInput:
       type: object
-      description: A multivariate option representing one of the possible values for a multivariate feature flag.
+      description: Input object for updating a feature state
       properties:
-        id:
-          type: integer
-          description: The unique identifier for this option
-        type:
-          type: string
-          description: The data type of the option value
-        string_value:
-          type: string
-          nullable: true
-          description: The string value of this option
-        integer_value:
-          type: integer
-          nullable: true
-          description: The integer value of this option
-        boolean_value:
+        enabled:
           type: boolean
-          nullable: true
-          description: The boolean value of this option
-        default_percentage_allocation:
-          type: number
-          format: float
-          minimum: 0
-          maximum: 100
-          description: The default percentage of users who will receive this option
+          description: Whether the feature should be enabled
+        feature_state_value:
+          description: The value to set for this feature state
+          oneOf:
+          - type: string
+          - type: integer
+          - type: boolean
+          - type: 'null'
     PaginatedResponse:
       type: object
       description: A paginated response wrapper containing the results count and navigation links.
@@ -369,21 +341,35 @@ components:
           description: Multivariate options for this feature
           items:
             $ref: '#/components/schemas/MultivariateOption'
+    MultivariateOption:
+      type: object
+      description: A multivariate option representing one of the possible values for a multivariate feature flag.
+      properties:
+        id:
+          type: integer
+          description: The unique identifier for this option
+        type:
+          type: string
+          description: The data type of the option value
+        string_value:
+          type: string
+          nullable: true
+          description: The string value of this option
+        integer_value:
+          type: integer
+          nullable: true
+          description: The integer value of this option
+        boolean_value:
+          type: boolean
+          nullable: true
+          description: The boolean value of this option
+        default_percentage_allocation:
+          type: number
+          format: float
+          minimum: 0
+          maximum: 100
+          description: The default percentage of users who will receive this option
   parameters:
-    ProjectId:
-      name: project_id
-      in: path
-      description: The unique identifier for the project
-      required: true
-      schema:
-        type: integer
-    FeatureId:
-      name: feature_id
-      in: path
-      description: The unique identifier for the feature
-      required: true
-      schema:
-        type: integer
     FeatureStateId:
       name: feature_state_id
       in: path
@@ -398,6 +384,20 @@ components:
       required: true
       schema:
         type: string
+    ProjectId:
+      name: project_id
+      in: path
+      description: The unique identifier for the project
+      required: true
+      schema:
+        type: integer
+    FeatureId:
+      name: feature_id
+      in: path
+      description: The unique identifier for the feature
+      required: true
+      schema:
+        type: integer
   securitySchemes:
     apiKeyAuth:
       type: apiKey
