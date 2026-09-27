@@ -1,17 +1,11 @@
 openapi: 3.2.0
 info:
-  title: Flagsmith Admin Segments API
-  description: The Flagsmith Admin API allows developers to programmatically manage all aspects of their Flagsmith projects. Anything that can be done through the Flagsmith dashboard can also be accomplished via this API, including creating, updating, and deleting projects, environments, feature flags, segments, and users. It uses a secret Organisation API Token for authentication and provides a Swagger interface at api.flagsmith.com/api/v1/docs for interactive exploration.
+  title: Flagsmith Segments API
   version: '1.0'
-  contact:
-    name: Flagsmith Support
-    url: https://www.flagsmith.com/contact-us
-  termsOfService: https://www.flagsmith.com/terms-of-service
+  description: 'Operations tagged Segments across 2 of this provider''s published API definitions: flagsmith-admin-api-openapi.yml, flagsmith-api-openapi.json. Each path carries the servers of the definition it was published in.'
 servers:
 - url: https://api.flagsmith.com/api/v1
   description: Flagsmith Production API
-security:
-- apiKeyAuth: []
 tags:
 - name: Segments
   description: Manage segments within a project. Segments define groups of users based on traits and rules for targeted flag delivery.
@@ -36,6 +30,8 @@ paths:
           description: Unauthorized - invalid or missing API token
         '404':
           description: Project not found
+      security:
+      - apiKeyAuth: []
     post:
       operationId: createSegment
       summary: Create a segment
@@ -63,6 +59,11 @@ paths:
           description: Unauthorized - invalid or missing API token
         '404':
           description: Project not found
+      security:
+      - apiKeyAuth: []
+    servers:
+    - url: https://api.flagsmith.com/api/v1
+      description: Flagsmith Production API
   /projects/{project_id}/segments/{segment_id}/:
     get:
       operationId: getSegment
@@ -84,6 +85,8 @@ paths:
           description: Unauthorized - invalid or missing API token
         '404':
           description: Segment or project not found
+      security:
+      - apiKeyAuth: []
     put:
       operationId: updateSegment
       summary: Update a segment
@@ -112,6 +115,8 @@ paths:
           description: Unauthorized - invalid or missing API token
         '404':
           description: Segment or project not found
+      security:
+      - apiKeyAuth: []
     delete:
       operationId: deleteSegment
       summary: Delete a segment
@@ -128,6 +133,228 @@ paths:
           description: Unauthorized - invalid or missing API token
         '404':
           description: Segment or project not found
+      security:
+      - apiKeyAuth: []
+    servers:
+    - url: https://api.flagsmith.com/api/v1
+      description: Flagsmith Production API
+  /api/v1/projects/{project_pk}/segments/{id}/:
+    patch:
+      operationId: api_v1_projects_segments_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this segment.
+        required: true
+      - in: path
+        name: project_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Segments
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedSegment'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedSegment'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedSegment'
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Segment_2'
+          description: ''
+      summary: Api v1 projects segments partial update
+      x-summary-source: derived
+    delete:
+      operationId: api_v1_projects_segments_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this segment.
+        required: true
+      - in: path
+        name: project_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Segments
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '204':
+          description: No response body
+      summary: Api v1 projects segments destroy
+      x-summary-source: derived
+  /api/v1/projects/{project_pk}/segments/{id}/associated-features/:
+    get:
+      operationId: api_v1_projects_segments_associated_features_retrieve
+      parameters:
+      - in: query
+        name: environment
+        schema:
+          type: integer
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this segment.
+        required: true
+      - in: path
+        name: project_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Segments
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SegmentAssociatedFeatureState'
+          description: ''
+      summary: Api v1 projects segments associated features retrieve
+      x-summary-source: derived
+  /api/v1/projects/{project_pk}/segments/{id}/clone/:
+    post:
+      operationId: api_v1_projects_segments_clone_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this segment.
+        required: true
+      - in: path
+        name: project_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Segments
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CloneSegment'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CloneSegment'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CloneSegment'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Segment_2'
+          description: ''
+      summary: Api v1 projects segments clone create
+      x-summary-source: derived
+  /api/v1/projects/{project_pk}/segments/{id}/members/:
+    get:
+      operationId: api_v1_projects_segments_members_retrieve
+      parameters:
+      - in: query
+        name: cursor
+        schema:
+          type: string
+          minLength: 1
+        description: The identifier of the previous page's last row; omit for the first page.
+      - in: query
+        name: environment
+        schema:
+          type: integer
+        description: The id of the environment to list segment members for.
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this segment.
+        required: true
+      - in: query
+        name: limit
+        schema:
+          type: integer
+          maximum: 200
+          minimum: 1
+          default: 100
+        description: Page size, up to 200.
+      - in: path
+        name: project_pk
+        schema:
+          type: integer
+        required: true
+      - in: query
+        name: q
+        schema:
+          type: string
+          minLength: 1
+        description: Case-insensitive substring to filter members by identifier.
+      tags:
+      - Segments
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SegmentMembersResponse'
+          description: ''
+      summary: Api v1 projects segments members retrieve
+      x-summary-source: derived
+  /api/v1/segments/get-by-uuid/{uuid}/:
+    get:
+      operationId: api_v1_segments_get_by_uuid_retrieve
+      parameters:
+      - in: path
+        name: uuid
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - Segments
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Segment_2'
+          description: ''
+      summary: Api v1 segments get by uuid retrieve
+      x-summary-source: derived
 components:
   schemas:
     SegmentCondition:
@@ -245,6 +472,391 @@ components:
           description: The conditions that make up this rule
           items:
             $ref: '#/components/schemas/SegmentCondition'
+    CloneSegment:
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 2000
+      required:
+      - name
+    Metadata:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        model_field:
+          type: integer
+        field_value:
+          type: string
+          maxLength: 2000
+      required:
+      - field_value
+      - model_field
+    SourceTypeEnum:
+      enum:
+      - csv
+      - amplitude
+      - mixpanel
+      type: string
+      description: '* `csv` - CSV
+
+        * `amplitude` - Amplitude
+
+        * `mixpanel` - Mixpanel'
+    Condition:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        operator:
+          $ref: '#/components/schemas/ConditionOperatorEnum'
+        property:
+          type:
+          - string
+          - 'null'
+          maxLength: 1000
+        value:
+          type:
+          - string
+          - 'null'
+          maxLength: 1000
+        description:
+          type:
+          - string
+          - 'null'
+        delete:
+          type: boolean
+          writeOnly: true
+      required:
+      - operator
+    SegmentMember:
+      type: object
+      properties:
+        identifier:
+          type: string
+        identity_key:
+          type: string
+        traits: {}
+      required:
+      - identifier
+      - identity_key
+      - traits
+    _NestedSegmentRule:
+      type: object
+      description: Adds nested create feature
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        type:
+          $ref: '#/components/schemas/SegmentRuleTypeEnum'
+        conditions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Condition'
+        delete:
+          type: boolean
+          writeOnly: true
+      required:
+      - type
+    ConditionOperatorEnum:
+      enum:
+      - EQUAL
+      - GREATER_THAN
+      - LESS_THAN
+      - CONTAINS
+      - GREATER_THAN_INCLUSIVE
+      - LESS_THAN_INCLUSIVE
+      - NOT_CONTAINS
+      - NOT_EQUAL
+      - REGEX
+      - PERCENTAGE_SPLIT
+      - MODULO
+      - IS_SET
+      - IS_NOT_SET
+      - IN
+      type: string
+      description: '* `EQUAL` - Exactly Matches
+
+        * `GREATER_THAN` - Greater than
+
+        * `LESS_THAN` - Less than
+
+        * `CONTAINS` - Contains
+
+        * `GREATER_THAN_INCLUSIVE` - Greater than or equal to
+
+        * `LESS_THAN_INCLUSIVE` - Less than or equal to
+
+        * `NOT_CONTAINS` - Does not contain
+
+        * `NOT_EQUAL` - Does not match
+
+        * `REGEX` - Matches regex
+
+        * `PERCENTAGE_SPLIT` - Percentage split
+
+        * `MODULO` - Modulo Operation
+
+        * `IS_SET` - Is set
+
+        * `IS_NOT_SET` - Is not set
+
+        * `IN` - In'
+    SegmentAssociatedFeatureState:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        feature:
+          type: integer
+        environment:
+          type:
+          - integer
+          - 'null'
+      required:
+      - feature
+    SegmentRuleTypeEnum:
+      enum:
+      - ALL
+      - ANY
+      - NONE
+      type: string
+      description: '* `ALL` - all
+
+        * `ANY` - any
+
+        * `NONE` - none'
+    BlankEnum:
+      enum:
+      - ''
+    SegmentMembersResponse:
+      type: object
+      properties:
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/SegmentMember'
+        next_cursor:
+          type:
+          - string
+          - 'null'
+          description: Pass as `cursor` to fetch the next page; null when there are no more rows.
+      required:
+      - next_cursor
+      - results
+    ManagedByEnum:
+      enum:
+      - cohort
+      type: string
+      description: '* `` - Unmanaged
+
+        * `cohort` - Cohort'
+    Segment_2:
+      type: object
+      description: Functionality for serializers that need to handle metadata
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+        created_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          readOnly: true
+        updated_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          readOnly: true
+        name:
+          type: string
+          maxLength: 2000
+        description:
+          type:
+          - string
+          - 'null'
+        project:
+          type: integer
+          readOnly: true
+        feature:
+          type:
+          - integer
+          - 'null'
+        version_of:
+          type:
+          - integer
+          - 'null'
+        rules:
+          type: array
+          items:
+            $ref: '#/components/schemas/SegmentRule_2'
+        metadata:
+          type: array
+          items:
+            $ref: '#/components/schemas/Metadata'
+        membership_counts:
+          type: array
+          items:
+            $ref: '#/components/schemas/SegmentMembershipCount'
+          readOnly: true
+        managed_by:
+          readOnly: true
+          oneOf:
+          - $ref: '#/components/schemas/ManagedByEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+        cohort:
+          oneOf:
+          - $ref: '#/components/schemas/_SegmentCohort'
+          - type: 'null'
+          readOnly: true
+        has_overrides:
+          type: boolean
+          readOnly: true
+          description: Whether any feature override points at this segment, counting overrides that are live now or scheduled to go live.
+      required:
+      - name
+      - rules
+    SegmentMembershipCount:
+      type: object
+      properties:
+        environment:
+          type: integer
+          readOnly: true
+        count:
+          type: integer
+          readOnly: true
+        last_synced_at:
+          type: string
+          format: date-time
+          readOnly: true
+    SegmentRule_2:
+      type: object
+      description: Adds nested create feature
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        type:
+          $ref: '#/components/schemas/SegmentRuleTypeEnum'
+        rules:
+          type: array
+          items:
+            $ref: '#/components/schemas/_NestedSegmentRule'
+        conditions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Condition'
+        delete:
+          type: boolean
+          writeOnly: true
+      required:
+      - type
+    PatchedSegment:
+      type: object
+      description: Functionality for serializers that need to handle metadata
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+        created_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          readOnly: true
+        updated_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          readOnly: true
+        name:
+          type: string
+          maxLength: 2000
+        description:
+          type:
+          - string
+          - 'null'
+        project:
+          type: integer
+          readOnly: true
+        feature:
+          type:
+          - integer
+          - 'null'
+        version_of:
+          type:
+          - integer
+          - 'null'
+        rules:
+          type: array
+          items:
+            $ref: '#/components/schemas/SegmentRule_2'
+        metadata:
+          type: array
+          items:
+            $ref: '#/components/schemas/Metadata'
+        membership_counts:
+          type: array
+          items:
+            $ref: '#/components/schemas/SegmentMembershipCount'
+          readOnly: true
+        managed_by:
+          readOnly: true
+          oneOf:
+          - $ref: '#/components/schemas/ManagedByEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+        cohort:
+          oneOf:
+          - $ref: '#/components/schemas/_SegmentCohort'
+          - type: 'null'
+          readOnly: true
+        has_overrides:
+          type: boolean
+          readOnly: true
+          description: Whether any feature override points at this segment, counting overrides that are live now or scheduled to go live.
+    _SegmentCohort:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        environment:
+          type: integer
+        environment_api_key:
+          type: string
+          readOnly: true
+        environment_name:
+          type: string
+          readOnly: true
+        source_type:
+          $ref: '#/components/schemas/SourceTypeEnum'
+        version:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+        deletion_requested_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+      required:
+      - environment
   parameters:
     SegmentId:
       name: segment_id
@@ -266,6 +878,35 @@ components:
       in: header
       name: Authorization
       description: A secret Organisation API Token prefixed with 'Api-Key'. For example, 'Api-Key your-token-here'. This token should never be exposed in client-side code.
+    Cohort_Sync_Key:
+      type: http
+      scheme: bearer
+      description: For cohort sync endpoints called by an external cohort source, such as Amplitude.
+    Cohort_Sync_Key__Basic:
+      type: http
+      scheme: basic
+      description: For cohort sync endpoints called by an external cohort source that can only send Basic credentials, such as Mixpanel. The key is the password; the username is ignored.
+    Environment_API_Key:
+      type: apiKey
+      in: header
+      name: X-Environment-Key
+      description: For SDK endpoints. <a href='https://docs.flagsmith.com/clients/rest#public-api-endpoints'>Find out more</a>.
+    Master_API_Key:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: For Management API endpoints. <a href='https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/management-api'>Find out more</a>.
+    basicAuth:
+      type: http
+      scheme: basic
+    tokenAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: Token-based authentication with required prefix "Token"
 externalDocs:
   description: Flagsmith Admin API Documentation
   url: https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/admin-api
+x-refined-from:
+- flagsmith-admin-api-openapi.yml
+- flagsmith-api-openapi.json

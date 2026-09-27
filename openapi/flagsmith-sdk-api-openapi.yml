@@ -1,0 +1,780 @@
+openapi: 3.2.0
+info:
+  title: Flagsmith SDK API
+  version: v1
+  description: Flagsmith's Core and SDK APIs. Check out Flagsmith documentation.
+  contact:
+    email: support@flagsmith.com
+  license:
+    name: BSD License
+    identifier: BSD-3-Clause
+tags:
+- name: SDK
+  description: SDK endpoints for flags, identities, and traits.
+paths:
+  /api/v1/environment-document/:
+    get:
+      operationId: sdk_v1_environment_document
+      description: 'Retrieve the environment document.
+
+        Used by SDKs in local evaluation mode, and Edge Proxy.'
+      tags:
+      - SDK
+      security:
+      - Environment API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/V1EnvironmentDocumentResponse'
+          description: ''
+      summary: Sdk v1 environment document
+      x-summary-source: derived
+  /api/v1/flags/:
+    get:
+      operationId: sdk_v1_flags
+      description: 'Retrieve the feature flags for an environment.
+
+
+        ---
+
+        *Note*: when providing the `feature` query argument, this endpoint will
+
+        return either a single object or a 404 (if the feature does not exist) rather
+
+        than a list.
+
+
+        ---
+
+        *Note*: using this endpoint with an identifier is deprecated.
+
+        Please use `/api/v1/identities/?identifier=` instead.'
+      parameters:
+      - in: query
+        name: feature
+        schema:
+          type: string
+          minLength: 1
+        description: Name of the feature to get the state of
+      tags:
+      - SDK
+      security:
+      - Environment API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  description: Represents a single flag (feature state) returned by the Flagsmith SDK.
+                  properties:
+                    feature:
+                      type: object
+                      description: Represents a Flagsmith feature, defined at project level.
+                      properties:
+                        id:
+                          type: integer
+                        name:
+                          type: string
+                        type:
+                          enum:
+                          - STANDARD
+                          - MULTIVARIATE
+                          type: string
+                      required:
+                      - id
+                      - name
+                      - type
+                    enabled:
+                      type: boolean
+                    feature_state_value:
+                      oneOf:
+                      - type: integer
+                      - type: boolean
+                      - type: string
+                      nullable: true
+                    variant:
+                      type: string
+                      nullable: true
+                    reason:
+                      type: string
+                      nullable: true
+                    metadata:
+                      type: object
+                      description: Additional, non-evaluation data about a feature state.
+                      properties:
+                        experiment:
+                          type: object
+                          description: Represents the experiment a feature state is part of. Only present while the experiment is running.
+                          properties:
+                            id:
+                              type: integer
+                            name:
+                              type: string
+                            in_experiment:
+                              type: boolean
+                          required:
+                          - id
+                          - in_experiment
+                          - name
+                  required:
+                  - enabled
+                  - feature
+                  - feature_state_value
+          description: ''
+      summary: Sdk v1 flags
+      x-summary-source: derived
+  /api/v1/flags/{identifier}:
+    get:
+      operationId: sdk_v1_flags_2
+      description: 'Retrieve the feature flags for an environment.
+
+
+        ---
+
+        *Note*: when providing the `feature` query argument, this endpoint will
+
+        return either a single object or a 404 (if the feature does not exist) rather
+
+        than a list.
+
+
+        ---
+
+        *Note*: using this endpoint with an identifier is deprecated.
+
+        Please use `/api/v1/identities/?identifier=` instead.'
+      parameters:
+      - in: query
+        name: feature
+        schema:
+          type: string
+          minLength: 1
+        description: Name of the feature to get the state of
+      - in: path
+        name: identifier
+        schema:
+          type: string
+          pattern: ^[-\w@%.]+$
+        required: true
+      tags:
+      - SDK
+      security:
+      - Environment API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  description: Represents a single flag (feature state) returned by the Flagsmith SDK.
+                  properties:
+                    feature:
+                      type: object
+                      description: Represents a Flagsmith feature, defined at project level.
+                      properties:
+                        id:
+                          type: integer
+                        name:
+                          type: string
+                        type:
+                          enum:
+                          - STANDARD
+                          - MULTIVARIATE
+                          type: string
+                      required:
+                      - id
+                      - name
+                      - type
+                    enabled:
+                      type: boolean
+                    feature_state_value:
+                      oneOf:
+                      - type: integer
+                      - type: boolean
+                      - type: string
+                      nullable: true
+                    variant:
+                      type: string
+                      nullable: true
+                    reason:
+                      type: string
+                      nullable: true
+                    metadata:
+                      type: object
+                      description: Additional, non-evaluation data about a feature state.
+                      properties:
+                        experiment:
+                          type: object
+                          description: Represents the experiment a feature state is part of. Only present while the experiment is running.
+                          properties:
+                            id:
+                              type: integer
+                            name:
+                              type: string
+                            in_experiment:
+                              type: boolean
+                          required:
+                          - id
+                          - in_experiment
+                          - name
+                  required:
+                  - enabled
+                  - feature
+                  - feature_state_value
+          description: ''
+      summary: Sdk v1 flags 2
+      x-summary-source: derived
+  /api/v1/identities/:
+    get:
+      operationId: sdk_v1_get_identities
+      description: Retrieve the flags and traits for an identity.
+      parameters:
+      - in: query
+        name: identifier
+        schema:
+          type: string
+          minLength: 1
+        required: true
+      - in: query
+        name: transient
+        schema:
+          type: boolean
+          default: false
+      tags:
+      - SDK
+      security:
+      - Environment API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/V1IdentitiesResponse'
+          description: ''
+      summary: Sdk v1 get identities
+      x-summary-source: derived
+    post:
+      operationId: sdk_v1_post_identities
+      description: Identify a user, set their traits, and retrieve their flags.
+      tags:
+      - SDK
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/V1IdentitiesRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/V1IdentitiesRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/V1IdentitiesRequest'
+        required: true
+      security:
+      - Environment API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/V1IdentitiesResponse'
+          description: ''
+      summary: Sdk v1 post identities
+      x-summary-source: derived
+components:
+  schemas:
+    V1EnvironmentDocumentResponseProject:
+      description: Represents a Flagsmith project. For SDKs, this is mainly used to convey segment data.
+      properties:
+        segments:
+          items:
+            $ref: '#/components/schemas/V1EnvironmentDocumentResponseSegment'
+          title: Segments
+          type: array
+      required:
+      - segments
+      title: Project
+      type: object
+    V1EnvironmentDocumentResponseSegment:
+      description: Represents a Flagsmith segment. Carries rules and feature overrides.
+      properties:
+        id:
+          title: Id
+          type: integer
+        name:
+          title: Name
+          type: string
+        rules:
+          items:
+            $ref: '#/components/schemas/V1EnvironmentDocumentResponseSegmentRule'
+          title: Rules
+          type: array
+        feature_states:
+          items:
+            $ref: '#/components/schemas/V1EnvironmentDocumentResponseFeatureState'
+          title: Feature States
+          type: array
+      required:
+      - id
+      - name
+      - rules
+      title: Segment
+      type: object
+    V1IdentitiesResponseExperimentMetadata:
+      description: Represents the experiment a feature state is part of. Only present while the experiment is running.
+      properties:
+        id:
+          title: Id
+          type: integer
+        name:
+          title: Name
+          type: string
+        in_experiment:
+          title: In Experiment
+          type: boolean
+      required:
+      - id
+      - name
+      - in_experiment
+      title: ExperimentMetadata
+      type: object
+    V1EnvironmentDocumentResponseMultivariateFeatureStateValue:
+      description: Represents a multivariate feature state value.
+      properties:
+        id:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Id
+        mv_fs_value_uuid:
+          anyOf:
+          - format: uuid
+            type: string
+          - type: 'null'
+          title: Mv Fs Value Uuid
+        percentage_allocation:
+          title: Percentage Allocation
+          type: number
+        multivariate_feature_option:
+          $ref: '#/components/schemas/V1EnvironmentDocumentResponseMultivariateFeatureOption'
+      required:
+      - id
+      - mv_fs_value_uuid
+      - percentage_allocation
+      - multivariate_feature_option
+      title: MultivariateFeatureStateValue
+      type: object
+    V1EnvironmentDocumentResponseFeatureStateMetadata:
+      additionalProperties: true
+      description: Additional, non-evaluation data about a feature state.
+      properties:
+        experiment:
+          $ref: '#/components/schemas/V1EnvironmentDocumentResponseExperimentMetadata'
+      title: FeatureStateMetadata
+      type: object
+    V1EnvironmentDocumentResponseFeatureSegment:
+      description: Represents data specific to a segment feature override.
+      properties:
+        priority:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Priority
+      required:
+      - priority
+      title: FeatureSegment
+      type: object
+    V1IdentitiesRequestTraitInput:
+      description: Represents a key-value pair trait provided as input when creating or updating an identity.
+      properties:
+        trait_key:
+          title: Trait Key
+          type: string
+        trait_value:
+          anyOf:
+          - type: integer
+          - type: number
+          - type: boolean
+          - type: string
+          - type: 'null'
+          title: Trait Value
+        transient:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Transient
+      required:
+      - trait_key
+      - trait_value
+      title: TraitInput
+      type: object
+    V1EnvironmentDocumentResponseSegmentRuleTypeEnum:
+      enum:
+      - ALL
+      - ANY
+      - NONE
+      type: string
+    V1IdentitiesResponse:
+      description: '`/api/v1/identities/` response.
+
+
+        Represents the identity created or updated, along with its flags.'
+      properties:
+        identifier:
+          title: Identifier
+          type: string
+        flags:
+          items:
+            $ref: '#/components/schemas/V1IdentitiesResponseV1Flag'
+          title: Flags
+          type: array
+        traits:
+          items:
+            $ref: '#/components/schemas/V1IdentitiesResponseTrait'
+          title: Traits
+          type: array
+      required:
+      - identifier
+      - flags
+      - traits
+      title: V1IdentitiesResponse
+      type: object
+    V1EnvironmentDocumentResponseFeatureState:
+      description: Used to define the state of a feature for an environment, segment overrides, and identity overrides.
+      properties:
+        feature:
+          $ref: '#/components/schemas/V1EnvironmentDocumentResponseFeature'
+        enabled:
+          title: Enabled
+          type: boolean
+        feature_state_value:
+          anyOf:
+          - type: integer
+          - type: boolean
+          - type: string
+          - type: 'null'
+          title: Feature State Value
+        featurestate_uuid:
+          format: uuid
+          title: Featurestate Uuid
+          type: string
+        feature_segment:
+          anyOf:
+          - $ref: '#/components/schemas/V1EnvironmentDocumentResponseFeatureSegment'
+          - type: 'null'
+        multivariate_feature_state_values:
+          items:
+            $ref: '#/components/schemas/V1EnvironmentDocumentResponseMultivariateFeatureStateValue'
+          title: Multivariate Feature State Values
+          type: array
+        metadata:
+          $ref: '#/components/schemas/V1EnvironmentDocumentResponseFeatureStateMetadata'
+      required:
+      - feature
+      - enabled
+      - feature_state_value
+      - featurestate_uuid
+      - feature_segment
+      - multivariate_feature_state_values
+      title: FeatureState
+      type: object
+    V1EnvironmentDocumentResponseMultivariateFeatureOption:
+      description: Represents a single multivariate feature option in the Flagsmith UI.
+      properties:
+        value:
+          title: Value
+          type: string
+      required:
+      - value
+      title: MultivariateFeatureOption
+      type: object
+    V1EnvironmentDocumentResponseFeature:
+      description: Represents a Flagsmith feature, defined at project level.
+      properties:
+        id:
+          title: Id
+          type: integer
+        name:
+          title: Name
+          type: string
+        type:
+          allOf:
+          - $ref: '#/components/schemas/TypeD77Enum'
+          title: Type
+      required:
+      - id
+      - name
+      - type
+      title: Feature
+      type: object
+    V1EnvironmentDocumentResponseSegmentRule:
+      description: Represents a rule within a segment used by Flagsmith engine. Root rules usually contain nested rules.
+      properties:
+        type:
+          allOf:
+          - $ref: '#/components/schemas/V1EnvironmentDocumentResponseSegmentRuleTypeEnum'
+          title: Type
+        rules:
+          items:
+            $ref: '#/components/schemas/V1EnvironmentDocumentResponseSegmentRule'
+          title: Rules
+          type: array
+        conditions:
+          items:
+            $ref: '#/components/schemas/V1EnvironmentDocumentResponseSegmentCondition'
+          title: Conditions
+          type: array
+      required:
+      - type
+      - rules
+      - conditions
+      title: SegmentRule
+      type: object
+    V1EnvironmentDocumentResponseIdentityOverride:
+      description: Represents an identity override, defining feature states specific to an identity.
+      properties:
+        identifier:
+          title: Identifier
+          type: string
+        identity_features:
+          items:
+            $ref: '#/components/schemas/V1EnvironmentDocumentResponseFeatureState'
+          title: Identity Features
+          type: array
+      required:
+      - identifier
+      - identity_features
+      title: IdentityOverride
+      type: object
+    V1EnvironmentDocumentResponse:
+      description: '`/api/v1/environment-documents/` response.
+
+
+        Powers Flagsmith SDK''s local evaluation mode.'
+      properties:
+        api_key:
+          title: Api Key
+          type: string
+        feature_states:
+          items:
+            $ref: '#/components/schemas/V1EnvironmentDocumentResponseFeatureState'
+          title: Feature States
+          type: array
+        identity_overrides:
+          items:
+            $ref: '#/components/schemas/V1EnvironmentDocumentResponseIdentityOverride'
+          title: Identity Overrides
+          type: array
+        name:
+          title: Name
+          type: string
+        project:
+          $ref: '#/components/schemas/V1EnvironmentDocumentResponseProject'
+      required:
+      - api_key
+      - feature_states
+      - identity_overrides
+      - name
+      - project
+      title: V1EnvironmentDocumentResponse
+      type: object
+    V1EnvironmentDocumentResponseExperimentMetadata:
+      description: Represents the experiment a feature state is part of. Only present while the experiment is running.
+      properties:
+        id:
+          title: Id
+          type: integer
+        name:
+          title: Name
+          type: string
+        in_experiment:
+          title: In Experiment
+          type: boolean
+      required:
+      - id
+      - name
+      - in_experiment
+      title: ExperimentMetadata
+      type: object
+    V1EnvironmentDocumentResponseSegmentCondition:
+      description: Represents a condition within a segment rule used by Flagsmith engine.
+      properties:
+        operator:
+          allOf:
+          - $ref: '#/components/schemas/V1EnvironmentDocumentResponseSegmentConditionOperatorEnum'
+          title: Operator
+        value:
+          title: Value
+          type: string
+        property_:
+          title: Property
+          type: string
+      required:
+      - operator
+      - value
+      - property_
+      title: SegmentCondition
+      type: object
+    V1EnvironmentDocumentResponseSegmentConditionOperatorEnum:
+      enum:
+      - EQUAL
+      - GREATER_THAN
+      - LESS_THAN
+      - LESS_THAN_INCLUSIVE
+      - CONTAINS
+      - GREATER_THAN_INCLUSIVE
+      - NOT_CONTAINS
+      - NOT_EQUAL
+      - REGEX
+      - PERCENTAGE_SPLIT
+      - MODULO
+      - IS_SET
+      - IS_NOT_SET
+      - IN
+      type: string
+    V1IdentitiesRequest:
+      description: '`/api/v1/identities/` request.
+
+
+        Used to retrieve flags for an identity and store its traits.'
+      properties:
+        identifier:
+          title: Identifier
+          type: string
+        traits:
+          anyOf:
+          - items:
+              $ref: '#/components/schemas/V1IdentitiesRequestTraitInput'
+            type: array
+          - type: 'null'
+          title: Traits
+        transient:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Transient
+      required:
+      - identifier
+      title: V1IdentitiesRequest
+      type: object
+    V1IdentitiesResponseFeatureStateMetadata:
+      additionalProperties: true
+      description: Additional, non-evaluation data about a feature state.
+      properties:
+        experiment:
+          $ref: '#/components/schemas/V1IdentitiesResponseExperimentMetadata'
+      title: FeatureStateMetadata
+      type: object
+    V1IdentitiesResponseV1Flag:
+      description: Represents a single flag (feature state) returned by the Flagsmith SDK.
+      properties:
+        feature:
+          $ref: '#/components/schemas/V1IdentitiesResponseFeature'
+        enabled:
+          title: Enabled
+          type: boolean
+        feature_state_value:
+          anyOf:
+          - type: integer
+          - type: boolean
+          - type: string
+          - type: 'null'
+          title: Feature State Value
+        variant:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Variant
+        reason:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Reason
+        metadata:
+          $ref: '#/components/schemas/V1IdentitiesResponseFeatureStateMetadata'
+      required:
+      - feature
+      - enabled
+      - feature_state_value
+      title: V1Flag
+      type: object
+    V1IdentitiesResponseTrait:
+      description: Represents a key-value pair associated with an identity.
+      properties:
+        trait_key:
+          title: Trait Key
+          type: string
+        trait_value:
+          anyOf:
+          - type: integer
+          - type: number
+          - type: boolean
+          - type: string
+          - type: 'null'
+          title: Trait Value
+      required:
+      - trait_key
+      - trait_value
+      title: Trait
+      type: object
+    V1IdentitiesResponseFeature:
+      description: Represents a Flagsmith feature, defined at project level.
+      properties:
+        id:
+          title: Id
+          type: integer
+        name:
+          title: Name
+          type: string
+        type:
+          allOf:
+          - $ref: '#/components/schemas/TypeD77Enum'
+          title: Type
+      required:
+      - id
+      - name
+      - type
+      title: Feature
+      type: object
+    TypeD77Enum:
+      enum:
+      - STANDARD
+      - MULTIVARIATE
+      type: string
+      description: '* `STANDARD` - STANDARD
+
+        * `MULTIVARIATE` - MULTIVARIATE'
+  securitySchemes:
+    Cohort_Sync_Key:
+      type: http
+      scheme: bearer
+      description: For cohort sync endpoints called by an external cohort source, such as Amplitude.
+    Cohort_Sync_Key__Basic:
+      type: http
+      scheme: basic
+      description: For cohort sync endpoints called by an external cohort source that can only send Basic credentials, such as Mixpanel. The key is the password; the username is ignored.
+    Environment_API_Key:
+      type: apiKey
+      in: header
+      name: X-Environment-Key
+      description: For SDK endpoints. <a href='https://docs.flagsmith.com/clients/rest#public-api-endpoints'>Find out more</a>.
+    Master_API_Key:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: For Management API endpoints. <a href='https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/management-api'>Find out more</a>.
+    basicAuth:
+      type: http
+      scheme: basic
+    tokenAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: Token-based authentication with required prefix "Token"

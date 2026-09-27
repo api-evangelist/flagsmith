@@ -1,0 +1,4027 @@
+openapi: 3.2.0
+info:
+  title: Flagsmith Integrations API
+  version: v1
+  description: Flagsmith's Core and SDK APIs. Check out Flagsmith documentation.
+  contact:
+    email: support@flagsmith.com
+  license:
+    name: BSD License
+    identifier: BSD-3-Clause
+tags:
+- name: Integrations
+  description: Configure third-party integrations (Amplitude, DataDog, Slack, etc.).
+paths:
+  /api/v1/admin/dashboard/integrations/:
+    get:
+      operationId: api_v1_admin_dashboard_integrations_retrieve
+      tags:
+      - Integrations
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          description: No response body
+      summary: Api v1 admin dashboard integrations retrieve
+      x-summary-source: derived
+  /api/v1/environments/{environment_api_key}/integrations/amplitude/:
+    get:
+      operationId: api_v1_environments_integrations_amplitude_list
+      parameters:
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      tags:
+      - Integrations
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AmplitudeConfiguration'
+          description: ''
+      summary: Api v1 environments integrations amplitude list
+      x-summary-source: derived
+    post:
+      operationId: api_v1_environments_integrations_amplitude_create
+      parameters:
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      tags:
+      - Integrations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AmplitudeConfiguration'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/AmplitudeConfiguration'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/AmplitudeConfiguration'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AmplitudeConfiguration'
+          description: ''
+      summary: Api v1 environments integrations amplitude create
+      x-summary-source: derived
+  /api/v1/environments/{environment_api_key}/integrations/amplitude/{id}/:
+    get:
+      operationId: api_v1_environments_integrations_amplitude_retrieve
+      parameters:
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this amplitude configuration.
+        required: true
+      tags:
+      - Integrations
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AmplitudeConfiguration'
+          description: ''
+      summary: Api v1 environments integrations amplitude retrieve
+      x-summary-source: derived
+    put:
+      operationId: api_v1_environments_integrations_amplitude_update
+      parameters:
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this amplitude configuration.
+        required: true
+      tags:
+      - Integrations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AmplitudeConfiguration'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/AmplitudeConfiguration'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/AmplitudeConfiguration'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AmplitudeConfiguration'
+          description: ''
+      summary: Api v1 environments integrations amplitude update
+      x-summary-source: derived
+    patch:
+      operationId: api_v1_environments_integrations_amplitude_partial_update
+      parameters:
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this amplitude configuration.
+        required: true
+      tags:
+      - Integrations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedAmplitudeConfiguration'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedAmplitudeConfiguration'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedAmplitudeConfiguration'
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AmplitudeConfiguration'
+          description: ''
+      summary: Api v1 environments integrations amplitude partial update
+      x-summary-source: derived
+    delete:
+      operationId: api_v1_environments_integrations_amplitude_destroy
+      parameters:
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this amplitude configuration.
+        required: true
+      tags:
+      - Integrations
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '204':
+          description: No response body
+      summary: Api v1 environments integrations amplitude destroy
+      x-summary-source: derived
+  /api/v1/environments/{environment_api_key}/integrations/dynatrace/:
+    get:
+      operationId: api_v1_environments_integrations_dynatrace_list
+      parameters:
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      tags:
+      - Integrations
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DynatraceConfiguration'
+          description: ''
+      summary: Api v1 environments integrations dynatrace list
+      x-summary-source: derived
+    post:
+      operationId: api_v1_environments_integrations_dynatrace_create
+      parameters:
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      tags:
+      - Integrations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DynatraceConfiguration'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/DynatraceConfiguration'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/DynatraceConfiguration'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DynatraceConfiguration'
+          description: ''
+      summary: Api v1 environments integrations dynatrace create
+      x-summary-source: derived
+  /api/v1/environments/{environment_api_key}/integrations/dynatrace/{id}/:
+    get:
+      operationId: api_v1_environments_integrations_dynatrace_retrieve
+      parameters:
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this dynatrace configuration.
+        required: true
+      tags:
+      - Integrations
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DynatraceConfiguration'
+          description: ''
+      summary: Api v1 environments integrations dynatrace retrieve
+      x-summary-source: derived
+    put:
+      operationId: api_v1_environments_integrations_dynatrace_update
+      parameters:
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this dynatrace configuration.
+        required: true
+      tags:
+      - Integrations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DynatraceConfiguration'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/DynatraceConfiguration'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/DynatraceConfiguration'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DynatraceConfiguration'
+          description: ''
+      summary: Api v1 environments integrations dynatrace update
+      x-summary-source: derived
+    patch:
+      operationId: api_v1_environments_integrations_dynatrace_partial_update
+      parameters:
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this dynatrace configuration.
+        required: true
+      tags:
+      - Integrations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedDynatraceConfiguration'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedDynatraceConfiguration'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedDynatraceConfiguration'
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DynatraceConfiguration'
+          description: ''
+      summary: Api v1 environments integrations dynatrace partial update
+      x-summary-source: derived
+    delete:
+      operationId: api_v1_environments_integrations_dynatrace_destroy
+      parameters:
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this dynatrace configuration.
+        required: true
+      tags:
+      - Integrations
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '204':
+          description: No response body
+      summary: Api v1 environments integrations dynatrace destroy
+      x-summary-source: derived
+  /api/v1/environments/{environment_api_key}/integrations/grafana/:
+    get:
+      operationId: api_v1_environments_integrations_grafana_list
+      parameters:
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      tags:
+      - Integrations
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GrafanaProjectConfiguration'
+          description: ''
+      summary: Api v1 environments integrations grafana list
+      x-summary-source: derived
+    post:
+      operationId: api_v1_environments_integrations_grafana_create
+      parameters:
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      tags:
+      - Integrations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GrafanaProjectConfiguration'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/GrafanaProjectConfiguration'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/GrafanaProjectConfiguration'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GrafanaProjectConfiguration'
+          description: ''
+      summary: Api v1 environments integrations grafana create
+      x-summary-source: derived
+  /api/v1/environments/{environment_api_key}/integrations/grafana/{id}/:
+    get:
+      operationId: api_v1_environments_integrations_grafana_retrieve
+      parameters:
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this grafana project configuration.
+        required: true
+      tags:
+      - Integrations
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GrafanaProjectConfiguration'
+          description: ''
+      summary: Api v1 environments integrations grafana retrieve
+      x-summary-source: derived
+    put:
+      operationId: api_v1_environments_integrations_grafana_update
+      parameters:
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this grafana project configuration.
+        required: true
+      tags:
+      - Integrations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GrafanaProjectConfiguration'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/GrafanaProjectConfiguration'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/GrafanaProjectConfiguration'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GrafanaProjectConfiguration'
+          description: ''
+      summary: Api v1 environments integrations grafana update
+      x-summary-source: derived
+    patch:
+      operationId: api_v1_environments_integrations_grafana_partial_update
+      parameters:
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this grafana project configuration.
+        required: true
+      tags:
+      - Integrations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedGrafanaProjectConfiguration'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedGrafanaProjectConfiguration'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedGrafanaProjectConfiguration'
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GrafanaProjectConfiguration'
+          description: ''
+      summary: Api v1 environments integrations grafana partial update
+      x-summary-source: derived
+    delete:
+      operationId: api_v1_environments_integrations_grafana_destroy
+      parameters:
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this grafana project configuration.
+        required: true
+      tags:
+      - Integrations
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '204':
+          description: No response body
+      summary: Api v1 environments integrations grafana destroy
+      x-summary-source: derived
+  /api/v1/environments/{environment_api_key}/integrations/heap/:
+    get:
+      operationId: api_v1_environments_integrations_heap_list
+      parameters:
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      tags:
+      - Integrations
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/HeapConfiguration'
+          description: ''
+      summary: Api v1 environments integrations heap list
+      x-summary-source: derived
+    post:
+      operationId: api_v1_environments_integrations_heap_create
+      parameters:
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      tags:
+      - Integrations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HeapConfiguration'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/HeapConfiguration'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/HeapConfiguration'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HeapConfiguration'
+          description: ''
+      summary: Api v1 environments integrations heap create
+      x-summary-source: derived
+  /api/v1/environments/{environment_api_key}/integrations/heap/{id}/:
+    get:
+      operationId: api_v1_environments_integrations_heap_retrieve
+      parameters:
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this heap configuration.
+        required: true
+      tags:
+      - Integrations
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HeapConfiguration'
+          description: ''
+      summary: Api v1 environments integrations heap retrieve
+      x-summary-source: derived
+    put:
+      operationId: api_v1_environments_integrations_heap_update
+      parameters:
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this heap configuration.
+        required: true
+      tags:
+      - Integrations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HeapConfiguration'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/HeapConfiguration'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/HeapConfiguration'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HeapConfiguration'
+          description: ''
+      summary: Api v1 environments integrations heap update
+      x-summary-source: derived
+    patch:
+      operationId: api_v1_environments_integrations_heap_partial_update
+      parameters:
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this heap configuration.
+        required: true
+      tags:
+      - Integrations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedHeapConfiguration'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedHeapConfiguration'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedHeapConfiguration'
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HeapConfiguration'
+          description: ''
+      summary: Api v1 environments integrations heap partial update
+      x-summary-source: derived
+    delete:
+      operationId: api_v1_environments_integrations_heap_destroy
+      parameters:
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this heap configuration.
+        required: true
+      tags:
+      - Integrations
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '204':
+          description: No response body
+      summary: Api v1 environments integrations heap destroy
+      x-summary-source: derived
+  /api/v1/environments/{environment_api_key}/integrations/mixpanel/:
+    get:
+      operationId: api_v1_environments_integrations_mixpanel_list
+      parameters:
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      tags:
+      - Integrations
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MixpanelConfiguration'
+          description: ''
+      summary: Api v1 environments integrations mixpanel list
+      x-summary-source: derived
+    post:
+      operationId: api_v1_environments_integrations_mixpanel_create
+      parameters:
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      tags:
+      - Integrations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MixpanelConfiguration'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/MixpanelConfiguration'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/MixpanelConfiguration'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MixpanelConfiguration'
+          description: ''
+      summary: Api v1 environments integrations mixpanel create
+      x-summary-source: derived
+  /api/v1/environments/{environment_api_key}/integrations/mixpanel/{id}/:
+    get:
+      operationId: api_v1_environments_integrations_mixpanel_retrieve
+      parameters:
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this mixpanel configuration.
+        required: true
+      tags:
+      - Integrations
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MixpanelConfiguration'
+          description: ''
+      summary: Api v1 environments integrations mixpanel retrieve
+      x-summary-source: derived
+    put:
+      operationId: api_v1_environments_integrations_mixpanel_update
+      parameters:
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this mixpanel configuration.
+        required: true
+      tags:
+      - Integrations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MixpanelConfiguration'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/MixpanelConfiguration'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/MixpanelConfiguration'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MixpanelConfiguration'
+          description: ''
+      summary: Api v1 environments integrations mixpanel update
+      x-summary-source: derived
+    patch:
+      operationId: api_v1_environments_integrations_mixpanel_partial_update
+      parameters:
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this mixpanel configuration.
+        required: true
+      tags:
+      - Integrations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedMixpanelConfiguration'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedMixpanelConfiguration'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedMixpanelConfiguration'
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MixpanelConfiguration'
+          description: ''
+      summary: Api v1 environments integrations mixpanel partial update
+      x-summary-source: derived
+    delete:
+      operationId: api_v1_environments_integrations_mixpanel_destroy
+      parameters:
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this mixpanel configuration.
+        required: true
+      tags:
+      - Integrations
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '204':
+          description: No response body
+      summary: Api v1 environments integrations mixpanel destroy
+      x-summary-source: derived
+  /api/v1/environments/{environment_api_key}/integrations/rudderstack/:
+    get:
+      operationId: api_v1_environments_integrations_rudderstack_list
+      parameters:
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      tags:
+      - Integrations
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RudderstackConfiguration'
+          description: ''
+      summary: Api v1 environments integrations rudderstack list
+      x-summary-source: derived
+    post:
+      operationId: api_v1_environments_integrations_rudderstack_create
+      parameters:
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      tags:
+      - Integrations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RudderstackConfiguration'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/RudderstackConfiguration'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/RudderstackConfiguration'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RudderstackConfiguration'
+          description: ''
+      summary: Api v1 environments integrations rudderstack create
+      x-summary-source: derived
+  /api/v1/environments/{environment_api_key}/integrations/rudderstack/{id}/:
+    get:
+      operationId: api_v1_environments_integrations_rudderstack_retrieve
+      parameters:
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this rudderstack configuration.
+        required: true
+      tags:
+      - Integrations
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RudderstackConfiguration'
+          description: ''
+      summary: Api v1 environments integrations rudderstack retrieve
+      x-summary-source: derived
+    put:
+      operationId: api_v1_environments_integrations_rudderstack_update
+      parameters:
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this rudderstack configuration.
+        required: true
+      tags:
+      - Integrations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RudderstackConfiguration'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/RudderstackConfiguration'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/RudderstackConfiguration'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RudderstackConfiguration'
+          description: ''
+      summary: Api v1 environments integrations rudderstack update
+      x-summary-source: derived
+    patch:
+      operationId: api_v1_environments_integrations_rudderstack_partial_update
+      parameters:
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this rudderstack configuration.
+        required: true
+      tags:
+      - Integrations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedRudderstackConfiguration'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedRudderstackConfiguration'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedRudderstackConfiguration'
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RudderstackConfiguration'
+          description: ''
+      summary: Api v1 environments integrations rudderstack partial update
+      x-summary-source: derived
+    delete:
+      operationId: api_v1_environments_integrations_rudderstack_destroy
+      parameters:
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this rudderstack configuration.
+        required: true
+      tags:
+      - Integrations
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '204':
+          description: No response body
+      summary: Api v1 environments integrations rudderstack destroy
+      x-summary-source: derived
+  /api/v1/environments/{environment_api_key}/integrations/segment/:
+    get:
+      operationId: api_v1_environments_integrations_segment_list
+      parameters:
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      tags:
+      - Integrations
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SegmentConfiguration'
+          description: ''
+      summary: Api v1 environments integrations segment list
+      x-summary-source: derived
+    post:
+      operationId: api_v1_environments_integrations_segment_create
+      parameters:
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      tags:
+      - Integrations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SegmentConfiguration'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SegmentConfiguration'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/SegmentConfiguration'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SegmentConfiguration'
+          description: ''
+      summary: Api v1 environments integrations segment create
+      x-summary-source: derived
+  /api/v1/environments/{environment_api_key}/integrations/segment/{id}/:
+    get:
+      operationId: api_v1_environments_integrations_segment_retrieve
+      parameters:
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this segment configuration.
+        required: true
+      tags:
+      - Integrations
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SegmentConfiguration'
+          description: ''
+      summary: Api v1 environments integrations segment retrieve
+      x-summary-source: derived
+    put:
+      operationId: api_v1_environments_integrations_segment_update
+      parameters:
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this segment configuration.
+        required: true
+      tags:
+      - Integrations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SegmentConfiguration'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SegmentConfiguration'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/SegmentConfiguration'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SegmentConfiguration'
+          description: ''
+      summary: Api v1 environments integrations segment update
+      x-summary-source: derived
+    patch:
+      operationId: api_v1_environments_integrations_segment_partial_update
+      parameters:
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this segment configuration.
+        required: true
+      tags:
+      - Integrations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedSegmentConfiguration'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedSegmentConfiguration'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedSegmentConfiguration'
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SegmentConfiguration'
+          description: ''
+      summary: Api v1 environments integrations segment partial update
+      x-summary-source: derived
+    delete:
+      operationId: api_v1_environments_integrations_segment_destroy
+      parameters:
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this segment configuration.
+        required: true
+      tags:
+      - Integrations
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '204':
+          description: No response body
+      summary: Api v1 environments integrations segment destroy
+      x-summary-source: derived
+  /api/v1/environments/{environment_api_key}/integrations/sentry/:
+    get:
+      operationId: api_v1_environments_integrations_sentry_list
+      parameters:
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      tags:
+      - Integrations
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SentryChangeTrackingConfiguration'
+          description: ''
+      summary: Api v1 environments integrations sentry list
+      x-summary-source: derived
+    post:
+      operationId: api_v1_environments_integrations_sentry_create
+      parameters:
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      tags:
+      - Integrations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SentryChangeTrackingConfiguration'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SentryChangeTrackingConfiguration'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/SentryChangeTrackingConfiguration'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SentryChangeTrackingConfiguration'
+          description: ''
+      summary: Api v1 environments integrations sentry create
+      x-summary-source: derived
+  /api/v1/environments/{environment_api_key}/integrations/sentry/{id}/:
+    get:
+      operationId: api_v1_environments_integrations_sentry_retrieve
+      parameters:
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this sentry change tracking configuration.
+        required: true
+      tags:
+      - Integrations
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SentryChangeTrackingConfiguration'
+          description: ''
+      summary: Api v1 environments integrations sentry retrieve
+      x-summary-source: derived
+    put:
+      operationId: api_v1_environments_integrations_sentry_update
+      parameters:
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this sentry change tracking configuration.
+        required: true
+      tags:
+      - Integrations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SentryChangeTrackingConfiguration'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SentryChangeTrackingConfiguration'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/SentryChangeTrackingConfiguration'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SentryChangeTrackingConfiguration'
+          description: ''
+      summary: Api v1 environments integrations sentry update
+      x-summary-source: derived
+    patch:
+      operationId: api_v1_environments_integrations_sentry_partial_update
+      parameters:
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this sentry change tracking configuration.
+        required: true
+      tags:
+      - Integrations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedSentryChangeTrackingConfiguration'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedSentryChangeTrackingConfiguration'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedSentryChangeTrackingConfiguration'
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SentryChangeTrackingConfiguration'
+          description: ''
+      summary: Api v1 environments integrations sentry partial update
+      x-summary-source: derived
+    delete:
+      operationId: api_v1_environments_integrations_sentry_destroy
+      parameters:
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this sentry change tracking configuration.
+        required: true
+      tags:
+      - Integrations
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '204':
+          description: No response body
+      summary: Api v1 environments integrations sentry destroy
+      x-summary-source: derived
+  /api/v1/environments/{environment_api_key}/integrations/slack/:
+    get:
+      operationId: api_v1_environments_integrations_slack_list
+      parameters:
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      tags:
+      - Integrations
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SlackEnvironment'
+          description: ''
+      summary: Api v1 environments integrations slack list
+      x-summary-source: derived
+    post:
+      operationId: api_v1_environments_integrations_slack_create
+      parameters:
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      tags:
+      - Integrations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SlackEnvironment'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SlackEnvironment'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/SlackEnvironment'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SlackEnvironment'
+          description: ''
+      summary: Api v1 environments integrations slack create
+      x-summary-source: derived
+  /api/v1/environments/{environment_api_key}/integrations/slack-channels/:
+    get:
+      operationId: api_v1_environments_integrations_slack_channels_list
+      parameters:
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      tags:
+      - Integrations
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SlackChannelList'
+          description: ''
+      summary: Api v1 environments integrations slack channels list
+      x-summary-source: derived
+  /api/v1/environments/{environment_api_key}/integrations/slack/{id}/:
+    get:
+      operationId: api_v1_environments_integrations_slack_retrieve
+      parameters:
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this slack environment.
+        required: true
+      tags:
+      - Integrations
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SlackEnvironment'
+          description: ''
+      summary: Api v1 environments integrations slack retrieve
+      x-summary-source: derived
+    put:
+      operationId: api_v1_environments_integrations_slack_update
+      parameters:
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this slack environment.
+        required: true
+      tags:
+      - Integrations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SlackEnvironment'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SlackEnvironment'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/SlackEnvironment'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SlackEnvironment'
+          description: ''
+      summary: Api v1 environments integrations slack update
+      x-summary-source: derived
+    patch:
+      operationId: api_v1_environments_integrations_slack_partial_update
+      parameters:
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this slack environment.
+        required: true
+      tags:
+      - Integrations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedSlackEnvironment'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedSlackEnvironment'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedSlackEnvironment'
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SlackEnvironment'
+          description: ''
+      summary: Api v1 environments integrations slack partial update
+      x-summary-source: derived
+    delete:
+      operationId: api_v1_environments_integrations_slack_destroy
+      parameters:
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this slack environment.
+        required: true
+      tags:
+      - Integrations
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '204':
+          description: No response body
+      summary: Api v1 environments integrations slack destroy
+      x-summary-source: derived
+  /api/v1/environments/{environment_api_key}/integrations/slack/callback/:
+    get:
+      operationId: api_v1_environments_integrations_slack_callback_retrieve
+      parameters:
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      tags:
+      - Integrations
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SlackEnvironment'
+          description: ''
+      summary: Api v1 environments integrations slack callback retrieve
+      x-summary-source: derived
+  /api/v1/environments/{environment_api_key}/integrations/slack/oauth/:
+    get:
+      operationId: api_v1_environments_integrations_slack_oauth_retrieve
+      parameters:
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      tags:
+      - Integrations
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SlackEnvironment'
+          description: ''
+      summary: Api v1 environments integrations slack oauth retrieve
+      x-summary-source: derived
+  /api/v1/environments/{environment_api_key}/integrations/slack/signature/:
+    get:
+      operationId: api_v1_environments_integrations_slack_signature_retrieve
+      parameters:
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      tags:
+      - Integrations
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SlackEnvironment'
+          description: ''
+      summary: Api v1 environments integrations slack signature retrieve
+      x-summary-source: derived
+  /api/v1/environments/{environment_api_key}/integrations/webhook/:
+    get:
+      operationId: api_v1_environments_integrations_webhook_list
+      parameters:
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      tags:
+      - Integrations
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/WebhookConfiguration'
+          description: ''
+      summary: Api v1 environments integrations webhook list
+      x-summary-source: derived
+    post:
+      operationId: api_v1_environments_integrations_webhook_create
+      parameters:
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      tags:
+      - Integrations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WebhookConfiguration'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/WebhookConfiguration'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/WebhookConfiguration'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WebhookConfiguration'
+          description: ''
+      summary: Api v1 environments integrations webhook create
+      x-summary-source: derived
+  /api/v1/environments/{environment_api_key}/integrations/webhook/{id}/:
+    get:
+      operationId: api_v1_environments_integrations_webhook_retrieve
+      parameters:
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this webhook configuration.
+        required: true
+      tags:
+      - Integrations
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WebhookConfiguration'
+          description: ''
+      summary: Api v1 environments integrations webhook retrieve
+      x-summary-source: derived
+    put:
+      operationId: api_v1_environments_integrations_webhook_update
+      parameters:
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this webhook configuration.
+        required: true
+      tags:
+      - Integrations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WebhookConfiguration'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/WebhookConfiguration'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/WebhookConfiguration'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WebhookConfiguration'
+          description: ''
+      summary: Api v1 environments integrations webhook update
+      x-summary-source: derived
+    patch:
+      operationId: api_v1_environments_integrations_webhook_partial_update
+      parameters:
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this webhook configuration.
+        required: true
+      tags:
+      - Integrations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedWebhookConfiguration'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedWebhookConfiguration'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedWebhookConfiguration'
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WebhookConfiguration'
+          description: ''
+      summary: Api v1 environments integrations webhook partial update
+      x-summary-source: derived
+    delete:
+      operationId: api_v1_environments_integrations_webhook_destroy
+      parameters:
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this webhook configuration.
+        required: true
+      tags:
+      - Integrations
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '204':
+          description: No response body
+      summary: Api v1 environments integrations webhook destroy
+      x-summary-source: derived
+  /api/v1/organisations/{organisation_pk}/integrations/github/:
+    get:
+      operationId: api_v1_organisations_integrations_github_list
+      parameters:
+      - in: path
+        name: organisation_pk
+        schema:
+          type: integer
+        required: true
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - Integrations
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedGithubConfigurationList'
+          description: ''
+      summary: Api v1 organisations integrations github list
+      x-summary-source: derived
+    post:
+      operationId: api_v1_organisations_integrations_github_create
+      parameters:
+      - in: path
+        name: organisation_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Integrations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GithubConfiguration'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/GithubConfiguration'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/GithubConfiguration'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GithubConfiguration'
+          description: ''
+      summary: Api v1 organisations integrations github create
+      x-summary-source: derived
+  /api/v1/organisations/{organisation_pk}/integrations/github/{github_pk}/repositories/:
+    get:
+      operationId: api_v1_organisations_integrations_github_repositories_list
+      parameters:
+      - in: path
+        name: github_pk
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: organisation_pk
+        schema:
+          type: string
+        required: true
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - Integrations
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedGithubRepositoryList'
+          description: ''
+      summary: Api v1 organisations integrations github repositories list
+      x-summary-source: derived
+    post:
+      operationId: api_v1_organisations_integrations_github_repositories_create
+      parameters:
+      - in: path
+        name: github_pk
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: organisation_pk
+        schema:
+          type: string
+        required: true
+      tags:
+      - Integrations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GithubRepository'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/GithubRepository'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/GithubRepository'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GithubRepository'
+          description: ''
+      summary: Api v1 organisations integrations github repositories create
+      x-summary-source: derived
+  /api/v1/organisations/{organisation_pk}/integrations/github/{github_pk}/repositories/{id}/:
+    get:
+      operationId: api_v1_organisations_integrations_github_repositories_retrieve
+      parameters:
+      - in: path
+        name: github_pk
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this git hub repository.
+        required: true
+      - in: path
+        name: organisation_pk
+        schema:
+          type: string
+        required: true
+      tags:
+      - Integrations
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GithubRepository'
+          description: ''
+      summary: Api v1 organisations integrations github repositories retrieve
+      x-summary-source: derived
+    put:
+      operationId: api_v1_organisations_integrations_github_repositories_update
+      parameters:
+      - in: path
+        name: github_pk
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this git hub repository.
+        required: true
+      - in: path
+        name: organisation_pk
+        schema:
+          type: string
+        required: true
+      tags:
+      - Integrations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GithubRepository'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/GithubRepository'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/GithubRepository'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GithubRepository'
+          description: ''
+      summary: Api v1 organisations integrations github repositories update
+      x-summary-source: derived
+    patch:
+      operationId: api_v1_organisations_integrations_github_repositories_partial_update
+      parameters:
+      - in: path
+        name: github_pk
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this git hub repository.
+        required: true
+      - in: path
+        name: organisation_pk
+        schema:
+          type: string
+        required: true
+      tags:
+      - Integrations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedGithubRepository'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedGithubRepository'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedGithubRepository'
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GithubRepository'
+          description: ''
+      summary: Api v1 organisations integrations github repositories partial update
+      x-summary-source: derived
+    delete:
+      operationId: api_v1_organisations_integrations_github_repositories_destroy
+      parameters:
+      - in: path
+        name: github_pk
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this git hub repository.
+        required: true
+      - in: path
+        name: organisation_pk
+        schema:
+          type: string
+        required: true
+      tags:
+      - Integrations
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '204':
+          description: No response body
+      summary: Api v1 organisations integrations github repositories destroy
+      x-summary-source: derived
+  /api/v1/organisations/{organisation_pk}/integrations/github/{id}/:
+    get:
+      operationId: api_v1_organisations_integrations_github_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this github configuration.
+        required: true
+      - in: path
+        name: organisation_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Integrations
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GithubConfiguration'
+          description: ''
+      summary: Api v1 organisations integrations github retrieve
+      x-summary-source: derived
+    put:
+      operationId: api_v1_organisations_integrations_github_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this github configuration.
+        required: true
+      - in: path
+        name: organisation_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Integrations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GithubConfiguration'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/GithubConfiguration'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/GithubConfiguration'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GithubConfiguration'
+          description: ''
+      summary: Api v1 organisations integrations github update
+      x-summary-source: derived
+    patch:
+      operationId: api_v1_organisations_integrations_github_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this github configuration.
+        required: true
+      - in: path
+        name: organisation_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Integrations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedGithubConfiguration'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedGithubConfiguration'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedGithubConfiguration'
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GithubConfiguration'
+          description: ''
+      summary: Api v1 organisations integrations github partial update
+      x-summary-source: derived
+    delete:
+      operationId: api_v1_organisations_integrations_github_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this github configuration.
+        required: true
+      - in: path
+        name: organisation_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Integrations
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '204':
+          description: No response body
+      summary: Api v1 organisations integrations github destroy
+      x-summary-source: derived
+  /api/v1/organisations/{organisation_pk}/integrations/grafana/:
+    get:
+      operationId: api_v1_organisations_integrations_grafana_list
+      parameters:
+      - in: path
+        name: organisation_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Integrations
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GrafanaOrganisationConfiguration'
+          description: ''
+      summary: Api v1 organisations integrations grafana list
+      x-summary-source: derived
+    post:
+      operationId: api_v1_organisations_integrations_grafana_create
+      parameters:
+      - in: path
+        name: organisation_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Integrations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GrafanaOrganisationConfiguration'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/GrafanaOrganisationConfiguration'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/GrafanaOrganisationConfiguration'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GrafanaOrganisationConfiguration'
+          description: ''
+      summary: Api v1 organisations integrations grafana create
+      x-summary-source: derived
+  /api/v1/organisations/{organisation_pk}/integrations/grafana/{id}/:
+    get:
+      operationId: api_v1_organisations_integrations_grafana_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this grafana organisation configuration.
+        required: true
+      - in: path
+        name: organisation_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Integrations
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GrafanaOrganisationConfiguration'
+          description: ''
+      summary: Api v1 organisations integrations grafana retrieve
+      x-summary-source: derived
+    put:
+      operationId: api_v1_organisations_integrations_grafana_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this grafana organisation configuration.
+        required: true
+      - in: path
+        name: organisation_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Integrations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GrafanaOrganisationConfiguration'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/GrafanaOrganisationConfiguration'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/GrafanaOrganisationConfiguration'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GrafanaOrganisationConfiguration'
+          description: ''
+      summary: Api v1 organisations integrations grafana update
+      x-summary-source: derived
+    patch:
+      operationId: api_v1_organisations_integrations_grafana_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this grafana organisation configuration.
+        required: true
+      - in: path
+        name: organisation_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Integrations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedGrafanaOrganisationConfiguration'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedGrafanaOrganisationConfiguration'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedGrafanaOrganisationConfiguration'
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GrafanaOrganisationConfiguration'
+          description: ''
+      summary: Api v1 organisations integrations grafana partial update
+      x-summary-source: derived
+    delete:
+      operationId: api_v1_organisations_integrations_grafana_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this grafana organisation configuration.
+        required: true
+      - in: path
+        name: organisation_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Integrations
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '204':
+          description: No response body
+      summary: Api v1 organisations integrations grafana destroy
+      x-summary-source: derived
+  /api/v1/projects/{project_pk}/integrations/datadog/:
+    get:
+      operationId: api_v1_projects_integrations_datadog_list
+      parameters:
+      - in: path
+        name: project_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Integrations
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DataDogConfiguration'
+          description: ''
+      summary: Api v1 projects integrations datadog list
+      x-summary-source: derived
+    post:
+      operationId: api_v1_projects_integrations_datadog_create
+      parameters:
+      - in: path
+        name: project_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Integrations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DataDogConfiguration'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/DataDogConfiguration'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/DataDogConfiguration'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataDogConfiguration'
+          description: ''
+      summary: Api v1 projects integrations datadog create
+      x-summary-source: derived
+  /api/v1/projects/{project_pk}/integrations/datadog/{id}/:
+    get:
+      operationId: api_v1_projects_integrations_datadog_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this data dog configuration.
+        required: true
+      - in: path
+        name: project_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Integrations
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataDogConfiguration'
+          description: ''
+      summary: Api v1 projects integrations datadog retrieve
+      x-summary-source: derived
+    put:
+      operationId: api_v1_projects_integrations_datadog_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this data dog configuration.
+        required: true
+      - in: path
+        name: project_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Integrations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DataDogConfiguration'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/DataDogConfiguration'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/DataDogConfiguration'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataDogConfiguration'
+          description: ''
+      summary: Api v1 projects integrations datadog update
+      x-summary-source: derived
+    patch:
+      operationId: api_v1_projects_integrations_datadog_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this data dog configuration.
+        required: true
+      - in: path
+        name: project_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Integrations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedDataDogConfiguration'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedDataDogConfiguration'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedDataDogConfiguration'
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataDogConfiguration'
+          description: ''
+      summary: Api v1 projects integrations datadog partial update
+      x-summary-source: derived
+    delete:
+      operationId: api_v1_projects_integrations_datadog_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this data dog configuration.
+        required: true
+      - in: path
+        name: project_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Integrations
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '204':
+          description: No response body
+      summary: Api v1 projects integrations datadog destroy
+      x-summary-source: derived
+  /api/v1/projects/{project_pk}/integrations/gitlab/:
+    get:
+      operationId: api_v1_projects_integrations_gitlab_list
+      parameters:
+      - in: path
+        name: project_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Integrations
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GitLabConfiguration'
+          description: ''
+      summary: Api v1 projects integrations gitlab list
+      x-summary-source: derived
+    post:
+      operationId: api_v1_projects_integrations_gitlab_create
+      parameters:
+      - in: path
+        name: project_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Integrations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GitLabConfiguration'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/GitLabConfiguration'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/GitLabConfiguration'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GitLabConfiguration'
+          description: ''
+      summary: Api v1 projects integrations gitlab create
+      x-summary-source: derived
+  /api/v1/projects/{project_pk}/integrations/gitlab/{id}/:
+    get:
+      operationId: api_v1_projects_integrations_gitlab_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this git lab configuration.
+        required: true
+      - in: path
+        name: project_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Integrations
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GitLabConfiguration'
+          description: ''
+      summary: Api v1 projects integrations gitlab retrieve
+      x-summary-source: derived
+    put:
+      operationId: api_v1_projects_integrations_gitlab_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this git lab configuration.
+        required: true
+      - in: path
+        name: project_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Integrations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GitLabConfiguration'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/GitLabConfiguration'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/GitLabConfiguration'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GitLabConfiguration'
+          description: ''
+      summary: Api v1 projects integrations gitlab update
+      x-summary-source: derived
+    patch:
+      operationId: api_v1_projects_integrations_gitlab_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this git lab configuration.
+        required: true
+      - in: path
+        name: project_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Integrations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedGitLabConfiguration'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedGitLabConfiguration'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedGitLabConfiguration'
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GitLabConfiguration'
+          description: ''
+      summary: Api v1 projects integrations gitlab partial update
+      x-summary-source: derived
+    delete:
+      operationId: api_v1_projects_integrations_gitlab_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this git lab configuration.
+        required: true
+      - in: path
+        name: project_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Integrations
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '204':
+          description: No response body
+      summary: Api v1 projects integrations gitlab destroy
+      x-summary-source: derived
+  /api/v1/projects/{project_pk}/integrations/grafana/:
+    get:
+      operationId: api_v1_projects_integrations_grafana_list
+      parameters:
+      - in: path
+        name: project_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Integrations
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GrafanaProjectConfiguration'
+          description: ''
+      summary: Api v1 projects integrations grafana list
+      x-summary-source: derived
+    post:
+      operationId: api_v1_projects_integrations_grafana_create
+      parameters:
+      - in: path
+        name: project_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Integrations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GrafanaProjectConfiguration'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/GrafanaProjectConfiguration'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/GrafanaProjectConfiguration'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GrafanaProjectConfiguration'
+          description: ''
+      summary: Api v1 projects integrations grafana create
+      x-summary-source: derived
+  /api/v1/projects/{project_pk}/integrations/grafana/{id}/:
+    get:
+      operationId: api_v1_projects_integrations_grafana_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this grafana project configuration.
+        required: true
+      - in: path
+        name: project_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Integrations
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GrafanaProjectConfiguration'
+          description: ''
+      summary: Api v1 projects integrations grafana retrieve
+      x-summary-source: derived
+    put:
+      operationId: api_v1_projects_integrations_grafana_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this grafana project configuration.
+        required: true
+      - in: path
+        name: project_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Integrations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GrafanaProjectConfiguration'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/GrafanaProjectConfiguration'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/GrafanaProjectConfiguration'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GrafanaProjectConfiguration'
+          description: ''
+      summary: Api v1 projects integrations grafana update
+      x-summary-source: derived
+    patch:
+      operationId: api_v1_projects_integrations_grafana_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this grafana project configuration.
+        required: true
+      - in: path
+        name: project_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Integrations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedGrafanaProjectConfiguration'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedGrafanaProjectConfiguration'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedGrafanaProjectConfiguration'
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GrafanaProjectConfiguration'
+          description: ''
+      summary: Api v1 projects integrations grafana partial update
+      x-summary-source: derived
+    delete:
+      operationId: api_v1_projects_integrations_grafana_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this grafana project configuration.
+        required: true
+      - in: path
+        name: project_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Integrations
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '204':
+          description: No response body
+      summary: Api v1 projects integrations grafana destroy
+      x-summary-source: derived
+  /api/v1/projects/{project_pk}/integrations/new-relic/:
+    get:
+      operationId: api_v1_projects_integrations_new_relic_list
+      parameters:
+      - in: path
+        name: project_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Integrations
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/NewRelicConfiguration'
+          description: ''
+      summary: Api v1 projects integrations new relic list
+      x-summary-source: derived
+    post:
+      operationId: api_v1_projects_integrations_new_relic_create
+      parameters:
+      - in: path
+        name: project_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Integrations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewRelicConfiguration'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/NewRelicConfiguration'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/NewRelicConfiguration'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NewRelicConfiguration'
+          description: ''
+      summary: Api v1 projects integrations new relic create
+      x-summary-source: derived
+  /api/v1/projects/{project_pk}/integrations/new-relic/{id}/:
+    get:
+      operationId: api_v1_projects_integrations_new_relic_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this new relic configuration.
+        required: true
+      - in: path
+        name: project_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Integrations
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NewRelicConfiguration'
+          description: ''
+      summary: Api v1 projects integrations new relic retrieve
+      x-summary-source: derived
+    put:
+      operationId: api_v1_projects_integrations_new_relic_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this new relic configuration.
+        required: true
+      - in: path
+        name: project_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Integrations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewRelicConfiguration'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/NewRelicConfiguration'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/NewRelicConfiguration'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NewRelicConfiguration'
+          description: ''
+      summary: Api v1 projects integrations new relic update
+      x-summary-source: derived
+    patch:
+      operationId: api_v1_projects_integrations_new_relic_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this new relic configuration.
+        required: true
+      - in: path
+        name: project_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Integrations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedNewRelicConfiguration'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedNewRelicConfiguration'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedNewRelicConfiguration'
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NewRelicConfiguration'
+          description: ''
+      summary: Api v1 projects integrations new relic partial update
+      x-summary-source: derived
+    delete:
+      operationId: api_v1_projects_integrations_new_relic_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this new relic configuration.
+        required: true
+      - in: path
+        name: project_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Integrations
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '204':
+          description: No response body
+      summary: Api v1 projects integrations new relic destroy
+      x-summary-source: derived
+components:
+  schemas:
+    SentryChangeTrackingConfiguration:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        environment:
+          type: integer
+          readOnly: true
+        webhook_url:
+          type: string
+          format: uri
+          maxLength: 200
+        secret:
+          type: string
+          maxLength: 60
+          minLength: 10
+      required:
+      - secret
+      - webhook_url
+    HeapConfiguration:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        api_key:
+          type: string
+          maxLength: 100
+        base_url:
+          type:
+          - string
+          - 'null'
+          format: uri
+          maxLength: 200
+      required:
+      - api_key
+    GithubRepository:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        github_configuration:
+          type: integer
+          readOnly: true
+        project:
+          type: integer
+        repository_owner:
+          type: string
+          maxLength: 100
+        repository_name:
+          type: string
+          maxLength: 100
+        tagging_enabled:
+          type: boolean
+      required:
+      - project
+      - repository_name
+      - repository_owner
+    PatchedMixpanelConfiguration:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        api_key:
+          type: string
+          maxLength: 100
+        base_url:
+          type:
+          - string
+          - 'null'
+          format: uri
+          maxLength: 200
+    PatchedSentryChangeTrackingConfiguration:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        environment:
+          type: integer
+          readOnly: true
+        webhook_url:
+          type: string
+          format: uri
+          maxLength: 200
+        secret:
+          type: string
+          maxLength: 60
+          minLength: 10
+    GithubConfiguration:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        installation_id:
+          type: string
+          maxLength: 100
+        organisation:
+          type: integer
+          readOnly: true
+      required:
+      - installation_id
+    PatchedGithubConfiguration:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        installation_id:
+          type: string
+          maxLength: 100
+        organisation:
+          type: integer
+          readOnly: true
+    PatchedHeapConfiguration:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        api_key:
+          type: string
+          maxLength: 100
+        base_url:
+          type:
+          - string
+          - 'null'
+          format: uri
+          maxLength: 200
+    PatchedGrafanaProjectConfiguration:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        base_url:
+          type:
+          - string
+          - 'null'
+          format: uri
+          maxLength: 200
+        api_key:
+          type: string
+          maxLength: 100
+    RudderstackConfiguration:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        base_url:
+          type:
+          - string
+          - 'null'
+          format: uri
+          maxLength: 200
+        api_key:
+          type: string
+          maxLength: 100
+      required:
+      - api_key
+    SlackChannelList:
+      type: object
+      properties:
+        cursor:
+          type: string
+        channels:
+          type: array
+          items:
+            $ref: '#/components/schemas/SlackChannel'
+      required:
+      - channels
+      - cursor
+    GrafanaProjectConfiguration:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        base_url:
+          type:
+          - string
+          - 'null'
+          format: uri
+          maxLength: 200
+        api_key:
+          type: string
+          maxLength: 100
+      required:
+      - api_key
+    PatchedGithubRepository:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        github_configuration:
+          type: integer
+          readOnly: true
+        project:
+          type: integer
+        repository_owner:
+          type: string
+          maxLength: 100
+        repository_name:
+          type: string
+          maxLength: 100
+        tagging_enabled:
+          type: boolean
+    SlackEnvironment:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        channel_id:
+          type: string
+          description: Id of the slack channel to post messages to
+          maxLength: 50
+        enabled:
+          type: boolean
+      required:
+      - channel_id
+    PatchedGitLabConfiguration:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        gitlab_instance_url:
+          type: string
+          format: uri
+          maxLength: 200
+        access_token:
+          type: string
+          maxLength: 300
+        labeling_enabled:
+          type: boolean
+    PatchedDynatraceConfiguration:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        base_url:
+          type:
+          - string
+          - 'null'
+          format: uri
+          maxLength: 200
+        api_key:
+          type: string
+          maxLength: 100
+        entity_selector:
+          type: string
+          maxLength: 1000
+    PatchedNewRelicConfiguration:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        base_url:
+          type:
+          - string
+          - 'null'
+          format: uri
+          maxLength: 200
+        api_key:
+          type: string
+          maxLength: 100
+        app_id:
+          type: string
+          maxLength: 100
+    WebhookConfiguration:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        url:
+          type: string
+          format: uri
+          maxLength: 200
+        secret:
+          type: string
+          maxLength: 255
+      required:
+      - url
+    PatchedWebhookConfiguration:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        url:
+          type: string
+          format: uri
+          maxLength: 200
+        secret:
+          type: string
+          maxLength: 255
+    NewRelicConfiguration:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        base_url:
+          type:
+          - string
+          - 'null'
+          format: uri
+          maxLength: 200
+        api_key:
+          type: string
+          maxLength: 100
+        app_id:
+          type: string
+          maxLength: 100
+      required:
+      - api_key
+      - app_id
+    PatchedGrafanaOrganisationConfiguration:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        base_url:
+          type:
+          - string
+          - 'null'
+          format: uri
+          maxLength: 200
+        api_key:
+          type: string
+          maxLength: 100
+    PatchedRudderstackConfiguration:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        base_url:
+          type:
+          - string
+          - 'null'
+          format: uri
+          maxLength: 200
+        api_key:
+          type: string
+          maxLength: 100
+    AmplitudeConfiguration:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        api_key:
+          type: string
+          maxLength: 100
+        base_url:
+          type: string
+          format: uri
+          maxLength: 200
+      required:
+      - api_key
+    PaginatedGithubRepositoryList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/GithubRepository'
+    DynatraceConfiguration:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        base_url:
+          type:
+          - string
+          - 'null'
+          format: uri
+          maxLength: 200
+        api_key:
+          type: string
+          maxLength: 100
+        entity_selector:
+          type: string
+          maxLength: 1000
+      required:
+      - api_key
+      - entity_selector
+    GitLabConfiguration:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        gitlab_instance_url:
+          type: string
+          format: uri
+          maxLength: 200
+        access_token:
+          type: string
+          maxLength: 300
+        labeling_enabled:
+          type: boolean
+      required:
+      - access_token
+      - gitlab_instance_url
+    BaseUrlEnum:
+      enum:
+      - https://api.segment.io/
+      - https://events.eu1.segmentapis.com/
+      type: string
+      description: '* `https://api.segment.io/` - https://api.segment.io/
+
+        * `https://events.eu1.segmentapis.com/` - https://events.eu1.segmentapis.com/'
+    PaginatedGithubConfigurationList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/GithubConfiguration'
+    DataDogConfiguration:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        base_url:
+          type: string
+          format: uri
+          maxLength: 200
+        api_key:
+          type: string
+          maxLength: 100
+        use_custom_source:
+          type: boolean
+      required:
+      - api_key
+      - base_url
+    PatchedSegmentConfiguration:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        api_key:
+          type: string
+          maxLength: 100
+        base_url:
+          allOf:
+          - $ref: '#/components/schemas/BaseUrlEnum'
+          default: https://api.segment.io/
+    MixpanelConfiguration:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        api_key:
+          type: string
+          maxLength: 100
+        base_url:
+          type:
+          - string
+          - 'null'
+          format: uri
+          maxLength: 200
+      required:
+      - api_key
+    SegmentConfiguration:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        api_key:
+          type: string
+          maxLength: 100
+        base_url:
+          allOf:
+          - $ref: '#/components/schemas/BaseUrlEnum'
+          default: https://api.segment.io/
+      required:
+      - api_key
+    SlackChannel:
+      type: object
+      properties:
+        channel_name:
+          type: string
+        channel_id:
+          type: string
+      required:
+      - channel_id
+      - channel_name
+    PatchedAmplitudeConfiguration:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        api_key:
+          type: string
+          maxLength: 100
+        base_url:
+          type: string
+          format: uri
+          maxLength: 200
+    PatchedDataDogConfiguration:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        base_url:
+          type: string
+          format: uri
+          maxLength: 200
+        api_key:
+          type: string
+          maxLength: 100
+        use_custom_source:
+          type: boolean
+    GrafanaOrganisationConfiguration:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        base_url:
+          type:
+          - string
+          - 'null'
+          format: uri
+          maxLength: 200
+        api_key:
+          type: string
+          maxLength: 100
+      required:
+      - api_key
+    PatchedSlackEnvironment:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        channel_id:
+          type: string
+          description: Id of the slack channel to post messages to
+          maxLength: 50
+        enabled:
+          type: boolean
+  securitySchemes:
+    Cohort_Sync_Key:
+      type: http
+      scheme: bearer
+      description: For cohort sync endpoints called by an external cohort source, such as Amplitude.
+    Cohort_Sync_Key__Basic:
+      type: http
+      scheme: basic
+      description: For cohort sync endpoints called by an external cohort source that can only send Basic credentials, such as Mixpanel. The key is the password; the username is ignored.
+    Environment_API_Key:
+      type: apiKey
+      in: header
+      name: X-Environment-Key
+      description: For SDK endpoints. <a href='https://docs.flagsmith.com/clients/rest#public-api-endpoints'>Find out more</a>.
+    Master_API_Key:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: For Management API endpoints. <a href='https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/management-api'>Find out more</a>.
+    basicAuth:
+      type: http
+      scheme: basic
+    tokenAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: Token-based authentication with required prefix "Token"

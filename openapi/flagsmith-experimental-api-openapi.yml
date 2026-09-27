@@ -1,0 +1,710 @@
+openapi: 3.2.0
+info:
+  title: Flagsmith Experimental API
+  version: v1
+  description: Flagsmith's Core and SDK APIs. Check out Flagsmith documentation.
+  contact:
+    email: support@flagsmith.com
+  license:
+    name: BSD License
+    identifier: BSD-3-Clause
+tags:
+- name: Experimental
+  description: Experimental endpoints subject to change.
+paths:
+  /api/__future__/environments/{environment_key}/features/{feature_id}/:
+    get:
+      operationId: api___future___environments_features_retrieve
+      description: Read what the flag serves in the environment.
+      parameters:
+      - in: path
+        name: environment_key
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: feature_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Experimental
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateFlagResponse'
+          description: ''
+      summary: Api future environments features retrieve
+      x-summary-source: derived
+    put:
+      operationId: api___future___environments_features_update
+      description: Replace the properties given, resetting what they omit.
+      parameters:
+      - in: path
+        name: environment_key
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: feature_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Experimental
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateFlagRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UpdateFlagRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UpdateFlagRequest'
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateFlagResponse'
+          description: ''
+      summary: Api future environments features update
+      x-summary-source: derived
+    patch:
+      operationId: api___future___environments_features_partial_update
+      description: Update the properties given, leaving the rest as they are.
+      parameters:
+      - in: path
+        name: environment_key
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: feature_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Experimental
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedUpdateFlagRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedUpdateFlagRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedUpdateFlagRequest'
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateFlagResponse'
+          description: ''
+      summary: Api future environments features partial update
+      x-summary-source: derived
+  /api/__future__/environments/{environment_key}/features/{feature_id}/segment-overrides/{segment_id}/:
+    delete:
+      operationId: api___future___environments_features_segment_overrides_destroy
+      description: Remove the flag's override for the segment, leaving the rest of the flag as it is.
+      parameters:
+      - in: path
+        name: environment_key
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: feature_id
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: segment_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Experimental
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateFlagResponse'
+          description: ''
+      summary: Api future environments features segment overrides destroy
+      x-summary-source: derived
+  /api/experiments/environments/{environment_key}/delete-segment-override/:
+    post:
+      operationId: api_experiments_environments_delete_segment_override_create
+      description: '**EXPERIMENTAL ENDPOINT** - Subject to change without notice.
+
+
+        Deletes a segment override for a feature in the given environment.
+
+
+        **Feature Identification:**
+
+        - Use `feature.name` OR `feature.id` (mutually exclusive)
+
+        - Feature must belong to the environment''s project
+
+
+        **Segment Identification:**
+
+        - Use `segment.id` (required)
+
+
+        The segment override must exist for the given feature/environment combination.
+
+        Returns 400 if the segment override does not exist.'
+      summary: Delete segment override
+      parameters:
+      - in: path
+        name: environment_key
+        schema:
+          type: string
+        description: The environment API key
+        required: true
+      tags:
+      - Experimental
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeleteSegmentOverride'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/DeleteSegmentOverride'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/DeleteSegmentOverride'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '204':
+          description: No response body
+  /api/experiments/environments/{environment_key}/update-flag-v1/:
+    post:
+      operationId: api_experiments_environments_update_flag_v1_create
+      description: '**EXPERIMENTAL ENDPOINT** - Subject to change without notice.
+
+
+        Updates a single feature state within an environment. You can update either:
+
+        - The environment default state (when no segment is specified)
+
+        - A specific segment override (when segment.id is provided)
+
+
+        **Feature Identification:**
+
+        - Use `feature.name` OR `feature.id` (mutually exclusive)
+
+
+        **Value Format:**
+
+        - The `value` field is always a string representation
+
+        - The `type` field tells the server how to parse it
+
+        - Available types: integer, string, boolean
+
+        - Examples:
+
+        - `{"type": "integer", "value": "42"}`
+
+        - `{"type": "boolean", "value": "true"}`
+
+        - `{"type": "string", "value": "hello"}`
+
+
+        **Segment Priority:**
+
+        - Optional `segment.priority` field controls ordering
+
+        - If field value is null or the field is omitted, lowest priority is assumed'
+      summary: Update single feature state
+      parameters:
+      - in: path
+        name: environment_key
+        schema:
+          type: string
+        description: The environment API key
+        required: true
+      tags:
+      - Experimental
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateFlag'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UpdateFlag'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UpdateFlag'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '204':
+          description: No response body
+  /api/experiments/environments/{environment_key}/update-flag-v2/:
+    post:
+      operationId: api_experiments_environments_update_flag_v2_create
+      description: '**EXPERIMENTAL ENDPOINT** - Subject to change without notice.
+
+
+        Updates multiple feature states in a single request. This endpoint allows
+
+        you to configure an entire feature (environment default + all segment overrides)
+
+        in one operation.
+
+
+        **What You Can Update:**
+
+        - Environment default state (required)
+
+        - Multiple segment overrides (optional)
+
+        - Priority ordering for each segment
+
+
+        **Feature Identification:**
+
+        - Use `feature.name` OR `feature.id` (mutually exclusive)
+
+
+        **Value Format:**
+
+        - The `value` field is always a string representation
+
+        - The `type` field tells the server how to parse it
+
+        - Available types: integer, string, boolean
+
+        - Examples:
+
+        - `{"type": "string", "value": "production"}`
+
+        - `{"type": "integer", "value": "100"}`
+
+        - `{"type": "boolean", "value": "false"}`
+
+
+        **Segment Overrides:**
+
+        - Provide array of segment override configurations
+
+        - Each override must specify: segment_id, enabled, value
+
+        - Optional priority field controls ordering
+
+        - Duplicate segment_id values are not allowed'
+      summary: Update multiple feature states
+      parameters:
+      - in: path
+        name: environment_key
+        schema:
+          type: string
+        description: The environment API key
+        required: true
+      tags:
+      - Experimental
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateFlagV2'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UpdateFlagV2'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UpdateFlagV2'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '204':
+          description: No response body
+components:
+  schemas:
+    UpdateFlagV2:
+      type: object
+      properties:
+        feature:
+          $ref: '#/components/schemas/FeatureIdentifier'
+        environment_default:
+          $ref: '#/components/schemas/EnvironmentDefault'
+        segment_overrides:
+          type: array
+          items:
+            $ref: '#/components/schemas/SegmentOverride'
+      required:
+      - environment_default
+      - feature
+    UpdateFlagResponseFlagValue:
+      properties:
+        type:
+          allOf:
+          - $ref: '#/components/schemas/Type68aEnum'
+          title: Type
+        value:
+          title: Value
+          type: string
+      required:
+      - type
+      - value
+      title: FlagValue
+      type: object
+    UpdateFlagRequestFlagValue:
+      properties:
+        type:
+          allOf:
+          - $ref: '#/components/schemas/Type68aEnum'
+          title: Type
+        value:
+          title: Value
+          type: string
+      required:
+      - type
+      - value
+      title: FlagValue
+      type: object
+    UpdateFlagResponseSegmentOverrideResponse:
+      properties:
+        segment:
+          $ref: '#/components/schemas/UpdateFlagResponseSegmentReference'
+        priority:
+          title: Priority
+          type: integer
+        enabled:
+          title: Enabled
+          type: boolean
+        value:
+          anyOf:
+          - $ref: '#/components/schemas/UpdateFlagResponseFlagValue'
+          - type: 'null'
+        variants:
+          items:
+            $ref: '#/components/schemas/UpdateFlagResponseVariant'
+          title: Variants
+          type: array
+      required:
+      - segment
+      - priority
+      - enabled
+      - value
+      - variants
+      title: SegmentOverrideResponse
+      type: object
+    PatchedUpdateFlagRequest:
+      properties:
+        environment_default:
+          $ref: '#/components/schemas/UpdateFlagRequestEnvironmentDefaultRequest'
+        segment_overrides:
+          items:
+            $ref: '#/components/schemas/UpdateFlagRequestSegmentOverrideRequest'
+          title: Segment Overrides
+          type: array
+      title: UpdateFlagRequest
+      type: object
+    UpdateFlagRequest:
+      properties:
+        environment_default:
+          $ref: '#/components/schemas/UpdateFlagRequestEnvironmentDefaultRequest'
+        segment_overrides:
+          items:
+            $ref: '#/components/schemas/UpdateFlagRequestSegmentOverrideRequest'
+          title: Segment Overrides
+          type: array
+      title: UpdateFlagRequest
+      type: object
+    UpdateFlag:
+      type: object
+      properties:
+        feature:
+          $ref: '#/components/schemas/FeatureIdentifier'
+        segment:
+          $ref: '#/components/schemas/FeatureUpdateSegmentData'
+        enabled:
+          type: boolean
+        value:
+          $ref: '#/components/schemas/FeatureValue'
+      required:
+      - enabled
+      - feature
+      - value
+    SegmentIdentifier:
+      type: object
+      properties:
+        id:
+          type: integer
+      required:
+      - id
+    UpdateFlagResponseVariant:
+      properties:
+        id:
+          title: Id
+          type: integer
+        weight:
+          title: Weight
+          type: number
+      required:
+      - id
+      - weight
+      title: Variant
+      type: object
+    FeatureUpdateSegmentData:
+      type: object
+      properties:
+        id:
+          type: integer
+        priority:
+          type:
+          - integer
+          - 'null'
+      required:
+      - id
+    UpdateFlagRequestSegmentOverrideRequest:
+      properties:
+        segment:
+          $ref: '#/components/schemas/UpdateFlagRequestSegmentReference'
+        enabled:
+          title: Enabled
+          type: boolean
+        priority:
+          title: Priority
+          type: integer
+        value:
+          $ref: '#/components/schemas/UpdateFlagRequestFlagValue'
+        variants:
+          items:
+            $ref: '#/components/schemas/UpdateFlagRequestVariant'
+          title: Variants
+          type: array
+      required:
+      - segment
+      title: SegmentOverrideRequest
+      type: object
+    EnvironmentDefault:
+      type: object
+      properties:
+        enabled:
+          type: boolean
+        value:
+          $ref: '#/components/schemas/FeatureValue'
+      required:
+      - enabled
+      - value
+    Type68aEnum:
+      enum:
+      - string
+      - integer
+      - boolean
+      type: string
+    SegmentOverride:
+      type: object
+      properties:
+        segment_id:
+          type: integer
+        priority:
+          type:
+          - integer
+          - 'null'
+        enabled:
+          type: boolean
+        value:
+          $ref: '#/components/schemas/FeatureValue'
+        multivariate_feature_state_values:
+          type: array
+          items:
+            $ref: '#/components/schemas/MultivariateValue'
+      required:
+      - enabled
+      - segment_id
+      - value
+    FeatureValueTypeEnum:
+      enum:
+      - integer
+      - string
+      - boolean
+      type: string
+      description: '* `integer` - integer
+
+        * `string` - string
+
+        * `boolean` - boolean'
+    UpdateFlagRequestVariant:
+      properties:
+        id:
+          title: Id
+          type: integer
+        weight:
+          title: Weight
+          type: number
+      required:
+      - id
+      - weight
+      title: Variant
+      type: object
+    UpdateFlagResponseEnvironmentDefaultResponse:
+      properties:
+        enabled:
+          title: Enabled
+          type: boolean
+        value:
+          anyOf:
+          - $ref: '#/components/schemas/UpdateFlagResponseFlagValue'
+          - type: 'null'
+        variants:
+          items:
+            $ref: '#/components/schemas/UpdateFlagResponseVariant'
+          title: Variants
+          type: array
+      required:
+      - enabled
+      - value
+      - variants
+      title: EnvironmentDefaultResponse
+      type: object
+    UpdateFlagResponseSegmentReference:
+      properties:
+        id:
+          title: Id
+          type: integer
+      required:
+      - id
+      title: SegmentReference
+      type: object
+    FeatureValue:
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/FeatureValueTypeEnum'
+        value:
+          type: string
+      required:
+      - type
+      - value
+    DeleteSegmentOverride:
+      type: object
+      properties:
+        feature:
+          $ref: '#/components/schemas/FeatureIdentifier'
+        segment:
+          $ref: '#/components/schemas/SegmentIdentifier'
+      required:
+      - feature
+      - segment
+    MultivariateValue:
+      type: object
+      properties:
+        multivariate_feature_option:
+          type: integer
+        percentage_allocation:
+          type: number
+          format: double
+          maximum: 100
+          minimum: 0
+      required:
+      - multivariate_feature_option
+      - percentage_allocation
+    UpdateFlagRequestSegmentReference:
+      properties:
+        id:
+          title: Id
+          type: integer
+      required:
+      - id
+      title: SegmentReference
+      type: object
+    UpdateFlagResponse:
+      properties:
+        environment_default:
+          $ref: '#/components/schemas/UpdateFlagResponseEnvironmentDefaultResponse'
+        segment_overrides:
+          items:
+            $ref: '#/components/schemas/UpdateFlagResponseSegmentOverrideResponse'
+          title: Segment Overrides
+          type: array
+      required:
+      - environment_default
+      - segment_overrides
+      title: UpdateFlagResponse
+      type: object
+    UpdateFlagRequestEnvironmentDefaultRequest:
+      properties:
+        enabled:
+          title: Enabled
+          type: boolean
+        value:
+          $ref: '#/components/schemas/UpdateFlagRequestFlagValue'
+        variants:
+          items:
+            $ref: '#/components/schemas/UpdateFlagRequestVariant'
+          title: Variants
+          type: array
+      title: EnvironmentDefaultRequest
+      type: object
+    FeatureIdentifier:
+      type: object
+      properties:
+        name:
+          type: string
+        id:
+          type: integer
+  securitySchemes:
+    Cohort_Sync_Key:
+      type: http
+      scheme: bearer
+      description: For cohort sync endpoints called by an external cohort source, such as Amplitude.
+    Cohort_Sync_Key__Basic:
+      type: http
+      scheme: basic
+      description: For cohort sync endpoints called by an external cohort source that can only send Basic credentials, such as Mixpanel. The key is the password; the username is ignored.
+    Environment_API_Key:
+      type: apiKey
+      in: header
+      name: X-Environment-Key
+      description: For SDK endpoints. <a href='https://docs.flagsmith.com/clients/rest#public-api-endpoints'>Find out more</a>.
+    Master_API_Key:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: For Management API endpoints. <a href='https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/management-api'>Find out more</a>.
+    basicAuth:
+      type: http
+      scheme: basic
+    tokenAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: Token-based authentication with required prefix "Token"

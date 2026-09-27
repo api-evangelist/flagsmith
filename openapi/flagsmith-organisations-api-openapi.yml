@@ -1,17 +1,11 @@
 openapi: 3.2.0
 info:
-  title: Flagsmith Admin Organisations API
-  description: The Flagsmith Admin API allows developers to programmatically manage all aspects of their Flagsmith projects. Anything that can be done through the Flagsmith dashboard can also be accomplished via this API, including creating, updating, and deleting projects, environments, feature flags, segments, and users. It uses a secret Organisation API Token for authentication and provides a Swagger interface at api.flagsmith.com/api/v1/docs for interactive exploration.
+  title: Flagsmith Organisations API
   version: '1.0'
-  contact:
-    name: Flagsmith Support
-    url: https://www.flagsmith.com/contact-us
-  termsOfService: https://www.flagsmith.com/terms-of-service
+  description: 'Operations tagged Organisations across 2 of this provider''s published API definitions: flagsmith-admin-api-openapi.yml, flagsmith-api-openapi.json. Each path carries the servers of the definition it was published in.'
 servers:
 - url: https://api.flagsmith.com/api/v1
   description: Flagsmith Production API
-security:
-- apiKeyAuth: []
 tags:
 - name: Organisations
   description: Manage organisations within Flagsmith. Organisations are the top-level container for projects, users, and billing.
@@ -32,6 +26,11 @@ paths:
                 $ref: '#/components/schemas/PaginatedResponse'
         '401':
           description: Unauthorized - invalid or missing API token
+      security:
+      - apiKeyAuth: []
+    servers:
+    - url: https://api.flagsmith.com/api/v1
+      description: Flagsmith Production API
   /organisations/{organisation_id}/:
     get:
       operationId: getOrganisation
@@ -52,38 +51,3316 @@ paths:
           description: Unauthorized - invalid or missing API token
         '404':
           description: Organisation not found
-components:
-  parameters:
-    OrganisationId:
-      name: organisation_id
-      in: path
-      description: The unique identifier for the organisation
-      required: true
-      schema:
-        type: integer
-  schemas:
-    PaginatedResponse:
-      type: object
-      description: A paginated response wrapper containing the results count and navigation links.
-      properties:
-        count:
+      security:
+      - apiKeyAuth: []
+    servers:
+    - url: https://api.flagsmith.com/api/v1
+      description: Flagsmith Production API
+  /api/v1/organisations/:
+    post:
+      operationId: api_v1_organisations_create
+      description: Override create method to add new organisation to authenticated user
+      tags:
+      - Organisations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrganisationSerializerFull'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/OrganisationSerializerFull'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/OrganisationSerializerFull'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganisationSerializerFull'
+          description: ''
+      summary: Api v1 organisations create
+      x-summary-source: derived
+  /api/v1/organisations/{organisation_id}/licence:
+    put:
+      operationId: api_v1_organisations_licence_update
+      parameters:
+      - in: path
+        name: organisation_id
+        schema:
           type: integer
-          description: The total number of results
-        next:
+        required: true
+      tags:
+      - Organisations
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          description: No response body
+      summary: Api v1 organisations licence update
+      x-summary-source: derived
+  /api/v1/organisations/{organisation_pk}/api-usage-notification/:
+    get:
+      operationId: api_v1_organisations_api_usage_notification_list
+      parameters:
+      - in: path
+        name: organisation_pk
+        schema:
+          type: integer
+        required: true
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - Organisations
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedOrganisationAPIUsageNotificationList'
+          description: ''
+      summary: Api v1 organisations api usage notification list
+      x-summary-source: derived
+  /api/v1/organisations/{organisation_pk}/github/create-cleanup-issue/:
+    post:
+      operationId: api_v1_organisations_github_create_cleanup_issue_create
+      parameters:
+      - in: path
+        name: organisation_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Organisations
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          description: No response body
+      summary: Api v1 organisations github create cleanup issue create
+      x-summary-source: derived
+  /api/v1/organisations/{organisation_pk}/github/issues/:
+    get:
+      operationId: api_v1_organisations_github_issues_retrieve
+      parameters:
+      - in: path
+        name: organisation_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Organisations
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          description: No response body
+      summary: Api v1 organisations github issues retrieve
+      x-summary-source: derived
+  /api/v1/organisations/{organisation_pk}/github/pulls/:
+    get:
+      operationId: api_v1_organisations_github_pulls_retrieve
+      parameters:
+      - in: path
+        name: organisation_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Organisations
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          description: No response body
+      summary: Api v1 organisations github pulls retrieve
+      x-summary-source: derived
+  /api/v1/organisations/{organisation_pk}/github/repo-contributors/:
+    get:
+      operationId: api_v1_organisations_github_repo_contributors_retrieve
+      parameters:
+      - in: path
+        name: organisation_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Organisations
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          description: No response body
+      summary: Api v1 organisations github repo contributors retrieve
+      x-summary-source: derived
+  /api/v1/organisations/{organisation_pk}/github/repositories/:
+    get:
+      operationId: api_v1_organisations_github_repositories_retrieve
+      parameters:
+      - in: path
+        name: organisation_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Organisations
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          description: No response body
+      summary: Api v1 organisations github repositories retrieve
+      x-summary-source: derived
+  /api/v1/organisations/{organisation_pk}/groups/:
+    post:
+      operationId: api_v1_organisations_groups_create
+      parameters:
+      - in: path
+        name: organisation_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Organisations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ListUserPermissionGroup'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ListUserPermissionGroup'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ListUserPermissionGroup'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListUserPermissionGroup'
+          description: ''
+      summary: Api v1 organisations groups create
+      x-summary-source: derived
+  /api/v1/organisations/{organisation_pk}/groups/{group_pk}/roles/:
+    get:
+      operationId: api_v1_organisations_groups_roles_list
+      parameters:
+      - in: path
+        name: group_pk
+        schema:
           type: string
-          nullable: true
-          format: uri
-          description: URL to the next page of results
-        previous:
+        required: true
+      - in: path
+        name: organisation_pk
+        schema:
           type: string
-          nullable: true
-          format: uri
-          description: URL to the previous page of results
-        results:
-          type: array
-          description: The array of result objects for this page
-          items:
-            type: object
+        required: true
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - Organisations
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedRoleList'
+          description: ''
+      summary: Api v1 organisations groups roles list
+      x-summary-source: derived
+  /api/v1/organisations/{organisation_pk}/groups/{group_pk}/roles/{id}/:
+    delete:
+      operationId: api_v1_organisations_groups_roles_destroy
+      parameters:
+      - in: path
+        name: group_pk
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: organisation_pk
+        schema:
+          type: string
+        required: true
+      tags:
+      - Organisations
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '204':
+          description: No response body
+      summary: Api v1 organisations groups roles destroy
+      x-summary-source: derived
+  /api/v1/organisations/{organisation_pk}/groups/{id}/:
+    get:
+      operationId: api_v1_organisations_groups_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this user permission group.
+        required: true
+      - in: path
+        name: organisation_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Organisations
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserPermissionGroupSerializerDetail'
+          description: ''
+      summary: Api v1 organisations groups retrieve
+      x-summary-source: derived
+    put:
+      operationId: api_v1_organisations_groups_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this user permission group.
+        required: true
+      - in: path
+        name: organisation_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Organisations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ListUserPermissionGroup'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ListUserPermissionGroup'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ListUserPermissionGroup'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListUserPermissionGroup'
+          description: ''
+      summary: Api v1 organisations groups update
+      x-summary-source: derived
+    patch:
+      operationId: api_v1_organisations_groups_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this user permission group.
+        required: true
+      - in: path
+        name: organisation_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Organisations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedListUserPermissionGroup'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedListUserPermissionGroup'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedListUserPermissionGroup'
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListUserPermissionGroup'
+          description: ''
+      summary: Api v1 organisations groups partial update
+      x-summary-source: derived
+    delete:
+      operationId: api_v1_organisations_groups_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this user permission group.
+        required: true
+      - in: path
+        name: organisation_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Organisations
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '204':
+          description: No response body
+      summary: Api v1 organisations groups destroy
+      x-summary-source: derived
+  /api/v1/organisations/{organisation_pk}/groups/{id}/add-users/:
+    post:
+      operationId: api_v1_organisations_groups_add_users_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this user permission group.
+        required: true
+      - in: path
+        name: organisation_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Organisations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserIds'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UserIds'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UserIds'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserPermissionGroupSerializerDetail'
+          description: ''
+      summary: Api v1 organisations groups add users create
+      x-summary-source: derived
+  /api/v1/organisations/{organisation_pk}/groups/{id}/remove-users/:
+    post:
+      operationId: api_v1_organisations_groups_remove_users_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this user permission group.
+        required: true
+      - in: path
+        name: organisation_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Organisations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserIds'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UserIds'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UserIds'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserPermissionGroupSerializerDetail'
+          description: ''
+      summary: Api v1 organisations groups remove users create
+      x-summary-source: derived
+  /api/v1/organisations/{organisation_pk}/groups/my-groups/:
+    get:
+      operationId: api_v1_organisations_groups_my_groups_retrieve
+      description: Returns a list of summary group objects only for the groups a user is a member of.
+      parameters:
+      - in: path
+        name: organisation_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Organisations
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserPermissionGroupSummary'
+          description: ''
+      summary: Api v1 organisations groups my groups retrieve
+      x-summary-source: derived
+  /api/v1/organisations/{organisation_pk}/groups/summaries/:
+    get:
+      operationId: api_v1_organisations_groups_summaries_retrieve
+      description: Returns a list of summary group objects for all groups in the organisation.
+      parameters:
+      - in: path
+        name: organisation_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Organisations
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserPermissionGroupSummary'
+          description: ''
+      summary: Api v1 organisations groups summaries retrieve
+      x-summary-source: derived
+  /api/v1/organisations/{organisation_pk}/invite-links/:
+    get:
+      operationId: api_v1_organisations_invite_links_list
+      parameters:
+      - in: path
+        name: organisation_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Organisations
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/InviteLink'
+          description: ''
+      summary: Api v1 organisations invite links list
+      x-summary-source: derived
+    post:
+      operationId: api_v1_organisations_invite_links_create
+      parameters:
+      - in: path
+        name: organisation_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Organisations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InviteLink'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/InviteLink'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/InviteLink'
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InviteLink'
+          description: ''
+      summary: Api v1 organisations invite links create
+      x-summary-source: derived
+  /api/v1/organisations/{organisation_pk}/invite-links/{id}/:
+    delete:
+      operationId: api_v1_organisations_invite_links_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this invite link.
+        required: true
+      - in: path
+        name: organisation_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Organisations
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '204':
+          description: No response body
+      summary: Api v1 organisations invite links destroy
+      x-summary-source: derived
+  /api/v1/organisations/{organisation_pk}/invites/{id}/:
+    get:
+      operationId: api_v1_organisations_invites_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this invite.
+        required: true
+      - in: path
+        name: organisation_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Organisations
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InviteList'
+          description: ''
+      summary: Api v1 organisations invites retrieve
+      x-summary-source: derived
+    delete:
+      operationId: api_v1_organisations_invites_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this invite.
+        required: true
+      - in: path
+        name: organisation_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Organisations
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '204':
+          description: No response body
+      summary: Api v1 organisations invites destroy
+      x-summary-source: derived
+  /api/v1/organisations/{organisation_pk}/invites/{id}/resend/:
+    post:
+      operationId: api_v1_organisations_invites_resend_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this invite.
+        required: true
+      - in: path
+        name: organisation_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Organisations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InviteList'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/InviteList'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/InviteList'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InviteList'
+          description: ''
+      summary: Api v1 organisations invites resend create
+      x-summary-source: derived
+  /api/v1/organisations/{organisation_pk}/master-api-keys/:
+    get:
+      operationId: api_v1_organisations_master_api_keys_list
+      parameters:
+      - in: path
+        name: organisation_pk
+        schema:
+          type: integer
+        required: true
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - Organisations
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedMasterAPIKeyList'
+          description: ''
+      summary: Api v1 organisations master api keys list
+      x-summary-source: derived
+    post:
+      operationId: api_v1_organisations_master_api_keys_create
+      parameters:
+      - in: path
+        name: organisation_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Organisations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MasterAPIKey'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/MasterAPIKey'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/MasterAPIKey'
+      security:
+      - tokenAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MasterAPIKey'
+          description: ''
+      summary: Api v1 organisations master api keys create
+      x-summary-source: derived
+  /api/v1/organisations/{organisation_pk}/master-api-keys/{api_key_prefix}/roles/:
+    get:
+      operationId: api_v1_organisations_master_api_keys_roles_list
+      parameters:
+      - in: path
+        name: api_key_prefix
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: organisation_pk
+        schema:
+          type: string
+        required: true
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - Organisations
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedRoleList'
+          description: ''
+      summary: Api v1 organisations master api keys roles list
+      x-summary-source: derived
+  /api/v1/organisations/{organisation_pk}/master-api-keys/{api_key_prefix}/roles/{id}/detach-roles-from-master-api-key/:
+    delete:
+      operationId: api_v1_organisations_master_api_keys_roles_detach_roles_from_master_api_key_destroy
+      parameters:
+      - in: path
+        name: api_key_prefix
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: organisation_pk
+        schema:
+          type: string
+        required: true
+      tags:
+      - Organisations
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '204':
+          description: No response body
+      summary: Api v1 organisations master api keys roles detach roles from master api key…
+      x-summary-source: derived
+  /api/v1/organisations/{organisation_pk}/master-api-keys/{prefix}/:
+    get:
+      operationId: api_v1_organisations_master_api_keys_retrieve
+      parameters:
+      - in: path
+        name: organisation_pk
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: prefix
+        schema:
+          type: string
+        required: true
+      tags:
+      - Organisations
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MasterAPIKey'
+          description: ''
+      summary: Api v1 organisations master api keys retrieve
+      x-summary-source: derived
+    put:
+      operationId: api_v1_organisations_master_api_keys_update
+      parameters:
+      - in: path
+        name: organisation_pk
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: prefix
+        schema:
+          type: string
+        required: true
+      tags:
+      - Organisations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MasterAPIKey'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/MasterAPIKey'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/MasterAPIKey'
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MasterAPIKey'
+          description: ''
+      summary: Api v1 organisations master api keys update
+      x-summary-source: derived
+    patch:
+      operationId: api_v1_organisations_master_api_keys_partial_update
+      parameters:
+      - in: path
+        name: organisation_pk
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: prefix
+        schema:
+          type: string
+        required: true
+      tags:
+      - Organisations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedMasterAPIKey'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedMasterAPIKey'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedMasterAPIKey'
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MasterAPIKey'
+          description: ''
+      summary: Api v1 organisations master api keys partial update
+      x-summary-source: derived
+    delete:
+      operationId: api_v1_organisations_master_api_keys_destroy
+      parameters:
+      - in: path
+        name: organisation_pk
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: prefix
+        schema:
+          type: string
+        required: true
+      tags:
+      - Organisations
+      security:
+      - tokenAuth: []
+      responses:
+        '204':
+          description: No response body
+      summary: Api v1 organisations master api keys destroy
+      x-summary-source: derived
+  /api/v1/organisations/{organisation_pk}/metadata-model-fields/:
+    get:
+      operationId: api_v1_organisations_metadata_model_fields_list
+      parameters:
+      - in: path
+        name: organisation_pk
+        schema:
+          type: string
+        required: true
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - Organisations
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedMetaDataModelFieldList'
+          description: ''
+      summary: Api v1 organisations metadata model fields list
+      x-summary-source: derived
+    post:
+      operationId: api_v1_organisations_metadata_model_fields_create
+      parameters:
+      - in: path
+        name: organisation_pk
+        schema:
+          type: string
+        required: true
+      tags:
+      - Organisations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MetaDataModelField'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/MetaDataModelField'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/MetaDataModelField'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MetaDataModelField'
+          description: ''
+      summary: Api v1 organisations metadata model fields create
+      x-summary-source: derived
+  /api/v1/organisations/{organisation_pk}/metadata-model-fields/{id}/:
+    get:
+      operationId: api_v1_organisations_metadata_model_fields_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this metadata model field.
+        required: true
+      - in: path
+        name: organisation_pk
+        schema:
+          type: string
+        required: true
+      tags:
+      - Organisations
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MetaDataModelField'
+          description: ''
+      summary: Api v1 organisations metadata model fields retrieve
+      x-summary-source: derived
+    put:
+      operationId: api_v1_organisations_metadata_model_fields_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this metadata model field.
+        required: true
+      - in: path
+        name: organisation_pk
+        schema:
+          type: string
+        required: true
+      tags:
+      - Organisations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MetaDataModelField'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/MetaDataModelField'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/MetaDataModelField'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MetaDataModelField'
+          description: ''
+      summary: Api v1 organisations metadata model fields update
+      x-summary-source: derived
+    patch:
+      operationId: api_v1_organisations_metadata_model_fields_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this metadata model field.
+        required: true
+      - in: path
+        name: organisation_pk
+        schema:
+          type: string
+        required: true
+      tags:
+      - Organisations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedMetaDataModelField'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedMetaDataModelField'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedMetaDataModelField'
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MetaDataModelField'
+          description: ''
+      summary: Api v1 organisations metadata model fields partial update
+      x-summary-source: derived
+    delete:
+      operationId: api_v1_organisations_metadata_model_fields_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this metadata model field.
+        required: true
+      - in: path
+        name: organisation_pk
+        schema:
+          type: string
+        required: true
+      tags:
+      - Organisations
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '204':
+          description: No response body
+      summary: Api v1 organisations metadata model fields destroy
+      x-summary-source: derived
+  /api/v1/organisations/{organisation_pk}/metadata-model-fields/supported-content-types/:
+    get:
+      operationId: api_v1_organisations_metadata_model_fields_supported_content_types_list
+      parameters:
+      - in: path
+        name: organisation_pk
+        schema:
+          type: string
+        required: true
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - Organisations
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedContentTypeList'
+          description: ''
+      summary: Api v1 organisations metadata model fields supported content types list
+      x-summary-source: derived
+  /api/v1/organisations/{organisation_pk}/metadata-model-fields/supported-required-for-models/:
+    get:
+      operationId: api_v1_organisations_metadata_model_fields_supported_required_for_models_list
+      parameters:
+      - in: query
+        name: model_name
+        schema:
+          type: string
+          minLength: 1
+        required: true
+      - in: path
+        name: organisation_pk
+        schema:
+          type: string
+        required: true
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - Organisations
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedContentTypeList'
+          description: ''
+      summary: Api v1 organisations metadata model fields supported required for models list
+      x-summary-source: derived
+  /api/v1/organisations/{organisation_pk}/roles/:
+    post:
+      operationId: api_v1_organisations_roles_create
+      parameters:
+      - in: path
+        name: organisation_pk
+        schema:
+          type: string
+        required: true
+      tags:
+      - Organisations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Role'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Role'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Role'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Role'
+          description: ''
+      summary: Api v1 organisations roles create
+      x-summary-source: derived
+  /api/v1/organisations/{organisation_pk}/roles/{id}/:
+    get:
+      operationId: api_v1_organisations_roles_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: organisation_pk
+        schema:
+          type: string
+        required: true
+      tags:
+      - Organisations
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Role'
+          description: ''
+      summary: Api v1 organisations roles retrieve
+      x-summary-source: derived
+    put:
+      operationId: api_v1_organisations_roles_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: organisation_pk
+        schema:
+          type: string
+        required: true
+      tags:
+      - Organisations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Role'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Role'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Role'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Role'
+          description: ''
+      summary: Api v1 organisations roles update
+      x-summary-source: derived
+    patch:
+      operationId: api_v1_organisations_roles_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: organisation_pk
+        schema:
+          type: string
+        required: true
+      tags:
+      - Organisations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedRole'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedRole'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedRole'
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Role'
+          description: ''
+      summary: Api v1 organisations roles partial update
+      x-summary-source: derived
+    delete:
+      operationId: api_v1_organisations_roles_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: organisation_pk
+        schema:
+          type: string
+        required: true
+      tags:
+      - Organisations
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '204':
+          description: No response body
+      summary: Api v1 organisations roles destroy
+      x-summary-source: derived
+  /api/v1/organisations/{organisation_pk}/roles/{role_pk}/environments-permissions/:
+    get:
+      operationId: api_v1_organisations_roles_environments_permissions_list
+      parameters:
+      - in: query
+        name: environment
+        schema:
+          type: integer
+        description: ID of the environment to filter by.
+        required: true
+      - in: path
+        name: organisation_pk
+        schema:
+          type: string
+        required: true
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - in: path
+        name: role_pk
+        schema:
+          type: string
+        required: true
+      tags:
+      - Organisations
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedRoleEnvironmentPermissionList'
+          description: ''
+      summary: Api v1 organisations roles environments permissions list
+      x-summary-source: derived
+    post:
+      operationId: api_v1_organisations_roles_environments_permissions_create
+      parameters:
+      - in: path
+        name: organisation_pk
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: role_pk
+        schema:
+          type: string
+        required: true
+      tags:
+      - Organisations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RoleEnvironmentPermission'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/RoleEnvironmentPermission'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/RoleEnvironmentPermission'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RoleEnvironmentPermission'
+          description: ''
+      summary: Api v1 organisations roles environments permissions create
+      x-summary-source: derived
+  /api/v1/organisations/{organisation_pk}/roles/{role_pk}/environments-permissions/{id}/:
+    get:
+      operationId: api_v1_organisations_roles_environments_permissions_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: organisation_pk
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: role_pk
+        schema:
+          type: string
+        required: true
+      tags:
+      - Organisations
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RoleEnvironmentPermission'
+          description: ''
+      summary: Api v1 organisations roles environments permissions retrieve
+      x-summary-source: derived
+    put:
+      operationId: api_v1_organisations_roles_environments_permissions_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: organisation_pk
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: role_pk
+        schema:
+          type: string
+        required: true
+      tags:
+      - Organisations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RoleEnvironmentPermission'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/RoleEnvironmentPermission'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/RoleEnvironmentPermission'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RoleEnvironmentPermission'
+          description: ''
+      summary: Api v1 organisations roles environments permissions update
+      x-summary-source: derived
+    patch:
+      operationId: api_v1_organisations_roles_environments_permissions_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: organisation_pk
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: role_pk
+        schema:
+          type: string
+        required: true
+      tags:
+      - Organisations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedRoleEnvironmentPermission'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedRoleEnvironmentPermission'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedRoleEnvironmentPermission'
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RoleEnvironmentPermission'
+          description: ''
+      summary: Api v1 organisations roles environments permissions partial update
+      x-summary-source: derived
+    delete:
+      operationId: api_v1_organisations_roles_environments_permissions_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: organisation_pk
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: role_pk
+        schema:
+          type: string
+        required: true
+      tags:
+      - Organisations
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '204':
+          description: No response body
+      summary: Api v1 organisations roles environments permissions destroy
+      x-summary-source: derived
+  /api/v1/organisations/{organisation_pk}/roles/{role_pk}/groups/:
+    get:
+      operationId: api_v1_organisations_roles_groups_list
+      parameters:
+      - in: path
+        name: organisation_pk
+        schema:
+          type: string
+        required: true
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - in: path
+        name: role_pk
+        schema:
+          type: string
+        required: true
+      tags:
+      - Organisations
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedGroupRoleList'
+          description: ''
+      summary: Api v1 organisations roles groups list
+      x-summary-source: derived
+    post:
+      operationId: api_v1_organisations_roles_groups_create
+      parameters:
+      - in: path
+        name: organisation_pk
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: role_pk
+        schema:
+          type: string
+        required: true
+      tags:
+      - Organisations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GroupRole'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/GroupRole'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/GroupRole'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupRole'
+          description: ''
+      summary: Api v1 organisations roles groups create
+      x-summary-source: derived
+  /api/v1/organisations/{organisation_pk}/roles/{role_pk}/groups/{id}/:
+    get:
+      operationId: api_v1_organisations_roles_groups_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: organisation_pk
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: role_pk
+        schema:
+          type: string
+        required: true
+      tags:
+      - Organisations
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupRole'
+          description: ''
+      summary: Api v1 organisations roles groups retrieve
+      x-summary-source: derived
+    put:
+      operationId: api_v1_organisations_roles_groups_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: organisation_pk
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: role_pk
+        schema:
+          type: string
+        required: true
+      tags:
+      - Organisations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GroupRole'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/GroupRole'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/GroupRole'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupRole'
+          description: ''
+      summary: Api v1 organisations roles groups update
+      x-summary-source: derived
+    patch:
+      operationId: api_v1_organisations_roles_groups_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: organisation_pk
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: role_pk
+        schema:
+          type: string
+        required: true
+      tags:
+      - Organisations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedGroupRole'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedGroupRole'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedGroupRole'
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupRole'
+          description: ''
+      summary: Api v1 organisations roles groups partial update
+      x-summary-source: derived
+    delete:
+      operationId: api_v1_organisations_roles_groups_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: organisation_pk
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: role_pk
+        schema:
+          type: string
+        required: true
+      tags:
+      - Organisations
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '204':
+          description: No response body
+      summary: Api v1 organisations roles groups destroy
+      x-summary-source: derived
+  /api/v1/organisations/{organisation_pk}/roles/{role_pk}/master-api-keys/:
+    get:
+      operationId: api_v1_organisations_roles_master_api_keys_list
+      parameters:
+      - in: path
+        name: organisation_pk
+        schema:
+          type: string
+        required: true
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - in: path
+        name: role_pk
+        schema:
+          type: string
+        required: true
+      tags:
+      - Organisations
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedMasterAPIKeyRoleList'
+          description: ''
+      summary: Api v1 organisations roles master api keys list
+      x-summary-source: derived
+    post:
+      operationId: api_v1_organisations_roles_master_api_keys_create
+      parameters:
+      - in: path
+        name: organisation_pk
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: role_pk
+        schema:
+          type: string
+        required: true
+      tags:
+      - Organisations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MasterAPIKeyRole'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/MasterAPIKeyRole'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/MasterAPIKeyRole'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MasterAPIKeyRole'
+          description: ''
+      summary: Api v1 organisations roles master api keys create
+      x-summary-source: derived
+  /api/v1/organisations/{organisation_pk}/roles/{role_pk}/master-api-keys/{id}/:
+    get:
+      operationId: api_v1_organisations_roles_master_api_keys_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: organisation_pk
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: role_pk
+        schema:
+          type: string
+        required: true
+      tags:
+      - Organisations
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MasterAPIKeyRole'
+          description: ''
+      summary: Api v1 organisations roles master api keys retrieve
+      x-summary-source: derived
+    put:
+      operationId: api_v1_organisations_roles_master_api_keys_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: organisation_pk
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: role_pk
+        schema:
+          type: string
+        required: true
+      tags:
+      - Organisations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MasterAPIKeyRole'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/MasterAPIKeyRole'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/MasterAPIKeyRole'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MasterAPIKeyRole'
+          description: ''
+      summary: Api v1 organisations roles master api keys update
+      x-summary-source: derived
+    patch:
+      operationId: api_v1_organisations_roles_master_api_keys_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: organisation_pk
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: role_pk
+        schema:
+          type: string
+        required: true
+      tags:
+      - Organisations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedMasterAPIKeyRole'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedMasterAPIKeyRole'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedMasterAPIKeyRole'
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MasterAPIKeyRole'
+          description: ''
+      summary: Api v1 organisations roles master api keys partial update
+      x-summary-source: derived
+    delete:
+      operationId: api_v1_organisations_roles_master_api_keys_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: organisation_pk
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: role_pk
+        schema:
+          type: string
+        required: true
+      tags:
+      - Organisations
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '204':
+          description: No response body
+      summary: Api v1 organisations roles master api keys destroy
+      x-summary-source: derived
+  /api/v1/organisations/{organisation_pk}/roles/{role_pk}/organisation-permissions/:
+    get:
+      operationId: api_v1_organisations_roles_organisation_permissions_list
+      parameters:
+      - in: path
+        name: organisation_pk
+        schema:
+          type: string
+        required: true
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - in: path
+        name: role_pk
+        schema:
+          type: string
+        required: true
+      tags:
+      - Organisations
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedRoleOrganisationPermisssionList'
+          description: ''
+      summary: Api v1 organisations roles organisation permissions list
+      x-summary-source: derived
+    post:
+      operationId: api_v1_organisations_roles_organisation_permissions_create
+      parameters:
+      - in: path
+        name: organisation_pk
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: role_pk
+        schema:
+          type: string
+        required: true
+      tags:
+      - Organisations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RoleOrganisationPermisssion'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/RoleOrganisationPermisssion'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/RoleOrganisationPermisssion'
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RoleOrganisationPermisssion'
+          description: ''
+      summary: Api v1 organisations roles organisation permissions create
+      x-summary-source: derived
+  /api/v1/organisations/{organisation_pk}/roles/{role_pk}/organisation-permissions/{id}/:
+    get:
+      operationId: api_v1_organisations_roles_organisation_permissions_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: organisation_pk
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: role_pk
+        schema:
+          type: string
+        required: true
+      tags:
+      - Organisations
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RoleOrganisationPermisssion'
+          description: ''
+      summary: Api v1 organisations roles organisation permissions retrieve
+      x-summary-source: derived
+    put:
+      operationId: api_v1_organisations_roles_organisation_permissions_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: organisation_pk
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: role_pk
+        schema:
+          type: string
+        required: true
+      tags:
+      - Organisations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RoleOrganisationPermisssion'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/RoleOrganisationPermisssion'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/RoleOrganisationPermisssion'
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RoleOrganisationPermisssion'
+          description: ''
+      summary: Api v1 organisations roles organisation permissions update
+      x-summary-source: derived
+    patch:
+      operationId: api_v1_organisations_roles_organisation_permissions_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: organisation_pk
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: role_pk
+        schema:
+          type: string
+        required: true
+      tags:
+      - Organisations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedRoleOrganisationPermisssion'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedRoleOrganisationPermisssion'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedRoleOrganisationPermisssion'
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RoleOrganisationPermisssion'
+          description: ''
+      summary: Api v1 organisations roles organisation permissions partial update
+      x-summary-source: derived
+    delete:
+      operationId: api_v1_organisations_roles_organisation_permissions_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: organisation_pk
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: role_pk
+        schema:
+          type: string
+        required: true
+      tags:
+      - Organisations
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '204':
+          description: No response body
+      summary: Api v1 organisations roles organisation permissions destroy
+      x-summary-source: derived
+  /api/v1/organisations/{organisation_pk}/roles/{role_pk}/projects-permissions/:
+    get:
+      operationId: api_v1_organisations_roles_projects_permissions_list
+      parameters:
+      - in: path
+        name: organisation_pk
+        schema:
+          type: string
+        required: true
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - in: query
+        name: project
+        schema:
+          type: integer
+        description: ID of the project to filter by.
+        required: true
+      - in: path
+        name: role_pk
+        schema:
+          type: string
+        required: true
+      tags:
+      - Organisations
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedRoleProjectPermissionList'
+          description: ''
+      summary: Api v1 organisations roles projects permissions list
+      x-summary-source: derived
+    post:
+      operationId: api_v1_organisations_roles_projects_permissions_create
+      parameters:
+      - in: path
+        name: organisation_pk
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: role_pk
+        schema:
+          type: string
+        required: true
+      tags:
+      - Organisations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RoleProjectPermission'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/RoleProjectPermission'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/RoleProjectPermission'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RoleProjectPermission'
+          description: ''
+      summary: Api v1 organisations roles projects permissions create
+      x-summary-source: derived
+  /api/v1/organisations/{organisation_pk}/roles/{role_pk}/projects-permissions/{id}/:
+    get:
+      operationId: api_v1_organisations_roles_projects_permissions_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: organisation_pk
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: role_pk
+        schema:
+          type: string
+        required: true
+      tags:
+      - Organisations
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RoleProjectPermission'
+          description: ''
+      summary: Api v1 organisations roles projects permissions retrieve
+      x-summary-source: derived
+    put:
+      operationId: api_v1_organisations_roles_projects_permissions_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: organisation_pk
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: role_pk
+        schema:
+          type: string
+        required: true
+      tags:
+      - Organisations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RoleProjectPermission'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/RoleProjectPermission'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/RoleProjectPermission'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RoleProjectPermission'
+          description: ''
+      summary: Api v1 organisations roles projects permissions update
+      x-summary-source: derived
+    patch:
+      operationId: api_v1_organisations_roles_projects_permissions_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: organisation_pk
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: role_pk
+        schema:
+          type: string
+        required: true
+      tags:
+      - Organisations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedRoleProjectPermission'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedRoleProjectPermission'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedRoleProjectPermission'
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RoleProjectPermission'
+          description: ''
+      summary: Api v1 organisations roles projects permissions partial update
+      x-summary-source: derived
+    delete:
+      operationId: api_v1_organisations_roles_projects_permissions_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: organisation_pk
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: role_pk
+        schema:
+          type: string
+        required: true
+      tags:
+      - Organisations
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '204':
+          description: No response body
+      summary: Api v1 organisations roles projects permissions destroy
+      x-summary-source: derived
+  /api/v1/organisations/{organisation_pk}/scim/:
+    get:
+      operationId: api_v1_organisations_scim_retrieve
+      parameters:
+      - in: path
+        name: organisation_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Organisations
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          description: No response body
+      summary: Api v1 organisations scim retrieve
+      x-summary-source: derived
+    post:
+      operationId: api_v1_organisations_scim_create
+      parameters:
+      - in: path
+        name: organisation_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Organisations
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          description: No response body
+      summary: Api v1 organisations scim create
+      x-summary-source: derived
+    delete:
+      operationId: api_v1_organisations_scim_destroy
+      parameters:
+      - in: path
+        name: organisation_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Organisations
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '204':
+          description: No response body
+      summary: Api v1 organisations scim destroy
+      x-summary-source: derived
+  /api/v1/organisations/{organisation_pk}/scim/regenerate-token/:
+    post:
+      operationId: api_v1_organisations_scim_regenerate_token_create
+      parameters:
+      - in: path
+        name: organisation_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Organisations
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          description: No response body
+      summary: Api v1 organisations scim regenerate token create
+      x-summary-source: derived
+  /api/v1/organisations/{organisation_pk}/trust-relationships/:
+    get:
+      operationId: api_v1_organisations_trust_relationships_list
+      parameters:
+      - in: path
+        name: organisation_pk
+        schema:
+          type: integer
+        required: true
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - Organisations
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedTrustRelationshipList'
+          description: ''
+      summary: Api v1 organisations trust relationships list
+      x-summary-source: derived
+    post:
+      operationId: api_v1_organisations_trust_relationships_create
+      parameters:
+      - in: path
+        name: organisation_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Organisations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TrustRelationship'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TrustRelationship'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TrustRelationship'
+        required: true
+      security:
+      - tokenAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TrustRelationship'
+          description: ''
+      summary: Api v1 organisations trust relationships create
+      x-summary-source: derived
+  /api/v1/organisations/{organisation_pk}/trust-relationships/{id}/:
+    get:
+      operationId: api_v1_organisations_trust_relationships_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this trust relationship.
+        required: true
+      - in: path
+        name: organisation_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Organisations
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TrustRelationship'
+          description: ''
+      summary: Api v1 organisations trust relationships retrieve
+      x-summary-source: derived
+    put:
+      operationId: api_v1_organisations_trust_relationships_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this trust relationship.
+        required: true
+      - in: path
+        name: organisation_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Organisations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TrustRelationship'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TrustRelationship'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TrustRelationship'
+        required: true
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TrustRelationship'
+          description: ''
+      summary: Api v1 organisations trust relationships update
+      x-summary-source: derived
+    patch:
+      operationId: api_v1_organisations_trust_relationships_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this trust relationship.
+        required: true
+      - in: path
+        name: organisation_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Organisations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedTrustRelationship'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedTrustRelationship'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedTrustRelationship'
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TrustRelationship'
+          description: ''
+      summary: Api v1 organisations trust relationships partial update
+      x-summary-source: derived
+    delete:
+      operationId: api_v1_organisations_trust_relationships_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this trust relationship.
+        required: true
+      - in: path
+        name: organisation_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Organisations
+      security:
+      - tokenAuth: []
+      responses:
+        '204':
+          description: No response body
+      summary: Api v1 organisations trust relationships destroy
+      x-summary-source: derived
+  /api/v1/organisations/{organisation_pk}/usage-data/:
+    get:
+      operationId: api_v1_organisations_usage_data_retrieve
+      parameters:
+      - in: query
+        name: client_application_name
+        schema:
+          type:
+          - string
+          - 'null'
+      - in: query
+        name: client_application_version
+        schema:
+          type:
+          - string
+          - 'null'
+      - in: query
+        name: environment_id
+        schema:
+          type: integer
+      - in: path
+        name: organisation_pk
+        schema:
+          type: integer
+        required: true
+      - in: query
+        name: period
+        schema:
+          enum:
+          - current_billing_period
+          - previous_billing_period
+          - 90_day_period
+          - null
+          type:
+          - string
+          - 'null'
+        description: '* `current_billing_period` - current_billing_period
+
+          * `previous_billing_period` - previous_billing_period
+
+          * `90_day_period` - 90_day_period'
+      - in: query
+        name: project_id
+        schema:
+          type: integer
+      - in: query
+        name: user_agent
+        schema:
+          type:
+          - string
+          - 'null'
+      tags:
+      - Organisations
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UsageData'
+          description: ''
+      summary: Api v1 organisations usage data retrieve
+      x-summary-source: derived
+  /api/v1/organisations/{organisation_pk}/usage-data/total-count/:
+    get:
+      operationId: api_v1_organisations_usage_data_total_count_retrieve
+      parameters:
+      - in: path
+        name: organisation_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Organisations
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UsageTotalCount'
+          description: ''
+      summary: Api v1 organisations usage data total count retrieve
+      x-summary-source: derived
+  /api/v1/organisations/{id}/:
+    get:
+      operationId: api_v1_organisations_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this organisation.
+        required: true
+      tags:
+      - Organisations
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganisationSerializerFull'
+          description: ''
+      summary: Api v1 organisations retrieve
+      x-summary-source: derived
+    put:
+      operationId: api_v1_organisations_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this organisation.
+        required: true
+      tags:
+      - Organisations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrganisationSerializerFull'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/OrganisationSerializerFull'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/OrganisationSerializerFull'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganisationSerializerFull'
+          description: ''
+      summary: Api v1 organisations update
+      x-summary-source: derived
+    patch:
+      operationId: api_v1_organisations_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this organisation.
+        required: true
+      tags:
+      - Organisations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedOrganisationSerializerFull'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedOrganisationSerializerFull'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedOrganisationSerializerFull'
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganisationSerializerFull'
+          description: ''
+      summary: Api v1 organisations partial update
+      x-summary-source: derived
+    delete:
+      operationId: api_v1_organisations_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this organisation.
+        required: true
+      tags:
+      - Organisations
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '204':
+          description: No response body
+      summary: Api v1 organisations destroy
+      x-summary-source: derived
+  /api/v1/organisations/{id}/get-hosted-page-url-for-subscription-upgrade/:
+    post:
+      operationId: api_v1_organisations_get_hosted_page_url_for_subscription_upgrade_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this organisation.
+        required: true
+      tags:
+      - Organisations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GetHostedPageForSubscriptionUpgrade'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/GetHostedPageForSubscriptionUpgrade'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/GetHostedPageForSubscriptionUpgrade'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetHostedPageForSubscriptionUpgrade'
+          description: ''
+      summary: Api v1 organisations get hosted page url for subscription upgrade create
+      x-summary-source: derived
+  /api/v1/organisations/{id}/get-subscription-metadata/:
+    get:
+      operationId: api_v1_organisations_get_subscription_metadata_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this organisation.
+        required: true
+      tags:
+      - Organisations
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubscriptionDetails'
+          description: ''
+      summary: Api v1 organisations get subscription metadata retrieve
+      x-summary-source: derived
+  /api/v1/organisations/{id}/influx-data/:
+    get:
+      operationId: api_v1_organisations_influx_data_retrieve
+      description: Please use /api/v1/organisations/{organisation_pk}/usage-data/
+      parameters:
+      - in: query
+        name: environment_id
+        schema:
+          type: integer
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this organisation.
+        required: true
+      - in: query
+        name: project_id
+        schema:
+          type: integer
+      tags:
+      - Organisations
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      deprecated: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InfluxData'
+          description: ''
+      summary: Api v1 organisations influx data retrieve
+      x-summary-source: derived
+  /api/v1/organisations/{id}/invite/:
+    post:
+      operationId: api_v1_organisations_invite_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this organisation.
+        required: true
+      tags:
+      - Organisations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MultiInvites'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/MultiInvites'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/MultiInvites'
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MultiInvites'
+          description: ''
+      summary: Api v1 organisations invite create
+      x-summary-source: derived
+  /api/v1/organisations/{id}/my-permissions/:
+    get:
+      operationId: api_v1_organisations_my_permissions_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this organisation.
+        required: true
+      tags:
+      - Organisations
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserObjectPermissions'
+          description: ''
+      summary: Api v1 organisations my permissions retrieve
+      x-summary-source: derived
+  /api/v1/organisations/{id}/portal-url/:
+    get:
+      operationId: api_v1_organisations_portal_url_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this organisation.
+        required: true
+      tags:
+      - Organisations
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PortalUrl'
+          description: ''
+      summary: Api v1 organisations portal url retrieve
+      x-summary-source: derived
+  /api/v1/organisations/{id}/remove-users/:
+    post:
+      operationId: api_v1_organisations_remove_users_create
+      description: Takes a list of users and removes them from the organisation provided in the url
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this organisation.
+        required: true
+      tags:
+      - Organisations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserId'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UserId'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UserId'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserId'
+          description: ''
+      summary: Api v1 organisations remove users create
+      x-summary-source: derived
+  /api/v1/organisations/{id}/update-subscription/:
+    post:
+      operationId: api_v1_organisations_update_subscription_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this organisation.
+        required: true
+      tags:
+      - Organisations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateSubscription'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UpdateSubscription'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UpdateSubscription'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganisationSerializerFull'
+          description: ''
+      summary: Api v1 organisations update subscription create
+      x-summary-source: derived
+  /api/v1/organisations/{id}/usage/:
+    get:
+      operationId: api_v1_organisations_usage_retrieve
+      description: Please use /api/v1/organisations/{organisation_pk}/usage-data/total-count/
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this organisation.
+        required: true
+      tags:
+      - Organisations
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      deprecated: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganisationSerializerFull'
+          description: ''
+      summary: Api v1 organisations usage retrieve
+      x-summary-source: derived
+  /api/v1/organisations/{id}/user-detailed-permissions/{user_id}/:
+    get:
+      operationId: api_v1_organisations_user_detailed_permissions_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this organisation.
+        required: true
+      - in: path
+        name: user_id
+        schema:
+          type: string
+          pattern: ^\d+$
+        required: true
+      tags:
+      - Organisations
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDetailedPermissions'
+          description: ''
+      summary: Api v1 organisations user detailed permissions retrieve
+      x-summary-source: derived
+  /api/v1/organisations/get-by-uuid/{uuid}/:
+    get:
+      operationId: api_v1_organisations_get_by_uuid_retrieve
+      parameters:
+      - in: path
+        name: uuid
+        schema:
+          type: string
+          pattern: ^[0-9a-f-]+$
+        required: true
+      tags:
+      - Organisations
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganisationSerializerFull'
+          description: ''
+      summary: Api v1 organisations get by uuid retrieve
+      x-summary-source: derived
+  /api/v1/organisations/permissions/:
+    get:
+      operationId: api_v1_organisations_permissions_retrieve
+      tags:
+      - Organisations
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PermissionModel'
+          description: ''
+      summary: Api v1 organisations permissions retrieve
+      x-summary-source: derived
+components:
+  schemas:
     Organisation:
       type: object
       description: An organisation in Flagsmith, the top-level container for projects, users, and billing.
@@ -108,12 +3385,1497 @@ components:
         persist_trait_data:
           type: boolean
           description: Whether trait data is persisted for identities
+    PaginatedResponse:
+      type: object
+      description: A paginated response wrapper containing the results count and navigation links.
+      properties:
+        count:
+          type: integer
+          description: The total number of results
+        next:
+          type: string
+          nullable: true
+          format: uri
+          description: URL to the next page of results
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          description: URL to the previous page of results
+        results:
+          type: array
+          description: The array of result objects for this page
+          items:
+            type: object
+    NullEnum:
+      type: 'null'
+    PortalUrl:
+      type: object
+      properties:
+        url:
+          type: string
+          format: uri
+      required:
+      - url
+    Role:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 255
+        description:
+          type:
+          - string
+          - 'null'
+        organisation:
+          type: integer
+          readOnly: true
+        tags:
+          type: array
+          items:
+            type: integer
+      required:
+      - name
+    PatchedRoleOrganisationPermisssion:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        role:
+          type: integer
+          readOnly: true
+        permissions:
+          type: array
+          items:
+            type: string
+    Group:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+      required:
+      - id
+      - name
+    DerivedFrom:
+      type: object
+      properties:
+        groups:
+          type: array
+          items:
+            $ref: '#/components/schemas/Group'
+        roles:
+          type: array
+          items:
+            $ref: '#/components/schemas/PermissionRole'
+      required:
+      - groups
+      - roles
+    InfluxData:
+      type: object
+      properties:
+        events_list:
+          type: array
+          items:
+            type: object
+            additionalProperties: {}
+      required:
+      - events_list
+    SubscriptionDetails:
+      type: object
+      properties:
+        max_seats:
+          type: integer
+        max_api_calls:
+          type: integer
+        max_projects:
+          type:
+          - integer
+          - 'null'
+        payment_source:
+          oneOf:
+          - $ref: '#/components/schemas/PaymentSourceEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        chargebee_email:
+          type: string
+          format: email
+        feature_history_visibility_days:
+          type:
+          - integer
+          - 'null'
+        audit_log_visibility_days:
+          type:
+          - integer
+          - 'null'
+      required:
+      - audit_log_visibility_days
+      - chargebee_email
+      - feature_history_visibility_days
+      - max_api_calls
+      - max_projects
+      - max_seats
+      - payment_source
+    PaginatedRoleList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Role'
+    PermissionRole:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        tags:
+          type: array
+          items:
+            type: integer
+      required:
+      - id
+      - name
+    RoleProjectPermission:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        role:
+          type: integer
+          readOnly: true
+        project:
+          type: integer
+        permissions:
+          type: array
+          items:
+            $ref: '#/components/schemas/PermissionsTagBasedPermission'
+        admin:
+          type: boolean
+      required:
+      - permissions
+      - project
+    PaginatedMasterAPIKeyRoleList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/MasterAPIKeyRole'
+    PatchedMetaDataModelField:
+      type: object
+      description: Adds nested create feature
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        field:
+          type: integer
+        content_type:
+          type: integer
+        is_required_for:
+          type: array
+          items:
+            $ref: '#/components/schemas/MetadataModelFieldRequirement'
+    MetaDataModelField:
+      type: object
+      description: Adds nested create feature
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        field:
+          type: integer
+        content_type:
+          type: integer
+        is_required_for:
+          type: array
+          items:
+            $ref: '#/components/schemas/MetadataModelFieldRequirement'
+      required:
+      - content_type
+      - field
+    MultiInvites:
+      type: object
+      properties:
+        invites:
+          type: array
+          items:
+            $ref: '#/components/schemas/Invite'
+        emails:
+          type: array
+          items:
+            type: string
+            format: email
+    PaginatedMetaDataModelFieldList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/MetaDataModelField'
+    PatchedRoleProjectPermission:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        role:
+          type: integer
+          readOnly: true
+        project:
+          type: integer
+        permissions:
+          type: array
+          items:
+            $ref: '#/components/schemas/PermissionsTagBasedPermission'
+        admin:
+          type: boolean
+    PatchedMasterAPIKeyRole:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        master_api_key:
+          type: string
+        role:
+          type: integer
+          readOnly: true
+        role_name:
+          type: string
+          readOnly: true
+    PatchedListUserPermissionGroup:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 200
+        users:
+          type: array
+          items:
+            $ref: '#/components/schemas/ListUserPermissionGroupMembership'
+          readOnly: true
+        is_default:
+          type: boolean
+          description: If set to true, all new users will be added to this group
+        external_id:
+          type:
+          - string
+          - 'null'
+          description: Unique ID of the group in an external system
+          maxLength: 255
+    GetHostedPageForSubscriptionUpgrade:
+      type: object
+      properties:
+        plan_id:
+          type: string
+          writeOnly: true
+        subscription_id:
+          type: string
+          writeOnly: true
+        url:
+          type: string
+          format: uri
+          readOnly: true
+      required:
+      - plan_id
+      - subscription_id
+    UsageTotalCount:
+      type: object
+      properties:
+        count:
+          type: integer
+      required:
+      - count
+    RoleEnum:
+      enum:
+      - ADMIN
+      - USER
+      type: string
+      description: '* `ADMIN` - Admin
+
+        * `USER` - User'
+    GroupRole:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        group:
+          type: integer
+        role:
+          type: integer
+          readOnly: true
+      required:
+      - group
+    TrustRelationship:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          description: Display name for this trust relationship.
+          maxLength: 100
+        issuer:
+          type: string
+          format: uri
+          description: OIDC issuer URL expected in exchanged tokens' `iss` claim.
+          maxLength: 500
+        audience:
+          type: string
+          description: Expected value of the `aud` claim in exchanged tokens.
+          maxLength: 500
+        claim_rules:
+          type: array
+          items:
+            $ref: '#/components/schemas/ClaimRule'
+        is_admin:
+          type: boolean
+        master_api_key_id:
+          type: string
+          readOnly: true
+        master_api_key_prefix:
+          type: string
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type:
+          - integer
+          - 'null'
+          readOnly: true
+      required:
+      - audience
+      - is_admin
+      - issuer
+      - name
+    TagBasedPermission:
+      type: object
+      properties:
+        permissions:
+          type: array
+          items:
+            type: string
+        tags:
+          type: array
+          items:
+            type: integer
+      required:
+      - permissions
+      - tags
+    UserPermissionGroupMembership:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        email:
+          type: string
+          format: email
+          maxLength: 254
+        first_name:
+          type: string
+          maxLength: 150
+        last_name:
+          type: string
+          maxLength: 150
+        last_login:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        group_admin:
+          type: boolean
+          readOnly: true
+      required:
+      - email
+      - first_name
+      - last_name
+    UserObjectPermissions:
+      type: object
+      properties:
+        permissions:
+          type: array
+          items:
+            type: string
+        admin:
+          type: boolean
+        tag_based_permissions:
+          type: array
+          items:
+            $ref: '#/components/schemas/TagBasedPermission'
+      required:
+      - admin
+      - permissions
+      - tag_based_permissions
+    InviteList:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        email:
+          type: string
+          format: email
+          maxLength: 254
+        date_created:
+          type: string
+          format: date-time
+          readOnly: true
+          title: DateCreated
+        invited_by:
+          $ref: '#/components/schemas/UserList'
+        permission_groups:
+          type: array
+          items:
+            type: integer
+      required:
+      - email
+      - invited_by
+    PaymentSourceEnum:
+      enum:
+      - CHARGEBEE
+      type: string
+      description: '* `CHARGEBEE` - CHARGEBEE'
+    UsageData:
+      type: object
+      properties:
+        flags:
+          type: integer
+        identities:
+          type: integer
+        traits:
+          type: integer
+        environment_document:
+          type: integer
+        day:
+          type: string
+        labels:
+          oneOf:
+          - $ref: '#/components/schemas/Labels'
+          - type: 'null'
+      required:
+      - day
+      - environment_document
+      - flags
+      - identities
+      - traits
+    OrganisationAPIUsageNotification:
+      type: object
+      properties:
+        organisation_id:
+          type: integer
+        percent_usage:
+          type: integer
+        notified_at:
+          type: string
+          format: date-time
+      required:
+      - notified_at
+      - organisation_id
+      - percent_usage
+    PaginatedRoleEnvironmentPermissionList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/RoleEnvironmentPermission'
+    RoleOrganisationPermisssion:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        role:
+          type: integer
+          readOnly: true
+        permissions:
+          type: array
+          items:
+            type: string
+    Labels:
+      type: object
+      properties:
+        client_application_name:
+          type:
+          - string
+          - 'null'
+        client_application_version:
+          type:
+          - string
+          - 'null'
+        user_agent:
+          type:
+          - string
+          - 'null'
+    MasterAPIKey:
+      type: object
+      properties:
+        id:
+          type: string
+          readOnly: true
+        prefix:
+          type: string
+          readOnly: true
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        name:
+          type: string
+          description: A free-form name for the API key. Need not be unique. 50 characters max.
+          maxLength: 50
+        revoked:
+          type: boolean
+          description: If the API key is revoked, clients cannot use it anymore. (This cannot be undone.)
+        expiry_date:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          title: Expires
+          description: Once API key expires, clients cannot use it anymore.
+        key:
+          type: string
+          readOnly: true
+          description: 'Since we don''t store the api key itself(i.e: we only store the hash) this key will be none for every endpoint apart from create'
+        is_admin:
+          type: boolean
+          default: true
+        has_expired:
+          type: boolean
+          readOnly: true
+        created_by:
+          type:
+          - integer
+          - 'null'
+          readOnly: true
+    PaginatedRoleOrganisationPermisssionList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/RoleOrganisationPermisssion'
+    PaginatedGroupRoleList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/GroupRole'
+    PatchedRoleEnvironmentPermission:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        role:
+          type: integer
+          readOnly: true
+        environment:
+          type: integer
+        permissions:
+          type: array
+          items:
+            $ref: '#/components/schemas/PermissionsTagBasedPermission'
+        admin:
+          type: boolean
+    BlankEnum:
+      enum:
+      - ''
+    InviteLink:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        hash:
+          type: string
+          readOnly: true
+        date_created:
+          type: string
+          format: date-time
+          readOnly: true
+          title: DateCreated
+        role:
+          $ref: '#/components/schemas/RoleEnum'
+        expires_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: Datetime that the invite link will cease to be active. Leave blank to enable indefinitely.
+    OrganisationSerializerFull:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+        name:
+          type: string
+          maxLength: 2000
+        created_date:
+          type: string
+          format: date-time
+          readOnly: true
+          title: DateCreated
+        webhook_notification_email:
+          type:
+          - string
+          - 'null'
+          format: email
+          maxLength: 254
+        num_seats:
+          type: integer
+          readOnly: true
+        subscription:
+          $ref: '#/components/schemas/Subscription'
+        role:
+          type:
+          - string
+          - 'null'
+          readOnly: true
+        persist_trait_data:
+          type: boolean
+          readOnly: true
+          description: Disable this if you don't want Flagsmith to store trait data for this org's identities.
+        block_access_to_admin:
+          type: boolean
+          readOnly: true
+          description: Enable this to block all the access to admin interface for the organisation
+        restrict_project_create_to_admin:
+          type: boolean
+        force_2fa:
+          type: boolean
+        targeting_key:
+          type:
+          - string
+          - 'null'
+          writeOnly: true
+          description: Flagsmith-on-Flagsmith targeting key. Immutable; org.<id> is used when unset.
+          maxLength: 64
+      required:
+      - name
+    RoleEnvironmentPermission:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        role:
+          type: integer
+          readOnly: true
+        environment:
+          type: integer
+        permissions:
+          type: array
+          items:
+            $ref: '#/components/schemas/PermissionsTagBasedPermission'
+        admin:
+          type: boolean
+      required:
+      - environment
+      - permissions
+    ListUserPermissionGroup:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 200
+        users:
+          type: array
+          items:
+            $ref: '#/components/schemas/ListUserPermissionGroupMembership'
+          readOnly: true
+        is_default:
+          type: boolean
+          description: If set to true, all new users will be added to this group
+        external_id:
+          type:
+          - string
+          - 'null'
+          description: Unique ID of the group in an external system
+          maxLength: 255
+      required:
+      - name
+    MasterAPIKeyRole:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        master_api_key:
+          type: string
+        role:
+          type: integer
+          readOnly: true
+        role_name:
+          type: string
+          readOnly: true
+      required:
+      - master_api_key
+    PatchedGroupRole:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        group:
+          type: integer
+        role:
+          type: integer
+          readOnly: true
+    UpdateSubscription:
+      type: object
+      properties:
+        hosted_page_id:
+          type: string
+      required:
+      - hosted_page_id
+    PaginatedOrganisationAPIUsageNotificationList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrganisationAPIUsageNotification'
+    PaginatedContentTypeList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/ContentType'
+    PatchedRole:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 255
+        description:
+          type:
+          - string
+          - 'null'
+        organisation:
+          type: integer
+          readOnly: true
+        tags:
+          type: array
+          items:
+            type: integer
+    PermissionsTagBasedPermission:
+      type: object
+      properties:
+        permission_key:
+          type: string
+        tags:
+          type: array
+          items:
+            type: integer
+      required:
+      - permission_key
+    UserDetailedPermissions:
+      type: object
+      properties:
+        admin:
+          type: boolean
+        permissions:
+          type: array
+          items:
+            $ref: '#/components/schemas/DetailedPermissions'
+        is_directly_granted:
+          type: boolean
+        derived_from:
+          $ref: '#/components/schemas/DerivedFrom'
+      required:
+      - admin
+      - derived_from
+      - is_directly_granted
+      - permissions
+    PaginatedTrustRelationshipList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/TrustRelationship'
+    MetadataModelFieldRequirement:
+      type: object
+      properties:
+        content_type:
+          type: integer
+        object_id:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+      required:
+      - content_type
+      - object_id
+    ContentType:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        app_label:
+          type: string
+          maxLength: 100
+        model:
+          type: string
+          title: Python model class name
+          maxLength: 100
+      required:
+      - app_label
+      - model
+    PaginatedMasterAPIKeyList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/MasterAPIKey'
+    PatchedTrustRelationship:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          description: Display name for this trust relationship.
+          maxLength: 100
+        issuer:
+          type: string
+          format: uri
+          description: OIDC issuer URL expected in exchanged tokens' `iss` claim.
+          maxLength: 500
+        audience:
+          type: string
+          description: Expected value of the `aud` claim in exchanged tokens.
+          maxLength: 500
+        claim_rules:
+          type: array
+          items:
+            $ref: '#/components/schemas/ClaimRule'
+        is_admin:
+          type: boolean
+        master_api_key_id:
+          type: string
+          readOnly: true
+        master_api_key_prefix:
+          type: string
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type:
+          - integer
+          - 'null'
+          readOnly: true
+    PaymentMethodEnum:
+      enum:
+      - CHARGEBEE
+      - XERO
+      - AWS_MARKETPLACE
+      type: string
+      description: '* `CHARGEBEE` - Chargebee
+
+        * `XERO` - Xero
+
+        * `AWS_MARKETPLACE` - AWS Marketplace'
+    DetailedPermissions:
+      type: object
+      properties:
+        permission_key:
+          type: string
+        is_directly_granted:
+          type: boolean
+        derived_from:
+          $ref: '#/components/schemas/DerivedFrom'
+      required:
+      - derived_from
+      - is_directly_granted
+      - permission_key
+    ListUserPermissionGroupMembership:
+      type: object
+      properties:
+        id:
+          type: integer
+        email:
+          type: string
+          format: email
+        first_name:
+          type: string
+        last_name:
+          type: string
+        last_login:
+          type: string
+        group_admin:
+          type: boolean
+      required:
+      - email
+      - first_name
+      - id
+      - last_login
+      - last_name
+    UserList:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        email:
+          type: string
+          format: email
+          maxLength: 254
+        first_name:
+          type: string
+          maxLength: 150
+        last_name:
+          type: string
+          maxLength: 150
+        last_login:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+      required:
+      - email
+      - first_name
+      - last_name
+    UserIds:
+      type: object
+      properties:
+        user_ids:
+          type: array
+          items:
+            type: integer
+      required:
+      - user_ids
+    PermissionModel:
+      type: object
+      properties:
+        key:
+          type: string
+          maxLength: 100
+        description:
+          type: string
+        supports_tag:
+          type: boolean
+          readOnly: true
+      required:
+      - description
+      - key
+    PatchedOrganisationSerializerFull:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+        name:
+          type: string
+          maxLength: 2000
+        created_date:
+          type: string
+          format: date-time
+          readOnly: true
+          title: DateCreated
+        webhook_notification_email:
+          type:
+          - string
+          - 'null'
+          format: email
+          maxLength: 254
+        num_seats:
+          type: integer
+          readOnly: true
+        subscription:
+          $ref: '#/components/schemas/Subscription'
+        role:
+          type:
+          - string
+          - 'null'
+          readOnly: true
+        persist_trait_data:
+          type: boolean
+          readOnly: true
+          description: Disable this if you don't want Flagsmith to store trait data for this org's identities.
+        block_access_to_admin:
+          type: boolean
+          readOnly: true
+          description: Enable this to block all the access to admin interface for the organisation
+        restrict_project_create_to_admin:
+          type: boolean
+        force_2fa:
+          type: boolean
+        targeting_key:
+          type:
+          - string
+          - 'null'
+          writeOnly: true
+          description: Flagsmith-on-Flagsmith targeting key. Immutable; org.<id> is used when unset.
+          maxLength: 64
+    UserPermissionGroupSummary:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          readOnly: true
+    ClaimRule:
+      type: object
+      properties:
+        claim:
+          type: string
+          maxLength: 255
+        values:
+          type: array
+          items:
+            type: string
+            maxLength: 500
+          minItems: 1
+      required:
+      - claim
+      - values
+    UserPermissionGroupSerializerDetail:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 200
+        users:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserPermissionGroupMembership'
+          readOnly: true
+        is_default:
+          type: boolean
+          description: If set to true, all new users will be added to this group
+        external_id:
+          type:
+          - string
+          - 'null'
+          description: Unique ID of the group in an external system
+          maxLength: 255
+      required:
+      - name
+    Invite:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        email:
+          type: string
+          format: email
+          maxLength: 254
+        role:
+          $ref: '#/components/schemas/RoleEnum'
+        date_created:
+          type: string
+          format: date-time
+          readOnly: true
+          title: DateCreated
+        permission_groups:
+          type: array
+          items:
+            type:
+            - integer
+            - 'null'
+      required:
+      - email
+    BillingStatusEnum:
+      enum:
+      - ACTIVE
+      - DUNNING
+      type: string
+      description: '* `ACTIVE` - Active
+
+        * `DUNNING` - Dunning'
+    Subscription:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        has_active_billing_periods:
+          type: boolean
+          readOnly: true
+        deleted_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          readOnly: true
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+        subscription_id:
+          type:
+          - string
+          - 'null'
+          maxLength: 100
+        subscription_date:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        plan:
+          type:
+          - string
+          - 'null'
+          maxLength: 100
+        max_seats:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+        max_api_calls:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+        cancellation_date:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        customer_id:
+          type:
+          - string
+          - 'null'
+          maxLength: 100
+        billing_status:
+          oneOf:
+          - $ref: '#/components/schemas/BillingStatusEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        payment_method:
+          oneOf:
+          - $ref: '#/components/schemas/PaymentMethodEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        notes:
+          type:
+          - string
+          - 'null'
+          maxLength: 500
+    UserId:
+      type: object
+      properties:
+        id:
+          type: integer
+      required:
+      - id
+    PaginatedRoleProjectPermissionList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/RoleProjectPermission'
+    PatchedMasterAPIKey:
+      type: object
+      properties:
+        id:
+          type: string
+          readOnly: true
+        prefix:
+          type: string
+          readOnly: true
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        name:
+          type: string
+          description: A free-form name for the API key. Need not be unique. 50 characters max.
+          maxLength: 50
+        revoked:
+          type: boolean
+          description: If the API key is revoked, clients cannot use it anymore. (This cannot be undone.)
+        expiry_date:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          title: Expires
+          description: Once API key expires, clients cannot use it anymore.
+        key:
+          type: string
+          readOnly: true
+          description: 'Since we don''t store the api key itself(i.e: we only store the hash) this key will be none for every endpoint apart from create'
+        is_admin:
+          type: boolean
+          default: true
+        has_expired:
+          type: boolean
+          readOnly: true
+        created_by:
+          type:
+          - integer
+          - 'null'
+          readOnly: true
+  parameters:
+    OrganisationId:
+      name: organisation_id
+      in: path
+      description: The unique identifier for the organisation
+      required: true
+      schema:
+        type: integer
   securitySchemes:
     apiKeyAuth:
       type: apiKey
       in: header
       name: Authorization
       description: A secret Organisation API Token prefixed with 'Api-Key'. For example, 'Api-Key your-token-here'. This token should never be exposed in client-side code.
+    Cohort_Sync_Key:
+      type: http
+      scheme: bearer
+      description: For cohort sync endpoints called by an external cohort source, such as Amplitude.
+    Cohort_Sync_Key__Basic:
+      type: http
+      scheme: basic
+      description: For cohort sync endpoints called by an external cohort source that can only send Basic credentials, such as Mixpanel. The key is the password; the username is ignored.
+    Environment_API_Key:
+      type: apiKey
+      in: header
+      name: X-Environment-Key
+      description: For SDK endpoints. <a href='https://docs.flagsmith.com/clients/rest#public-api-endpoints'>Find out more</a>.
+    Master_API_Key:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: For Management API endpoints. <a href='https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/management-api'>Find out more</a>.
+    basicAuth:
+      type: http
+      scheme: basic
+    tokenAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: Token-based authentication with required prefix "Token"
 externalDocs:
   description: Flagsmith Admin API Documentation
   url: https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/admin-api
+x-refined-from:
+- flagsmith-admin-api-openapi.yml
+- flagsmith-api-openapi.json

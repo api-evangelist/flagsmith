@@ -2,16 +2,10 @@ openapi: 3.2.0
 info:
   title: Flagsmith Identities API
   version: '1.0'
-  contact:
-    name: Flagsmith Support
-    url: https://www.flagsmith.com/contact-us
-  termsOfService: https://www.flagsmith.com/terms-of-service
-  description: 'Operations tagged Identities across 2 of this provider''s published API definitions: flagsmith-admin-api-openapi.yml, flagsmith-identities-api-openapi.yml. Each path carries the servers of the definition it was published in.'
+  description: 'Operations tagged Identities across 3 of this provider''s published API definitions: flagsmith-admin-api-openapi.yml, flagsmith-api-openapi.json, flagsmith-identities-api-openapi.yml. Each path carries the servers of the definition it was published in.'
 servers:
 - url: https://api.flagsmith.com/api/v1
   description: Flagsmith Production API
-security:
-- apiKeyAuth: []
 tags:
 - name: Identities
   description: Manage user identities within an environment. Identities represent individual users and their associated traits.
@@ -36,6 +30,8 @@ paths:
           description: Unauthorized - invalid or missing API token
         '404':
           description: Environment not found
+      security:
+      - apiKeyAuth: []
     servers:
     - url: https://api.flagsmith.com/api/v1
       description: Flagsmith Production API
@@ -60,6 +56,8 @@ paths:
           description: Unauthorized - invalid or missing API token
         '404':
           description: Identity or environment not found
+      security:
+      - apiKeyAuth: []
     delete:
       operationId: deleteIdentity
       summary: Delete an identity
@@ -76,9 +74,1463 @@ paths:
           description: Unauthorized - invalid or missing API token
         '404':
           description: Identity or environment not found
+      security:
+      - apiKeyAuth: []
     servers:
     - url: https://api.flagsmith.com/api/v1
       description: Flagsmith Production API
+  /api/v1/environments/{environment_api_key}/edge-identities/:
+    get:
+      operationId: api_v1_environments_edge_identities_list
+      parameters:
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      - name: last_evaluated_key
+        in: query
+        description: Used as the starting point for the page
+        required: false
+        schema:
+          type: string
+      - name: page_size
+        in: query
+        description: Number of results to return per page.
+        required: false
+        schema:
+          type: integer
+      tags:
+      - Identities
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedEdgeIdentityList'
+          description: ''
+      summary: Api v1 environments edge identities list
+      x-summary-source: derived
+    post:
+      operationId: api_v1_environments_edge_identities_create
+      parameters:
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      tags:
+      - Identities
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EdgeIdentity'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/EdgeIdentity'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/EdgeIdentity'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EdgeIdentity'
+          description: ''
+      summary: Api v1 environments edge identities create
+      x-summary-source: derived
+  /api/v1/environments/{environment_api_key}/edge-identities/{edge_identity_identity_uuid}/edge-featurestates/:
+    get:
+      operationId: api_v1_environments_edge_identities_edge_featurestates_list
+      parameters:
+      - in: path
+        name: edge_identity_identity_uuid
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      - in: query
+        name: feature
+        schema:
+          type: integer
+        description: ID of the feature to filter by
+      tags:
+      - Identities
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/EdgeIdentityFeatureState'
+          description: ''
+      summary: Api v1 environments edge identities edge featurestates list
+      x-summary-source: derived
+    post:
+      operationId: api_v1_environments_edge_identities_edge_featurestates_create
+      parameters:
+      - in: path
+        name: edge_identity_identity_uuid
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      tags:
+      - Identities
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EdgeIdentityFeatureState'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/EdgeIdentityFeatureState'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/EdgeIdentityFeatureState'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EdgeIdentityFeatureState'
+          description: ''
+      summary: Api v1 environments edge identities edge featurestates create
+      x-summary-source: derived
+  ? /api/v1/environments/{environment_api_key}/edge-identities/{edge_identity_identity_uuid}/edge-featurestates/{featurestate_uuid}/
+  : get:
+      operationId: api_v1_environments_edge_identities_edge_featurestates_retrieve
+      parameters:
+      - in: path
+        name: edge_identity_identity_uuid
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: featurestate_uuid
+        schema:
+          type: string
+        required: true
+      tags:
+      - Identities
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EdgeIdentityFeatureState'
+          description: ''
+      summary: Api v1 environments edge identities edge featurestates retrieve
+      x-summary-source: derived
+    put:
+      operationId: api_v1_environments_edge_identities_edge_featurestates_update
+      parameters:
+      - in: path
+        name: edge_identity_identity_uuid
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: featurestate_uuid
+        schema:
+          type: string
+        required: true
+      tags:
+      - Identities
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EdgeIdentityFeatureState'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/EdgeIdentityFeatureState'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/EdgeIdentityFeatureState'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EdgeIdentityFeatureState'
+          description: ''
+      summary: Api v1 environments edge identities edge featurestates update
+      x-summary-source: derived
+    delete:
+      operationId: api_v1_environments_edge_identities_edge_featurestates_destroy
+      parameters:
+      - in: path
+        name: edge_identity_identity_uuid
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: featurestate_uuid
+        schema:
+          type: string
+        required: true
+      tags:
+      - Identities
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '204':
+          description: No response body
+      summary: Api v1 environments edge identities edge featurestates destroy
+      x-summary-source: derived
+  /api/v1/environments/{environment_api_key}/edge-identities/{edge_identity_identity_uuid}/edge-featurestates/all/:
+    get:
+      operationId: api_v1_environments_edge_identities_edge_featurestates_all_list
+      parameters:
+      - in: path
+        name: edge_identity_identity_uuid
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      tags:
+      - Identities
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/IdentityAllFeatureStates'
+          description: ''
+      summary: Api v1 environments edge identities edge featurestates all list
+      x-summary-source: derived
+  ? /api/v1/environments/{environment_api_key}/edge-identities/{edge_identity_identity_uuid}/edge-featurestates/clone-from-given-identity/
+  : post:
+      operationId: api_v1_environments_edge_identities_edge_featurestates_clone_from_given_identity_create
+      description: Clone feature states from a given source identity.
+      parameters:
+      - in: path
+        name: edge_identity_identity_uuid
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      tags:
+      - Identities
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EdgeIdentitySourceIdentityRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/EdgeIdentitySourceIdentityRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/EdgeIdentitySourceIdentityRequest'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/IdentityAllFeatureStates'
+          description: ''
+      summary: Api v1 environments edge identities edge featurestates clone from given…
+      x-summary-source: derived
+  /api/v1/environments/{environment_api_key}/edge-identities/{identity_uuid}/:
+    get:
+      operationId: api_v1_environments_edge_identities_retrieve
+      parameters:
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: identity_uuid
+        schema:
+          type: string
+        required: true
+      tags:
+      - Identities
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EdgeIdentity'
+          description: ''
+      summary: Api v1 environments edge identities retrieve
+      x-summary-source: derived
+    put:
+      operationId: api_v1_environments_edge_identities_update
+      parameters:
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: identity_uuid
+        schema:
+          type: string
+        required: true
+      tags:
+      - Identities
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EdgeIdentityUpdate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/EdgeIdentityUpdate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/EdgeIdentityUpdate'
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EdgeIdentityUpdate'
+          description: ''
+      summary: Api v1 environments edge identities update
+      x-summary-source: derived
+    patch:
+      operationId: api_v1_environments_edge_identities_partial_update
+      parameters:
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: identity_uuid
+        schema:
+          type: string
+        required: true
+      tags:
+      - Identities
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedEdgeIdentityUpdate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedEdgeIdentityUpdate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedEdgeIdentityUpdate'
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EdgeIdentityUpdate'
+          description: ''
+      summary: Api v1 environments edge identities partial update
+      x-summary-source: derived
+    delete:
+      operationId: api_v1_environments_edge_identities_destroy
+      parameters:
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: identity_uuid
+        schema:
+          type: string
+        required: true
+      tags:
+      - Identities
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '204':
+          description: No response body
+      summary: Api v1 environments edge identities destroy
+      x-summary-source: derived
+  /api/v1/environments/{environment_api_key}/edge-identities/{identity_uuid}/list-traits/:
+    get:
+      operationId: api_v1_environments_edge_identities_list_traits_list
+      parameters:
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: identity_uuid
+        schema:
+          type: string
+        required: true
+      - name: last_evaluated_key
+        in: query
+        description: Used as the starting point for the page
+        required: false
+        schema:
+          type: string
+      - name: page_size
+        in: query
+        description: Number of results to return per page.
+        required: false
+        schema:
+          type: integer
+      tags:
+      - Identities
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedEdgeIdentityTraitsList'
+          description: ''
+      summary: Api v1 environments edge identities list traits list
+      x-summary-source: derived
+  /api/v1/environments/{environment_api_key}/edge-identities/{identity_uuid}/update-traits/:
+    put:
+      operationId: api_v1_environments_edge_identities_update_traits_update
+      parameters:
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: identity_uuid
+        schema:
+          type: string
+        required: true
+      tags:
+      - Identities
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EdgeIdentityTraits'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/EdgeIdentityTraits'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/EdgeIdentityTraits'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EdgeIdentityTraits'
+          description: ''
+      summary: Api v1 environments edge identities update traits update
+      x-summary-source: derived
+  /api/v1/environments/{environment_api_key}/identities/:
+    get:
+      operationId: api_v1_environments_identities_list
+      parameters:
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      tags:
+      - Identities
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedIdentityList'
+          description: ''
+      summary: Api v1 environments identities list
+      x-summary-source: derived
+    post:
+      operationId: api_v1_environments_identities_create
+      parameters:
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      tags:
+      - Identities
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Identity_2'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Identity_2'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Identity_2'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Identity_2'
+          description: ''
+      summary: Api v1 environments identities create
+      x-summary-source: derived
+  /api/v1/environments/{environment_api_key}/identities/{identity_pk}/featurestates/:
+    get:
+      operationId: api_v1_environments_identities_featurestates_list
+      description: 'View set to manage feature states. Nested beneath environments and environments + identities
+
+        to allow for filtering on both.'
+      parameters:
+      - in: query
+        name: anyIdentity
+        schema:
+          type: string
+        description: Pass any value to get results that have an identity override. Do not pass for default behaviour.
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      - in: query
+        name: feature
+        schema:
+          type: integer
+        description: ID of the feature to filter by.
+      - in: query
+        name: feature_name
+        schema:
+          type: string
+        description: Name of the feature to filter by.
+      - in: path
+        name: identity_pk
+        schema:
+          type:
+          - integer
+          - 'null'
+        required: true
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - Identities
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedFeatureStateSerializerWithIdentityList'
+          description: ''
+      summary: Api v1 environments identities featurestates list
+      x-summary-source: derived
+    post:
+      operationId: api_v1_environments_identities_featurestates_create
+      description: 'DEPRECATED: please use `/features/featurestates/` instead.
+
+        Override create method to add environment and identity (if present) from URL parameters.'
+      parameters:
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: identity_pk
+        schema:
+          type:
+          - integer
+          - 'null'
+        required: true
+      tags:
+      - Identities
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FeatureStateSerializerBasic'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/FeatureStateSerializerBasic'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/FeatureStateSerializerBasic'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FeatureStateSerializerBasic'
+          description: ''
+      summary: Api v1 environments identities featurestates create
+      x-summary-source: derived
+  /api/v1/environments/{environment_api_key}/identities/{identity_pk}/featurestates/{id}/:
+    get:
+      operationId: api_v1_environments_identities_featurestates_retrieve
+      description: 'View set to manage feature states. Nested beneath environments and environments + identities
+
+        to allow for filtering on both.'
+      parameters:
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this feature state.
+        required: true
+      - in: path
+        name: identity_pk
+        schema:
+          type:
+          - integer
+          - 'null'
+        required: true
+      tags:
+      - Identities
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FeatureStateSerializerBasic'
+          description: ''
+      summary: Api v1 environments identities featurestates retrieve
+      x-summary-source: derived
+    put:
+      operationId: api_v1_environments_identities_featurestates_update
+      description: 'Override update method to always assume update request is partial and create / update
+
+        feature state value.'
+      parameters:
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this feature state.
+        required: true
+      - in: path
+        name: identity_pk
+        schema:
+          type:
+          - integer
+          - 'null'
+        required: true
+      tags:
+      - Identities
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FeatureStateSerializerBasic'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/FeatureStateSerializerBasic'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/FeatureStateSerializerBasic'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FeatureStateSerializerBasic'
+          description: ''
+      summary: Api v1 environments identities featurestates update
+      x-summary-source: derived
+    patch:
+      operationId: api_v1_environments_identities_featurestates_partial_update
+      description: Override partial_update as overridden update method assumes partial True for all requests.
+      parameters:
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this feature state.
+        required: true
+      - in: path
+        name: identity_pk
+        schema:
+          type:
+          - integer
+          - 'null'
+        required: true
+      tags:
+      - Identities
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedFeatureStateSerializerCreate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedFeatureStateSerializerCreate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedFeatureStateSerializerCreate'
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FeatureStateSerializerCreate'
+          description: ''
+      summary: Api v1 environments identities featurestates partial update
+      x-summary-source: derived
+    delete:
+      operationId: api_v1_environments_identities_featurestates_destroy
+      description: 'View set to manage feature states. Nested beneath environments and environments + identities
+
+        to allow for filtering on both.'
+      parameters:
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this feature state.
+        required: true
+      - in: path
+        name: identity_pk
+        schema:
+          type:
+          - integer
+          - 'null'
+        required: true
+      tags:
+      - Identities
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '204':
+          description: No response body
+      summary: Api v1 environments identities featurestates destroy
+      x-summary-source: derived
+  /api/v1/environments/{environment_api_key}/identities/{identity_pk}/featurestates/all/:
+    get:
+      operationId: api_v1_environments_identities_featurestates_all_retrieve
+      description: 'View set to manage feature states. Nested beneath environments and environments + identities
+
+        to allow for filtering on both.'
+      parameters:
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: identity_pk
+        schema:
+          type:
+          - integer
+          - 'null'
+        required: true
+      tags:
+      - Identities
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FeatureStateSerializerCreate'
+          description: ''
+      summary: Api v1 environments identities featurestates all retrieve
+      x-summary-source: derived
+  /api/v1/environments/{environment_api_key}/identities/{identity_pk}/featurestates/clone-from-given-identity/:
+    post:
+      operationId: api_v1_environments_identities_featurestates_clone_from_given_identity_create
+      description: Clone feature states from a given source identity.
+      parameters:
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: identity_pk
+        schema:
+          type:
+          - integer
+          - 'null'
+        required: true
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - Identities
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IdentitySourceIdentityRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/IdentitySourceIdentityRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/IdentitySourceIdentityRequest'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedIdentityAllFeatureStatesList'
+          description: ''
+      summary: Api v1 environments identities featurestates clone from given identity create
+      x-summary-source: derived
+  /api/v1/environments/{environment_api_key}/identities/{identity_pk}/traits/:
+    get:
+      operationId: api_v1_environments_identities_traits_list
+      parameters:
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: identity_pk
+        schema:
+          type: integer
+        required: true
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - Identities
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedTraitList'
+          description: ''
+      summary: Api v1 environments identities traits list
+      x-summary-source: derived
+    post:
+      operationId: api_v1_environments_identities_traits_create
+      parameters:
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: identity_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Identities
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Trait'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Trait'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Trait'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Trait'
+          description: ''
+      summary: Api v1 environments identities traits create
+      x-summary-source: derived
+  /api/v1/environments/{environment_api_key}/identities/{identity_pk}/traits/{id}/:
+    get:
+      operationId: api_v1_environments_identities_traits_retrieve
+      parameters:
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this trait.
+        required: true
+      - in: path
+        name: identity_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Identities
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Trait'
+          description: ''
+      summary: Api v1 environments identities traits retrieve
+      x-summary-source: derived
+    put:
+      operationId: api_v1_environments_identities_traits_update
+      parameters:
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this trait.
+        required: true
+      - in: path
+        name: identity_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Identities
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Trait'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Trait'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Trait'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Trait'
+          description: ''
+      summary: Api v1 environments identities traits update
+      x-summary-source: derived
+    patch:
+      operationId: api_v1_environments_identities_traits_partial_update
+      parameters:
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this trait.
+        required: true
+      - in: path
+        name: identity_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Identities
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedTrait'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedTrait'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedTrait'
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Trait'
+          description: ''
+      summary: Api v1 environments identities traits partial update
+      x-summary-source: derived
+    delete:
+      operationId: api_v1_environments_identities_traits_destroy
+      parameters:
+      - in: query
+        name: deleteAllMatchingTraits
+        schema:
+          type: boolean
+        description: Deletes all traits in this environment matching the key of the deleted trait
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this trait.
+        required: true
+      - in: path
+        name: identity_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Identities
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '204':
+          description: No response body
+      summary: Api v1 environments identities traits destroy
+      x-summary-source: derived
+  /api/v1/environments/{environment_api_key}/identities/{id}/:
+    get:
+      operationId: api_v1_environments_identities_retrieve
+      parameters:
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this identity.
+        required: true
+      tags:
+      - Identities
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Identity_2'
+          description: ''
+      summary: Api v1 environments identities retrieve
+      x-summary-source: derived
+    put:
+      operationId: api_v1_environments_identities_update
+      parameters:
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this identity.
+        required: true
+      tags:
+      - Identities
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Identity_2'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Identity_2'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Identity_2'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Identity_2'
+          description: ''
+      summary: Api v1 environments identities update
+      x-summary-source: derived
+    patch:
+      operationId: api_v1_environments_identities_partial_update
+      parameters:
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this identity.
+        required: true
+      tags:
+      - Identities
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedIdentity'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedIdentity'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedIdentity'
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Identity_2'
+          description: ''
+      summary: Api v1 environments identities partial update
+      x-summary-source: derived
+    delete:
+      operationId: api_v1_environments_identities_destroy
+      parameters:
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this identity.
+        required: true
+      tags:
+      - Identities
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '204':
+          description: No response body
+      summary: Api v1 environments identities destroy
+      x-summary-source: derived
+  /api/v1/environments/environments/{environment_api_key}/edge-identities-featurestates:
+    put:
+      operationId: api_v1_environments_environments_edge_identities_featurestates_update
+      parameters:
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      tags:
+      - Identities
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EdgeIdentityWithIdentifierFeatureStateRequestBody'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/EdgeIdentityWithIdentifierFeatureStateRequestBody'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/EdgeIdentityWithIdentifierFeatureStateRequestBody'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EdgeIdentityFeatureState'
+          description: ''
+      summary: Api v1 environments environments edge identities featurestates update
+      x-summary-source: derived
+    delete:
+      operationId: api_v1_environments_environments_edge_identities_featurestates_destroy
+      parameters:
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      tags:
+      - Identities
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '204':
+          description: No response body
+      summary: Api v1 environments environments edge identities featurestates destroy
+      x-summary-source: derived
+  /api/v1/traits/:
+    post:
+      operationId: api_v1_traits_create
+      tags:
+      - Identities
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SDKCreateUpdateTrait'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SDKCreateUpdateTrait'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/SDKCreateUpdateTrait'
+        required: true
+      security:
+      - Environment API Key: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SDKCreateUpdateTrait'
+          description: ''
+      summary: Api v1 traits create
+      x-summary-source: derived
+  /api/v1/traits/bulk/:
+    put:
+      operationId: api_v1_traits_bulk_update
+      tags:
+      - Identities
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/SDKCreateUpdateTrait'
+          application/x-www-form-urlencoded:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/SDKCreateUpdateTrait'
+          multipart/form-data:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/SDKCreateUpdateTrait'
+        required: true
+      security:
+      - Environment API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SDKBulkCreateUpdateTrait'
+          description: ''
+      summary: Api v1 traits bulk update
+      x-summary-source: derived
+  /api/v1/traits/increment-value/:
+    post:
+      operationId: api_v1_traits_increment_value_create
+      tags:
+      - Identities
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IncrementTraitValue'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/IncrementTraitValue'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/IncrementTraitValue'
+        required: true
+      security:
+      - Environment API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IncrementTraitValue'
+          description: ''
+      summary: Api v1 traits increment value create
+      x-summary-source: derived
   /identities/:
     servers:
     - url: https://api.flagsmith.com/api/v1
@@ -111,6 +1563,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+      security:
+      - apiKeyAuth: []
     post:
       operationId: identifyUserAndGetFlags
       summary: Identify a user and get flags with traits
@@ -142,6 +1596,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+      security:
+      - apiKeyAuth: []
   /traits/:
     servers:
     - url: https://api.flagsmith.com/api/v1
@@ -164,7 +1620,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Trait'
+                $ref: '#/components/schemas/Trait_2'
         '400':
           description: Bad request - missing or invalid trait data
           content:
@@ -177,6 +1633,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+      security:
+      - apiKeyAuth: []
   /traits/bulk/:
     servers:
     - url: https://api.flagsmith.com/api/v1
@@ -203,7 +1661,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Trait'
+                  $ref: '#/components/schemas/Trait_2'
         '400':
           description: Bad request - missing or invalid trait data
           content:
@@ -216,6 +1674,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+      security:
+      - apiKeyAuth: []
 components:
   parameters:
     EnvironmentApiKey:
@@ -282,36 +1742,782 @@ components:
         environment:
           type: integer
           description: The ID of the environment this identity belongs to
-    Flag:
+    PatchedIdentity:
       type: object
-      description: A feature flag object containing the feature definition, its enabled state, and any associated value for the environment.
       properties:
         id:
           type: integer
-          description: The unique identifier for this feature state
-        feature:
-          $ref: '#/components/schemas/Feature'
+          readOnly: true
+        identifier:
+          type: string
+          maxLength: 2000
+        environment:
+          type: integer
+          readOnly: true
+    EdgeIdentityUpdate:
+      type: object
+      properties:
+        identity_uuid:
+          type: string
+          readOnly: true
+        identifier:
+          type: string
+          readOnly: true
+          maxLength: 2000
+        dashboard_alias:
+          type: string
+          maxLength: 100
+      required:
+      - identifier
+    FeatureStateSerializerWithIdentity:
+      type: object
+      description: Adds nested create feature
+      properties:
+        id:
+          type: integer
+          readOnly: true
         feature_state_value:
-          description: The value associated with this feature state. Can be a string, integer, boolean, or null depending on the feature configuration.
+          type:
+          - string
+          - integer
+          - number
+          - boolean
+          - 'null'
+          readOnly: true
+        multivariate_feature_state_values:
+          type: array
+          items:
+            $ref: '#/components/schemas/MultivariateFeatureStateValue'
+        identifier:
+          type: string
+          description: Can be passed as an alternative to `identity`
+        identity:
+          $ref: '#/components/schemas/_Identity'
+        deleted_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          readOnly: true
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+        enabled:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        live_from:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        version:
+          type:
+          - integer
+          - 'null'
+          readOnly: true
+        feature:
+          type: integer
+        environment:
+          type:
+          - integer
+          - 'null'
+        feature_segment:
+          type:
+          - integer
+          - 'null'
+        change_request:
+          type:
+          - integer
+          - 'null'
+        environment_feature_version:
+          type:
+          - string
+          - 'null'
+          format: uuid
+      required:
+      - feature
+      - identity
+    NullEnum:
+      type: 'null'
+    PaginatedEdgeIdentityList:
+      type: object
+      required:
+      - results
+      properties:
+        last_evaluated_key:
+          type: string
+          nullable: true
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/EdgeIdentity'
+    FeatureStateSerializerCreate:
+      type: object
+      properties:
+        feature:
+          type: integer
+        enabled:
+          type: boolean
+      required:
+      - feature
+    EdgeIdentitySourceIdentityRequest:
+      type: object
+      properties:
+        source_identity_uuid:
+          type: string
+          description: UUID of the source identity to clone feature states from.
+      required:
+      - source_identity_uuid
+    IdentityAllFeatureStatesMVFeatureStateValue:
+      type: object
+      properties:
+        multivariate_feature_option:
+          $ref: '#/components/schemas/IdentityAllFeatureStatesMVFeatureOption'
+        percentage_allocation:
+          type: number
+          format: double
+      required:
+      - multivariate_feature_option
+      - percentage_allocation
+    PatchedEdgeIdentityUpdate:
+      type: object
+      properties:
+        identity_uuid:
+          type: string
+          readOnly: true
+        identifier:
+          type: string
+          readOnly: true
+          maxLength: 2000
+        dashboard_alias:
+          type: string
+          maxLength: 100
+    IdentitySourceIdentityRequest:
+      type: object
+      properties:
+        source_identity_id:
+          type: integer
+          description: ID of the source identity to clone feature states from.
+      required:
+      - source_identity_id
+    PatchedTrait:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        trait_key:
+          type: string
+          maxLength: 200
+        value_type:
+          oneOf:
+          - $ref: '#/components/schemas/ValueTypeEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        integer_value:
+          type:
+          - integer
+          - 'null'
+          maximum: 2147483647
+          minimum: -2147483648
+        string_value:
+          type:
+          - string
+          - 'null'
+          maxLength: 2000
+        boolean_value:
+          type:
+          - boolean
+          - 'null'
+        float_value:
+          type:
+          - number
+          - 'null'
+          format: double
+        created_date:
+          type: string
+          format: date-time
+          readOnly: true
+          title: DateCreated
+    PaginatedFeatureStateSerializerWithIdentityList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/FeatureStateSerializerWithIdentity'
+    PaginatedIdentityAllFeatureStatesList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/IdentityAllFeatureStates'
+    PaginatedIdentityList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Identity_2'
+    ValueTypeEnum:
+      enum:
+      - int
+      - unicode
+      - bool
+      - float
+      type: string
+      description: '* `int` - Integer
+
+        * `unicode` - String
+
+        * `bool` - Boolean
+
+        * `float` - Float'
+    SDKBulkCreateUpdateTrait:
+      type: object
+      properties:
+        identity:
+          $ref: '#/components/schemas/IdentifierOnlyIdentity'
+        trait_value:
+          type:
+          - string
+          - integer
+          - number
+          - boolean
+          - 'null'
+          description: Can be string, integer, float, or boolean
+        trait_key:
+          type: string
+      required:
+      - identity
+      - trait_key
+      - trait_value
+    IdentityAllFeatureStatesSegment:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+      required:
+      - id
+      - name
+    EdgeIdentityWithIdentifierFeatureStateRequestBody:
+      type: object
+      properties:
+        feature_state_value:
+          type:
+          - string
+          - integer
+          - boolean
+          - 'null'
+          description: Feature state value (string, integer, or boolean)
+        feature:
+          oneOf:
+          - type: integer
+            description: Feature ID
+          - type: string
+            description: Feature name
+          description: Feature identifier (ID or name)
+        multivariate_feature_state_values:
+          type: array
+          items:
+            $ref: '#/components/schemas/EdgeMultivariateFeatureStateValue'
+        enabled:
+          type: boolean
+          default: false
+        featurestate_uuid:
+          type: string
+          readOnly: true
+        identity_uuid:
+          type: string
+          format: uuid
+          readOnly: true
+        identifier:
+          type: string
+          maxLength: 2000
+      required:
+      - feature
+      - identifier
+    EdgeIdentity:
+      type: object
+      properties:
+        identity_uuid:
+          type: string
+          readOnly: true
+        identifier:
+          type: string
+          maxLength: 2000
+        dashboard_alias:
+          type: string
+          maxLength: 100
+      required:
+      - identifier
+    IdentifierOnlyIdentity:
+      type: object
+      properties:
+        identifier:
+          type: string
+          maxLength: 2000
+      required:
+      - identifier
+    IdentityAllFeatureStatesFeature:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        type:
+          type: string
+      required:
+      - id
+      - name
+      - type
+    PaginatedTraitList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Trait'
+    EdgeIdentityTraits:
+      type: object
+      properties:
+        trait_key:
+          type: string
+        trait_value:
+          type:
+          - string
+          - 'null'
+      required:
+      - trait_key
+      - trait_value
+    EdgeMultivariateFeatureStateValue:
+      type: object
+      properties:
+        multivariate_feature_option:
+          type: integer
+        percentage_allocation:
+          type: number
+          format: double
+          maximum: 100
+          minimum: 0
+      required:
+      - multivariate_feature_option
+      - percentage_allocation
+    EdgeIdentityFeatureState:
+      type: object
+      properties:
+        feature_state_value:
+          type:
+          - string
+          - integer
+          - boolean
+          - 'null'
+          description: Feature state value (string, integer, or boolean)
+        feature:
+          type: integer
+          description: Feature ID
+        multivariate_feature_state_values:
+          type: array
+          items:
+            $ref: '#/components/schemas/EdgeMultivariateFeatureStateValue'
+        enabled:
+          type: boolean
+          default: false
+        featurestate_uuid:
+          type: string
+          readOnly: true
+        identity_uuid:
+          type: string
+          format: uuid
+          readOnly: true
+      required:
+      - feature
+    Identity_2:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        identifier:
+          type: string
+          maxLength: 2000
+        environment:
+          type: integer
+          readOnly: true
+      required:
+      - identifier
+    SDKCreateUpdateTrait:
+      type: object
+      properties:
+        identity:
+          $ref: '#/components/schemas/IdentifierOnlyIdentity'
+        trait_value:
+          type:
+          - string
+          - integer
+          - number
+          - boolean
+          description: Can be string, integer, float, or boolean
+        trait_key:
+          type: string
+      required:
+      - identity
+      - trait_key
+      - trait_value
+    IdentityAllFeatureStates:
+      type: object
+      properties:
+        feature:
+          $ref: '#/components/schemas/IdentityAllFeatureStatesFeature'
+        enabled:
+          type: boolean
+        feature_state_value:
           oneOf:
           - type: string
           - type: integer
           - type: boolean
-          - type: 'null'
+          readOnly: true
+          description: 'Can be any of the following types: integer, boolean, string.'
+        overridden_by:
+          type:
+          - string
+          - 'null'
+          readOnly: true
+          description: 'One of: null, ''SEGMENT'', ''IDENTITY''.'
+        segment:
+          allOf:
+          - $ref: '#/components/schemas/IdentityAllFeatureStatesSegment'
+          readOnly: true
+        multivariate_feature_state_values:
+          type: array
+          items:
+            $ref: '#/components/schemas/IdentityAllFeatureStatesMVFeatureStateValue'
+      required:
+      - enabled
+      - feature
+      - multivariate_feature_state_values
+    PatchedFeatureStateSerializerCreate:
+      type: object
+      properties:
+        feature:
+          type: integer
         enabled:
           type: boolean
-          description: Whether this feature flag is currently enabled
+    BlankEnum:
+      enum:
+      - ''
+    FeatureStateSerializerBasic:
+      type: object
+      description: Adds nested create feature
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        feature_state_value:
+          type:
+          - string
+          - integer
+          - number
+          - boolean
+          - 'null'
+          readOnly: true
+        multivariate_feature_state_values:
+          type: array
+          items:
+            $ref: '#/components/schemas/MultivariateFeatureStateValue'
+        identifier:
+          type: string
+          description: Can be passed as an alternative to `identity`
+        deleted_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          readOnly: true
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+        enabled:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        live_from:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        version:
+          type:
+          - integer
+          - 'null'
+          readOnly: true
+        feature:
+          type: integer
         environment:
-          type: integer
-          description: The ID of the environment this flag belongs to
+          type:
+          - integer
+          - 'null'
         identity:
-          type: integer
-          nullable: true
-          description: The identity ID if this is an identity-specific override, or null for environment defaults
+          type:
+          - integer
+          - 'null'
         feature_segment:
+          type:
+          - integer
+          - 'null'
+        change_request:
+          type:
+          - integer
+          - 'null'
+        environment_feature_version:
+          type:
+          - string
+          - 'null'
+          format: uuid
+      required:
+      - feature
+    IncrementTraitValue:
+      type: object
+      properties:
+        trait_key:
+          type: string
+        increment_by:
           type: integer
+          writeOnly: true
+        identifier:
+          type: string
+        trait_value:
+          type: integer
+          readOnly: true
+      required:
+      - identifier
+      - increment_by
+      - trait_key
+    MultivariateFeatureStateValue:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        multivariate_feature_option:
+          type: integer
+        percentage_allocation:
+          type: number
+          format: double
+          maximum: 100
+          minimum: 0
+      required:
+      - multivariate_feature_option
+      - percentage_allocation
+    Trait:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        trait_key:
+          type: string
+          maxLength: 200
+        value_type:
+          oneOf:
+          - $ref: '#/components/schemas/ValueTypeEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        integer_value:
+          type:
+          - integer
+          - 'null'
+          maximum: 2147483647
+          minimum: -2147483648
+        string_value:
+          type:
+          - string
+          - 'null'
+          maxLength: 2000
+        boolean_value:
+          type:
+          - boolean
+          - 'null'
+        float_value:
+          type:
+          - number
+          - 'null'
+          format: double
+        created_date:
+          type: string
+          format: date-time
+          readOnly: true
+          title: DateCreated
+      required:
+      - trait_key
+    _Identity:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        identifier:
+          type: string
+          maxLength: 2000
+      required:
+      - identifier
+    PaginatedEdgeIdentityTraitsList:
+      type: object
+      required:
+      - results
+      properties:
+        last_evaluated_key:
+          type: string
           nullable: true
-          description: The feature segment ID if this flag state is a segment override, or null otherwise
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/EdgeIdentityTraits'
+    IdentityAllFeatureStatesMVFeatureOption:
+      type: object
+      properties:
+        value:
+          oneOf:
+          - type: string
+          - type: integer
+          - type: boolean
+          description: 'Can be any of the following types: integer, boolean, string.'
+          readOnly: true
+    IdentityRequest:
+      type: object
+      description: The request body for identifying a user and optionally setting traits.
+      required:
+      - identifier
+      properties:
+        identifier:
+          type: string
+          description: The unique identifier for the user identity in your application.
+        traits:
+          type: array
+          description: An optional array of traits to set for this identity. Traits are used for segment evaluation and personalized flag delivery.
+          items:
+            $ref: '#/components/schemas/TraitInput'
+        transient:
+          type: boolean
+          description: When true, the identity is transient and will not be persisted.
+    Error:
+      type: object
+      description: An error response from the API
+      properties:
+        detail:
+          type: string
+          description: A human-readable error message
+    TraitRequest:
+      type: object
+      description: Request body for setting a trait on an identity.
+      required:
+      - identity
+      - trait_key
+      - trait_value
+      properties:
+        identity:
+          type: object
+          description: The identity to set the trait on
+          required:
+          - identifier
+          properties:
+            identifier:
+              type: string
+              description: The unique identifier for the user identity
+        trait_key:
+          type: string
+          description: The key name of the trait to set
+        trait_value:
+          description: The value to set for the trait. Set to null to delete the trait.
+          oneOf:
+          - type: string
+          - type: integer
+          - type: number
+          - type: boolean
+          - type: 'null'
     TraitInput:
       type: object
       description: Input object for setting a trait value on an identity.
@@ -346,59 +2552,54 @@ components:
           type: array
           description: The traits associated with this identity
           items:
-            $ref: '#/components/schemas/Trait'
-    TraitRequest:
+            $ref: '#/components/schemas/Trait_2'
+    Flag:
       type: object
-      description: Request body for setting a trait on an identity.
-      required:
-      - identity
-      - trait_key
-      - trait_value
+      description: A feature flag object containing the feature definition, its enabled state, and any associated value for the environment.
       properties:
+        id:
+          type: integer
+          description: The unique identifier for this feature state
+        feature:
+          $ref: '#/components/schemas/Feature'
+        feature_state_value:
+          description: The value associated with this feature state. Can be a string, integer, boolean, or null depending on the feature configuration.
+          oneOf:
+          - type: string
+          - type: integer
+          - type: boolean
+          - type: 'null'
+        enabled:
+          type: boolean
+          description: Whether this feature flag is currently enabled
+        environment:
+          type: integer
+          description: The ID of the environment this flag belongs to
         identity:
-          type: object
-          description: The identity to set the trait on
-          required:
-          - identifier
-          properties:
-            identifier:
-              type: string
-              description: The unique identifier for the user identity
+          type: integer
+          nullable: true
+          description: The identity ID if this is an identity-specific override, or null for environment defaults
+        feature_segment:
+          type: integer
+          nullable: true
+          description: The feature segment ID if this flag state is a segment override, or null otherwise
+    Trait_2:
+      type: object
+      description: A trait is a key-value pair associated with an identity, used for segment evaluation and personalization.
+      properties:
+        id:
+          type: integer
+          description: The unique identifier for this trait
         trait_key:
           type: string
-          description: The key name of the trait to set
+          description: The key name of the trait
         trait_value:
-          description: The value to set for the trait. Set to null to delete the trait.
+          description: The value of the trait. Can be a string, integer, float, or boolean.
           oneOf:
           - type: string
           - type: integer
           - type: number
           - type: boolean
-          - type: 'null'
-    IdentityRequest:
-      type: object
-      description: The request body for identifying a user and optionally setting traits.
-      required:
-      - identifier
-      properties:
-        identifier:
-          type: string
-          description: The unique identifier for the user identity in your application.
-        traits:
-          type: array
-          description: An optional array of traits to set for this identity. Traits are used for segment evaluation and personalized flag delivery.
-          items:
-            $ref: '#/components/schemas/TraitInput'
-        transient:
-          type: boolean
-          description: When true, the identity is transient and will not be persisted.
-    Error:
-      type: object
-      description: An error response from the API
-      properties:
-        detail:
-          type: string
-          description: A human-readable error message
     Feature:
       type: object
       description: A feature definition containing metadata about the feature flag including its name, type, and default configuration.
@@ -430,32 +2631,42 @@ components:
           - STANDARD
           - MULTIVARIATE
           description: The type of feature flag. STANDARD for simple on/off flags, MULTIVARIATE for flags with multiple value variations.
-    Trait:
-      type: object
-      description: A trait is a key-value pair associated with an identity, used for segment evaluation and personalization.
-      properties:
-        id:
-          type: integer
-          description: The unique identifier for this trait
-        trait_key:
-          type: string
-          description: The key name of the trait
-        trait_value:
-          description: The value of the trait. Can be a string, integer, float, or boolean.
-          oneOf:
-          - type: string
-          - type: integer
-          - type: number
-          - type: boolean
   securitySchemes:
     apiKeyAuth:
       type: apiKey
       in: header
       name: Authorization
       description: A secret Organisation API Token prefixed with 'Api-Key'. For example, 'Api-Key your-token-here'. This token should never be exposed in client-side code.
+    Cohort_Sync_Key:
+      type: http
+      scheme: bearer
+      description: For cohort sync endpoints called by an external cohort source, such as Amplitude.
+    Cohort_Sync_Key__Basic:
+      type: http
+      scheme: basic
+      description: For cohort sync endpoints called by an external cohort source that can only send Basic credentials, such as Mixpanel. The key is the password; the username is ignored.
+    Environment_API_Key:
+      type: apiKey
+      in: header
+      name: X-Environment-Key
+      description: For SDK endpoints. <a href='https://docs.flagsmith.com/clients/rest#public-api-endpoints'>Find out more</a>.
+    Master_API_Key:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: For Management API endpoints. <a href='https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/management-api'>Find out more</a>.
+    basicAuth:
+      type: http
+      scheme: basic
+    tokenAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: Token-based authentication with required prefix "Token"
 externalDocs:
   description: Flagsmith Admin API Documentation
   url: https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/admin-api
 x-refined-from:
 - flagsmith-admin-api-openapi.yml
+- flagsmith-api-openapi.json
 - flagsmith-identities-api-openapi.yml

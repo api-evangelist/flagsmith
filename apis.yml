@@ -22,7 +22,7 @@ tags:
 - Segmentation
 - Developer Tools
 - DevOps
-- Open-Source
+- Open Source
 - Software-as-a-Service
 - MCP
 - Agent Ready
@@ -39,6 +39,7 @@ tags_raw:
 - SaaS
 - MCP
 - Agent Ready
+- Open-Source
 maintainers:
 - FN: API Evangelist
   email: info@apievangelist.com
@@ -113,16 +114,19 @@ apis:
     url: collections/flagsmith-flags-api.postman_collection.json
   - type: OpenCollection
     url: collections/flagsmith-flags-api.opencollection.json
-  description: The Flagsmith Flags API is the public-facing REST API that client-side and server-side
-    SDKs use to retrieve feature flag values and remote configuration for environments and users. It uses
-    a non-secret Environment Key for authentication and is designed to be fast, scalable, and publicly
-    accessible. The Edge API endpoint at edge.api.flagsmith.com serves requests from AWS Lambda functions
-    running in data centers near the client, providing low-latency global access to flag evaluations.
+  description: >-
+    The Flagsmith Flags API is the public-facing REST API that client-side and server-side SDKs use to
+    retrieve feature flag values and remote configuration for environments and users. It uses a non-secret
+    Environment Key for authentication and is designed to be fast, scalable, and publicly accessible.
+    The Edge API endpoint at edge.api.flagsmith.com serves requests from AWS Lambda functions running
+    in data centers near the client, providing low-latency global access to flag evaluations.
 - aid: flagsmith:flagsmith-environments-api
   name: flagsmith Environments API
-  description: Manage environments within a project. Environments represent deployment stages such as
-    development, staging, and production.
-  humanURL: https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/management-api/
+  description: >-
+    Manage environments within a project. Environments represent deployment stages such as development,
+    staging, and production.
+  humanURL: >-
+    https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/management-api/
   baseURL: https://api.flagsmith.com/api/v1
   tags:
   - Environment
@@ -136,7 +140,8 @@ apis:
   - type: AsyncAPI
     url: asyncapi/flagsmith-webhooks-asyncapi.yml
   - type: APIReference
-    url: https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/management-api/
+    url: >-
+      https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/management-api/
   - type: Overlay
     url: overlays/flagsmith-environments-api-overlay.yaml
   - type: PostmanCollection
@@ -145,9 +150,11 @@ apis:
     url: collections/flagsmith-environments-api.opencollection.json
 - aid: flagsmith:flagsmith-features-api
   name: flagsmith Features API
-  description: Manage feature flags within a project. Features can be toggled on or off and can have remote
-    configuration values.
-  humanURL: https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/management-api/
+  description: >-
+    Manage feature flags within a project. Features can be toggled on or off and can have remote configuration
+    values.
+  humanURL: >-
+    https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/management-api/
   baseURL: https://api.flagsmith.com/api/v1
   tags:
   - Features
@@ -159,7 +166,8 @@ apis:
   - type: AsyncAPI
     url: asyncapi/flagsmith-webhooks-asyncapi.yml
   - type: APIReference
-    url: https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/management-api/
+    url: >-
+      https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/management-api/
   - type: Overlay
     url: overlays/flagsmith-features-api-overlay.yaml
   - type: PostmanCollection
@@ -168,9 +176,11 @@ apis:
     url: collections/flagsmith-features-api.opencollection.json
 - aid: flagsmith:flagsmith-identities-api
   name: flagsmith Identities API
-  description: Manage user identities within an environment. Identities represent individual users and
-    their associated traits.
-  humanURL: https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/management-api/
+  description: >-
+    Manage user identities within an environment. Identities represent individual users and their associated
+    traits.
+  humanURL: >-
+    https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/management-api/
   baseURL: https://api.flagsmith.com/api/v1
   tags:
   - Identities
@@ -182,7 +192,8 @@ apis:
   - type: AsyncAPI
     url: asyncapi/flagsmith-webhooks-asyncapi.yml
   - type: APIReference
-    url: https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/management-api/
+    url: >-
+      https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/management-api/
   - type: Overlay
     url: overlays/flagsmith-identities-api-overlay.yaml
   - type: PostmanCollection
@@ -191,9 +202,11 @@ apis:
     url: collections/flagsmith-identities-api.opencollection.json
 - aid: flagsmith:flagsmith-organisations-api
   name: flagsmith Organisations API
-  description: Manage organisations within Flagsmith. Organisations are the top-level container for projects,
-    users, and billing.
-  humanURL: https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/management-api/
+  description: >-
+    Manage organisations within Flagsmith. Organisations are the top-level container for projects, users,
+    and billing.
+  humanURL: >-
+    https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/management-api/
   baseURL: https://api.flagsmith.com/api/v1
   tags:
   - Organisations
@@ -205,7 +218,8 @@ apis:
   - type: AsyncAPI
     url: asyncapi/flagsmith-webhooks-asyncapi.yml
   - type: APIReference
-    url: https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/management-api/
+    url: >-
+      https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/management-api/
   - type: Overlay
     url: overlays/flagsmith-organisations-api-overlay.yaml
   - type: PostmanCollection
@@ -215,7 +229,8 @@ apis:
 - aid: flagsmith:flagsmith-projects-api
   name: flagsmith Projects API
   description: Manage projects within an organisation. Projects contain environments and feature flags.
-  humanURL: https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/management-api/
+  humanURL: >-
+    https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/management-api/
   baseURL: https://api.flagsmith.com/api/v1
   tags:
   - Project
@@ -229,7 +244,8 @@ apis:
   - type: AsyncAPI
     url: asyncapi/flagsmith-webhooks-asyncapi.yml
   - type: APIReference
-    url: https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/management-api/
+    url: >-
+      https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/management-api/
   - type: Overlay
     url: overlays/flagsmith-projects-api-overlay.yaml
   - type: PostmanCollection
@@ -238,9 +254,11 @@ apis:
     url: collections/flagsmith-projects-api.opencollection.json
 - aid: flagsmith:flagsmith-segments-api
   name: flagsmith Segments API
-  description: Manage segments within a project. Segments define groups of users based on traits and rules
-    for targeted flag delivery.
-  humanURL: https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/management-api/
+  description: >-
+    Manage segments within a project. Segments define groups of users based on traits and rules for targeted
+    flag delivery.
+  humanURL: >-
+    https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/management-api/
   baseURL: https://api.flagsmith.com/api/v1
   tags:
   - Segments
@@ -252,7 +270,8 @@ apis:
   - type: AsyncAPI
     url: asyncapi/flagsmith-webhooks-asyncapi.yml
   - type: APIReference
-    url: https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/management-api/
+    url: >-
+      https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/management-api/
   - type: Overlay
     url: overlays/flagsmith-segments-api-overlay.yaml
   - type: PostmanCollection
@@ -262,7 +281,8 @@ apis:
 - aid: flagsmith:flagsmith-users-api
   name: flagsmith Users API
   description: Manage organisation users and their permissions within Flagsmith.
-  humanURL: https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/management-api/
+  humanURL: >-
+    https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/management-api/
   baseURL: https://api.flagsmith.com/api/v1
   tags:
   - User
@@ -276,7 +296,8 @@ apis:
   - type: AsyncAPI
     url: asyncapi/flagsmith-webhooks-asyncapi.yml
   - type: APIReference
-    url: https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/management-api/
+    url: >-
+      https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/management-api/
   - type: Overlay
     url: overlays/flagsmith-users-api-overlay.yaml
   - type: PostmanCollection
@@ -285,9 +306,11 @@ apis:
     url: collections/flagsmith-users-api.opencollection.json
 - aid: flagsmith:flagsmith-webhooks-api
   name: flagsmith Webhooks API
-  description: Configure webhooks for environments and organisations to receive notifications about flag
-    changes and audit log events.
-  humanURL: https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/management-api/
+  description: >-
+    Configure webhooks for environments and organisations to receive notifications about flag changes
+    and audit log events.
+  humanURL: >-
+    https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/management-api/
   baseURL: https://api.flagsmith.com/api/v1
   tags:
   - Webhook
@@ -301,13 +324,164 @@ apis:
   - type: AsyncAPI
     url: asyncapi/flagsmith-webhooks-asyncapi.yml
   - type: APIReference
-    url: https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/management-api/
+    url: >-
+      https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/management-api/
   - type: Overlay
     url: overlays/flagsmith-webhooks-api-overlay.yaml
   - type: PostmanCollection
     url: collections/flagsmith-webhooks-api.postman_collection.json
   - type: OpenCollection
     url: collections/flagsmith-webhooks-api.opencollection.json
+- aid: flagsmith:flagsmith-admin-dashboard-api
+  name: Flagsmith Admin dashboard API
+  description: Platform hub admin dashboard endpoints.
+  humanURL: https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/flags-api/
+  baseURL: https://edge.api.flagsmith.com
+  tags:
+  - Admin dashboard
+  properties:
+  - type: OpenAPI
+    url: openapi/flagsmith-admin-dashboard-api-openapi.yml
+- aid: flagsmith:flagsmith-analytics-api
+  name: Flagsmith Analytics API
+  description: SDK analytics and telemetry.
+  humanURL: https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/flags-api/
+  baseURL: https://edge.api.flagsmith.com
+  tags:
+  - Analytics
+  properties:
+  - type: OpenAPI
+    url: openapi/flagsmith-analytics-api-openapi.yml
+- aid: flagsmith:flagsmith-audit-api
+  name: Flagsmith Audit API
+  description: Access audit logs.
+  humanURL: https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/flags-api/
+  baseURL: https://edge.api.flagsmith.com
+  tags:
+  - Audit
+  properties:
+  - type: OpenAPI
+    url: openapi/flagsmith-audit-api-openapi.yml
+- aid: flagsmith:flagsmith-authentication-api
+  name: Flagsmith Authentication API
+  description: Authentication, MFA, OAuth, and token management.
+  humanURL: https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/flags-api/
+  baseURL: https://edge.api.flagsmith.com
+  tags:
+  - Authentication
+  properties:
+  - type: OpenAPI
+    url: openapi/flagsmith-authentication-api-openapi.yml
+- aid: flagsmith:flagsmith-experimental-api
+  name: Flagsmith Experimental API
+  description: Experimental endpoints subject to change.
+  humanURL: https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/flags-api/
+  baseURL: https://edge.api.flagsmith.com
+  tags:
+  - experimental
+  properties:
+  - type: OpenAPI
+    url: openapi/flagsmith-experimental-api-openapi.yml
+- aid: flagsmith:flagsmith-feature-states-api
+  name: Flagsmith Feature states API
+  description: Manage feature states and feature versioning.
+  humanURL: https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/flags-api/
+  baseURL: https://edge.api.flagsmith.com
+  tags:
+  - Feature states
+  properties:
+  - type: OpenAPI
+    url: openapi/flagsmith-feature-states-api-openapi.yml
+- aid: flagsmith:flagsmith-integrations-api
+  name: Flagsmith Integrations API
+  description: Configure third-party integrations (Amplitude, DataDog, Slack, etc.).
+  humanURL: https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/flags-api/
+  baseURL: https://edge.api.flagsmith.com
+  tags:
+  - Integrations
+  properties:
+  - type: OpenAPI
+    url: openapi/flagsmith-integrations-api-openapi.yml
+- aid: flagsmith:flagsmith-mcp-api
+  name: Flagsmith MCP API
+  description: MCP-compatible endpoints.
+  humanURL: https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/flags-api/
+  baseURL: https://edge.api.flagsmith.com
+  tags:
+  - mcp
+  properties:
+  - type: OpenAPI
+    url: openapi/flagsmith-mcp-api-openapi.yml
+- aid: flagsmith:flagsmith-metadata-api
+  name: Flagsmith Metadata API
+  description: Manage metadata fields and model configuration.
+  humanURL: https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/flags-api/
+  baseURL: https://edge.api.flagsmith.com
+  tags:
+  - Metadata
+  properties:
+  - type: OpenAPI
+    url: openapi/flagsmith-metadata-api-openapi.yml
+- aid: flagsmith:flagsmith-o-api
+  name: Flagsmith O API
+  description: The o API from Flagsmith — 1 operation(s) for o.
+  humanURL: https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/flags-api/
+  baseURL: https://edge.api.flagsmith.com
+  tags:
+  - o
+  properties:
+  - type: OpenAPI
+    url: openapi/flagsmith-o-api-openapi.yml
+- aid: flagsmith:flagsmith-onboarding-api
+  name: Flagsmith Onboarding API
+  description: Onboarding flows.
+  humanURL: https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/flags-api/
+  baseURL: https://edge.api.flagsmith.com
+  tags:
+  - Onboarding
+  properties:
+  - type: OpenAPI
+    url: openapi/flagsmith-onboarding-api-openapi.yml
+- aid: flagsmith:flagsmith-other-api
+  name: Flagsmith Other API
+  description: Other endpoints.
+  humanURL: https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/flags-api/
+  baseURL: https://edge.api.flagsmith.com
+  tags:
+  - Other
+  properties:
+  - type: OpenAPI
+    url: openapi/flagsmith-other-api-openapi.yml
+- aid: flagsmith:flagsmith-permissions-api
+  name: Flagsmith Permissions API
+  description: Manage user and group permissions across organisations, projects, and environments.
+  humanURL: https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/flags-api/
+  baseURL: https://edge.api.flagsmith.com
+  tags:
+  - Permissions
+  properties:
+  - type: OpenAPI
+    url: openapi/flagsmith-permissions-api-openapi.yml
+- aid: flagsmith:flagsmith-processor-api
+  name: Flagsmith Processor API
+  description: The processor API from Flagsmith — 1 operation(s) for processor.
+  humanURL: https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/flags-api/
+  baseURL: https://edge.api.flagsmith.com
+  tags:
+  - processor
+  properties:
+  - type: OpenAPI
+    url: openapi/flagsmith-processor-api-openapi.yml
+- aid: flagsmith:flagsmith-sdk-api
+  name: Flagsmith SDK API
+  description: SDK endpoints for flags, identities, and traits.
+  humanURL: https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/flags-api/
+  baseURL: https://edge.api.flagsmith.com
+  tags:
+  - sdk
+  properties:
+  - type: OpenAPI
+    url: openapi/flagsmith-sdk-api-openapi.yml
 common:
 - type: Website
   url: https://flagsmith.com

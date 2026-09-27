@@ -1,0 +1,65 @@
+openapi: 3.2.0
+info:
+  title: Flagsmith Processor API
+  version: v1
+  description: Flagsmith's Core and SDK APIs. Check out Flagsmith documentation.
+  contact:
+    email: support@flagsmith.com
+  license:
+    name: BSD License
+    identifier: BSD-3-Clause
+tags:
+- name: Processor
+paths:
+  /processor/monitoring/:
+    get:
+      operationId: processor_monitoring_retrieve
+      tags:
+      - Processor
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Monitoring'
+          description: ''
+      summary: Processor monitoring retrieve
+      x-summary-source: derived
+components:
+  schemas:
+    Monitoring:
+      type: object
+      properties:
+        waiting:
+          type: integer
+          readOnly: true
+  securitySchemes:
+    Cohort_Sync_Key:
+      type: http
+      scheme: bearer
+      description: For cohort sync endpoints called by an external cohort source, such as Amplitude.
+    Cohort_Sync_Key__Basic:
+      type: http
+      scheme: basic
+      description: For cohort sync endpoints called by an external cohort source that can only send Basic credentials, such as Mixpanel. The key is the password; the username is ignored.
+    Environment_API_Key:
+      type: apiKey
+      in: header
+      name: X-Environment-Key
+      description: For SDK endpoints. <a href='https://docs.flagsmith.com/clients/rest#public-api-endpoints'>Find out more</a>.
+    Master_API_Key:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: For Management API endpoints. <a href='https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/management-api'>Find out more</a>.
+    basicAuth:
+      type: http
+      scheme: basic
+    tokenAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: Token-based authentication with required prefix "Token"

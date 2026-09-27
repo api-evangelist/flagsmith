@@ -2,6 +2,7 @@
   "provider": "flagsmith",
   "sources": [
     "_original/flagsmith-admin-api-openapi.yml",
+    "_original/flagsmith-api-openapi.json",
     "flagsmith-flags-api-openapi.yml",
     "flagsmith-identities-api-openapi.yml"
   ],
@@ -14,6 +15,21 @@
     "flagsmith-segments-api-openapi.yml",
     "flagsmith-users-api-openapi.yml",
     "flagsmith-webhooks-api-openapi.yml",
+    "flagsmith-admin-dashboard-api-openapi.yml",
+    "flagsmith-analytics-api-openapi.yml",
+    "flagsmith-audit-api-openapi.yml",
+    "flagsmith-authentication-api-openapi.yml",
+    "flagsmith-feature-states-api-openapi.yml",
+    "flagsmith-integrations-api-openapi.yml",
+    "flagsmith-metadata-api-openapi.yml",
+    "flagsmith-onboarding-api-openapi.yml",
+    "flagsmith-other-api-openapi.yml",
+    "flagsmith-permissions-api-openapi.yml",
+    "flagsmith-experimental-api-openapi.yml",
+    "flagsmith-mcp-api-openapi.yml",
+    "flagsmith-o-api-openapi.yml",
+    "flagsmith-processor-api-openapi.yml",
+    "flagsmith-sdk-api-openapi.yml",
     "flagsmith-flags-api-openapi.yml"
   ],
   "archived": [],
@@ -23,10 +39,19 @@
     "flagsmith-identities-api-openapi.yml: previously refined output kept for 4 operation(s) no archived document covers (e.g. /identities/ get, /identities/ post, /traits/ post); its other 3 operation(s) came from the archive and were dropped from it. The archive is incomplete for this provider \u2014 re-harvest to restore _original/ as the full source of truth."
   ],
   "notes": [
-    "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "sourced from openapi/_original/ (2 archived document(s)); previously refined output at the top level was skipped rather than re-split",
     "flagsmith-admin-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
-    "tag 'Identities' spans 2 source specs (flagsmith-admin-api-openapi.yml, flagsmith-identities-api-openapi.yml): per-path servers applied",
-    "apis.yml register: already-registered"
+    "flagsmith-api-openapi.json: upgraded openapi 3.1.0 -> OpenAPI 3.2.0; renamed 4 component key(s) illegal in 3.x (e.g. Cohort Sync Key)",
+    "flagsmith-api-openapi.json: declared missing tag: o",
+    "flagsmith-api-openapi.json: declared missing tag: processor",
+    "tag 'Environments' spans 2 source specs (flagsmith-admin-api-openapi.yml, flagsmith-api-openapi.json): per-path servers applied",
+    "tag 'Features' spans 2 source specs (flagsmith-admin-api-openapi.yml, flagsmith-api-openapi.json): per-path servers applied",
+    "tag 'Identities' spans 3 source specs (flagsmith-admin-api-openapi.yml, flagsmith-api-openapi.json, flagsmith-identities-api-openapi.yml): per-path servers applied",
+    "tag 'Organisations' spans 2 source specs (flagsmith-admin-api-openapi.yml, flagsmith-api-openapi.json): per-path servers applied",
+    "tag 'Projects' spans 2 source specs (flagsmith-admin-api-openapi.yml, flagsmith-api-openapi.json): per-path servers applied",
+    "tag 'Segments' spans 2 source specs (flagsmith-admin-api-openapi.yml, flagsmith-api-openapi.json): per-path servers applied",
+    "tag 'Webhooks' spans 2 source specs (flagsmith-admin-api-openapi.yml, flagsmith-api-openapi.json): per-path servers applied",
+    "apis.yml register: written (+15 apis, 24 total)"
   ],
   "skipped": [
     "flagsmith-environments-api-openapi.yml: previously refined output, superseded by openapi/_original/",

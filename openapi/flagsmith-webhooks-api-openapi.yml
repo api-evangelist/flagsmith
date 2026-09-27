@@ -1,17 +1,11 @@
 openapi: 3.2.0
 info:
-  title: Flagsmith Admin Webhooks API
-  description: The Flagsmith Admin API allows developers to programmatically manage all aspects of their Flagsmith projects. Anything that can be done through the Flagsmith dashboard can also be accomplished via this API, including creating, updating, and deleting projects, environments, feature flags, segments, and users. It uses a secret Organisation API Token for authentication and provides a Swagger interface at api.flagsmith.com/api/v1/docs for interactive exploration.
+  title: Flagsmith Webhooks API
   version: '1.0'
-  contact:
-    name: Flagsmith Support
-    url: https://www.flagsmith.com/contact-us
-  termsOfService: https://www.flagsmith.com/terms-of-service
+  description: 'Operations tagged Webhooks across 2 of this provider''s published API definitions: flagsmith-admin-api-openapi.yml, flagsmith-api-openapi.json. Each path carries the servers of the definition it was published in.'
 servers:
 - url: https://api.flagsmith.com/api/v1
   description: Flagsmith Production API
-security:
-- apiKeyAuth: []
 tags:
 - name: Webhooks
   description: Configure webhooks for environments and organisations to receive notifications about flag changes and audit log events.
@@ -36,6 +30,8 @@ paths:
                   $ref: '#/components/schemas/Webhook'
         '401':
           description: Unauthorized - invalid or missing API token
+      security:
+      - apiKeyAuth: []
     post:
       operationId: createEnvironmentWebhook
       summary: Create an environment webhook
@@ -61,6 +57,11 @@ paths:
           description: Bad request - validation error
         '401':
           description: Unauthorized - invalid or missing API token
+      security:
+      - apiKeyAuth: []
+    servers:
+    - url: https://api.flagsmith.com/api/v1
+      description: Flagsmith Production API
   /organisations/{organisation_id}/webhooks/:
     get:
       operationId: listOrganisationWebhooks
@@ -81,6 +82,8 @@ paths:
                   $ref: '#/components/schemas/Webhook'
         '401':
           description: Unauthorized - invalid or missing API token
+      security:
+      - apiKeyAuth: []
     post:
       operationId: createOrganisationWebhook
       summary: Create an organisation webhook
@@ -106,23 +109,581 @@ paths:
           description: Bad request - validation error
         '401':
           description: Unauthorized - invalid or missing API token
+      security:
+      - apiKeyAuth: []
+    servers:
+    - url: https://api.flagsmith.com/api/v1
+      description: Flagsmith Production API
+  /api/v1/cb-webhook/:
+    post:
+      operationId: api_v1_cb_webhook_create
+      description: 'Endpoint to handle webhooks from chargebee.
+
+
+        Payment failure and payment succeeded webhooks are filtered out and processed
+
+        to determine which of our subscriptions are in a dunning state.
+
+
+        The remaining webhooks are processed if they have subscription data:
+
+
+        - If subscription is active, check to see if plan has changed and update if so. Always update cancellation date to
+
+        None to ensure that if a subscription is reactivated, it is updated on our end.
+
+
+        - If subscription is cancelled or not renewing, update subscription on our end to include cancellation date and
+
+        send alert to admin users.'
+      tags:
+      - Webhooks
+      security:
+      - basicAuth: []
+      responses:
+        '200':
+          description: No response body
+      summary: Api v1 cb webhook create
+      x-summary-source: derived
+  /api/v1/cohort-sync/mixpanel/webhook/:
+    post:
+      operationId: api_v1_cohort_sync_mixpanel_webhook_create
+      description: Called by Mixpanel every sync cycle with the cohort's full membership (`members`) or the changes since the last sync (`add_members`/`remove_members`).
+      tags:
+      - Webhooks
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MixpanelWebhook'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/MixpanelWebhook'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/MixpanelWebhook'
+        required: true
+      security:
+      - Cohort Sync Key: []
+      - Cohort Sync Key (Basic): []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MixpanelWebhookResponse'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MixpanelWebhookFailureResponse'
+          description: ''
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MixpanelWebhookFailureResponse'
+          description: ''
+      x-flagsmith-minimum-plan: START_UP
+      summary: Api v1 cohort sync mixpanel webhook create
+      x-summary-source: derived
+  /api/v1/cohort-sync/webhook/cohorts/{id}/members/add/:
+    post:
+      operationId: api_v1_cohort_sync_webhook_cohorts_members_add_create
+      description: Add members to a CSV cohort. Accepted deltas are applied to identity data asynchronously. Re-adding a member is a no-op, so retries are safe.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - Webhooks
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WebhookSyncMembers'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/WebhookSyncMembers'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/WebhookSyncMembers'
+        required: true
+      security:
+      - Cohort Sync Key: []
+      - Cohort Sync Key (Basic): []
+      responses:
+        '200':
+          description: No response body
+      x-flagsmith-minimum-plan: START_UP
+      summary: Api v1 cohort sync webhook cohorts members add create
+      x-summary-source: derived
+  /api/v1/cohort-sync/webhook/cohorts/{id}/members/remove/:
+    post:
+      operationId: api_v1_cohort_sync_webhook_cohorts_members_remove_create
+      description: Remove members from a CSV cohort. Accepted deltas are applied to identity data asynchronously. Removing a non-member is a no-op, so retries are safe.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - Webhooks
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WebhookSyncMembers'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/WebhookSyncMembers'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/WebhookSyncMembers'
+        required: true
+      security:
+      - Cohort Sync Key: []
+      - Cohort Sync Key (Basic): []
+      responses:
+        '200':
+          description: No response body
+      x-flagsmith-minimum-plan: START_UP
+      summary: Api v1 cohort sync webhook cohorts members remove create
+      x-summary-source: derived
+  /api/v1/environments/{environment_api_key}/webhooks/:
+    get:
+      operationId: api_v1_environments_webhooks_list
+      description: Manage webhooks for an environment.
+      parameters:
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      tags:
+      - Webhooks
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Webhook_2'
+          description: ''
+      summary: Api v1 environments webhooks list
+      x-summary-source: derived
+    post:
+      operationId: api_v1_environments_webhooks_create
+      description: Manage webhooks for an environment.
+      parameters:
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      tags:
+      - Webhooks
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Webhook_2'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Webhook_2'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Webhook_2'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Webhook_2'
+          description: ''
+      summary: Api v1 environments webhooks create
+      x-summary-source: derived
+  /api/v1/environments/{environment_api_key}/webhooks/{id}/:
+    put:
+      operationId: api_v1_environments_webhooks_update
+      description: Manage webhooks for an environment.
+      parameters:
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this webhook.
+        required: true
+      tags:
+      - Webhooks
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Webhook_2'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Webhook_2'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Webhook_2'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Webhook_2'
+          description: ''
+      summary: Api v1 environments webhooks update
+      x-summary-source: derived
+    patch:
+      operationId: api_v1_environments_webhooks_partial_update
+      description: Manage webhooks for an environment.
+      parameters:
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this webhook.
+        required: true
+      tags:
+      - Webhooks
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedWebhook'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedWebhook'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedWebhook'
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Webhook_2'
+          description: ''
+      summary: Api v1 environments webhooks partial update
+      x-summary-source: derived
+    delete:
+      operationId: api_v1_environments_webhooks_destroy
+      description: Manage webhooks for an environment.
+      parameters:
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this webhook.
+        required: true
+      tags:
+      - Webhooks
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '204':
+          description: No response body
+      summary: Api v1 environments webhooks destroy
+      x-summary-source: derived
+  /api/v1/github-webhook/:
+    post:
+      operationId: api_v1_github_webhook_create
+      tags:
+      - Webhooks
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+      summary: Api v1 github webhook create
+      x-summary-source: derived
+  /api/v1/organisations/{organisation_pk}/webhooks/:
+    get:
+      operationId: api_v1_organisations_webhooks_list
+      parameters:
+      - in: path
+        name: organisation_pk
+        schema:
+          type: integer
+        required: true
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - Webhooks
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedOrganisationWebhookList'
+          description: ''
+      summary: Api v1 organisations webhooks list
+      x-summary-source: derived
+    post:
+      operationId: api_v1_organisations_webhooks_create
+      parameters:
+      - in: path
+        name: organisation_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Webhooks
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrganisationWebhook'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/OrganisationWebhook'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/OrganisationWebhook'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganisationWebhook'
+          description: ''
+      summary: Api v1 organisations webhooks create
+      x-summary-source: derived
+  /api/v1/organisations/{organisation_pk}/webhooks/{id}/:
+    get:
+      operationId: api_v1_organisations_webhooks_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this organisation webhook.
+        required: true
+      - in: path
+        name: organisation_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Webhooks
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganisationWebhook'
+          description: ''
+      summary: Api v1 organisations webhooks retrieve
+      x-summary-source: derived
+    put:
+      operationId: api_v1_organisations_webhooks_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this organisation webhook.
+        required: true
+      - in: path
+        name: organisation_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Webhooks
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrganisationWebhook'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/OrganisationWebhook'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/OrganisationWebhook'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganisationWebhook'
+          description: ''
+      summary: Api v1 organisations webhooks update
+      x-summary-source: derived
+    patch:
+      operationId: api_v1_organisations_webhooks_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this organisation webhook.
+        required: true
+      - in: path
+        name: organisation_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Webhooks
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedOrganisationWebhook'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedOrganisationWebhook'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedOrganisationWebhook'
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganisationWebhook'
+          description: ''
+      summary: Api v1 organisations webhooks partial update
+      x-summary-source: derived
+    delete:
+      operationId: api_v1_organisations_webhooks_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this organisation webhook.
+        required: true
+      - in: path
+        name: organisation_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Webhooks
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '204':
+          description: No response body
+      summary: Api v1 organisations webhooks destroy
+      x-summary-source: derived
+  /api/v1/webhooks/test/:
+    post:
+      operationId: api_v1_webhooks_test_create
+      tags:
+      - Webhooks
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TestWebhook'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TestWebhook'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TestWebhook'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TestWebhookSuccessResponse'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TestWebhookErrorResponse'
+          description: ''
+      summary: Api v1 webhooks test create
+      x-summary-source: derived
 components:
-  parameters:
-    OrganisationId:
-      name: organisation_id
-      in: path
-      description: The unique identifier for the organisation
-      required: true
-      schema:
-        type: integer
-    EnvironmentApiKey:
-      name: environment_api_key
-      in: path
-      description: The API key for the environment
-      required: true
-      schema:
-        type: string
   schemas:
+    WebhookInput:
+      type: object
+      description: Input object for creating or updating a webhook
+      required:
+      - url
+      properties:
+        url:
+          type: string
+          format: uri
+          description: The URL to send webhook events to
+        enabled:
+          type: boolean
+          description: Whether the webhook should be enabled
+        secret:
+          type: string
+          description: Optional secret for signing webhook payloads with HMAC-SHA256
     Webhook:
       type: object
       description: A webhook configuration for receiving event notifications from Flagsmith.
@@ -148,28 +709,329 @@ components:
         secret:
           type: string
           description: Optional secret used to sign webhook payloads with HMAC-SHA256 for verification
-    WebhookInput:
+    ActionEnum:
+      enum:
+      - members
+      - add_members
+      - remove_members
+      type: string
+      description: '* `members` - members
+
+        * `add_members` - add_members
+
+        * `remove_members` - remove_members'
+    Scope:
       type: object
-      description: Input object for creating or updating a webhook
-      required:
-      - url
       properties:
+        type:
+          $ref: '#/components/schemas/WebhookScopeTypeEnum'
+      required:
+      - type
+    MixpanelParameters:
+      type: object
+      properties:
+        mixpanel_cohort_id:
+          type: string
+          maxLength: 255
+        mixpanel_cohort_name:
+          type: string
+          maxLength: 2000
+        members:
+          type: array
+          items:
+            $ref: '#/components/schemas/MixpanelMember'
+      required:
+      - members
+      - mixpanel_cohort_id
+      - mixpanel_cohort_name
+    OrganisationWebhook:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
         url:
           type: string
           format: uri
-          description: The URL to send webhook events to
+          maxLength: 200
         enabled:
           type: boolean
-          description: Whether the webhook should be enabled
         secret:
           type: string
-          description: Optional secret for signing webhook payloads with HMAC-SHA256
+          maxLength: 255
+        created_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          readOnly: true
+        updated_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          readOnly: true
+      required:
+      - url
+    MixpanelWebhookFailureResponse:
+      type: object
+      properties:
+        action:
+          type:
+          - string
+          - 'null'
+        status:
+          type: string
+        error:
+          $ref: '#/components/schemas/MixpanelWebhookError'
+      required:
+      - action
+      - error
+      - status
+    PatchedOrganisationWebhook:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        url:
+          type: string
+          format: uri
+          maxLength: 200
+        enabled:
+          type: boolean
+        secret:
+          type: string
+          maxLength: 255
+        created_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          readOnly: true
+        updated_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          readOnly: true
+    MixpanelWebhookError:
+      type: object
+      properties:
+        message:
+          type: string
+        code:
+          type: integer
+      required:
+      - code
+      - message
+    Webhook_2:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        url:
+          type: string
+          format: uri
+          maxLength: 200
+        enabled:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        secret:
+          type: string
+          maxLength: 255
+      required:
+      - url
+    PaginatedOrganisationWebhookList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrganisationWebhook'
+    MixpanelWebhookResponse:
+      type: object
+      properties:
+        action:
+          type: string
+        status:
+          type: string
+      required:
+      - action
+      - status
+    WebhookSyncMembers:
+      type: object
+      properties:
+        identifiers:
+          type: array
+          items:
+            type: string
+          description: Identity identifiers, each at most 1024 bytes of UTF-8.
+          maxItems: 10000
+          minItems: 1
+      required:
+      - identifiers
+    WebhookScopeTypeEnum:
+      enum:
+      - organisation
+      - environment
+      type: string
+      description: '* `organisation` - organisation
+
+        * `environment` - environment'
+    MixpanelWebhook:
+      type: object
+      properties:
+        action:
+          $ref: '#/components/schemas/ActionEnum'
+        parameters:
+          $ref: '#/components/schemas/MixpanelParameters'
+      required:
+      - action
+      - parameters
+    MixpanelMember:
+      type: object
+      properties:
+        mixpanel_distinct_id:
+          type: string
+      required:
+      - mixpanel_distinct_id
+    TestWebhook:
+      type: object
+      properties:
+        webhook_url:
+          type: string
+          format: uri
+        scope:
+          $ref: '#/components/schemas/Scope'
+        secret:
+          type:
+          - string
+          - 'null'
+      required:
+      - scope
+      - webhook_url
+    PatchedWebhook:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        url:
+          type: string
+          format: uri
+          maxLength: 200
+        enabled:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        secret:
+          type: string
+          maxLength: 255
+    TestWebhookErrorResponse:
+      type: object
+      properties:
+        detail:
+          type: string
+        status:
+          type: integer
+        body:
+          type:
+          - string
+          - 'null'
+      required:
+      - detail
+      - status
+    TestWebhookSuccessResponse:
+      type: object
+      properties:
+        detail:
+          type: string
+        status:
+          type: integer
+          default: 200
+      required:
+      - detail
+  parameters:
+    EnvironmentApiKey:
+      name: environment_api_key
+      in: path
+      description: The API key for the environment
+      required: true
+      schema:
+        type: string
+    OrganisationId:
+      name: organisation_id
+      in: path
+      description: The unique identifier for the organisation
+      required: true
+      schema:
+        type: integer
   securitySchemes:
     apiKeyAuth:
       type: apiKey
       in: header
       name: Authorization
       description: A secret Organisation API Token prefixed with 'Api-Key'. For example, 'Api-Key your-token-here'. This token should never be exposed in client-side code.
+    Cohort_Sync_Key:
+      type: http
+      scheme: bearer
+      description: For cohort sync endpoints called by an external cohort source, such as Amplitude.
+    Cohort_Sync_Key__Basic:
+      type: http
+      scheme: basic
+      description: For cohort sync endpoints called by an external cohort source that can only send Basic credentials, such as Mixpanel. The key is the password; the username is ignored.
+    Environment_API_Key:
+      type: apiKey
+      in: header
+      name: X-Environment-Key
+      description: For SDK endpoints. <a href='https://docs.flagsmith.com/clients/rest#public-api-endpoints'>Find out more</a>.
+    Master_API_Key:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: For Management API endpoints. <a href='https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/management-api'>Find out more</a>.
+    basicAuth:
+      type: http
+      scheme: basic
+    tokenAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: Token-based authentication with required prefix "Token"
 externalDocs:
   description: Flagsmith Admin API Documentation
   url: https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/admin-api
+x-refined-from:
+- flagsmith-admin-api-openapi.yml
+- flagsmith-api-openapi.json

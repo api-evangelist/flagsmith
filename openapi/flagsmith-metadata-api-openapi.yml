@@ -1,0 +1,459 @@
+openapi: 3.2.0
+info:
+  title: Flagsmith Metadata API
+  version: v1
+  description: Flagsmith's Core and SDK APIs. Check out Flagsmith documentation.
+  contact:
+    email: support@flagsmith.com
+  license:
+    name: BSD License
+    identifier: BSD-3-Clause
+tags:
+- name: Metadata
+  description: Manage metadata fields and model configuration.
+paths:
+  /api/v1/auth/saml/{name}/metadata/:
+    get:
+      operationId: api_v1_auth_saml_metadata_retrieve
+      parameters:
+      - in: query
+        name: format
+        schema:
+          type: string
+          enum:
+          - json
+          - xml
+      - in: path
+        name: name
+        schema:
+          type: string
+        required: true
+      tags:
+      - Metadata
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+      summary: Api v1 auth saml metadata retrieve
+      x-summary-source: derived
+  /api/v1/metadata/fields/:
+    get:
+      operationId: api_v1_metadata_fields_list
+      parameters:
+      - in: query
+        name: organisation
+        schema:
+          type: integer
+        description: Organisation ID to filter by
+        required: true
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      tags:
+      - Metadata
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedMetadataFieldList'
+          description: ''
+      summary: Api v1 metadata fields list
+      x-summary-source: derived
+    post:
+      operationId: api_v1_metadata_fields_create
+      tags:
+      - Metadata
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MetadataField'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/MetadataField'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/MetadataField'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MetadataField'
+          description: ''
+      summary: Api v1 metadata fields create
+      x-summary-source: derived
+  /api/v1/metadata/fields/{id}/:
+    get:
+      operationId: api_v1_metadata_fields_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this metadata field.
+        required: true
+      tags:
+      - Metadata
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MetadataField'
+          description: ''
+      summary: Api v1 metadata fields retrieve
+      x-summary-source: derived
+    put:
+      operationId: api_v1_metadata_fields_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this metadata field.
+        required: true
+      tags:
+      - Metadata
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MetadataField'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/MetadataField'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/MetadataField'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MetadataField'
+          description: ''
+      summary: Api v1 metadata fields update
+      x-summary-source: derived
+    patch:
+      operationId: api_v1_metadata_fields_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this metadata field.
+        required: true
+      tags:
+      - Metadata
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedMetadataField'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedMetadataField'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedMetadataField'
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MetadataField'
+          description: ''
+      summary: Api v1 metadata fields partial update
+      x-summary-source: derived
+    delete:
+      operationId: api_v1_metadata_fields_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this metadata field.
+        required: true
+      tags:
+      - Metadata
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '204':
+          description: No response body
+      summary: Api v1 metadata fields destroy
+      x-summary-source: derived
+  /api/v1/projects/{project_pk}/metadata/fields/:
+    get:
+      operationId: api_v1_projects_metadata_fields_list
+      parameters:
+      - in: query
+        name: entity
+        schema:
+          enum:
+          - feature
+          - segment
+          - environment
+          type: string
+          minLength: 1
+        description: 'Filter by entity type (feature, segment, or environment).
+
+
+          * `feature` - feature
+
+          * `segment` - segment
+
+          * `environment` - environment'
+      - in: query
+        name: include_organisation
+        schema:
+          type: boolean
+          default: false
+        description: Include inherited organisation-level fields. Project-level fields override same-named org fields.
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - in: path
+        name: project_pk
+        schema:
+          type:
+          - integer
+          - 'null'
+        required: true
+      tags:
+      - Metadata
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedMetadataFieldList'
+          description: ''
+      summary: Api v1 projects metadata fields list
+      x-summary-source: derived
+  /api/v1/projects/{project_pk}/metadata/fields/{id}/:
+    get:
+      operationId: api_v1_projects_metadata_fields_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this metadata field.
+        required: true
+      - in: path
+        name: project_pk
+        schema:
+          type:
+          - integer
+          - 'null'
+        required: true
+      tags:
+      - Metadata
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MetadataField'
+          description: ''
+      summary: Api v1 projects metadata fields retrieve
+      x-summary-source: derived
+components:
+  schemas:
+    MetadataModelFieldRequirement:
+      type: object
+      properties:
+        content_type:
+          type: integer
+        object_id:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+      required:
+      - content_type
+      - object_id
+    MetadataModelFieldNested:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        content_type:
+          type: integer
+        is_required_for:
+          type: array
+          items:
+            $ref: '#/components/schemas/MetadataModelFieldRequirement'
+          readOnly: true
+      required:
+      - content_type
+    MetadataField:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 255
+        type:
+          $ref: '#/components/schemas/MetadataFieldTypeEnum'
+        description:
+          type:
+          - string
+          - 'null'
+        organisation:
+          type: integer
+        project:
+          type:
+          - integer
+          - 'null'
+        model_fields:
+          type: array
+          items:
+            $ref: '#/components/schemas/MetadataModelFieldNested'
+          readOnly: true
+      required:
+      - name
+      - organisation
+    MetadataFieldTypeEnum:
+      enum:
+      - int
+      - str
+      - bool
+      - url
+      - multiline_str
+      type: string
+      description: '* `int` - Integer
+
+        * `str` - String
+
+        * `bool` - Boolean
+
+        * `url` - Url
+
+        * `multiline_str` - Multiline String'
+    PatchedMetadataField:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 255
+        type:
+          $ref: '#/components/schemas/MetadataFieldTypeEnum'
+        description:
+          type:
+          - string
+          - 'null'
+        organisation:
+          type: integer
+        project:
+          type:
+          - integer
+          - 'null'
+        model_fields:
+          type: array
+          items:
+            $ref: '#/components/schemas/MetadataModelFieldNested'
+          readOnly: true
+    PaginatedMetadataFieldList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/MetadataField'
+  securitySchemes:
+    Cohort_Sync_Key:
+      type: http
+      scheme: bearer
+      description: For cohort sync endpoints called by an external cohort source, such as Amplitude.
+    Cohort_Sync_Key__Basic:
+      type: http
+      scheme: basic
+      description: For cohort sync endpoints called by an external cohort source that can only send Basic credentials, such as Mixpanel. The key is the password; the username is ignored.
+    Environment_API_Key:
+      type: apiKey
+      in: header
+      name: X-Environment-Key
+      description: For SDK endpoints. <a href='https://docs.flagsmith.com/clients/rest#public-api-endpoints'>Find out more</a>.
+    Master_API_Key:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: For Management API endpoints. <a href='https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/management-api'>Find out more</a>.
+    basicAuth:
+      type: http
+      scheme: basic
+    tokenAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: Token-based authentication with required prefix "Token"

@@ -1,0 +1,1512 @@
+openapi: 3.2.0
+info:
+  title: Flagsmith Permissions API
+  version: v1
+  description: Flagsmith's Core and SDK APIs. Check out Flagsmith documentation.
+  contact:
+    email: support@flagsmith.com
+  license:
+    name: BSD License
+    identifier: BSD-3-Clause
+tags:
+- name: Permissions
+  description: Manage user and group permissions across organisations, projects, and environments.
+paths:
+  /api/v1/environments/{environment_api_key}/user-group-permissions/:
+    get:
+      operationId: api_v1_environments_user_group_permissions_list
+      parameters:
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      tags:
+      - Permissions
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ListUserPermissionGroupEnvironmentPermission'
+          description: ''
+      summary: Api v1 environments user group permissions list
+      x-summary-source: derived
+    post:
+      operationId: api_v1_environments_user_group_permissions_create
+      parameters:
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      tags:
+      - Permissions
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUpdateUserPermissionGroupEnvironmentPermission'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CreateUpdateUserPermissionGroupEnvironmentPermission'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CreateUpdateUserPermissionGroupEnvironmentPermission'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateUpdateUserPermissionGroupEnvironmentPermission'
+          description: ''
+      summary: Api v1 environments user group permissions create
+      x-summary-source: derived
+  /api/v1/environments/{environment_api_key}/user-group-permissions/{id}/:
+    get:
+      operationId: api_v1_environments_user_group_permissions_retrieve
+      parameters:
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this user permission group environment permission.
+        required: true
+      tags:
+      - Permissions
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateUpdateUserPermissionGroupEnvironmentPermission'
+          description: ''
+      summary: Api v1 environments user group permissions retrieve
+      x-summary-source: derived
+    put:
+      operationId: api_v1_environments_user_group_permissions_update
+      parameters:
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this user permission group environment permission.
+        required: true
+      tags:
+      - Permissions
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUpdateUserPermissionGroupEnvironmentPermission'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CreateUpdateUserPermissionGroupEnvironmentPermission'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CreateUpdateUserPermissionGroupEnvironmentPermission'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateUpdateUserPermissionGroupEnvironmentPermission'
+          description: ''
+      summary: Api v1 environments user group permissions update
+      x-summary-source: derived
+    patch:
+      operationId: api_v1_environments_user_group_permissions_partial_update
+      parameters:
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this user permission group environment permission.
+        required: true
+      tags:
+      - Permissions
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedCreateUpdateUserPermissionGroupEnvironmentPermission'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedCreateUpdateUserPermissionGroupEnvironmentPermission'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedCreateUpdateUserPermissionGroupEnvironmentPermission'
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateUpdateUserPermissionGroupEnvironmentPermission'
+          description: ''
+      summary: Api v1 environments user group permissions partial update
+      x-summary-source: derived
+    delete:
+      operationId: api_v1_environments_user_group_permissions_destroy
+      parameters:
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this user permission group environment permission.
+        required: true
+      tags:
+      - Permissions
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '204':
+          description: No response body
+      summary: Api v1 environments user group permissions destroy
+      x-summary-source: derived
+  /api/v1/environments/{environment_api_key}/user-permissions/:
+    get:
+      operationId: api_v1_environments_user_permissions_list
+      parameters:
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      tags:
+      - Permissions
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ListUserEnvironmentPermission'
+          description: ''
+      summary: Api v1 environments user permissions list
+      x-summary-source: derived
+    post:
+      operationId: api_v1_environments_user_permissions_create
+      parameters:
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      tags:
+      - Permissions
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUpdateUserEnvironmentPermission'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CreateUpdateUserEnvironmentPermission'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CreateUpdateUserEnvironmentPermission'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateUpdateUserEnvironmentPermission'
+          description: ''
+      summary: Api v1 environments user permissions create
+      x-summary-source: derived
+  /api/v1/environments/{environment_api_key}/user-permissions/{id}/:
+    get:
+      operationId: api_v1_environments_user_permissions_retrieve
+      parameters:
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this user environment permission.
+        required: true
+      tags:
+      - Permissions
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateUpdateUserEnvironmentPermission'
+          description: ''
+      summary: Api v1 environments user permissions retrieve
+      x-summary-source: derived
+    put:
+      operationId: api_v1_environments_user_permissions_update
+      parameters:
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this user environment permission.
+        required: true
+      tags:
+      - Permissions
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUpdateUserEnvironmentPermission'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CreateUpdateUserEnvironmentPermission'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CreateUpdateUserEnvironmentPermission'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateUpdateUserEnvironmentPermission'
+          description: ''
+      summary: Api v1 environments user permissions update
+      x-summary-source: derived
+    patch:
+      operationId: api_v1_environments_user_permissions_partial_update
+      parameters:
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this user environment permission.
+        required: true
+      tags:
+      - Permissions
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedCreateUpdateUserEnvironmentPermission'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedCreateUpdateUserEnvironmentPermission'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedCreateUpdateUserEnvironmentPermission'
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateUpdateUserEnvironmentPermission'
+          description: ''
+      summary: Api v1 environments user permissions partial update
+      x-summary-source: derived
+    delete:
+      operationId: api_v1_environments_user_permissions_destroy
+      parameters:
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this user environment permission.
+        required: true
+      tags:
+      - Permissions
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '204':
+          description: No response body
+      summary: Api v1 environments user permissions destroy
+      x-summary-source: derived
+  /api/v1/organisations/{organisation_pk}/user-group-permissions/:
+    get:
+      operationId: api_v1_organisations_user_group_permissions_list
+      parameters:
+      - in: query
+        name: group
+        schema:
+          type: integer
+      - in: path
+        name: organisation_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Permissions
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserPermissionGroupOrganisationPermissionList'
+          description: ''
+      summary: Api v1 organisations user group permissions list
+      x-summary-source: derived
+    post:
+      operationId: api_v1_organisations_user_group_permissions_create
+      parameters:
+      - in: path
+        name: organisation_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Permissions
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserPermissionGroupOrganisationPermissionUpdateCreate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UserPermissionGroupOrganisationPermissionUpdateCreate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UserPermissionGroupOrganisationPermissionUpdateCreate'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserPermissionGroupOrganisationPermissionUpdateCreate'
+          description: ''
+      summary: Api v1 organisations user group permissions create
+      x-summary-source: derived
+  /api/v1/organisations/{organisation_pk}/user-group-permissions/{id}/:
+    put:
+      operationId: api_v1_organisations_user_group_permissions_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this user permission group organisation permission.
+        required: true
+      - in: path
+        name: organisation_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Permissions
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserPermissionGroupOrganisationPermissionUpdateCreate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UserPermissionGroupOrganisationPermissionUpdateCreate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UserPermissionGroupOrganisationPermissionUpdateCreate'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserPermissionGroupOrganisationPermissionUpdateCreate'
+          description: ''
+      summary: Api v1 organisations user group permissions update
+      x-summary-source: derived
+    patch:
+      operationId: api_v1_organisations_user_group_permissions_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this user permission group organisation permission.
+        required: true
+      - in: path
+        name: organisation_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Permissions
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedUserPermissionGroupOrganisationPermissionUpdateCreate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedUserPermissionGroupOrganisationPermissionUpdateCreate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedUserPermissionGroupOrganisationPermissionUpdateCreate'
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserPermissionGroupOrganisationPermissionUpdateCreate'
+          description: ''
+      summary: Api v1 organisations user group permissions partial update
+      x-summary-source: derived
+    delete:
+      operationId: api_v1_organisations_user_group_permissions_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this user permission group organisation permission.
+        required: true
+      - in: path
+        name: organisation_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Permissions
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '204':
+          description: No response body
+      summary: Api v1 organisations user group permissions destroy
+      x-summary-source: derived
+  /api/v1/organisations/{organisation_pk}/user-permissions/:
+    get:
+      operationId: api_v1_organisations_user_permissions_list
+      parameters:
+      - in: path
+        name: organisation_pk
+        schema:
+          type: integer
+        required: true
+      - in: query
+        name: user
+        schema:
+          type: integer
+      tags:
+      - Permissions
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserOrganisationPermissionList'
+          description: ''
+      summary: Api v1 organisations user permissions list
+      x-summary-source: derived
+    post:
+      operationId: api_v1_organisations_user_permissions_create
+      parameters:
+      - in: path
+        name: organisation_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Permissions
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserOrganisationPermissionUpdateCreate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UserOrganisationPermissionUpdateCreate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UserOrganisationPermissionUpdateCreate'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserOrganisationPermissionUpdateCreate'
+          description: ''
+      summary: Api v1 organisations user permissions create
+      x-summary-source: derived
+  /api/v1/organisations/{organisation_pk}/user-permissions/{id}/:
+    put:
+      operationId: api_v1_organisations_user_permissions_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this user organisation permission.
+        required: true
+      - in: path
+        name: organisation_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Permissions
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserOrganisationPermissionUpdateCreate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UserOrganisationPermissionUpdateCreate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UserOrganisationPermissionUpdateCreate'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserOrganisationPermissionUpdateCreate'
+          description: ''
+      summary: Api v1 organisations user permissions update
+      x-summary-source: derived
+    patch:
+      operationId: api_v1_organisations_user_permissions_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this user organisation permission.
+        required: true
+      - in: path
+        name: organisation_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Permissions
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedUserOrganisationPermissionUpdateCreate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedUserOrganisationPermissionUpdateCreate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedUserOrganisationPermissionUpdateCreate'
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserOrganisationPermissionUpdateCreate'
+          description: ''
+      summary: Api v1 organisations user permissions partial update
+      x-summary-source: derived
+    delete:
+      operationId: api_v1_organisations_user_permissions_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this user organisation permission.
+        required: true
+      - in: path
+        name: organisation_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Permissions
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '204':
+          description: No response body
+      summary: Api v1 organisations user permissions destroy
+      x-summary-source: derived
+  /api/v1/projects/{project_pk}/user-group-permissions/:
+    get:
+      operationId: api_v1_projects_user_group_permissions_list
+      parameters:
+      - in: path
+        name: project_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Permissions
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ListUserPermissionGroupProjectPermission'
+          description: ''
+      summary: Api v1 projects user group permissions list
+      x-summary-source: derived
+    post:
+      operationId: api_v1_projects_user_group_permissions_create
+      parameters:
+      - in: path
+        name: project_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Permissions
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUpdateUserPermissionGroupProjectPermission'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CreateUpdateUserPermissionGroupProjectPermission'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CreateUpdateUserPermissionGroupProjectPermission'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateUpdateUserPermissionGroupProjectPermission'
+          description: ''
+      summary: Api v1 projects user group permissions create
+      x-summary-source: derived
+  /api/v1/projects/{project_pk}/user-group-permissions/{id}/:
+    get:
+      operationId: api_v1_projects_user_group_permissions_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this user project permission.
+        required: true
+      - in: path
+        name: project_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Permissions
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateUpdateUserPermissionGroupProjectPermission'
+          description: ''
+      summary: Api v1 projects user group permissions retrieve
+      x-summary-source: derived
+    put:
+      operationId: api_v1_projects_user_group_permissions_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this user project permission.
+        required: true
+      - in: path
+        name: project_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Permissions
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUpdateUserPermissionGroupProjectPermission'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CreateUpdateUserPermissionGroupProjectPermission'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CreateUpdateUserPermissionGroupProjectPermission'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateUpdateUserPermissionGroupProjectPermission'
+          description: ''
+      summary: Api v1 projects user group permissions update
+      x-summary-source: derived
+    patch:
+      operationId: api_v1_projects_user_group_permissions_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this user project permission.
+        required: true
+      - in: path
+        name: project_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Permissions
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedCreateUpdateUserPermissionGroupProjectPermission'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedCreateUpdateUserPermissionGroupProjectPermission'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedCreateUpdateUserPermissionGroupProjectPermission'
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateUpdateUserPermissionGroupProjectPermission'
+          description: ''
+      summary: Api v1 projects user group permissions partial update
+      x-summary-source: derived
+    delete:
+      operationId: api_v1_projects_user_group_permissions_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this user project permission.
+        required: true
+      - in: path
+        name: project_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Permissions
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '204':
+          description: No response body
+      summary: Api v1 projects user group permissions destroy
+      x-summary-source: derived
+  /api/v1/projects/{project_pk}/user-permissions/:
+    get:
+      operationId: api_v1_projects_user_permissions_list
+      parameters:
+      - in: path
+        name: project_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Permissions
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ListUserProjectPermission'
+          description: ''
+      summary: Api v1 projects user permissions list
+      x-summary-source: derived
+    post:
+      operationId: api_v1_projects_user_permissions_create
+      parameters:
+      - in: path
+        name: project_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Permissions
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUpdateUserProjectPermission'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CreateUpdateUserProjectPermission'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CreateUpdateUserProjectPermission'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateUpdateUserProjectPermission'
+          description: ''
+      summary: Api v1 projects user permissions create
+      x-summary-source: derived
+  /api/v1/projects/{project_pk}/user-permissions/{id}/:
+    get:
+      operationId: api_v1_projects_user_permissions_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this user project permission.
+        required: true
+      - in: path
+        name: project_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Permissions
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateUpdateUserProjectPermission'
+          description: ''
+      summary: Api v1 projects user permissions retrieve
+      x-summary-source: derived
+    put:
+      operationId: api_v1_projects_user_permissions_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this user project permission.
+        required: true
+      - in: path
+        name: project_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Permissions
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUpdateUserProjectPermission'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CreateUpdateUserProjectPermission'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CreateUpdateUserProjectPermission'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateUpdateUserProjectPermission'
+          description: ''
+      summary: Api v1 projects user permissions update
+      x-summary-source: derived
+    patch:
+      operationId: api_v1_projects_user_permissions_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this user project permission.
+        required: true
+      - in: path
+        name: project_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Permissions
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedCreateUpdateUserProjectPermission'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedCreateUpdateUserProjectPermission'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedCreateUpdateUserProjectPermission'
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateUpdateUserProjectPermission'
+          description: ''
+      summary: Api v1 projects user permissions partial update
+      x-summary-source: derived
+    delete:
+      operationId: api_v1_projects_user_permissions_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this user project permission.
+        required: true
+      - in: path
+        name: project_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Permissions
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '204':
+          description: No response body
+      summary: Api v1 projects user permissions destroy
+      x-summary-source: derived
+components:
+  schemas:
+    ListUserEnvironmentPermission:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        permissions:
+          type: array
+          items:
+            type: string
+        admin:
+          type: boolean
+        user:
+          $ref: '#/components/schemas/UserList'
+      required:
+      - user
+    CreateUpdateUserProjectPermission:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        permissions:
+          type: array
+          items:
+            type: string
+        admin:
+          type: boolean
+        user:
+          type: integer
+      required:
+      - user
+    CreateUpdateUserPermissionGroupProjectPermission:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        permissions:
+          type: array
+          items:
+            type: string
+        admin:
+          type: boolean
+        group:
+          type: integer
+      required:
+      - group
+    PatchedUserOrganisationPermissionUpdateCreate:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        user:
+          type: integer
+        permissions:
+          type: array
+          items:
+            type: string
+    ListUserPermissionGroupEnvironmentPermission:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        permissions:
+          type: array
+          items:
+            type: string
+        admin:
+          type: boolean
+        group:
+          $ref: '#/components/schemas/UserPermissionGroupSerializerDetail'
+      required:
+      - group
+    PatchedUserPermissionGroupOrganisationPermissionUpdateCreate:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        group:
+          type: integer
+        permissions:
+          type: array
+          items:
+            type: string
+    UserPermissionGroupOrganisationPermissionList:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        group:
+          $ref: '#/components/schemas/UserPermissionGroup'
+        permissions:
+          type: array
+          items:
+            type: string
+      required:
+      - group
+    UserOrganisationPermissionList:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        user:
+          $ref: '#/components/schemas/UserList'
+        permissions:
+          type: array
+          items:
+            type: string
+      required:
+      - user
+    PatchedCreateUpdateUserPermissionGroupEnvironmentPermission:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        permissions:
+          type: array
+          items:
+            type: string
+        admin:
+          type: boolean
+        group:
+          type: integer
+    UserPermissionGroupMembership:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        email:
+          type: string
+          format: email
+          maxLength: 254
+        first_name:
+          type: string
+          maxLength: 150
+        last_name:
+          type: string
+          maxLength: 150
+        last_login:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        group_admin:
+          type: boolean
+          readOnly: true
+      required:
+      - email
+      - first_name
+      - last_name
+    UserPermissionGroup:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 200
+        users:
+          type: array
+          items:
+            type: integer
+          readOnly: true
+        is_default:
+          type: boolean
+          description: If set to true, all new users will be added to this group
+        external_id:
+          type:
+          - string
+          - 'null'
+          description: Unique ID of the group in an external system
+          maxLength: 255
+      required:
+      - name
+    CreateUpdateUserEnvironmentPermission:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        permissions:
+          type: array
+          items:
+            type: string
+        admin:
+          type: boolean
+        user:
+          type: integer
+      required:
+      - user
+    UserPermissionGroupOrganisationPermissionUpdateCreate:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        group:
+          type: integer
+        permissions:
+          type: array
+          items:
+            type: string
+      required:
+      - group
+    CreateUpdateUserPermissionGroupEnvironmentPermission:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        permissions:
+          type: array
+          items:
+            type: string
+        admin:
+          type: boolean
+        group:
+          type: integer
+      required:
+      - group
+    ListUserPermissionGroupProjectPermission:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        permissions:
+          type: array
+          items:
+            type: string
+        admin:
+          type: boolean
+        group:
+          $ref: '#/components/schemas/UserPermissionGroup'
+      required:
+      - group
+    UserOrganisationPermissionUpdateCreate:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        user:
+          type: integer
+        permissions:
+          type: array
+          items:
+            type: string
+      required:
+      - user
+    PatchedCreateUpdateUserEnvironmentPermission:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        permissions:
+          type: array
+          items:
+            type: string
+        admin:
+          type: boolean
+        user:
+          type: integer
+    PatchedCreateUpdateUserPermissionGroupProjectPermission:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        permissions:
+          type: array
+          items:
+            type: string
+        admin:
+          type: boolean
+        group:
+          type: integer
+    UserList:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        email:
+          type: string
+          format: email
+          maxLength: 254
+        first_name:
+          type: string
+          maxLength: 150
+        last_name:
+          type: string
+          maxLength: 150
+        last_login:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+      required:
+      - email
+      - first_name
+      - last_name
+    ListUserProjectPermission:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        permissions:
+          type: array
+          items:
+            type: string
+        admin:
+          type: boolean
+        user:
+          $ref: '#/components/schemas/UserList'
+      required:
+      - user
+    UserPermissionGroupSerializerDetail:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 200
+        users:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserPermissionGroupMembership'
+          readOnly: true
+        is_default:
+          type: boolean
+          description: If set to true, all new users will be added to this group
+        external_id:
+          type:
+          - string
+          - 'null'
+          description: Unique ID of the group in an external system
+          maxLength: 255
+      required:
+      - name
+    PatchedCreateUpdateUserProjectPermission:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        permissions:
+          type: array
+          items:
+            type: string
+        admin:
+          type: boolean
+        user:
+          type: integer
+  securitySchemes:
+    Cohort_Sync_Key:
+      type: http
+      scheme: bearer
+      description: For cohort sync endpoints called by an external cohort source, such as Amplitude.
+    Cohort_Sync_Key__Basic:
+      type: http
+      scheme: basic
+      description: For cohort sync endpoints called by an external cohort source that can only send Basic credentials, such as Mixpanel. The key is the password; the username is ignored.
+    Environment_API_Key:
+      type: apiKey
+      in: header
+      name: X-Environment-Key
+      description: For SDK endpoints. <a href='https://docs.flagsmith.com/clients/rest#public-api-endpoints'>Find out more</a>.
+    Master_API_Key:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: For Management API endpoints. <a href='https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/management-api'>Find out more</a>.
+    basicAuth:
+      type: http
+      scheme: basic
+    tokenAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: Token-based authentication with required prefix "Token"

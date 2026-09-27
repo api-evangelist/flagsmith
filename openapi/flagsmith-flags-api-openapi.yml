@@ -41,6 +41,14 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 components:
+  parameters:
+    FeatureNameQuery:
+      name: feature
+      in: query
+      description: Optional feature name to filter flags. When provided, returns only the flag matching the specified feature name.
+      required: false
+      schema:
+        type: string
   schemas:
     Error:
       type: object
@@ -49,6 +57,36 @@ components:
         detail:
           type: string
           description: A human-readable error message
+    Flag:
+      type: object
+      description: A feature flag object containing the feature definition, its enabled state, and any associated value for the environment.
+      properties:
+        id:
+          type: integer
+          description: The unique identifier for this feature state
+        feature:
+          $ref: '#/components/schemas/Feature'
+        feature_state_value:
+          description: The value associated with this feature state. Can be a string, integer, boolean, or null depending on the feature configuration.
+          oneOf:
+          - type: string
+          - type: integer
+          - type: boolean
+          - type: 'null'
+        enabled:
+          type: boolean
+          description: Whether this feature flag is currently enabled
+        environment:
+          type: integer
+          description: The ID of the environment this flag belongs to
+        identity:
+          type: integer
+          nullable: true
+          description: The identity ID if this is an identity-specific override, or null for environment defaults
+        feature_segment:
+          type: integer
+          nullable: true
+          description: The feature segment ID if this flag state is a segment override, or null otherwise
     Feature:
       type: object
       description: A feature definition containing metadata about the feature flag including its name, type, and default configuration.
@@ -80,44 +118,6 @@ components:
           - STANDARD
           - MULTIVARIATE
           description: The type of feature flag. STANDARD for simple on/off flags, MULTIVARIATE for flags with multiple value variations.
-    Flag:
-      type: object
-      description: A feature flag object containing the feature definition, its enabled state, and any associated value for the environment.
-      properties:
-        id:
-          type: integer
-          description: The unique identifier for this feature state
-        feature:
-          $ref: '#/components/schemas/Feature'
-        feature_state_value:
-          description: The value associated with this feature state. Can be a string, integer, boolean, or null depending on the feature configuration.
-          oneOf:
-          - type: string
-          - type: integer
-          - type: boolean
-          - type: 'null'
-        enabled:
-          type: boolean
-          description: Whether this feature flag is currently enabled
-        environment:
-          type: integer
-          description: The ID of the environment this flag belongs to
-        identity:
-          type: integer
-          nullable: true
-          description: The identity ID if this is an identity-specific override, or null for environment defaults
-        feature_segment:
-          type: integer
-          nullable: true
-          description: The feature segment ID if this flag state is a segment override, or null otherwise
-  parameters:
-    FeatureNameQuery:
-      name: feature
-      in: query
-      description: Optional feature name to filter flags. When provided, returns only the flag matching the specified feature name.
-      required: false
-      schema:
-        type: string
   securitySchemes:
     apiKeyAuth:
       type: apiKey

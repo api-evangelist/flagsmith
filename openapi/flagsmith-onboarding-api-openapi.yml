@@ -1,0 +1,94 @@
+openapi: 3.2.0
+info:
+  title: Flagsmith Onboarding API
+  version: v1
+  description: Flagsmith's Core and SDK APIs. Check out Flagsmith documentation.
+  contact:
+    email: support@flagsmith.com
+  license:
+    name: BSD License
+    identifier: BSD-3-Clause
+tags:
+- name: Onboarding
+  description: Onboarding flows.
+paths:
+  /api/v1/onboarding/request/receive/:
+    post:
+      operationId: api_v1_onboarding_request_receive_create
+      tags:
+      - Onboarding
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SelfHostedOnboardingReceiveSupport'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SelfHostedOnboardingReceiveSupport'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/SelfHostedOnboardingReceiveSupport'
+        required: true
+      responses:
+        '204':
+          description: No response body
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: ''
+      summary: Api v1 onboarding request receive create
+      x-summary-source: derived
+components:
+  schemas:
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+      - message
+    SelfHostedOnboardingReceiveSupport:
+      type: object
+      properties:
+        first_name:
+          type: string
+        last_name:
+          type: string
+        email:
+          type: string
+          format: email
+        hubspot_cookie:
+          type: string
+      required:
+      - email
+      - first_name
+      - last_name
+  securitySchemes:
+    Cohort_Sync_Key:
+      type: http
+      scheme: bearer
+      description: For cohort sync endpoints called by an external cohort source, such as Amplitude.
+    Cohort_Sync_Key__Basic:
+      type: http
+      scheme: basic
+      description: For cohort sync endpoints called by an external cohort source that can only send Basic credentials, such as Mixpanel. The key is the password; the username is ignored.
+    Environment_API_Key:
+      type: apiKey
+      in: header
+      name: X-Environment-Key
+      description: For SDK endpoints. <a href='https://docs.flagsmith.com/clients/rest#public-api-endpoints'>Find out more</a>.
+    Master_API_Key:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: For Management API endpoints. <a href='https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/management-api'>Find out more</a>.
+    basicAuth:
+      type: http
+      scheme: basic
+    tokenAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: Token-based authentication with required prefix "Token"

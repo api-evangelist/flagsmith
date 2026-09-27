@@ -1,0 +1,223 @@
+openapi: 3.2.0
+info:
+  title: Flagsmith Other API
+  version: v1
+  description: Flagsmith's Core and SDK APIs. Check out Flagsmith documentation.
+  contact:
+    email: support@flagsmith.com
+  license:
+    name: BSD License
+    identifier: BSD-3-Clause
+tags:
+- name: Other
+  description: Other endpoints.
+paths:
+  /api/v1/cohort-sync/amplitude/lists/:
+    post:
+      operationId: api_v1_cohort_sync_amplitude_lists_create
+      description: Called by Amplitude once per cohort sync setup; creates the backing cohort and returns its identifier as the list ID.
+      tags:
+      - Other
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AmplitudeList'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/AmplitudeList'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/AmplitudeList'
+        required: true
+      security:
+      - Cohort Sync Key: []
+      - Cohort Sync Key (Basic): []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AmplitudeListResponse'
+          description: ''
+      x-flagsmith-minimum-plan: START_UP
+      summary: Api v1 cohort sync amplitude lists create
+      x-summary-source: derived
+  /api/v1/cohort-sync/amplitude/lists/{id}/add/:
+    post:
+      operationId: api_v1_cohort_sync_amplitude_lists_add_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - Other
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CohortSyncMembers'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CohortSyncMembers'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CohortSyncMembers'
+        required: true
+      security:
+      - Cohort Sync Key: []
+      - Cohort Sync Key (Basic): []
+      responses:
+        '200':
+          description: No response body
+      x-flagsmith-minimum-plan: START_UP
+      summary: Api v1 cohort sync amplitude lists add create
+      x-summary-source: derived
+  /api/v1/cohort-sync/amplitude/lists/{id}/remove/:
+    post:
+      operationId: api_v1_cohort_sync_amplitude_lists_remove_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - Other
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CohortSyncMembers'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CohortSyncMembers'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CohortSyncMembers'
+        required: true
+      security:
+      - Cohort Sync Key: []
+      - Cohort Sync Key (Basic): []
+      responses:
+        '200':
+          description: No response body
+      x-flagsmith-minimum-plan: START_UP
+      summary: Api v1 cohort sync amplitude lists remove create
+      x-summary-source: derived
+  /api/v1/gitlab-webhook/{webhook_uuid}/:
+    post:
+      operationId: api_v1_gitlab_webhook_create
+      parameters:
+      - in: path
+        name: webhook_uuid
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - Other
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+      summary: Api v1 gitlab webhook create
+      x-summary-source: derived
+  /api/v1/oauth/authorize/:
+    get:
+      operationId: api_v1_oauth_authorize_retrieve
+      description: Validate an authorisation request and return application info.
+      tags:
+      - Other
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          description: No response body
+      summary: Api v1 oauth authorize retrieve
+      x-summary-source: derived
+    post:
+      operationId: api_v1_oauth_authorize_create
+      description: Process a consent decision and return the redirect URI.
+      tags:
+      - Other
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          description: No response body
+      summary: Api v1 oauth authorize create
+      x-summary-source: derived
+components:
+  schemas:
+    AmplitudeListResponseEnvelope:
+      type: object
+      properties:
+        list_id:
+          type: string
+          format: uuid
+      required:
+      - list_id
+    AmplitudeListResponse:
+      type: object
+      properties:
+        list_id:
+          type: string
+          format: uuid
+        response:
+          $ref: '#/components/schemas/AmplitudeListResponseEnvelope'
+      required:
+      - list_id
+      - response
+    AmplitudeList:
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 2000
+      required:
+      - name
+    CohortSyncMembers:
+      type: object
+      properties:
+        user_ids:
+          type: array
+          items:
+            type: string
+          minItems: 1
+      required:
+      - user_ids
+  securitySchemes:
+    Cohort_Sync_Key:
+      type: http
+      scheme: bearer
+      description: For cohort sync endpoints called by an external cohort source, such as Amplitude.
+    Cohort_Sync_Key__Basic:
+      type: http
+      scheme: basic
+      description: For cohort sync endpoints called by an external cohort source that can only send Basic credentials, such as Mixpanel. The key is the password; the username is ignored.
+    Environment_API_Key:
+      type: apiKey
+      in: header
+      name: X-Environment-Key
+      description: For SDK endpoints. <a href='https://docs.flagsmith.com/clients/rest#public-api-endpoints'>Find out more</a>.
+    Master_API_Key:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: For Management API endpoints. <a href='https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/management-api'>Find out more</a>.
+    basicAuth:
+      type: http
+      scheme: basic
+    tokenAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: Token-based authentication with required prefix "Token"

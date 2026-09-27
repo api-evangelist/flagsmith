@@ -1,17 +1,11 @@
 openapi: 3.2.0
 info:
-  title: Flagsmith Admin Features API
-  description: The Flagsmith Admin API allows developers to programmatically manage all aspects of their Flagsmith projects. Anything that can be done through the Flagsmith dashboard can also be accomplished via this API, including creating, updating, and deleting projects, environments, feature flags, segments, and users. It uses a secret Organisation API Token for authentication and provides a Swagger interface at api.flagsmith.com/api/v1/docs for interactive exploration.
+  title: Flagsmith Features API
   version: '1.0'
-  contact:
-    name: Flagsmith Support
-    url: https://www.flagsmith.com/contact-us
-  termsOfService: https://www.flagsmith.com/terms-of-service
+  description: 'Operations tagged Features across 2 of this provider''s published API definitions: flagsmith-admin-api-openapi.yml, flagsmith-api-openapi.json. Each path carries the servers of the definition it was published in.'
 servers:
 - url: https://api.flagsmith.com/api/v1
   description: Flagsmith Production API
-security:
-- apiKeyAuth: []
 tags:
 - name: Features
   description: Manage feature flags within a project. Features can be toggled on or off and can have remote configuration values.
@@ -36,6 +30,8 @@ paths:
           description: Unauthorized - invalid or missing API token
         '404':
           description: Project not found
+      security:
+      - apiKeyAuth: []
     post:
       operationId: createFeature
       summary: Create a feature flag
@@ -63,6 +59,11 @@ paths:
           description: Unauthorized - invalid or missing API token
         '404':
           description: Project not found
+      security:
+      - apiKeyAuth: []
+    servers:
+    - url: https://api.flagsmith.com/api/v1
+      description: Flagsmith Production API
   /projects/{project_id}/features/{feature_id}/:
     get:
       operationId: getFeature
@@ -84,6 +85,8 @@ paths:
           description: Unauthorized - invalid or missing API token
         '404':
           description: Feature or project not found
+      security:
+      - apiKeyAuth: []
     put:
       operationId: updateFeature
       summary: Update a feature flag
@@ -112,6 +115,8 @@ paths:
           description: Unauthorized - invalid or missing API token
         '404':
           description: Feature or project not found
+      security:
+      - apiKeyAuth: []
     delete:
       operationId: deleteFeature
       summary: Delete a feature flag
@@ -128,6 +133,11 @@ paths:
           description: Unauthorized - invalid or missing API token
         '404':
           description: Feature or project not found
+      security:
+      - apiKeyAuth: []
+    servers:
+    - url: https://api.flagsmith.com/api/v1
+      description: Flagsmith Production API
   /environments/{environment_api_key}/featurestates/:
     get:
       operationId: listFeatureStates
@@ -148,6 +158,11 @@ paths:
           description: Unauthorized - invalid or missing API token
         '404':
           description: Environment not found
+      security:
+      - apiKeyAuth: []
+    servers:
+    - url: https://api.flagsmith.com/api/v1
+      description: Flagsmith Production API
   /environments/{environment_api_key}/featurestates/{feature_state_id}/:
     patch:
       operationId: updateFeatureState
@@ -177,111 +192,1179 @@ paths:
           description: Unauthorized - invalid or missing API token
         '404':
           description: Feature state or environment not found
+      security:
+      - apiKeyAuth: []
+    servers:
+    - url: https://api.flagsmith.com/api/v1
+      description: Flagsmith Production API
+  /api/v1/environments/{environment_pk}/features/{feature_pk}/versions/{id}/:
+    delete:
+      operationId: api_v1_environments_features_versions_destroy
+      parameters:
+      - in: path
+        name: environment_pk
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: feature_pk
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - Features
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '204':
+          description: No response body
+      summary: Api v1 environments features versions destroy
+      x-summary-source: derived
+  /api/v1/features/create-feature-export/:
+    post:
+      operationId: api_v1_features_create_feature_export_create
+      tags:
+      - Features
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateFeatureExport'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CreateFeatureExport'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CreateFeatureExport'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FeatureExport'
+          description: ''
+      summary: Api v1 features create feature export create
+      x-summary-source: derived
+  /api/v1/features/download-feature-export/{feature_export_id}/:
+    get:
+      operationId: api_v1_features_download_feature_export_retrieve
+      description: This endpoint is to download a feature export file from a specific environment
+      parameters:
+      - in: path
+        name: feature_export_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Features
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+          description: ''
+      summary: Api v1 features download feature export retrieve
+      x-summary-source: derived
+  /api/v1/features/download-flagsmith-on-flagsmith/:
+    get:
+      operationId: api_v1_features_download_flagsmith_on_flagsmith_retrieve
+      description: This endpoint is to download a feature export to enable Flagsmith on Flagsmith
+      tags:
+      - Features
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+          description: ''
+      summary: Api v1 features download flagsmith on flagsmith retrieve
+      x-summary-source: derived
+  /api/v1/features/feature-import/{environment_id}:
+    post:
+      operationId: api_v1_features_feature_import_create
+      parameters:
+      - in: path
+        name: environment_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Features
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FeatureImportUpload'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/FeatureImportUpload'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/FeatureImportUpload'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FeatureImport'
+          description: ''
+      summary: Api v1 features feature import create
+      x-summary-source: derived
+  /api/v1/features/feature-segments/:
+    post:
+      operationId: api_v1_features_feature_segments_create
+      tags:
+      - Features
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FeatureSegmentCreate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/FeatureSegmentCreate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/FeatureSegmentCreate'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FeatureSegmentCreate'
+          description: ''
+      summary: Api v1 features feature segments create
+      x-summary-source: derived
+  /api/v1/features/feature-segments/{id}/:
+    get:
+      operationId: api_v1_features_feature_segments_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this feature segment.
+        required: true
+      tags:
+      - Features
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FeatureSegmentList'
+          description: ''
+      summary: Api v1 features feature segments retrieve
+      x-summary-source: derived
+    put:
+      operationId: api_v1_features_feature_segments_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this feature segment.
+        required: true
+      tags:
+      - Features
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FeatureSegmentCreate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/FeatureSegmentCreate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/FeatureSegmentCreate'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FeatureSegmentCreate'
+          description: ''
+      summary: Api v1 features feature segments update
+      x-summary-source: derived
+    patch:
+      operationId: api_v1_features_feature_segments_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this feature segment.
+        required: true
+      tags:
+      - Features
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedFeatureSegmentCreate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedFeatureSegmentCreate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedFeatureSegmentCreate'
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FeatureSegmentCreate'
+          description: ''
+      summary: Api v1 features feature segments partial update
+      x-summary-source: derived
+  /api/v1/features/feature-segments/get-by-uuid/{uuid}/:
+    get:
+      operationId: api_v1_features_feature_segments_get_by_uuid_retrieve
+      parameters:
+      - in: path
+        name: uuid
+        schema:
+          type: string
+          pattern: ^[0-9a-f-]+$
+        required: true
+      tags:
+      - Features
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FeatureSegmentList'
+          description: ''
+      summary: Api v1 features feature segments get by uuid retrieve
+      x-summary-source: derived
+  /api/v1/features/feature-segments/update-priorities/:
+    post:
+      operationId: api_v1_features_feature_segments_update_priorities_create
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - Features
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/FeatureSegmentChangePriorities'
+          application/x-www-form-urlencoded:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/FeatureSegmentChangePriorities'
+          multipart/form-data:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/FeatureSegmentChangePriorities'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedFeatureSegmentListList'
+          description: ''
+      summary: Api v1 features feature segments update priorities create
+      x-summary-source: derived
+  /api/v1/features/get-by-uuid/{uuid}/:
+    get:
+      operationId: api_v1_features_get_by_uuid_retrieve
+      parameters:
+      - in: path
+        name: uuid
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - Features
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateFeature'
+          description: ''
+      summary: Api v1 features get by uuid retrieve
+      x-summary-source: derived
+  /api/v1/features/workflows/change-requests/{id}/:
+    get:
+      operationId: api_v1_features_workflows_change_requests_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this change request.
+        required: true
+      tags:
+      - Features
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChangeRequestRetrieve'
+          description: ''
+      summary: Api v1 features workflows change requests retrieve
+      x-summary-source: derived
+    put:
+      operationId: api_v1_features_workflows_change_requests_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this change request.
+        required: true
+      tags:
+      - Features
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChangeRequestUpdate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ChangeRequestUpdate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ChangeRequestUpdate'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChangeRequestUpdate'
+          description: ''
+      summary: Api v1 features workflows change requests update
+      x-summary-source: derived
+    patch:
+      operationId: api_v1_features_workflows_change_requests_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this change request.
+        required: true
+      tags:
+      - Features
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedChangeRequestUpdate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedChangeRequestUpdate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedChangeRequestUpdate'
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChangeRequestUpdate'
+          description: ''
+      summary: Api v1 features workflows change requests partial update
+      x-summary-source: derived
+    delete:
+      operationId: api_v1_features_workflows_change_requests_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this change request.
+        required: true
+      tags:
+      - Features
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '204':
+          description: No response body
+      summary: Api v1 features workflows change requests destroy
+      x-summary-source: derived
+  /api/v1/features/workflows/change-requests/{id}/approve/:
+    post:
+      operationId: api_v1_features_workflows_change_requests_approve_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this change request.
+        required: true
+      tags:
+      - Features
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChangeRequestRetrieve'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkflowsError'
+          description: ''
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkflowsError'
+          description: ''
+      summary: Api v1 features workflows change requests approve create
+      x-summary-source: derived
+  /api/v1/features/workflows/change-requests/{id}/commit/:
+    post:
+      operationId: api_v1_features_workflows_change_requests_commit_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this change request.
+        required: true
+      tags:
+      - Features
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChangeRequestRetrieve'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkflowsError'
+          description: ''
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkflowsError'
+          description: ''
+      summary: Api v1 features workflows change requests commit create
+      x-summary-source: derived
+  /api/v1/flags/{feature_id}/multivariate-options/:
+    get:
+      operationId: api_v1_flags_multivariate_options_list
+      parameters:
+      - in: path
+        name: feature_id
+        schema:
+          type: string
+          pattern: ^[0-9]+$
+        required: true
+      tags:
+      - Features
+      security:
+      - Environment API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FeatureMVOptionsValuesResponse'
+          description: ''
+      summary: Api v1 flags multivariate options list
+      x-summary-source: derived
+  /api/v1/multivariate/options/get-by-uuid/{uuid}/:
+    get:
+      operationId: api_v1_multivariate_options_get_by_uuid_retrieve
+      parameters:
+      - in: path
+        name: uuid
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - Features
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MultivariateFeatureOption'
+          description: ''
+      summary: Api v1 multivariate options get by uuid retrieve
+      x-summary-source: derived
+  /api/v1/projects/{project_pk}/features/{feature_pk}/feature-external-resources/:
+    post:
+      operationId: api_v1_projects_features_feature_external_resources_create
+      parameters:
+      - in: path
+        name: feature_pk
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: project_pk
+        schema:
+          type: string
+        required: true
+      tags:
+      - Features
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FeatureExternalResource'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/FeatureExternalResource'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/FeatureExternalResource'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FeatureExternalResource'
+          description: ''
+      summary: Api v1 projects features feature external resources create
+      x-summary-source: derived
+  /api/v1/projects/{project_pk}/features/{feature_pk}/feature-external-resources/{id}/:
+    get:
+      operationId: api_v1_projects_features_feature_external_resources_retrieve
+      parameters:
+      - in: path
+        name: feature_pk
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this feature external resource.
+        required: true
+      - in: path
+        name: project_pk
+        schema:
+          type: string
+        required: true
+      tags:
+      - Features
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FeatureExternalResource'
+          description: ''
+      summary: Api v1 projects features feature external resources retrieve
+      x-summary-source: derived
+    put:
+      operationId: api_v1_projects_features_feature_external_resources_update
+      parameters:
+      - in: path
+        name: feature_pk
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this feature external resource.
+        required: true
+      - in: path
+        name: project_pk
+        schema:
+          type: string
+        required: true
+      tags:
+      - Features
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FeatureExternalResource'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/FeatureExternalResource'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/FeatureExternalResource'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FeatureExternalResource'
+          description: ''
+      summary: Api v1 projects features feature external resources update
+      x-summary-source: derived
+    patch:
+      operationId: api_v1_projects_features_feature_external_resources_partial_update
+      parameters:
+      - in: path
+        name: feature_pk
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this feature external resource.
+        required: true
+      - in: path
+        name: project_pk
+        schema:
+          type: string
+        required: true
+      tags:
+      - Features
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedFeatureExternalResource'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedFeatureExternalResource'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedFeatureExternalResource'
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FeatureExternalResource'
+          description: ''
+      summary: Api v1 projects features feature external resources partial update
+      x-summary-source: derived
+    delete:
+      operationId: api_v1_projects_features_feature_external_resources_destroy
+      parameters:
+      - in: path
+        name: feature_pk
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this feature external resource.
+        required: true
+      - in: path
+        name: project_pk
+        schema:
+          type: string
+        required: true
+      tags:
+      - Features
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '204':
+          description: No response body
+      summary: Api v1 projects features feature external resources destroy
+      x-summary-source: derived
+  /api/v1/projects/{project_pk}/features/{feature_pk}/mv-options/{id}/:
+    get:
+      operationId: api_v1_projects_features_mv_options_retrieve
+      parameters:
+      - in: path
+        name: feature_pk
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this multivariate feature option.
+        required: true
+      - in: path
+        name: project_pk
+        schema:
+          type: string
+        required: true
+      tags:
+      - Features
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MultivariateFeatureOption'
+          description: ''
+      summary: Api v1 projects features mv options retrieve
+      x-summary-source: derived
+    patch:
+      operationId: api_v1_projects_features_mv_options_partial_update
+      parameters:
+      - in: path
+        name: feature_pk
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this multivariate feature option.
+        required: true
+      - in: path
+        name: project_pk
+        schema:
+          type: string
+        required: true
+      tags:
+      - Features
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedMultivariateFeatureOption'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedMultivariateFeatureOption'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedMultivariateFeatureOption'
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MultivariateFeatureOption'
+          description: ''
+      summary: Api v1 projects features mv options partial update
+      x-summary-source: derived
+  /api/v1/projects/{project_pk}/features/{id}/:
+    patch:
+      operationId: api_v1_projects_features_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this feature.
+        required: true
+      - in: path
+        name: project_pk
+        schema:
+          type: integer
+          description: Changing the project selected will remove previous Feature States for the previously associated projects Environments that are related to this Feature. New default Feature States will be created for the new selected projects Environments for this Feature. Also this will remove any Tags associated with a feature as Tags are Project defined
+        required: true
+      tags:
+      - Features
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedUpdateFeature'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedUpdateFeature'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedUpdateFeature'
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateFeature'
+          description: ''
+      summary: Api v1 projects features partial update
+      x-summary-source: derived
+    delete:
+      operationId: api_v1_projects_features_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this feature.
+        required: true
+      - in: path
+        name: project_pk
+        schema:
+          type: integer
+          description: Changing the project selected will remove previous Feature States for the previously associated projects Environments that are related to this Feature. New default Feature States will be created for the new selected projects Environments for this Feature. Also this will remove any Tags associated with a feature as Tags are Project defined
+        required: true
+      tags:
+      - Features
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '204':
+          description: No response body
+      summary: Api v1 projects features destroy
+      x-summary-source: derived
+  /api/v1/projects/{project_pk}/features/{id}/add-group-owners/:
+    post:
+      operationId: api_v1_projects_features_add_group_owners_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this feature.
+        required: true
+      - in: path
+        name: project_pk
+        schema:
+          type: integer
+          description: Changing the project selected will remove previous Feature States for the previously associated projects Environments that are related to this Feature. New default Feature States will be created for the new selected projects Environments for this Feature. Also this will remove any Tags associated with a feature as Tags are Project defined
+        required: true
+      tags:
+      - Features
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FeatureGroupOwnerInput'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/FeatureGroupOwnerInput'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/FeatureGroupOwnerInput'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProjectFeature'
+          description: ''
+      summary: Api v1 projects features add group owners create
+      x-summary-source: derived
+  /api/v1/projects/{project_pk}/features/{id}/add-owners/:
+    post:
+      operationId: api_v1_projects_features_add_owners_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this feature.
+        required: true
+      - in: path
+        name: project_pk
+        schema:
+          type: integer
+          description: Changing the project selected will remove previous Feature States for the previously associated projects Environments that are related to this Feature. New default Feature States will be created for the new selected projects Environments for this Feature. Also this will remove any Tags associated with a feature as Tags are Project defined
+        required: true
+      tags:
+      - Features
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FeatureOwnerInput'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/FeatureOwnerInput'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/FeatureOwnerInput'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProjectFeature'
+          description: ''
+      summary: Api v1 projects features add owners create
+      x-summary-source: derived
+  /api/v1/projects/{project_pk}/features/{id}/influx-data/:
+    get:
+      operationId: api_v1_projects_features_influx_data_retrieve
+      description: Please use ​/api​/v1​/projects​/{project_pk}​/features​/{id}​/evaluation-data/
+      parameters:
+      - in: query
+        name: aggregate_every
+        schema:
+          type: string
+          default: 24h
+          minLength: 1
+      - in: query
+        name: environment_id
+        schema:
+          type: string
+          minLength: 1
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this feature.
+        required: true
+      - in: query
+        name: period
+        schema:
+          type: string
+          default: 24h
+          minLength: 1
+      - in: path
+        name: project_pk
+        schema:
+          type: integer
+          description: Changing the project selected will remove previous Feature States for the previously associated projects Environments that are related to this Feature. New default Feature States will be created for the new selected projects Environments for this Feature. Also this will remove any Tags associated with a feature as Tags are Project defined
+        required: true
+      tags:
+      - Features
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      deprecated: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FeatureInfluxData'
+          description: ''
+      summary: Api v1 projects features influx data retrieve
+      x-summary-source: derived
+  /api/v1/projects/{project_pk}/features/{id}/remove-group-owners/:
+    post:
+      operationId: api_v1_projects_features_remove_group_owners_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this feature.
+        required: true
+      - in: path
+        name: project_pk
+        schema:
+          type: integer
+          description: Changing the project selected will remove previous Feature States for the previously associated projects Environments that are related to this Feature. New default Feature States will be created for the new selected projects Environments for this Feature. Also this will remove any Tags associated with a feature as Tags are Project defined
+        required: true
+      tags:
+      - Features
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FeatureGroupOwnerInput'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/FeatureGroupOwnerInput'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/FeatureGroupOwnerInput'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProjectFeature'
+          description: ''
+      summary: Api v1 projects features remove group owners create
+      x-summary-source: derived
+  /api/v1/projects/{project_pk}/features/{id}/remove-owners/:
+    post:
+      operationId: api_v1_projects_features_remove_owners_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this feature.
+        required: true
+      - in: path
+        name: project_pk
+        schema:
+          type: integer
+          description: Changing the project selected will remove previous Feature States for the previously associated projects Environments that are related to this Feature. New default Feature States will be created for the new selected projects Environments for this Feature. Also this will remove any Tags associated with a feature as Tags are Project defined
+        required: true
+      tags:
+      - Features
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FeatureOwnerInput'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/FeatureOwnerInput'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/FeatureOwnerInput'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProjectFeature'
+          description: ''
+      summary: Api v1 projects features remove owners create
+      x-summary-source: derived
 components:
+  parameters:
+    EnvironmentApiKey:
+      name: environment_api_key
+      in: path
+      description: The API key for the environment
+      required: true
+      schema:
+        type: string
+    FeatureStateId:
+      name: feature_state_id
+      in: path
+      description: The unique identifier for the feature state
+      required: true
+      schema:
+        type: integer
+    ProjectId:
+      name: project_id
+      in: path
+      description: The unique identifier for the project
+      required: true
+      schema:
+        type: integer
+    FeatureId:
+      name: feature_id
+      in: path
+      description: The unique identifier for the feature
+      required: true
+      schema:
+        type: integer
   schemas:
-    FeatureState:
-      type: object
-      description: The state of a feature flag within a specific environment, including its enabled status and current value.
-      properties:
-        id:
-          type: integer
-          description: The unique identifier for this feature state
-        feature:
-          type: integer
-          description: The ID of the feature
-        enabled:
-          type: boolean
-          description: Whether the feature is currently enabled
-        feature_state_value:
-          description: The current value of the feature state
-          oneOf:
-          - type: string
-          - type: integer
-          - type: boolean
-          - type: 'null'
-        environment:
-          type: integer
-          description: The ID of the environment
-        identity:
-          type: integer
-          nullable: true
-          description: The identity ID for identity overrides
-        feature_segment:
-          type: integer
-          nullable: true
-          description: The feature segment ID for segment overrides
-    FeatureInput:
-      type: object
-      description: Input object for creating or updating a feature flag
-      required:
-      - name
-      properties:
-        name:
-          type: string
-          description: The name of the feature flag
-          maxLength: 2000
-          pattern: ^[-_.a-zA-Z0-9]+$
-        description:
-          type: string
-          nullable: true
-          description: A human-readable description of the feature
-        initial_value:
-          type: string
-          nullable: true
-          description: The initial value for the feature
-        default_enabled:
-          type: boolean
-          description: Whether the feature is enabled by default
-        type:
-          type: string
-          enum:
-          - STANDARD
-          - MULTIVARIATE
-          description: The type of feature flag
-        is_archived:
-          type: boolean
-          description: Whether the feature is archived
-        tags:
-          type: array
-          description: Tag IDs to associate with this feature
-          items:
-            type: integer
-    FeatureStateInput:
-      type: object
-      description: Input object for updating a feature state
-      properties:
-        enabled:
-          type: boolean
-          description: Whether the feature should be enabled
-        feature_state_value:
-          description: The value to set for this feature state
-          oneOf:
-          - type: string
-          - type: integer
-          - type: boolean
-          - type: 'null'
-    PaginatedResponse:
-      type: object
-      description: A paginated response wrapper containing the results count and navigation links.
-      properties:
-        count:
-          type: integer
-          description: The total number of results
-        next:
-          type: string
-          nullable: true
-          format: uri
-          description: URL to the next page of results
-        previous:
-          type: string
-          nullable: true
-          format: uri
-          description: URL to the previous page of results
-        results:
-          type: array
-          description: The array of result objects for this page
-          items:
-            type: object
     AdminFeature:
       type: object
       description: A feature flag definition in the admin API containing full metadata and configuration options.
@@ -341,6 +1424,109 @@ components:
           description: Multivariate options for this feature
           items:
             $ref: '#/components/schemas/MultivariateOption'
+    FeatureStateInput:
+      type: object
+      description: Input object for updating a feature state
+      properties:
+        enabled:
+          type: boolean
+          description: Whether the feature should be enabled
+        feature_state_value:
+          description: The value to set for this feature state
+          oneOf:
+          - type: string
+          - type: integer
+          - type: boolean
+          - type: 'null'
+    FeatureInput:
+      type: object
+      description: Input object for creating or updating a feature flag
+      required:
+      - name
+      properties:
+        name:
+          type: string
+          description: The name of the feature flag
+          maxLength: 2000
+          pattern: ^[-_.a-zA-Z0-9]+$
+        description:
+          type: string
+          nullable: true
+          description: A human-readable description of the feature
+        initial_value:
+          type: string
+          nullable: true
+          description: The initial value for the feature
+        default_enabled:
+          type: boolean
+          description: Whether the feature is enabled by default
+        type:
+          type: string
+          enum:
+          - STANDARD
+          - MULTIVARIATE
+          description: The type of feature flag
+        is_archived:
+          type: boolean
+          description: Whether the feature is archived
+        tags:
+          type: array
+          description: Tag IDs to associate with this feature
+          items:
+            type: integer
+    PaginatedResponse:
+      type: object
+      description: A paginated response wrapper containing the results count and navigation links.
+      properties:
+        count:
+          type: integer
+          description: The total number of results
+        next:
+          type: string
+          nullable: true
+          format: uri
+          description: URL to the next page of results
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          description: URL to the previous page of results
+        results:
+          type: array
+          description: The array of result objects for this page
+          items:
+            type: object
+    FeatureState:
+      type: object
+      description: The state of a feature flag within a specific environment, including its enabled status and current value.
+      properties:
+        id:
+          type: integer
+          description: The unique identifier for this feature state
+        feature:
+          type: integer
+          description: The ID of the feature
+        enabled:
+          type: boolean
+          description: Whether the feature is currently enabled
+        feature_state_value:
+          description: The current value of the feature state
+          oneOf:
+          - type: string
+          - type: integer
+          - type: boolean
+          - type: 'null'
+        environment:
+          type: integer
+          description: The ID of the environment
+        identity:
+          type: integer
+          nullable: true
+          description: The identity ID for identity overrides
+        feature_segment:
+          type: integer
+          nullable: true
+          description: The feature segment ID for segment overrides
     MultivariateOption:
       type: object
       description: A multivariate option representing one of the possible values for a multivariate feature flag.
@@ -369,41 +1555,1671 @@ components:
           minimum: 0
           maximum: 100
           description: The default percentage of users who will receive this option
-  parameters:
-    FeatureStateId:
-      name: feature_state_id
-      in: path
-      description: The unique identifier for the feature state
-      required: true
-      schema:
-        type: integer
-    EnvironmentApiKey:
-      name: environment_api_key
-      in: path
-      description: The API key for the environment
-      required: true
-      schema:
-        type: string
-    ProjectId:
-      name: project_id
-      in: path
-      description: The unique identifier for the project
-      required: true
-      schema:
-        type: integer
-    FeatureId:
-      name: feature_id
-      in: path
-      description: The unique identifier for the feature
-      required: true
-      schema:
-        type: integer
+    EnvironmentFeatureVersionChangeRequest:
+      type: object
+      properties:
+        uuid:
+          type: string
+          format: uuid
+        feature_states:
+          type: array
+          items:
+            $ref: '#/components/schemas/CreateChangeRequestFeatureState'
+        live_from:
+          type:
+          - string
+          - 'null'
+          format: date-time
+      required:
+      - feature_states
+    UpdateChangeRequestFeatureState:
+      type: object
+      description: Adds nested create feature
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        feature:
+          type: integer
+        feature_segment:
+          type:
+          - integer
+          - 'null'
+        enabled:
+          type: boolean
+        feature_state_value:
+          $ref: '#/components/schemas/_FeatureStateValue'
+        multivariate_feature_state_values:
+          type: array
+          items:
+            $ref: '#/components/schemas/_MultivariateFeatureStateValue'
+        live_from:
+          type:
+          - string
+          - 'null'
+          format: date-time
+      required:
+      - feature
+    SourceTypeEnum:
+      enum:
+      - csv
+      - amplitude
+      - mixpanel
+      type: string
+      description: '* `csv` - CSV
+
+        * `amplitude` - Amplitude
+
+        * `mixpanel` - Mixpanel'
+    NullEnum:
+      type: 'null'
+    FeatureExport:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          readOnly: true
+        environment_id:
+          type: integer
+          readOnly: true
+        status:
+          $ref: '#/components/schemas/Status6d4Enum'
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+    CreateFeatureExport:
+      type: object
+      properties:
+        environment_id:
+          type: integer
+        tag_ids:
+          type: array
+          items:
+            type: integer
+      required:
+      - environment_id
+      - tag_ids
+    _MultivariateFeatureStateValue:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        multivariate_feature_option:
+          type: integer
+        percentage_allocation:
+          type: number
+          format: double
+          maximum: 100
+          minimum: 0
+      required:
+      - multivariate_feature_option
+      - percentage_allocation
+    FeatureOwnerInput:
+      type: object
+      properties:
+        user_ids:
+          type: array
+          items:
+            type: integer
+      required:
+      - user_ids
+    PatchedMultivariateFeatureOption:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+        type:
+          oneOf:
+          - $ref: '#/components/schemas/Type975Enum'
+          - $ref: '#/components/schemas/BlankEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        integer_value:
+          type:
+          - integer
+          - 'null'
+          maximum: 2147483647
+          minimum: -2147483648
+        string_value:
+          type:
+          - string
+          - 'null'
+          maxLength: 20000
+        boolean_value:
+          type:
+          - boolean
+          - 'null'
+        default_percentage_allocation:
+          type: number
+          format: double
+          maximum: 100
+          minimum: 0
+        key:
+          type:
+          - string
+          - 'null'
+          description: A stable, human-readable identifier for the variant.
+          pattern: ^[-a-zA-Z0-9_]+$
+          maxLength: 255
+        feature:
+          type: integer
+    LifecycleStageEnum:
+      enum:
+      - new
+      - live
+      - stale
+      - permanent
+      - needs_monitoring
+      - to_remove
+      type: string
+      description: '* `new` - new
+
+        * `live` - live
+
+        * `stale` - stale
+
+        * `permanent` - permanent
+
+        * `needs_monitoring` - needs_monitoring
+
+        * `to_remove` - to_remove'
+    FeatureExternalResource:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        url:
+          type: string
+          format: uri
+          maxLength: 200
+        type:
+          $ref: '#/components/schemas/FeatureExternalResourceTypeEnum'
+        metadata:
+          oneOf:
+          - {}
+          - type: 'null'
+        feature:
+          type: integer
+      required:
+      - feature
+      - type
+      - url
+    UpdateFeature:
+      type: object
+      description: prevent users from changing certain values after creation
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          readOnly: true
+        type:
+          oneOf:
+          - $ref: '#/components/schemas/TypeD77Enum'
+          - $ref: '#/components/schemas/BlankEnum'
+        default_enabled:
+          type: boolean
+          readOnly: true
+        initial_value:
+          type:
+          - string
+          - 'null'
+          readOnly: true
+        created_date:
+          type: string
+          format: date-time
+          readOnly: true
+          title: DateCreated
+        description:
+          type:
+          - string
+          - 'null'
+        tags:
+          type: array
+          items:
+            type: integer
+        multivariate_options:
+          type: array
+          items:
+            $ref: '#/components/schemas/NestedMultivariateFeatureOption'
+        is_archived:
+          type: boolean
+        owners:
+          type: array
+          items:
+            type: integer
+          readOnly: true
+        group_owners:
+          type: array
+          items:
+            type: integer
+          readOnly: true
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+        project:
+          type: integer
+          readOnly: true
+          description: Changing the project selected will remove previous Feature States for the previously associated projects Environments that are related to this Feature. New default Feature States will be created for the new selected projects Environments for this Feature. Also this will remove any Tags associated with a feature as Tags are Project defined
+        environment_feature_state:
+          oneOf:
+          - $ref: '#/components/schemas/FeatureStateSerializerSmall'
+          - type: 'null'
+          readOnly: true
+        segment_feature_state:
+          oneOf:
+          - $ref: '#/components/schemas/FeatureStateSerializerSmall'
+          - type: 'null'
+          readOnly: true
+        num_segment_overrides:
+          type: integer
+          readOnly: true
+          description: Number of segment overrides that exist for the given feature in the environment provided by the `environment` query parameter.
+        num_identity_overrides:
+          type:
+          - integer
+          - 'null'
+          readOnly: true
+          description: 'Number of identity overrides that exist for the given feature in the environment provided by the `environment` query parameter. Note: will return null for Edge enabled projects.'
+        is_num_identity_overrides_complete:
+          type: boolean
+          readOnly: true
+          default: true
+        is_server_key_only:
+          type: boolean
+        last_modified_in_any_environment:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          readOnly: true
+          description: 'Datetime representing the last time that the feature was modified in any environment in the given project. Note: requires feature versioning v2 enabled on the environment.'
+        last_modified_in_current_environment:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          readOnly: true
+          description: 'Datetime representing the last time that the feature was modified in any environment in the current environment. Note: requires that the environment query parameter is passed and feature versioning v2 enabled on the environment.'
+        metadata:
+          type: array
+          items:
+            $ref: '#/components/schemas/Metadata'
+        code_references_counts:
+          type: array
+          items:
+            $ref: '#/components/schemas/FeatureFlagCodeReferencesRepositoryCount'
+          readOnly: true
+        lifecycle_stage:
+          allOf:
+          - $ref: '#/components/schemas/LifecycleStageEnum'
+          readOnly: true
+    MultivariateFeatureOption:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+        type:
+          oneOf:
+          - $ref: '#/components/schemas/Type975Enum'
+          - $ref: '#/components/schemas/BlankEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        integer_value:
+          type:
+          - integer
+          - 'null'
+          maximum: 2147483647
+          minimum: -2147483648
+        string_value:
+          type:
+          - string
+          - 'null'
+          maxLength: 20000
+        boolean_value:
+          type:
+          - boolean
+          - 'null'
+        default_percentage_allocation:
+          type: number
+          format: double
+          maximum: 100
+          minimum: 0
+        key:
+          type:
+          - string
+          - 'null'
+          description: A stable, human-readable identifier for the variant.
+          pattern: ^[-a-zA-Z0-9_]+$
+          maxLength: 255
+        feature:
+          type: integer
+      required:
+      - feature
+    PatchedFeatureSegmentCreate:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+        feature:
+          type: integer
+        segment:
+          type: integer
+        environment:
+          type: integer
+        priority:
+          type: integer
+          readOnly: true
+    Type975Enum:
+      enum:
+      - int
+      - unicode
+      - bool
+      type: string
+      description: '* `int` - Integer
+
+        * `unicode` - String
+
+        * `bool` - Boolean'
+    _SegmentCohort:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        environment:
+          type: integer
+        environment_api_key:
+          type: string
+          readOnly: true
+        environment_name:
+          type: string
+          readOnly: true
+        source_type:
+          $ref: '#/components/schemas/SourceTypeEnum'
+        version:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+        deletion_requested_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+      required:
+      - environment
+    FeatureImportUploadStrategyEnum:
+      enum:
+      - SKIP
+      - OVERWRITE_DESTRUCTIVE
+      type: string
+      description: '* `SKIP` - SKIP
+
+        * `OVERWRITE_DESTRUCTIVE` - OVERWRITE_DESTRUCTIVE'
+    WorkflowsError:
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+      - message
+    FeatureImportUpload:
+      type: object
+      properties:
+        file:
+          type: string
+          format: uri
+        strategy:
+          $ref: '#/components/schemas/FeatureImportUploadStrategyEnum'
+      required:
+      - file
+      - strategy
+    ChangeRequestUpdate:
+      type: object
+      description: Adds nested create feature
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        title:
+          type: string
+          maxLength: 500
+        description:
+          type:
+          - string
+          - 'null'
+        feature_states:
+          type: array
+          items:
+            $ref: '#/components/schemas/UpdateChangeRequestFeatureState'
+        deleted_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          readOnly: true
+        environment:
+          type:
+          - integer
+          - 'null'
+          readOnly: true
+        committed_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          readOnly: true
+        approvals:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChangeRequestApproval'
+        user:
+          type:
+          - integer
+          - 'null'
+          readOnly: true
+        committed_by:
+          type:
+          - integer
+          - 'null'
+          readOnly: true
+        group_assignments:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChangeRequestGroupAssignment'
+        environment_feature_versions:
+          type: array
+          items:
+            type: string
+            format: uuid
+        change_sets:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/VersionChangeSet'
+        ignore_conflicts:
+          type: boolean
+      required:
+      - feature_states
+      - title
+    ChangeRequestRetrieve:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        environment:
+          type:
+          - integer
+          - 'null'
+          readOnly: true
+        title:
+          type: string
+          readOnly: true
+        description:
+          type:
+          - string
+          - 'null'
+          readOnly: true
+        feature_states:
+          type: array
+          items:
+            $ref: '#/components/schemas/CreateChangeRequestFeatureState'
+        user:
+          type:
+          - integer
+          - 'null'
+          readOnly: true
+        committed_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          readOnly: true
+        committed_by:
+          type:
+          - integer
+          - 'null'
+          readOnly: true
+        deleted_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          readOnly: true
+        approvals:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChangeRequestApproval'
+        is_approved:
+          type: string
+          readOnly: true
+        is_committed:
+          type: string
+          readOnly: true
+        group_assignments:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChangeRequestGroupAssignment'
+        environment_feature_versions:
+          type: array
+          items:
+            $ref: '#/components/schemas/EnvironmentFeatureVersionChangeRequest'
+        segments:
+          type: array
+          items:
+            $ref: '#/components/schemas/Segment'
+        change_sets:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/VersionChangeSet'
+        conflicts:
+          type: array
+          items:
+            $ref: '#/components/schemas/Conflict'
+          readOnly: true
+        ignore_conflicts:
+          type: boolean
+          readOnly: true
+      required:
+      - approvals
+      - environment_feature_versions
+      - feature_states
+      - group_assignments
+      - segments
+    VersionChangeSet:
+      type: object
+      description: Adds nested create feature
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        feature:
+          type: integer
+        live_from:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        feature_states_to_update:
+          type: array
+          items: {}
+          description: List of feature states to update as part of this change.
+        feature_states_to_create:
+          type: array
+          items: {}
+          description: List of feature states to create as part of this change.
+        segment_ids_to_delete_overrides:
+          type: array
+          items:
+            type: integer
+          description: List of segment IDs for which the overrides should be deleted as part of this change.
+      required:
+      - feature
+      - feature_states_to_create
+      - feature_states_to_update
+      - segment_ids_to_delete_overrides
+    PatchedFeatureExternalResource:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        url:
+          type: string
+          format: uri
+          maxLength: 200
+        type:
+          $ref: '#/components/schemas/FeatureExternalResourceTypeEnum'
+        metadata:
+          oneOf:
+          - {}
+          - type: 'null'
+        feature:
+          type: integer
+    Segment:
+      type: object
+      description: Functionality for serializers that need to handle metadata
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+        created_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          readOnly: true
+        updated_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          readOnly: true
+        name:
+          type: string
+          maxLength: 2000
+        description:
+          type:
+          - string
+          - 'null'
+        project:
+          type: integer
+          readOnly: true
+        feature:
+          type:
+          - integer
+          - 'null'
+        version_of:
+          type:
+          - integer
+          - 'null'
+        rules:
+          type: array
+          items:
+            $ref: '#/components/schemas/SegmentRule'
+        metadata:
+          type: array
+          items:
+            $ref: '#/components/schemas/Metadata'
+        membership_counts:
+          type: array
+          items:
+            $ref: '#/components/schemas/SegmentMembershipCount'
+          readOnly: true
+        managed_by:
+          readOnly: true
+          oneOf:
+          - $ref: '#/components/schemas/ManagedByEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+        cohort:
+          oneOf:
+          - $ref: '#/components/schemas/_SegmentCohort'
+          - type: 'null'
+          readOnly: true
+        has_overrides:
+          type: boolean
+          readOnly: true
+          description: Whether any feature override points at this segment, counting overrides that are live now or scheduled to go live.
+      required:
+      - name
+      - rules
+    FeatureImport:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        environment_id:
+          type: integer
+          readOnly: true
+        strategy:
+          $ref: '#/components/schemas/FeatureImportStrategyEnum'
+        status:
+          $ref: '#/components/schemas/Status6d4Enum'
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - strategy
+    CreateFeature:
+      type: object
+      description: Adds nested create feature
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 2000
+        type:
+          oneOf:
+          - $ref: '#/components/schemas/TypeD77Enum'
+          - $ref: '#/components/schemas/BlankEnum'
+        default_enabled:
+          type: boolean
+        initial_value:
+          type:
+          - string
+          - 'null'
+          maxLength: 20000
+        created_date:
+          type: string
+          format: date-time
+          readOnly: true
+          title: DateCreated
+        description:
+          type:
+          - string
+          - 'null'
+        tags:
+          type: array
+          items:
+            type: integer
+        multivariate_options:
+          type: array
+          items:
+            $ref: '#/components/schemas/NestedMultivariateFeatureOption'
+        is_archived:
+          type: boolean
+        owners:
+          type: array
+          items:
+            type: integer
+        group_owners:
+          type: array
+          items:
+            type: integer
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+        project:
+          type: integer
+          readOnly: true
+          description: Changing the project selected will remove previous Feature States for the previously associated projects Environments that are related to this Feature. New default Feature States will be created for the new selected projects Environments for this Feature. Also this will remove any Tags associated with a feature as Tags are Project defined
+        environment_feature_state:
+          oneOf:
+          - $ref: '#/components/schemas/FeatureStateSerializerSmall'
+          - type: 'null'
+          readOnly: true
+        segment_feature_state:
+          oneOf:
+          - $ref: '#/components/schemas/FeatureStateSerializerSmall'
+          - type: 'null'
+          readOnly: true
+        num_segment_overrides:
+          type: integer
+          readOnly: true
+          description: Number of segment overrides that exist for the given feature in the environment provided by the `environment` query parameter.
+        num_identity_overrides:
+          type:
+          - integer
+          - 'null'
+          readOnly: true
+          description: 'Number of identity overrides that exist for the given feature in the environment provided by the `environment` query parameter. Note: will return null for Edge enabled projects.'
+        is_num_identity_overrides_complete:
+          type: boolean
+          readOnly: true
+          default: true
+        is_server_key_only:
+          type: boolean
+        last_modified_in_any_environment:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          readOnly: true
+          description: 'Datetime representing the last time that the feature was modified in any environment in the given project. Note: requires feature versioning v2 enabled on the environment.'
+        last_modified_in_current_environment:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          readOnly: true
+          description: 'Datetime representing the last time that the feature was modified in any environment in the current environment. Note: requires that the environment query parameter is passed and feature versioning v2 enabled on the environment.'
+      required:
+      - name
+    FeatureSegmentChangePriorities:
+      type: object
+      properties:
+        id:
+          type: integer
+        priority:
+          type: integer
+          minimum: 0
+          description: Value to change the feature segment's priority to.
+      required:
+      - id
+      - priority
+    Metadata:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        model_field:
+          type: integer
+        field_value:
+          type: string
+          maxLength: 2000
+      required:
+      - field_value
+      - model_field
+    FeatureGroupOwnerInput:
+      type: object
+      properties:
+        group_ids:
+          type: array
+          items:
+            type: integer
+      required:
+      - group_ids
+    ChangeRequestApproval:
+      type: object
+      description: Adds nested create feature
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        user:
+          type: integer
+        approved_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          readOnly: true
+      required:
+      - user
+    FeatureExternalResourceTypeEnum:
+      enum:
+      - GITHUB_ISSUE
+      - GITHUB_PR
+      - GITLAB_ISSUE
+      - GITLAB_MR
+      type: string
+      description: '* `GITHUB_ISSUE` - GitHub Issue
+
+        * `GITHUB_PR` - GitHub PR
+
+        * `GITLAB_ISSUE` - GitLab Issue
+
+        * `GITLAB_MR` - GitLab MR'
+    _NestedSegmentRule:
+      type: object
+      description: Adds nested create feature
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        type:
+          $ref: '#/components/schemas/SegmentRuleTypeEnum'
+        conditions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Condition'
+        delete:
+          type: boolean
+          writeOnly: true
+      required:
+      - type
+    CreateChangeRequestFeatureState:
+      type: object
+      description: Adds nested create feature
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        feature:
+          type: integer
+        feature_segment:
+          type:
+          - integer
+          - 'null'
+        enabled:
+          type: boolean
+        feature_state_value:
+          $ref: '#/components/schemas/_FeatureStateValue'
+        multivariate_feature_state_values:
+          type: array
+          items:
+            $ref: '#/components/schemas/_MultivariateFeatureStateValue'
+        live_from:
+          type:
+          - string
+          - 'null'
+          format: date-time
+      required:
+      - feature
+    BlankEnum:
+      enum:
+      - ''
+    FeatureInfluxData:
+      type: object
+      properties:
+        events_list:
+          type: array
+          items:
+            type: object
+            additionalProperties: {}
+      required:
+      - events_list
+    FeatureSegmentList:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+        segment:
+          type: integer
+          readOnly: true
+        priority:
+          type: integer
+          readOnly: true
+        environment:
+          type: integer
+          readOnly: true
+        segment_name:
+          type: string
+          readOnly: true
+        is_feature_specific:
+          type: boolean
+          readOnly: true
+    ProjectFeature:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 2000
+        created_date:
+          type: string
+          format: date-time
+          readOnly: true
+          title: DateCreated
+        description:
+          type:
+          - string
+          - 'null'
+        initial_value:
+          type:
+          - string
+          - 'null'
+          maxLength: 20000
+        default_enabled:
+          type: boolean
+        type:
+          oneOf:
+          - $ref: '#/components/schemas/TypeD77Enum'
+          - $ref: '#/components/schemas/BlankEnum'
+        owners:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserList'
+          readOnly: true
+        group_owners:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserPermissionGroupSummary'
+          readOnly: true
+        is_server_key_only:
+          type: boolean
+      required:
+      - name
+    FeatureStateSerializerSmall:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        feature_state_value:
+          type:
+          - string
+          - integer
+          - boolean
+          - 'null'
+          readOnly: true
+        environment:
+          type:
+          - integer
+          - 'null'
+        identity:
+          type:
+          - integer
+          - 'null'
+        feature_segment:
+          type:
+          - integer
+          - 'null'
+        enabled:
+          type: boolean
+    FeatureMVOptionsValuesResponse:
+      type: object
+      properties:
+        control_value:
+          oneOf:
+          - type: string
+          - type: integer
+          - type: boolean
+          - type: 'null'
+          readOnly: true
+        options:
+          type: array
+          items:
+            $ref: '#/components/schemas/MultivariateOptionValues'
+      required:
+      - options
+    FeatureFlagCodeReferencesRepositoryCount:
+      type: object
+      properties:
+        repository_url:
+          type: string
+          format: uri
+        count:
+          type: integer
+        last_successful_repository_scanned_at:
+          type: string
+          format: date-time
+        last_feature_found_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+      required:
+      - count
+      - last_feature_found_at
+      - last_successful_repository_scanned_at
+      - repository_url
+    FeatureSegmentCreate:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+        feature:
+          type: integer
+        segment:
+          type: integer
+        environment:
+          type: integer
+        priority:
+          type: integer
+          readOnly: true
+      required:
+      - environment
+      - feature
+      - segment
+    SegmentRule:
+      type: object
+      description: Adds nested create feature
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        type:
+          $ref: '#/components/schemas/SegmentRuleTypeEnum'
+        rules:
+          type: array
+          items:
+            $ref: '#/components/schemas/_NestedSegmentRule'
+        conditions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Condition'
+        delete:
+          type: boolean
+          writeOnly: true
+      required:
+      - type
+    PatchedUpdateFeature:
+      type: object
+      description: prevent users from changing certain values after creation
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          readOnly: true
+        type:
+          oneOf:
+          - $ref: '#/components/schemas/TypeD77Enum'
+          - $ref: '#/components/schemas/BlankEnum'
+        default_enabled:
+          type: boolean
+          readOnly: true
+        initial_value:
+          type:
+          - string
+          - 'null'
+          readOnly: true
+        created_date:
+          type: string
+          format: date-time
+          readOnly: true
+          title: DateCreated
+        description:
+          type:
+          - string
+          - 'null'
+        tags:
+          type: array
+          items:
+            type: integer
+        multivariate_options:
+          type: array
+          items:
+            $ref: '#/components/schemas/NestedMultivariateFeatureOption'
+        is_archived:
+          type: boolean
+        owners:
+          type: array
+          items:
+            type: integer
+          readOnly: true
+        group_owners:
+          type: array
+          items:
+            type: integer
+          readOnly: true
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+        project:
+          type: integer
+          readOnly: true
+          description: Changing the project selected will remove previous Feature States for the previously associated projects Environments that are related to this Feature. New default Feature States will be created for the new selected projects Environments for this Feature. Also this will remove any Tags associated with a feature as Tags are Project defined
+        environment_feature_state:
+          oneOf:
+          - $ref: '#/components/schemas/FeatureStateSerializerSmall'
+          - type: 'null'
+          readOnly: true
+        segment_feature_state:
+          oneOf:
+          - $ref: '#/components/schemas/FeatureStateSerializerSmall'
+          - type: 'null'
+          readOnly: true
+        num_segment_overrides:
+          type: integer
+          readOnly: true
+          description: Number of segment overrides that exist for the given feature in the environment provided by the `environment` query parameter.
+        num_identity_overrides:
+          type:
+          - integer
+          - 'null'
+          readOnly: true
+          description: 'Number of identity overrides that exist for the given feature in the environment provided by the `environment` query parameter. Note: will return null for Edge enabled projects.'
+        is_num_identity_overrides_complete:
+          type: boolean
+          readOnly: true
+          default: true
+        is_server_key_only:
+          type: boolean
+        last_modified_in_any_environment:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          readOnly: true
+          description: 'Datetime representing the last time that the feature was modified in any environment in the given project. Note: requires feature versioning v2 enabled on the environment.'
+        last_modified_in_current_environment:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          readOnly: true
+          description: 'Datetime representing the last time that the feature was modified in any environment in the current environment. Note: requires that the environment query parameter is passed and feature versioning v2 enabled on the environment.'
+        metadata:
+          type: array
+          items:
+            $ref: '#/components/schemas/Metadata'
+        code_references_counts:
+          type: array
+          items:
+            $ref: '#/components/schemas/FeatureFlagCodeReferencesRepositoryCount'
+          readOnly: true
+        lifecycle_stage:
+          allOf:
+          - $ref: '#/components/schemas/LifecycleStageEnum'
+          readOnly: true
+    ChangeRequestGroupAssignment:
+      type: object
+      description: Adds nested create feature
+      properties:
+        group:
+          type: integer
+      required:
+      - group
+    SegmentMembershipCount:
+      type: object
+      properties:
+        environment:
+          type: integer
+          readOnly: true
+        count:
+          type: integer
+          readOnly: true
+        last_synced_at:
+          type: string
+          format: date-time
+          readOnly: true
+    _FeatureStateValue:
+      type: object
+      properties:
+        type:
+          oneOf:
+          - $ref: '#/components/schemas/Type975Enum'
+          - $ref: '#/components/schemas/BlankEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        string_value:
+          type:
+          - string
+          - 'null'
+          maxLength: 20000
+        integer_value:
+          type:
+          - integer
+          - 'null'
+          maximum: 2147483647
+          minimum: -2147483648
+        boolean_value:
+          type:
+          - boolean
+          - 'null'
+    Condition:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        operator:
+          $ref: '#/components/schemas/ConditionOperatorEnum'
+        property:
+          type:
+          - string
+          - 'null'
+          maxLength: 1000
+        value:
+          type:
+          - string
+          - 'null'
+          maxLength: 1000
+        description:
+          type:
+          - string
+          - 'null'
+        delete:
+          type: boolean
+          writeOnly: true
+      required:
+      - operator
+    UserList:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        email:
+          type: string
+          format: email
+          maxLength: 254
+        first_name:
+          type: string
+          maxLength: 150
+        last_name:
+          type: string
+          maxLength: 150
+        last_login:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+      required:
+      - email
+      - first_name
+      - last_name
+    PatchedChangeRequestUpdate:
+      type: object
+      description: Adds nested create feature
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        title:
+          type: string
+          maxLength: 500
+        description:
+          type:
+          - string
+          - 'null'
+        feature_states:
+          type: array
+          items:
+            $ref: '#/components/schemas/UpdateChangeRequestFeatureState'
+        deleted_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          readOnly: true
+        environment:
+          type:
+          - integer
+          - 'null'
+          readOnly: true
+        committed_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          readOnly: true
+        approvals:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChangeRequestApproval'
+        user:
+          type:
+          - integer
+          - 'null'
+          readOnly: true
+        committed_by:
+          type:
+          - integer
+          - 'null'
+          readOnly: true
+        group_assignments:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChangeRequestGroupAssignment'
+        environment_feature_versions:
+          type: array
+          items:
+            type: string
+            format: uuid
+        change_sets:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/VersionChangeSet'
+        ignore_conflicts:
+          type: boolean
+    PaginatedFeatureSegmentListList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/FeatureSegmentList'
+    ConditionOperatorEnum:
+      enum:
+      - EQUAL
+      - GREATER_THAN
+      - LESS_THAN
+      - CONTAINS
+      - GREATER_THAN_INCLUSIVE
+      - LESS_THAN_INCLUSIVE
+      - NOT_CONTAINS
+      - NOT_EQUAL
+      - REGEX
+      - PERCENTAGE_SPLIT
+      - MODULO
+      - IS_SET
+      - IS_NOT_SET
+      - IN
+      type: string
+      description: '* `EQUAL` - Exactly Matches
+
+        * `GREATER_THAN` - Greater than
+
+        * `LESS_THAN` - Less than
+
+        * `CONTAINS` - Contains
+
+        * `GREATER_THAN_INCLUSIVE` - Greater than or equal to
+
+        * `LESS_THAN_INCLUSIVE` - Less than or equal to
+
+        * `NOT_CONTAINS` - Does not contain
+
+        * `NOT_EQUAL` - Does not match
+
+        * `REGEX` - Matches regex
+
+        * `PERCENTAGE_SPLIT` - Percentage split
+
+        * `MODULO` - Modulo Operation
+
+        * `IS_SET` - Is set
+
+        * `IS_NOT_SET` - Is not set
+
+        * `IN` - In'
+    NestedMultivariateFeatureOption:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+        type:
+          oneOf:
+          - $ref: '#/components/schemas/Type975Enum'
+          - $ref: '#/components/schemas/BlankEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        integer_value:
+          type:
+          - integer
+          - 'null'
+          maximum: 2147483647
+          minimum: -2147483648
+        string_value:
+          type:
+          - string
+          - 'null'
+          maxLength: 20000
+        boolean_value:
+          type:
+          - boolean
+          - 'null'
+        default_percentage_allocation:
+          type: number
+          format: double
+          maximum: 100
+          minimum: 0
+        key:
+          type:
+          - string
+          - 'null'
+          readOnly: true
+          description: A stable, human-readable identifier for the variant.
+    SegmentRuleTypeEnum:
+      enum:
+      - ALL
+      - ANY
+      - NONE
+      type: string
+      description: '* `ALL` - all
+
+        * `ANY` - any
+
+        * `NONE` - none'
+    UserPermissionGroupSummary:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          readOnly: true
+    MultivariateOptionValues:
+      type: object
+      properties:
+        value:
+          oneOf:
+          - type: string
+          - type: integer
+          - type: boolean
+          - type: 'null'
+          description: 'Given the *incoming* primitive data, return the value for this field
+
+            that should be validated and transformed to a native value.'
+          readOnly: true
+    FeatureImportStrategyEnum:
+      enum:
+      - SKIP
+      - OVERWRITE_DESTRUCTIVE
+      type: string
+      description: '* `SKIP` - Skip
+
+        * `OVERWRITE_DESTRUCTIVE` - Overwrite Destructive'
+    Conflict:
+      type: object
+      properties:
+        original_cr_id:
+          type: integer
+        segment_id:
+          type: integer
+        is_environment_default:
+          type: boolean
+        published_at:
+          type: string
+          format: date-time
+      required:
+      - is_environment_default
+      - original_cr_id
+      - published_at
+      - segment_id
+    ManagedByEnum:
+      enum:
+      - cohort
+      type: string
+      description: '* `` - Unmanaged
+
+        * `cohort` - Cohort'
+    TypeD77Enum:
+      enum:
+      - STANDARD
+      - MULTIVARIATE
+      type: string
+      description: '* `STANDARD` - STANDARD
+
+        * `MULTIVARIATE` - MULTIVARIATE'
+    Status6d4Enum:
+      enum:
+      - SUCCESS
+      - PROCESSING
+      - FAILED
+      type: string
+      description: '* `SUCCESS` - Success
+
+        * `PROCESSING` - Processing
+
+        * `FAILED` - Failed'
   securitySchemes:
     apiKeyAuth:
       type: apiKey
       in: header
       name: Authorization
       description: A secret Organisation API Token prefixed with 'Api-Key'. For example, 'Api-Key your-token-here'. This token should never be exposed in client-side code.
+    Cohort_Sync_Key:
+      type: http
+      scheme: bearer
+      description: For cohort sync endpoints called by an external cohort source, such as Amplitude.
+    Cohort_Sync_Key__Basic:
+      type: http
+      scheme: basic
+      description: For cohort sync endpoints called by an external cohort source that can only send Basic credentials, such as Mixpanel. The key is the password; the username is ignored.
+    Environment_API_Key:
+      type: apiKey
+      in: header
+      name: X-Environment-Key
+      description: For SDK endpoints. <a href='https://docs.flagsmith.com/clients/rest#public-api-endpoints'>Find out more</a>.
+    Master_API_Key:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: For Management API endpoints. <a href='https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/management-api'>Find out more</a>.
+    basicAuth:
+      type: http
+      scheme: basic
+    tokenAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: Token-based authentication with required prefix "Token"
 externalDocs:
   description: Flagsmith Admin API Documentation
   url: https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/admin-api
+x-refined-from:
+- flagsmith-admin-api-openapi.yml
+- flagsmith-api-openapi.json

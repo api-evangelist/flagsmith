@@ -1,0 +1,2441 @@
+openapi: 3.2.0
+info:
+  title: Flagsmith Authentication API
+  version: v1
+  description: Flagsmith's Core and SDK APIs. Check out Flagsmith documentation.
+  contact:
+    email: support@flagsmith.com
+  license:
+    name: BSD License
+    identifier: BSD-3-Clause
+tags:
+- name: Authentication
+  description: Authentication, MFA, OAuth, and token management.
+paths:
+  /api/v1/auth/{method}/activate/:
+    post:
+      operationId: api_v1_auth_activate_create
+      parameters:
+      - in: path
+        name: method
+        schema:
+          type: string
+        required: true
+      tags:
+      - Authentication
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          description: No response body
+      summary: Api v1 auth activate create
+      x-summary-source: derived
+  /api/v1/auth/{method}/activate/confirm/:
+    post:
+      operationId: api_v1_auth_activate_confirm_create
+      parameters:
+      - in: path
+        name: method
+        schema:
+          type: string
+        required: true
+      tags:
+      - Authentication
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          description: No response body
+      summary: Api v1 auth activate confirm create
+      x-summary-source: derived
+  /api/v1/auth/{method}/deactivate/:
+    post:
+      operationId: api_v1_auth_deactivate_create
+      parameters:
+      - in: path
+        name: method
+        schema:
+          type: string
+        required: true
+      tags:
+      - Authentication
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          description: No response body
+      summary: Api v1 auth deactivate create
+      x-summary-source: derived
+  /api/v1/auth/login/:
+    post:
+      operationId: api_v1_auth_login_create
+      description: Class to handle throttling for login requests
+      tags:
+      - Authentication
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenCreate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenCreate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TokenCreate'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenCreate'
+          description: ''
+      summary: Api v1 auth login create
+      x-summary-source: derived
+  /api/v1/auth/login/code/:
+    post:
+      operationId: api_v1_auth_login_code_create
+      description: Override class to add throttling
+      tags:
+      - Authentication
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenCreate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenCreate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TokenCreate'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenCreate'
+          description: ''
+      summary: Api v1 auth login code create
+      x-summary-source: derived
+  /api/v1/auth/logout/:
+    post:
+      operationId: api_v1_auth_logout_create
+      description: Use this endpoint to logout user (remove user authentication token).
+      tags:
+      - Authentication
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '204':
+          description: No response body
+      summary: Api v1 auth logout create
+      x-summary-source: derived
+  /api/v1/auth/mfa/user-active-methods/:
+    get:
+      operationId: api_v1_auth_mfa_user_active_methods_retrieve
+      tags:
+      - Authentication
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          description: No response body
+      summary: Api v1 auth mfa user active methods retrieve
+      x-summary-source: derived
+  /api/v1/auth/oauth/github/:
+    post:
+      operationId: api_v1_auth_oauth_github_create
+      tags:
+      - Authentication
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GithubLogin'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/GithubLogin'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/GithubLogin'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OAuthToken'
+          description: ''
+        '502':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: ''
+      summary: Api v1 auth oauth github create
+      x-summary-source: derived
+  /api/v1/auth/oauth/google/:
+    post:
+      operationId: api_v1_auth_oauth_google_create
+      tags:
+      - Authentication
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GoogleLogin'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/GoogleLogin'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/GoogleLogin'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OAuthToken'
+          description: ''
+        '502':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: ''
+      summary: Api v1 auth oauth google create
+      x-summary-source: derived
+  /api/v1/auth/oidc/token/:
+    post:
+      operationId: oidc_token_exchange
+      description: Exchange an OIDC token issued by a trusted identity provider for a short-lived Flagsmith access token.
+      tags:
+      - Authentication
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenExchangeRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenExchangeRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TokenExchangeRequest'
+        required: true
+      security:
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenExchangeResponse'
+          description: ''
+        '400':
+          description: Request body is invalid.
+        '401':
+          description: Token validation failed, or no trust relationship matches the token.
+      summary: Oidc token exchange
+      x-summary-source: derived
+  /api/v1/auth/saml/{name}/request/:
+    post:
+      operationId: api_v1_auth_saml_request_create
+      parameters:
+      - in: query
+        name: format
+        schema:
+          type: string
+          enum:
+          - html
+          - json
+      - in: path
+        name: name
+        schema:
+          type: string
+        required: true
+      tags:
+      - Authentication
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SamlRequest'
+            text/html:
+              schema:
+                $ref: '#/components/schemas/SamlRequest'
+          description: ''
+      summary: Api v1 auth saml request create
+      x-summary-source: derived
+  /api/v1/auth/saml/{name}/response/:
+    post:
+      operationId: api_v1_auth_saml_response_create
+      parameters:
+      - in: query
+        name: format
+        schema:
+          type: string
+          enum:
+          - html
+          - json
+      - in: path
+        name: name
+        schema:
+          type: string
+        required: true
+      tags:
+      - Authentication
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+      summary: Api v1 auth saml response create
+      x-summary-source: derived
+  /api/v1/auth/saml/attribute-mapping/:
+    get:
+      operationId: api_v1_auth_saml_attribute_mapping_list
+      parameters:
+      - in: query
+        name: organisation
+        schema:
+          type: integer
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - in: query
+        name: saml_configuration
+        schema:
+          type: integer
+      tags:
+      - Authentication
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedSamlAttributeMappingList'
+          description: ''
+      summary: Api v1 auth saml attribute mapping list
+      x-summary-source: derived
+    post:
+      operationId: api_v1_auth_saml_attribute_mapping_create
+      tags:
+      - Authentication
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SamlAttributeMapping'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SamlAttributeMapping'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/SamlAttributeMapping'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SamlAttributeMapping'
+          description: ''
+      summary: Api v1 auth saml attribute mapping create
+      x-summary-source: derived
+  /api/v1/auth/saml/attribute-mapping/{id}/:
+    get:
+      operationId: api_v1_auth_saml_attribute_mapping_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - Authentication
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SamlAttributeMapping'
+          description: ''
+      summary: Api v1 auth saml attribute mapping retrieve
+      x-summary-source: derived
+    put:
+      operationId: api_v1_auth_saml_attribute_mapping_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - Authentication
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SamlAttributeMapping'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SamlAttributeMapping'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/SamlAttributeMapping'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SamlAttributeMapping'
+          description: ''
+      summary: Api v1 auth saml attribute mapping update
+      x-summary-source: derived
+    patch:
+      operationId: api_v1_auth_saml_attribute_mapping_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - Authentication
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedSamlAttributeMapping'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedSamlAttributeMapping'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedSamlAttributeMapping'
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SamlAttributeMapping'
+          description: ''
+      summary: Api v1 auth saml attribute mapping partial update
+      x-summary-source: derived
+    delete:
+      operationId: api_v1_auth_saml_attribute_mapping_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - Authentication
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '204':
+          description: No response body
+      summary: Api v1 auth saml attribute mapping destroy
+      x-summary-source: derived
+  /api/v1/auth/saml/configuration/:
+    get:
+      operationId: api_v1_auth_saml_configuration_list
+      parameters:
+      - in: query
+        name: organisation
+        schema:
+          type: integer
+        required: true
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - Authentication
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedSamlConfigurationList'
+          description: ''
+      x-flagsmith-minimum-plan: SCALE_UP
+      summary: Api v1 auth saml configuration list
+      x-summary-source: derived
+    post:
+      operationId: api_v1_auth_saml_configuration_create
+      tags:
+      - Authentication
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SamlConfiguration'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SamlConfiguration'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/SamlConfiguration'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SamlConfiguration'
+          description: ''
+      x-flagsmith-minimum-plan: SCALE_UP
+      summary: Api v1 auth saml configuration create
+      x-summary-source: derived
+  /api/v1/auth/saml/configuration/{name}/:
+    get:
+      operationId: api_v1_auth_saml_configuration_retrieve
+      parameters:
+      - in: path
+        name: name
+        schema:
+          type: string
+        required: true
+      tags:
+      - Authentication
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SamlConfiguration'
+          description: ''
+      x-flagsmith-minimum-plan: SCALE_UP
+      summary: Api v1 auth saml configuration retrieve
+      x-summary-source: derived
+    put:
+      operationId: api_v1_auth_saml_configuration_update
+      parameters:
+      - in: path
+        name: name
+        schema:
+          type: string
+        required: true
+      tags:
+      - Authentication
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SamlConfiguration'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SamlConfiguration'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/SamlConfiguration'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SamlConfiguration'
+          description: ''
+      x-flagsmith-minimum-plan: SCALE_UP
+      summary: Api v1 auth saml configuration update
+      x-summary-source: derived
+    patch:
+      operationId: api_v1_auth_saml_configuration_partial_update
+      parameters:
+      - in: path
+        name: name
+        schema:
+          type: string
+        required: true
+      tags:
+      - Authentication
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedSamlConfiguration'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedSamlConfiguration'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedSamlConfiguration'
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SamlConfiguration'
+          description: ''
+      x-flagsmith-minimum-plan: SCALE_UP
+      summary: Api v1 auth saml configuration partial update
+      x-summary-source: derived
+    delete:
+      operationId: api_v1_auth_saml_configuration_destroy
+      parameters:
+      - in: path
+        name: name
+        schema:
+          type: string
+        required: true
+      tags:
+      - Authentication
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '204':
+          description: No response body
+      x-flagsmith-minimum-plan: SCALE_UP
+      summary: Api v1 auth saml configuration destroy
+      x-summary-source: derived
+  /api/v1/auth/saml/login/:
+    post:
+      operationId: api_v1_auth_saml_login_create
+      tags:
+      - Authentication
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SamlLogin'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SamlLogin'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/SamlLogin'
+        required: true
+      security:
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SamlUserToken'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: ''
+      summary: Api v1 auth saml login create
+      x-summary-source: derived
+  /api/v1/auth/token/:
+    delete:
+      operationId: api_v1_auth_token_destroy
+      tags:
+      - Authentication
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '204':
+          description: No response body
+      summary: Api v1 auth token destroy
+      x-summary-source: derived
+  /api/v1/auth/users/:
+    get:
+      operationId: api_v1_auth_users_list
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - Authentication
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedUserList'
+          description: ''
+      summary: Api v1 auth users list
+      x-summary-source: derived
+    post:
+      operationId: api_v1_auth_users_create
+      tags:
+      - Authentication
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomUserCreate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CustomUserCreate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CustomUserCreate'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomUserCreate'
+          description: ''
+      summary: Api v1 auth users create
+      x-summary-source: derived
+  /api/v1/auth/users/{id}/:
+    get:
+      operationId: api_v1_auth_users_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Feature flag admin user.
+        required: true
+      tags:
+      - Authentication
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+      summary: Api v1 auth users retrieve
+      x-summary-source: derived
+    put:
+      operationId: api_v1_auth_users_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Feature flag admin user.
+        required: true
+      tags:
+      - Authentication
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/User'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/User'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+      summary: Api v1 auth users update
+      x-summary-source: derived
+    patch:
+      operationId: api_v1_auth_users_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Feature flag admin user.
+        required: true
+      tags:
+      - Authentication
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedUser'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedUser'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedUser'
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+      summary: Api v1 auth users partial update
+      x-summary-source: derived
+    delete:
+      operationId: api_v1_auth_users_destroy
+      parameters:
+      - in: query
+        name: current_password
+        schema:
+          type:
+          - string
+          - 'null'
+      - in: query
+        name: delete_orphan_organisations
+        schema:
+          type: boolean
+          default: false
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Feature flag admin user.
+        required: true
+      tags:
+      - Authentication
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '204':
+          description: No response body
+      summary: Api v1 auth users destroy
+      x-summary-source: derived
+  /api/v1/auth/users/activation/:
+    post:
+      operationId: api_v1_auth_users_activation_create
+      tags:
+      - Authentication
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Activation'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Activation'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Activation'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Activation'
+          description: ''
+      summary: Api v1 auth users activation create
+      x-summary-source: derived
+  /api/v1/auth/users/me/:
+    get:
+      operationId: api_v1_auth_users_me_retrieve
+      tags:
+      - Authentication
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SamlCurrentUser'
+          description: ''
+      summary: Api v1 auth users me retrieve
+      x-summary-source: derived
+    put:
+      operationId: api_v1_auth_users_me_update
+      tags:
+      - Authentication
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SamlCurrentUser'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SamlCurrentUser'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/SamlCurrentUser'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SamlCurrentUser'
+          description: ''
+      summary: Api v1 auth users me update
+      x-summary-source: derived
+    patch:
+      operationId: api_v1_auth_users_me_partial_update
+      tags:
+      - Authentication
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedSamlCurrentUser'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedSamlCurrentUser'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedSamlCurrentUser'
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SamlCurrentUser'
+          description: ''
+      summary: Api v1 auth users me partial update
+      x-summary-source: derived
+    delete:
+      operationId: api_v1_auth_users_me_destroy
+      tags:
+      - Authentication
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '204':
+          description: No response body
+      summary: Api v1 auth users me destroy
+      x-summary-source: derived
+  /api/v1/auth/users/me/onboarding/:
+    patch:
+      operationId: api_v1_auth_users_me_onboarding_partial_update
+      tags:
+      - Authentication
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedUser'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedUser'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedUser'
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+      summary: Api v1 auth users me onboarding partial update
+      x-summary-source: derived
+  /api/v1/auth/users/resend_activation/:
+    post:
+      operationId: api_v1_auth_users_resend_activation_create
+      tags:
+      - Authentication
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SendEmailReset'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SendEmailReset'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/SendEmailReset'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SendEmailReset'
+          description: ''
+      summary: Api v1 auth users resend activation create
+      x-summary-source: derived
+  /api/v1/auth/users/reset_email/:
+    post:
+      operationId: api_v1_auth_users_reset_email_create
+      tags:
+      - Authentication
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SendEmailReset'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SendEmailReset'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/SendEmailReset'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SendEmailReset'
+          description: ''
+      summary: Api v1 auth users reset email create
+      x-summary-source: derived
+  /api/v1/auth/users/reset_email_confirm/:
+    post:
+      operationId: api_v1_auth_users_reset_email_confirm_create
+      tags:
+      - Authentication
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UsernameResetConfirm'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UsernameResetConfirm'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UsernameResetConfirm'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UsernameResetConfirm'
+          description: ''
+      summary: Api v1 auth users reset email confirm create
+      x-summary-source: derived
+  /api/v1/auth/users/reset_password/:
+    post:
+      operationId: api_v1_auth_users_reset_password_create
+      tags:
+      - Authentication
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SendEmailReset'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SendEmailReset'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/SendEmailReset'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SendEmailReset'
+          description: ''
+      summary: Api v1 auth users reset password create
+      x-summary-source: derived
+  /api/v1/auth/users/reset_password_confirm/:
+    post:
+      operationId: api_v1_auth_users_reset_password_confirm_create
+      tags:
+      - Authentication
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PasswordResetConfirmRetype'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PasswordResetConfirmRetype'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PasswordResetConfirmRetype'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PasswordResetConfirmRetype'
+          description: ''
+      summary: Api v1 auth users reset password confirm create
+      x-summary-source: derived
+  /api/v1/auth/users/set_email/:
+    post:
+      operationId: api_v1_auth_users_set_email_create
+      tags:
+      - Authentication
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SetUsername'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SetUsername'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/SetUsername'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SetUsername'
+          description: ''
+      summary: Api v1 auth users set email create
+      x-summary-source: derived
+  /api/v1/auth/users/set_password/:
+    post:
+      operationId: api_v1_auth_users_set_password_create
+      tags:
+      - Authentication
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SetPasswordRetype'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SetPasswordRetype'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/SetPasswordRetype'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SetPasswordRetype'
+          description: ''
+      summary: Api v1 auth users set password create
+      x-summary-source: derived
+  /api/v1/organisations/{organisation_pk}/groups/{group_pk}/users/{user_pk}/make-admin:
+    post:
+      operationId: api_v1_organisations_groups_users_make_admin_create
+      parameters:
+      - in: path
+        name: group_pk
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: organisation_pk
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: user_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Authentication
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          description: No response body
+      summary: Api v1 organisations groups users make admin create
+      x-summary-source: derived
+  /api/v1/organisations/{organisation_pk}/groups/{group_pk}/users/{user_pk}/remove-admin:
+    post:
+      operationId: api_v1_organisations_groups_users_remove_admin_create
+      parameters:
+      - in: path
+        name: group_pk
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: organisation_pk
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: user_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Authentication
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          description: No response body
+      summary: Api v1 organisations groups users remove admin create
+      x-summary-source: derived
+  /api/v1/organisations/{organisation_pk}/roles/{role_pk}/users/:
+    get:
+      operationId: api_v1_organisations_roles_users_list
+      parameters:
+      - in: path
+        name: organisation_pk
+        schema:
+          type: string
+        required: true
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - in: path
+        name: role_pk
+        schema:
+          type: string
+        required: true
+      tags:
+      - Authentication
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedUserRoleList'
+          description: ''
+      summary: Api v1 organisations roles users list
+      x-summary-source: derived
+    post:
+      operationId: api_v1_organisations_roles_users_create
+      parameters:
+      - in: path
+        name: organisation_pk
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: role_pk
+        schema:
+          type: string
+        required: true
+      tags:
+      - Authentication
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRole'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UserRole'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UserRole'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserRole'
+          description: ''
+      summary: Api v1 organisations roles users create
+      x-summary-source: derived
+  /api/v1/organisations/{organisation_pk}/roles/{role_pk}/users/{id}/:
+    get:
+      operationId: api_v1_organisations_roles_users_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: organisation_pk
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: role_pk
+        schema:
+          type: string
+        required: true
+      tags:
+      - Authentication
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserRole'
+          description: ''
+      summary: Api v1 organisations roles users retrieve
+      x-summary-source: derived
+    put:
+      operationId: api_v1_organisations_roles_users_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: organisation_pk
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: role_pk
+        schema:
+          type: string
+        required: true
+      tags:
+      - Authentication
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRole'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UserRole'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UserRole'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserRole'
+          description: ''
+      summary: Api v1 organisations roles users update
+      x-summary-source: derived
+    patch:
+      operationId: api_v1_organisations_roles_users_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: organisation_pk
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: role_pk
+        schema:
+          type: string
+        required: true
+      tags:
+      - Authentication
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedUserRole'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedUserRole'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedUserRole'
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserRole'
+          description: ''
+      summary: Api v1 organisations roles users partial update
+      x-summary-source: derived
+    delete:
+      operationId: api_v1_organisations_roles_users_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: organisation_pk
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: role_pk
+        schema:
+          type: string
+        required: true
+      tags:
+      - Authentication
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '204':
+          description: No response body
+      summary: Api v1 organisations roles users destroy
+      x-summary-source: derived
+  /api/v1/organisations/{organisation_pk}/users/:
+    get:
+      operationId: api_v1_organisations_users_list
+      parameters:
+      - in: path
+        name: organisation_pk
+        schema:
+          type: string
+        required: true
+      tags:
+      - Authentication
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserList'
+          description: ''
+      summary: Api v1 organisations users list
+      x-summary-source: derived
+  /api/v1/organisations/{organisation_pk}/users/{id}/update-role/:
+    post:
+      operationId: api_v1_organisations_users_update_role_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Feature flag admin user.
+        required: true
+      - in: path
+        name: organisation_pk
+        schema:
+          type: string
+        required: true
+      tags:
+      - Authentication
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserOrganisation'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UserOrganisation'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UserOrganisation'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserOrganisation'
+          description: ''
+      summary: Api v1 organisations users update role create
+      x-summary-source: derived
+  /api/v1/organisations/{organisation_pk}/users/{user_pk}/roles/:
+    get:
+      operationId: api_v1_organisations_users_roles_list
+      parameters:
+      - in: path
+        name: organisation_pk
+        schema:
+          type: string
+        required: true
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - in: path
+        name: user_pk
+        schema:
+          type: string
+        required: true
+      tags:
+      - Authentication
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedRoleList'
+          description: ''
+      summary: Api v1 organisations users roles list
+      x-summary-source: derived
+  /api/v1/organisations/{organisation_pk}/users/{user_pk}/roles/{id}/:
+    delete:
+      operationId: api_v1_organisations_users_roles_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: organisation_pk
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: user_pk
+        schema:
+          type: string
+        required: true
+      tags:
+      - Authentication
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '204':
+          description: No response body
+      summary: Api v1 organisations users roles destroy
+      x-summary-source: derived
+  /api/v1/users/join/{hash}/:
+    post:
+      operationId: api_v1_users_join_create
+      parameters:
+      - in: path
+        name: hash
+        schema:
+          type: string
+        required: true
+      tags:
+      - Authentication
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          description: No response body
+      summary: Api v1 users join create
+      x-summary-source: derived
+  /api/v1/users/join/link/{hash}/:
+    post:
+      operationId: api_v1_users_join_link_create
+      parameters:
+      - in: path
+        name: hash
+        schema:
+          type: string
+        required: true
+      tags:
+      - Authentication
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          description: No response body
+      summary: Api v1 users join link create
+      x-summary-source: derived
+components:
+  schemas:
+    SamlConfiguration:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        organisation:
+          type: integer
+        name:
+          type: string
+          description: An alphanumeric string to uniquely identify the saml configuration.
+          pattern: ^[A-Za-z0-9-]
+          maxLength: 100
+        frontend_url:
+          type: string
+          format: uri
+          description: Base URL to redirect to on a successful SAML authentication, e.g. https://app.flagsmith.com/
+          maxLength: 200
+        idp_metadata_xml:
+          type:
+          - string
+          - 'null'
+        allow_idp_initiated:
+          type: boolean
+          title: Allow IdP-initiated (unsolicited) login
+      required:
+      - frontend_url
+      - name
+      - organisation
+    SignUpTypeEnum:
+      enum:
+      - NO_INVITE
+      - INVITE_EMAIL
+      - INVITE_LINK
+      type: string
+      description: '* `NO_INVITE` - No Invite
+
+        * `INVITE_EMAIL` - Invite Email
+
+        * `INVITE_LINK` - Invite Link'
+    NullEnum:
+      type: 'null'
+    DjangoAttributeNameEnum:
+      enum:
+      - email
+      - first_name
+      - last_name
+      - groups
+      type: string
+      description: '* `email` - Email
+
+        * `first_name` - First / Given name
+
+        * `last_name` - Last name / Surname
+
+        * `groups` - Groups'
+    SetPasswordRetype:
+      type: object
+      properties:
+        new_password:
+          type: string
+        re_new_password:
+          type: string
+        current_password:
+          type: string
+      required:
+      - current_password
+      - new_password
+      - re_new_password
+    Role:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 255
+        description:
+          type:
+          - string
+          - 'null'
+        organisation:
+          type: integer
+          readOnly: true
+        tags:
+          type: array
+          items:
+            type: integer
+      required:
+      - name
+    PatchedSamlCurrentUser:
+      type: object
+      properties:
+        first_name:
+          type: string
+          maxLength: 150
+        last_name:
+          type: string
+          maxLength: 150
+        sign_up_type:
+          oneOf:
+          - $ref: '#/components/schemas/SignUpTypeEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        id:
+          type: integer
+          readOnly: true
+        email:
+          type: string
+          format: email
+          readOnly: true
+        auth_type:
+          type: string
+          readOnly: true
+        is_superuser:
+          type: boolean
+          readOnly: true
+        date_joined:
+          type: string
+          format: date-time
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+        pylon_email_signature:
+          type: string
+          readOnly: true
+    PaginatedRoleList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Role'
+    CustomUserCreate:
+      type: object
+      properties:
+        first_name:
+          type: string
+          maxLength: 150
+        last_name:
+          type: string
+          maxLength: 150
+        sign_up_type:
+          oneOf:
+          - $ref: '#/components/schemas/SignUpTypeEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        email:
+          type: string
+          format: email
+          maxLength: 254
+        id:
+          type: integer
+          readOnly: true
+        password:
+          type: string
+          writeOnly: true
+        is_active:
+          type: boolean
+          readOnly: true
+          title: Active
+          description: Designates whether this user should be treated as active. Unselect this instead of deleting accounts.
+        marketing_consent_given:
+          type: boolean
+          readOnly: true
+          description: Determines whether the user has agreed to receive marketing mails
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+        key:
+          type: string
+          readOnly: true
+      required:
+      - email
+      - first_name
+      - last_name
+      - password
+    GoogleLogin:
+      type: object
+      properties:
+        access_token:
+          type: string
+          description: Code or access token returned from the FE interaction with the third party login provider.
+        sign_up_type:
+          writeOnly: true
+          description: 'Provide information about how the user signed up (i.e. via invite or not)
+
+
+            * `NO_INVITE` - No Invite
+
+            * `INVITE_EMAIL` - Invite Email
+
+            * `INVITE_LINK` - Invite Link'
+          oneOf:
+          - $ref: '#/components/schemas/SignUpTypeEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        hubspot_cookie:
+          type:
+          - string
+          - 'null'
+        marketing_consent_given:
+          type:
+          - boolean
+          - 'null'
+        utm_data:
+          oneOf:
+          - $ref: '#/components/schemas/UTMData'
+          - type: 'null'
+      required:
+      - access_token
+    SamlUserToken:
+      type: object
+      properties:
+        key:
+          type: string
+          maxLength: 40
+      required:
+      - key
+    Activation:
+      type: object
+      properties:
+        uid:
+          type: string
+        token:
+          type: string
+      required:
+      - token
+      - uid
+    PaginatedUserRoleList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserRole'
+    TokenExchangeRequest:
+      type: object
+      properties:
+        token:
+          type: string
+          description: An OIDC token issued by a trusted identity provider, e.g. a GitHub Actions job token.
+      required:
+      - token
+    UserOrganisation:
+      type: object
+      properties:
+        role:
+          $ref: '#/components/schemas/RoleEnum'
+        organisation:
+          allOf:
+          - $ref: '#/components/schemas/OrganisationSerializerBasic'
+          readOnly: true
+        is_active:
+          type: boolean
+          readOnly: true
+          description: Inactive members can still log in, but cannot access the organisation, and do not count towards its seat limit.
+      required:
+      - role
+    SendEmailReset:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+      required:
+      - email
+    UTMData:
+      type: object
+      properties:
+        utm_source:
+          type: string
+        utm_medium:
+          type: string
+        utm_campaign:
+          type: string
+        utm_term:
+          type: string
+        utm_content:
+          type: string
+    GithubLogin:
+      type: object
+      properties:
+        access_token:
+          type: string
+          description: Code or access token returned from the FE interaction with the third party login provider.
+        sign_up_type:
+          writeOnly: true
+          description: 'Provide information about how the user signed up (i.e. via invite or not)
+
+
+            * `NO_INVITE` - No Invite
+
+            * `INVITE_EMAIL` - Invite Email
+
+            * `INVITE_LINK` - Invite Link'
+          oneOf:
+          - $ref: '#/components/schemas/SignUpTypeEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        hubspot_cookie:
+          type:
+          - string
+          - 'null'
+        marketing_consent_given:
+          type:
+          - boolean
+          - 'null'
+        utm_data:
+          oneOf:
+          - $ref: '#/components/schemas/UTMData'
+          - type: 'null'
+      required:
+      - access_token
+    RoleEnum:
+      enum:
+      - ADMIN
+      - USER
+      type: string
+      description: '* `ADMIN` - Admin
+
+        * `USER` - User'
+    TokenExchangeResponse:
+      type: object
+      properties:
+        access_token:
+          type: string
+          description: Short-lived access token for the Management API.
+        token_type:
+          type: string
+          description: Always "Bearer".
+        expires_in:
+          type: integer
+          description: Access token lifetime in seconds.
+      required:
+      - access_token
+      - expires_in
+      - token_type
+    OrganisationSerializerBasic:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 2000
+      required:
+      - name
+    PatchedSamlAttributeMapping:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        saml_configuration:
+          type: integer
+        django_attribute_name:
+          $ref: '#/components/schemas/DjangoAttributeNameEnum'
+        idp_attribute_name:
+          type: string
+          maxLength: 200
+    PatchedSamlConfiguration:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        organisation:
+          type: integer
+        name:
+          type: string
+          description: An alphanumeric string to uniquely identify the saml configuration.
+          pattern: ^[A-Za-z0-9-]
+          maxLength: 100
+        frontend_url:
+          type: string
+          format: uri
+          description: Base URL to redirect to on a successful SAML authentication, e.g. https://app.flagsmith.com/
+          maxLength: 200
+        idp_metadata_xml:
+          type:
+          - string
+          - 'null'
+        allow_idp_initiated:
+          type: boolean
+          title: Allow IdP-initiated (unsolicited) login
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+      - message
+    SamlLogin:
+      type: object
+      properties:
+        access_token:
+          type: string
+          description: Code or access token returned from the FE interaction with the third party login provider.
+      required:
+      - access_token
+    OAuthToken:
+      type: object
+      properties:
+        key:
+          type: string
+          readOnly: true
+        is_new_user:
+          type: boolean
+          readOnly: true
+    User:
+      type: object
+      properties:
+        first_name:
+          type: string
+          maxLength: 150
+        last_name:
+          type: string
+          maxLength: 150
+        sign_up_type:
+          oneOf:
+          - $ref: '#/components/schemas/SignUpTypeEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        id:
+          type: integer
+          readOnly: true
+        email:
+          type: string
+          format: email
+          readOnly: true
+      required:
+      - first_name
+      - last_name
+    SamlCurrentUser:
+      type: object
+      properties:
+        first_name:
+          type: string
+          maxLength: 150
+        last_name:
+          type: string
+          maxLength: 150
+        sign_up_type:
+          oneOf:
+          - $ref: '#/components/schemas/SignUpTypeEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        id:
+          type: integer
+          readOnly: true
+        email:
+          type: string
+          format: email
+          readOnly: true
+        auth_type:
+          type: string
+          readOnly: true
+        is_superuser:
+          type: boolean
+          readOnly: true
+        date_joined:
+          type: string
+          format: date-time
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+        pylon_email_signature:
+          type: string
+          readOnly: true
+      required:
+      - first_name
+      - last_name
+    PaginatedUserList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/User'
+    BlankEnum:
+      enum:
+      - ''
+    UsernameResetConfirm:
+      type: object
+      properties:
+        new_email:
+          type: string
+          format: email
+          title: Email
+          maxLength: 254
+      required:
+      - new_email
+    PasswordResetConfirmRetype:
+      type: object
+      properties:
+        uid:
+          type: string
+        token:
+          type: string
+        new_password:
+          type: string
+        re_new_password:
+          type: string
+      required:
+      - new_password
+      - re_new_password
+      - token
+      - uid
+    SamlRequestHeaders:
+      type: object
+      properties:
+        Location:
+          type: string
+      required:
+      - Location
+    SamlAttributeMapping:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        saml_configuration:
+          type: integer
+        django_attribute_name:
+          $ref: '#/components/schemas/DjangoAttributeNameEnum'
+        idp_attribute_name:
+          type: string
+          maxLength: 200
+      required:
+      - django_attribute_name
+      - idp_attribute_name
+      - saml_configuration
+    PatchedUser:
+      type: object
+      properties:
+        first_name:
+          type: string
+          maxLength: 150
+        last_name:
+          type: string
+          maxLength: 150
+        sign_up_type:
+          oneOf:
+          - $ref: '#/components/schemas/SignUpTypeEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        id:
+          type: integer
+          readOnly: true
+        email:
+          type: string
+          format: email
+          readOnly: true
+    PatchedUserRole:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        user:
+          type: integer
+        role:
+          type: integer
+          readOnly: true
+    TokenCreate:
+      type: object
+      properties:
+        password:
+          type: string
+        email:
+          type: string
+    UserList:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        email:
+          type: string
+          format: email
+          maxLength: 254
+        first_name:
+          type: string
+          maxLength: 150
+        last_name:
+          type: string
+          maxLength: 150
+        last_login:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+      required:
+      - email
+      - first_name
+      - last_name
+    PaginatedSamlAttributeMappingList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/SamlAttributeMapping'
+    UserRole:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        user:
+          type: integer
+        role:
+          type: integer
+          readOnly: true
+      required:
+      - user
+    SamlRequest:
+      type: object
+      properties:
+        headers:
+          $ref: '#/components/schemas/SamlRequestHeaders'
+        status:
+          type: integer
+        url:
+          type: string
+      required:
+      - headers
+      - status
+      - url
+    SetUsername:
+      type: object
+      properties:
+        current_password:
+          type: string
+        new_email:
+          type: string
+          format: email
+          title: Email
+          maxLength: 254
+      required:
+      - current_password
+      - new_email
+    PaginatedSamlConfigurationList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/SamlConfiguration'
+  securitySchemes:
+    Cohort_Sync_Key:
+      type: http
+      scheme: bearer
+      description: For cohort sync endpoints called by an external cohort source, such as Amplitude.
+    Cohort_Sync_Key__Basic:
+      type: http
+      scheme: basic
+      description: For cohort sync endpoints called by an external cohort source that can only send Basic credentials, such as Mixpanel. The key is the password; the username is ignored.
+    Environment_API_Key:
+      type: apiKey
+      in: header
+      name: X-Environment-Key
+      description: For SDK endpoints. <a href='https://docs.flagsmith.com/clients/rest#public-api-endpoints'>Find out more</a>.
+    Master_API_Key:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: For Management API endpoints. <a href='https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/management-api'>Find out more</a>.
+    basicAuth:
+      type: http
+      scheme: basic
+    tokenAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: Token-based authentication with required prefix "Token"

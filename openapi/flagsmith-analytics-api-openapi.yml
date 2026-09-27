@@ -1,0 +1,165 @@
+openapi: 3.2.0
+info:
+  title: Flagsmith Analytics API
+  version: v1
+  description: Flagsmith's Core and SDK APIs. Check out Flagsmith documentation.
+  contact:
+    email: support@flagsmith.com
+  license:
+    name: BSD License
+    identifier: BSD-3-Clause
+tags:
+- name: Analytics
+  description: SDK analytics and telemetry.
+paths:
+  /api/v1/analytics/flags/:
+    post:
+      operationId: api_v1_analytics_flags_create
+      description: Class to handle flag analytics events
+      tags:
+      - Analytics
+      security:
+      - Environment API Key: []
+      responses:
+        '201':
+          description: No response body
+      summary: Api v1 analytics flags create
+      x-summary-source: derived
+  /api/v1/analytics/telemetry/:
+    post:
+      operationId: api_v1_analytics_telemetry_create
+      description: 'Class to handle telemetry events from self hosted APIs so we can aggregate and track
+
+        self hosted installation data'
+      tags:
+      - Analytics
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Telemetry'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Telemetry'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Telemetry'
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Telemetry'
+          description: ''
+      summary: Api v1 analytics telemetry create
+      x-summary-source: derived
+  /api/v2/analytics/flags/:
+    post:
+      operationId: api_v2_analytics_flags_create
+      tags:
+      - Analytics
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SDKAnalyticsFlags'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SDKAnalyticsFlags'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/SDKAnalyticsFlags'
+        required: true
+      security:
+      - Environment API Key: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SDKAnalyticsFlags'
+          description: ''
+      summary: Api v2 analytics flags create
+      x-summary-source: derived
+components:
+  schemas:
+    SDKAnalyticsFlagsSerializerDetail:
+      type: object
+      properties:
+        feature_name:
+          type: string
+        identity_identifier:
+          type: string
+        enabled_when_evaluated:
+          type: boolean
+        count:
+          type: integer
+      required:
+      - count
+      - enabled_when_evaluated
+      - feature_name
+    Telemetry:
+      type: object
+      properties:
+        organisations:
+          type: integer
+        projects:
+          type: integer
+        environments:
+          type: integer
+        features:
+          type: integer
+        segments:
+          type: integer
+        users:
+          type: integer
+        debug_enabled:
+          type: boolean
+        env:
+          type: string
+      required:
+      - debug_enabled
+      - env
+      - environments
+      - features
+      - organisations
+      - projects
+      - segments
+      - users
+    SDKAnalyticsFlags:
+      type: object
+      properties:
+        evaluations:
+          type: array
+          items:
+            $ref: '#/components/schemas/SDKAnalyticsFlagsSerializerDetail'
+      required:
+      - evaluations
+  securitySchemes:
+    Cohort_Sync_Key:
+      type: http
+      scheme: bearer
+      description: For cohort sync endpoints called by an external cohort source, such as Amplitude.
+    Cohort_Sync_Key__Basic:
+      type: http
+      scheme: basic
+      description: For cohort sync endpoints called by an external cohort source that can only send Basic credentials, such as Mixpanel. The key is the password; the username is ignored.
+    Environment_API_Key:
+      type: apiKey
+      in: header
+      name: X-Environment-Key
+      description: For SDK endpoints. <a href='https://docs.flagsmith.com/clients/rest#public-api-endpoints'>Find out more</a>.
+    Master_API_Key:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: For Management API endpoints. <a href='https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/management-api'>Find out more</a>.
+    basicAuth:
+      type: http
+      scheme: basic
+    tokenAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: Token-based authentication with required prefix "Token"

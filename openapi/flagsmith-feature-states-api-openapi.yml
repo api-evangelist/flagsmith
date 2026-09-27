@@ -1,0 +1,1337 @@
+openapi: 3.2.0
+info:
+  title: Flagsmith Feature states API
+  version: v1
+  description: Flagsmith's Core and SDK APIs. Check out Flagsmith documentation.
+  contact:
+    email: support@flagsmith.com
+  license:
+    name: BSD License
+    identifier: BSD-3-Clause
+tags:
+- name: Feature states
+  description: Manage feature states and feature versioning.
+paths:
+  /api/v1/environment-feature-versions/{id}/:
+    get:
+      operationId: api_v1_environment_feature_versions_retrieve
+      description: 'This is an additional endpoint to retrieve a specific version without needing
+
+        to provide the environment or feature as part of the URL.'
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - Feature states
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EnvironmentFeatureVersionRetrieve'
+          description: ''
+      summary: Api v1 environment feature versions retrieve
+      x-summary-source: derived
+  /api/v1/environments/{environment_api_key}/featurestates/:
+    get:
+      operationId: api_v1_environments_featurestates_list
+      description: 'View set to manage feature states. Nested beneath environments and environments + identities
+
+        to allow for filtering on both.'
+      parameters:
+      - in: query
+        name: anyIdentity
+        schema:
+          type: string
+        description: Pass any value to get results that have an identity override. Do not pass for default behaviour.
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      - in: query
+        name: feature
+        schema:
+          type: integer
+        description: ID of the feature to filter by.
+      - in: query
+        name: feature_name
+        schema:
+          type: string
+        description: Name of the feature to filter by.
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - Feature states
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedFeatureStateSerializerWithIdentityList'
+          description: ''
+      summary: Api v1 environments featurestates list
+      x-summary-source: derived
+    post:
+      operationId: api_v1_environments_featurestates_create
+      description: 'DEPRECATED: please use `/features/featurestates/` instead.
+
+        Override create method to add environment and identity (if present) from URL parameters.'
+      parameters:
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      tags:
+      - Feature states
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FeatureStateSerializerBasic'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/FeatureStateSerializerBasic'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/FeatureStateSerializerBasic'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FeatureStateSerializerBasic'
+          description: ''
+      summary: Api v1 environments featurestates create
+      x-summary-source: derived
+  /api/v1/environments/{environment_api_key}/featurestates/{id}/:
+    get:
+      operationId: api_v1_environments_featurestates_retrieve
+      description: 'View set to manage feature states. Nested beneath environments and environments + identities
+
+        to allow for filtering on both.'
+      parameters:
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this feature state.
+        required: true
+      tags:
+      - Feature states
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FeatureStateSerializerBasic'
+          description: ''
+      summary: Api v1 environments featurestates retrieve
+      x-summary-source: derived
+    patch:
+      operationId: api_v1_environments_featurestates_partial_update
+      description: Override partial_update as overridden update method assumes partial True for all requests.
+      parameters:
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this feature state.
+        required: true
+      tags:
+      - Feature states
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedFeatureStateSerializerCreate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedFeatureStateSerializerCreate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedFeatureStateSerializerCreate'
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FeatureStateSerializerCreate'
+          description: ''
+      summary: Api v1 environments featurestates partial update
+      x-summary-source: derived
+    delete:
+      operationId: api_v1_environments_featurestates_destroy
+      description: 'View set to manage feature states. Nested beneath environments and environments + identities
+
+        to allow for filtering on both.'
+      parameters:
+      - in: path
+        name: environment_api_key
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this feature state.
+        required: true
+      tags:
+      - Feature states
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '204':
+          description: No response body
+      summary: Api v1 environments featurestates destroy
+      x-summary-source: derived
+  /api/v1/environments/{environment_pk}/features/{feature_pk}/versions/{environment_feature_version_pk}/featurestates/{id}/:
+    patch:
+      operationId: api_v1_environments_features_versions_featurestates_partial_update
+      parameters:
+      - in: path
+        name: environment_feature_version_pk
+        schema:
+          type:
+          - string
+          - 'null'
+          format: uuid
+        required: true
+      - in: path
+        name: environment_pk
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: feature_pk
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this feature state.
+        required: true
+      tags:
+      - Feature states
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedCustomEnvironmentFeatureVersionFeatureState'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedCustomEnvironmentFeatureVersionFeatureState'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedCustomEnvironmentFeatureVersionFeatureState'
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomEnvironmentFeatureVersionFeatureState'
+          description: ''
+      summary: Api v1 environments features versions featurestates partial update
+      x-summary-source: derived
+    delete:
+      operationId: api_v1_environments_features_versions_featurestates_destroy
+      parameters:
+      - in: path
+        name: environment_feature_version_pk
+        schema:
+          type:
+          - string
+          - 'null'
+          format: uuid
+        required: true
+      - in: path
+        name: environment_pk
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: feature_pk
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this feature state.
+        required: true
+      tags:
+      - Feature states
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '204':
+          description: No response body
+      summary: Api v1 environments features versions featurestates destroy
+      x-summary-source: derived
+  /api/v1/feature-health/{path}:
+    post:
+      operationId: api_v1_feature_health_create
+      parameters:
+      - in: path
+        name: path
+        schema:
+          type: string
+          pattern: ^.{0,100}$
+        required: true
+      tags:
+      - Feature states
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+      summary: Api v1 feature health create
+      x-summary-source: derived
+  /api/v1/features/featurestates/:
+    get:
+      operationId: api_v1_features_featurestates_list
+      parameters:
+      - in: query
+        name: environment
+        schema:
+          type: integer
+        description: ID of the environment.
+        required: true
+      - in: query
+        name: feature
+        schema:
+          type: integer
+      - in: query
+        name: feature_segment
+        schema:
+          type: integer
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - Feature states
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedWritableNestedFeatureStateList'
+          description: ''
+      summary: Api v1 features featurestates list
+      x-summary-source: derived
+    post:
+      operationId: api_v1_features_featurestates_create
+      tags:
+      - Feature states
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WritableNestedFeatureState'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/WritableNestedFeatureState'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/WritableNestedFeatureState'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WritableNestedFeatureState'
+          description: ''
+      summary: Api v1 features featurestates create
+      x-summary-source: derived
+  /api/v1/features/featurestates/{id}/:
+    patch:
+      operationId: api_v1_features_featurestates_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this feature state.
+        required: true
+      tags:
+      - Feature states
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedWritableNestedFeatureState'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedWritableNestedFeatureState'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedWritableNestedFeatureState'
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WritableNestedFeatureState'
+          description: ''
+      summary: Api v1 features featurestates partial update
+      x-summary-source: derived
+  /api/v1/features/featurestates/get-by-uuid/{uuid}/:
+    get:
+      operationId: api_v1_features_featurestates_get_by_uuid_retrieve
+      parameters:
+      - in: path
+        name: uuid
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - Feature states
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WritableNestedFeatureState'
+          description: ''
+      summary: Api v1 features featurestates get by uuid retrieve
+      x-summary-source: derived
+  /api/v1/projects/{project_pk}/feature-health/events/{id}/dismiss/:
+    post:
+      operationId: api_v1_projects_feature_health_events_dismiss_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this feature health event.
+        required: true
+      - in: path
+        name: project_pk
+        schema:
+          type: string
+        required: true
+      tags:
+      - Feature states
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FeatureHealthEvent'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/FeatureHealthEvent'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/FeatureHealthEvent'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FeatureHealthEvent'
+          description: ''
+      summary: Api v1 projects feature health events dismiss create
+      x-summary-source: derived
+  /api/v1/projects/{project_pk}/feature-health/providers/:
+    get:
+      operationId: api_v1_projects_feature_health_providers_list
+      parameters:
+      - in: path
+        name: project_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Feature states
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FeatureHealthProvider'
+          description: ''
+      summary: Api v1 projects feature health providers list
+      x-summary-source: derived
+    post:
+      operationId: api_v1_projects_feature_health_providers_create
+      parameters:
+      - in: path
+        name: project_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Feature states
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateFeatureHealthProvider'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CreateFeatureHealthProvider'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CreateFeatureHealthProvider'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FeatureHealthProvider'
+          description: ''
+      summary: Api v1 projects feature health providers create
+      x-summary-source: derived
+  /api/v1/projects/{project_pk}/feature-health/providers/{name}/:
+    delete:
+      operationId: api_v1_projects_feature_health_providers_destroy
+      parameters:
+      - in: path
+        name: name
+        schema:
+          enum:
+          - Webhook
+          - Grafana
+          type: string
+          description: '* `Webhook` - Webhook
+
+            * `Grafana` - Grafana'
+        required: true
+      - in: path
+        name: project_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Feature states
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '204':
+          description: No response body
+      summary: Api v1 projects feature health providers destroy
+      x-summary-source: derived
+components:
+  schemas:
+    FeatureHealthEventReasonTextBlock:
+      type: object
+      properties:
+        text:
+          type: string
+        title:
+          type: string
+      required:
+      - text
+    FeatureStateSerializerWithIdentity:
+      type: object
+      description: Adds nested create feature
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        feature_state_value:
+          type:
+          - string
+          - integer
+          - number
+          - boolean
+          - 'null'
+          readOnly: true
+        multivariate_feature_state_values:
+          type: array
+          items:
+            $ref: '#/components/schemas/MultivariateFeatureStateValue'
+        identifier:
+          type: string
+          description: Can be passed as an alternative to `identity`
+        identity:
+          $ref: '#/components/schemas/_Identity'
+        deleted_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          readOnly: true
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+        enabled:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        live_from:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        version:
+          type:
+          - integer
+          - 'null'
+          readOnly: true
+        feature:
+          type: integer
+        environment:
+          type:
+          - integer
+          - 'null'
+        feature_segment:
+          type:
+          - integer
+          - 'null'
+        change_request:
+          type:
+          - integer
+          - 'null'
+        environment_feature_version:
+          type:
+          - string
+          - 'null'
+          format: uuid
+      required:
+      - feature
+      - identity
+    NullEnum:
+      type: 'null'
+    FeatureStateSerializerCreate:
+      type: object
+      properties:
+        feature:
+          type: integer
+        enabled:
+          type: boolean
+      required:
+      - feature
+    FeatureStateValue:
+      type: object
+      properties:
+        type:
+          oneOf:
+          - $ref: '#/components/schemas/Type975Enum'
+          - $ref: '#/components/schemas/BlankEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        string_value:
+          type:
+          - string
+          - 'null'
+          maxLength: 20000
+        integer_value:
+          type:
+          - integer
+          - 'null'
+          maximum: 2147483647
+          minimum: -2147483648
+        boolean_value:
+          type:
+          - boolean
+          - 'null'
+    Type975Enum:
+      enum:
+      - int
+      - unicode
+      - bool
+      type: string
+      description: '* `int` - Integer
+
+        * `unicode` - String
+
+        * `bool` - Boolean'
+    PaginatedFeatureStateSerializerWithIdentityList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/FeatureStateSerializerWithIdentity'
+    FeatureHealthEventReason:
+      type: object
+      properties:
+        text_blocks:
+          type: array
+          items:
+            $ref: '#/components/schemas/FeatureHealthEventReasonTextBlock'
+        url_blocks:
+          type: array
+          items:
+            $ref: '#/components/schemas/FeatureHealthEventReasonUrlBlock'
+      required:
+      - text_blocks
+      - url_blocks
+    PatchedCustomEnvironmentFeatureVersionFeatureState:
+      type: object
+      description: Adds nested create feature
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        feature:
+          type: integer
+          readOnly: true
+        enabled:
+          type: boolean
+        feature_state_value:
+          $ref: '#/components/schemas/FeatureStateValue'
+        feature_segment:
+          oneOf:
+          - $ref: '#/components/schemas/CustomCreateSegmentOverrideFeatureSegment'
+          - type: 'null'
+        deleted_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          readOnly: true
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        live_from:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          readOnly: true
+        environment:
+          type:
+          - integer
+          - 'null'
+          readOnly: true
+        identity:
+          type:
+          - integer
+          - 'null'
+          readOnly: true
+        change_request:
+          type:
+          - integer
+          - 'null'
+          readOnly: true
+        multivariate_feature_state_values:
+          type: array
+          items:
+            $ref: '#/components/schemas/MultivariateFeatureStateValue'
+    FeatureHealthEventTypeEnum:
+      enum:
+      - UNHEALTHY
+      - HEALTHY
+      type: string
+      description: '* `UNHEALTHY` - Unhealthy
+
+        * `HEALTHY` - Healthy'
+    FeatureHealthEventReasonUrlBlock:
+      type: object
+      properties:
+        url:
+          type: string
+        title:
+          type: string
+      required:
+      - url
+    PatchedFeatureStateSerializerCreate:
+      type: object
+      properties:
+        feature:
+          type: integer
+        enabled:
+          type: boolean
+    WritableNestedFeatureState:
+      type: object
+      description: Adds nested create feature
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        feature_state_value:
+          $ref: '#/components/schemas/FeatureStateValue'
+        multivariate_feature_state_values:
+          type: array
+          items:
+            $ref: '#/components/schemas/MultivariateFeatureStateValue'
+        identifier:
+          type: string
+          description: Can be passed as an alternative to `identity`
+        deleted_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          readOnly: true
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+        enabled:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        live_from:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        version:
+          type:
+          - integer
+          - 'null'
+          readOnly: true
+        feature:
+          type: integer
+        environment:
+          type:
+          - integer
+          - 'null'
+        identity:
+          type:
+          - integer
+          - 'null'
+        feature_segment:
+          type:
+          - integer
+          - 'null'
+        change_request:
+          type:
+          - integer
+          - 'null'
+        environment_feature_version:
+          type:
+          - string
+          - 'null'
+          format: uuid
+      required:
+      - environment
+      - feature
+    BlankEnum:
+      enum:
+      - ''
+    PatchedWritableNestedFeatureState:
+      type: object
+      description: Adds nested create feature
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        feature_state_value:
+          $ref: '#/components/schemas/FeatureStateValue'
+        multivariate_feature_state_values:
+          type: array
+          items:
+            $ref: '#/components/schemas/MultivariateFeatureStateValue'
+        identifier:
+          type: string
+          description: Can be passed as an alternative to `identity`
+        deleted_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          readOnly: true
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+        enabled:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        live_from:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        version:
+          type:
+          - integer
+          - 'null'
+          readOnly: true
+        feature:
+          type: integer
+        environment:
+          type:
+          - integer
+          - 'null'
+        identity:
+          type:
+          - integer
+          - 'null'
+        feature_segment:
+          type:
+          - integer
+          - 'null'
+        change_request:
+          type:
+          - integer
+          - 'null'
+        environment_feature_version:
+          type:
+          - string
+          - 'null'
+          format: uuid
+    CustomCreateSegmentOverrideFeatureSegment:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        segment:
+          type: integer
+        priority:
+          type: integer
+          minimum: 0
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+      required:
+      - segment
+    FeatureStateSerializerBasic:
+      type: object
+      description: Adds nested create feature
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        feature_state_value:
+          type:
+          - string
+          - integer
+          - number
+          - boolean
+          - 'null'
+          readOnly: true
+        multivariate_feature_state_values:
+          type: array
+          items:
+            $ref: '#/components/schemas/MultivariateFeatureStateValue'
+        identifier:
+          type: string
+          description: Can be passed as an alternative to `identity`
+        deleted_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          readOnly: true
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+        enabled:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        live_from:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        version:
+          type:
+          - integer
+          - 'null'
+          readOnly: true
+        feature:
+          type: integer
+        environment:
+          type:
+          - integer
+          - 'null'
+        identity:
+          type:
+          - integer
+          - 'null'
+        feature_segment:
+          type:
+          - integer
+          - 'null'
+        change_request:
+          type:
+          - integer
+          - 'null'
+        environment_feature_version:
+          type:
+          - string
+          - 'null'
+          format: uuid
+      required:
+      - feature
+    CustomEnvironmentFeatureVersionFeatureState:
+      type: object
+      description: Adds nested create feature
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        feature:
+          type: integer
+          readOnly: true
+        enabled:
+          type: boolean
+        feature_state_value:
+          $ref: '#/components/schemas/FeatureStateValue'
+        feature_segment:
+          oneOf:
+          - $ref: '#/components/schemas/CustomCreateSegmentOverrideFeatureSegment'
+          - type: 'null'
+        deleted_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          readOnly: true
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        live_from:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          readOnly: true
+        environment:
+          type:
+          - integer
+          - 'null'
+          readOnly: true
+        identity:
+          type:
+          - integer
+          - 'null'
+          readOnly: true
+        change_request:
+          type:
+          - integer
+          - 'null'
+          readOnly: true
+        multivariate_feature_state_values:
+          type: array
+          items:
+            $ref: '#/components/schemas/MultivariateFeatureStateValue'
+      required:
+      - feature_state_value
+    FeatureHealthEvent:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        environment:
+          type:
+          - integer
+          - 'null'
+          readOnly: true
+        feature:
+          type: integer
+          readOnly: true
+        provider_name:
+          type:
+          - string
+          - 'null'
+          readOnly: true
+        reason:
+          oneOf:
+          - $ref: '#/components/schemas/FeatureHealthEventReason'
+          - type: 'null'
+        type:
+          allOf:
+          - $ref: '#/components/schemas/FeatureHealthEventTypeEnum'
+          readOnly: true
+      required:
+      - reason
+    MultivariateFeatureStateValue:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        multivariate_feature_option:
+          type: integer
+        percentage_allocation:
+          type: number
+          format: double
+          maximum: 100
+          minimum: 0
+      required:
+      - multivariate_feature_option
+      - percentage_allocation
+    CreateFeatureHealthProvider:
+      type: object
+      properties:
+        name:
+          $ref: '#/components/schemas/NameEnum'
+      required:
+      - name
+    _Identity:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        identifier:
+          type: string
+          maxLength: 2000
+      required:
+      - identifier
+    EnvironmentFeatureVersionRetrieve:
+      type: object
+      properties:
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        published:
+          type: boolean
+          readOnly: true
+        live_from:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+        is_live:
+          type: boolean
+          readOnly: true
+        published_by:
+          type:
+          - integer
+          - 'null'
+          readOnly: true
+        created_by:
+          type:
+          - integer
+          - 'null'
+          readOnly: true
+        description:
+          type:
+          - string
+          - 'null'
+        previous_version_uuid:
+          type:
+          - string
+          - 'null'
+          readOnly: true
+        feature:
+          type: integer
+          readOnly: true
+        environment:
+          type: integer
+          readOnly: true
+    NameEnum:
+      enum:
+      - Webhook
+      - Grafana
+      type: string
+      description: '* `Webhook` - Webhook
+
+        * `Grafana` - Grafana'
+    PaginatedWritableNestedFeatureStateList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/WritableNestedFeatureState'
+    FeatureHealthProvider:
+      type: object
+      properties:
+        created_by:
+          type: string
+          format: email
+          readOnly: true
+        name:
+          $ref: '#/components/schemas/NameEnum'
+        project:
+          type: integer
+        webhook_url:
+          type: string
+          readOnly: true
+      required:
+      - name
+      - project
+  securitySchemes:
+    Cohort_Sync_Key:
+      type: http
+      scheme: bearer
+      description: For cohort sync endpoints called by an external cohort source, such as Amplitude.
+    Cohort_Sync_Key__Basic:
+      type: http
+      scheme: basic
+      description: For cohort sync endpoints called by an external cohort source that can only send Basic credentials, such as Mixpanel. The key is the password; the username is ignored.
+    Environment_API_Key:
+      type: apiKey
+      in: header
+      name: X-Environment-Key
+      description: For SDK endpoints. <a href='https://docs.flagsmith.com/clients/rest#public-api-endpoints'>Find out more</a>.
+    Master_API_Key:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: For Management API endpoints. <a href='https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/management-api'>Find out more</a>.
+    basicAuth:
+      type: http
+      scheme: basic
+    tokenAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: Token-based authentication with required prefix "Token"

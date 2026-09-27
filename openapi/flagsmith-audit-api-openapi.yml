@@ -1,0 +1,636 @@
+openapi: 3.2.0
+info:
+  title: Flagsmith Audit API
+  version: v1
+  description: Flagsmith's Core and SDK APIs. Check out Flagsmith documentation.
+  contact:
+    email: support@flagsmith.com
+  license:
+    name: BSD License
+    identifier: BSD-3-Clause
+tags:
+- name: Audit
+  description: Access audit logs.
+paths:
+  /api/v1/audit/:
+    get:
+      operationId: api_v1_audit_list
+      parameters:
+      - in: query
+        name: environments
+        schema:
+          type: array
+          items:
+            type: integer
+            minimum: 0
+      - in: query
+        name: is_system_event
+        schema:
+          type:
+          - boolean
+          - 'null'
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - in: query
+        name: project
+        schema:
+          type: integer
+      - in: query
+        name: search
+        schema:
+          type: string
+          maxLength: 256
+          minLength: 1
+      tags:
+      - Audit
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedAuditLogListList'
+          description: ''
+      summary: Api v1 audit list
+      x-summary-source: derived
+  /api/v1/audit/{id}/:
+    get:
+      operationId: api_v1_audit_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this audit log.
+        required: true
+      tags:
+      - Audit
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuditLogRetrieve'
+          description: ''
+      summary: Api v1 audit retrieve
+      x-summary-source: derived
+  /api/v1/organisations/{organisation_pk}/audit/:
+    get:
+      operationId: api_v1_organisations_audit_list
+      parameters:
+      - in: query
+        name: environments
+        schema:
+          type: array
+          items:
+            type: integer
+            minimum: 0
+      - in: query
+        name: is_system_event
+        schema:
+          type:
+          - boolean
+          - 'null'
+      - in: path
+        name: organisation_pk
+        schema:
+          type: string
+        required: true
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - in: query
+        name: project
+        schema:
+          type: integer
+      - in: query
+        name: search
+        schema:
+          type: string
+          maxLength: 256
+          minLength: 1
+      tags:
+      - Audit
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedAuditLogListList'
+          description: ''
+      summary: Api v1 organisations audit list
+      x-summary-source: derived
+  /api/v1/organisations/{organisation_pk}/audit/{id}/:
+    get:
+      operationId: api_v1_organisations_audit_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this audit log.
+        required: true
+      - in: path
+        name: organisation_pk
+        schema:
+          type: string
+        required: true
+      tags:
+      - Audit
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuditLogRetrieve'
+          description: ''
+      summary: Api v1 organisations audit retrieve
+      x-summary-source: derived
+  /api/v1/projects/{project_pk}/audit/:
+    get:
+      operationId: api_v1_projects_audit_list
+      parameters:
+      - in: query
+        name: environments
+        schema:
+          type: array
+          items:
+            type: integer
+            minimum: 0
+      - in: query
+        name: is_system_event
+        schema:
+          type:
+          - boolean
+          - 'null'
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - in: query
+        name: project
+        schema:
+          type: integer
+      - in: path
+        name: project_pk
+        schema:
+          type:
+          - integer
+          - 'null'
+        required: true
+      - in: query
+        name: search
+        schema:
+          type: string
+          maxLength: 256
+          minLength: 1
+      tags:
+      - Audit
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedAuditLogListList'
+          description: ''
+      summary: Api v1 projects audit list
+      x-summary-source: derived
+  /api/v1/projects/{project_pk}/audit/{id}/:
+    get:
+      operationId: api_v1_projects_audit_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this audit log.
+        required: true
+      - in: path
+        name: project_pk
+        schema:
+          type:
+          - integer
+          - 'null'
+        required: true
+      tags:
+      - Audit
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuditLogRetrieve'
+          description: ''
+      summary: Api v1 projects audit retrieve
+      x-summary-source: derived
+components:
+  schemas:
+    EdgeV2MigrationStatusEnum:
+      enum:
+      - NOT_STARTED
+      - IN_PROGRESS
+      - COMPLETE
+      - INCOMPLETE
+      type: string
+      description: '* `NOT_STARTED` - Not Started
+
+        * `IN_PROGRESS` - In Progress
+
+        * `COMPLETE` - Complete
+
+        * `INCOMPLETE` - Incomplete (identity overrides skipped)'
+    UserList:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        email:
+          type: string
+          format: email
+          maxLength: 254
+        first_name:
+          type: string
+          maxLength: 150
+        last_name:
+          type: string
+          maxLength: 150
+        last_login:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+      required:
+      - email
+      - first_name
+      - last_name
+    AuditLogRetrieve:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        created_date:
+          type: string
+          format: date-time
+          title: DateCreated
+        log:
+          type: string
+        author:
+          $ref: '#/components/schemas/UserList'
+        environment:
+          $ref: '#/components/schemas/EnvironmentSerializerLight'
+        project:
+          $ref: '#/components/schemas/ProjectList'
+        related_object_id:
+          type:
+          - integer
+          - 'null'
+          maximum: 2147483647
+          minimum: -2147483648
+        related_object_uuid:
+          type:
+          - string
+          - 'null'
+          maxLength: 36
+        related_object_type:
+          type:
+          - string
+          - 'null'
+          maxLength: 20
+        is_system_event:
+          type: boolean
+        change_details:
+          type: array
+          items:
+            type: object
+            properties:
+              field:
+                type: string
+              old:
+                type:
+                - string
+                - number
+                - boolean
+                - 'null'
+              new:
+                type:
+                - string
+                - number
+                - boolean
+                - 'null'
+          readOnly: true
+        change_type:
+          allOf:
+          - $ref: '#/components/schemas/ChangeTypeEnum'
+          readOnly: true
+      required:
+      - author
+      - created_date
+      - environment
+      - log
+      - project
+    AuditLogList:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        created_date:
+          type: string
+          format: date-time
+          title: DateCreated
+        log:
+          type: string
+        author:
+          $ref: '#/components/schemas/UserList'
+        environment:
+          $ref: '#/components/schemas/EnvironmentSerializerLight'
+        project:
+          $ref: '#/components/schemas/ProjectList'
+        related_object_id:
+          type:
+          - integer
+          - 'null'
+          maximum: 2147483647
+          minimum: -2147483648
+        related_object_uuid:
+          type:
+          - string
+          - 'null'
+          maxLength: 36
+        related_object_type:
+          type:
+          - string
+          - 'null'
+          maxLength: 20
+        is_system_event:
+          type: boolean
+      required:
+      - author
+      - created_date
+      - environment
+      - log
+      - project
+    EnvironmentSerializerLight:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+        name:
+          type: string
+          maxLength: 2000
+        api_key:
+          type: string
+          maxLength: 100
+        description:
+          type:
+          - string
+          - 'null'
+          maxLength: 20000
+        project:
+          type: integer
+          description: Changing the project selected will remove all previous Feature States for the previously associated projects Features that are related to this Environment. New default Feature States will be created for the new selected projects Features for this Environment.
+        minimum_change_request_approvals:
+          type:
+          - integer
+          - 'null'
+          maximum: 2147483647
+          minimum: -2147483648
+        allow_client_traits:
+          type: boolean
+          description: Allows clients using the client API key to set traits.
+        banner_text:
+          type:
+          - string
+          - 'null'
+          maxLength: 255
+        banner_colour:
+          type:
+          - string
+          - 'null'
+          description: hex code for the banner colour
+          maxLength: 7
+        hide_disabled_flags:
+          type:
+          - boolean
+          - 'null'
+          description: 'If true will exclude flags from SDK which are disabled. NOTE: If set, this will override the project `hide_disabled_flags`'
+        use_mv_v2_evaluation:
+          type: boolean
+          description: 'To avoid breaking the API, we return this field as well.
+
+
+            Warning: this will still mean that sending the `use_mv_v2_evaluation` field
+
+            (e.g. in a PUT request) will not behave as expected but, since this is a minor
+
+            issue, I think we can ignore.'
+          readOnly: true
+        use_identity_composite_key_for_hashing:
+          type: boolean
+          description: Enable this to have consistent multivariate and percentage split evaluations across all SDKs (in local and server side mode)
+        hide_sensitive_data:
+          type: boolean
+          description: 'If true, will hide sensitive data(e.g: traits, description etc) from the SDK endpoints'
+        use_v2_feature_versioning:
+          type: boolean
+          readOnly: true
+        use_identity_overrides_in_local_eval:
+          type: boolean
+          description: When enabled, identity overrides will be included in the environment document
+        is_creating:
+          type: boolean
+          readOnly: true
+          description: Attribute used to indicate when an environment is still being created (via clone for example)
+      required:
+      - name
+      - project
+    ChangeTypeEnum:
+      enum:
+      - CREATE
+      - UPDATE
+      - DELETE
+      - UNKNOWN
+      type: string
+    ProjectList:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+        name:
+          type: string
+          maxLength: 2000
+        organisation:
+          type: integer
+        hide_disabled_flags:
+          type: boolean
+          description: If true will exclude flags from SDK which are disabled
+        enable_dynamo_db:
+          type: boolean
+          readOnly: true
+          description: If true will sync environment data with dynamodb and allow access to dynamodb identities
+        migration_status:
+          type: string
+          readOnly: true
+          description: 'Edge migration status of the project; can be one of: MIGRATION_SCHEDULED, MIGRATION_COMPLETED, MIGRATION_IN_PROGRESS, MIGRATION_NOT_STARTED, NOT_APPLICABLE'
+        use_edge_identities:
+          type: boolean
+          readOnly: true
+        prevent_flag_defaults:
+          type: boolean
+          description: Prevent defaults from being set in all environments when creating a feature.
+        enable_realtime_updates:
+          type: boolean
+          description: Enable this to trigger a realtime(sse) event whenever the value of a flag changes
+        only_allow_lower_case_feature_names:
+          type: boolean
+          description: Used by UI to validate feature names
+        feature_name_regex:
+          type:
+          - string
+          - 'null'
+          description: Used for validating feature names
+          maxLength: 255
+        show_edge_identity_overrides_for_feature:
+          type: boolean
+          readOnly: true
+        stale_flags_limit_days:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+          description: Number of days without modification in any environment before a flag is considered stale.
+        edge_v2_migration_status:
+          allOf:
+          - $ref: '#/components/schemas/EdgeV2MigrationStatusEnum'
+          readOnly: true
+          description: '[Edge V2 migration] Project migration status. Set to `IN_PROGRESS` to trigger migration start.
+
+
+            * `NOT_STARTED` - Not Started
+
+            * `IN_PROGRESS` - In Progress
+
+            * `COMPLETE` - Complete
+
+            * `INCOMPLETE` - Incomplete (identity overrides skipped)'
+        minimum_change_request_approvals:
+          type:
+          - integer
+          - 'null'
+          maximum: 2147483647
+          minimum: -2147483648
+        enforce_feature_owners:
+          type: boolean
+          description: Require at least one user or group owner when creating a feature.
+      required:
+      - name
+      - organisation
+    PaginatedAuditLogListList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/AuditLogList'
+  securitySchemes:
+    Cohort_Sync_Key:
+      type: http
+      scheme: bearer
+      description: For cohort sync endpoints called by an external cohort source, such as Amplitude.
+    Cohort_Sync_Key__Basic:
+      type: http
+      scheme: basic
+      description: For cohort sync endpoints called by an external cohort source that can only send Basic credentials, such as Mixpanel. The key is the password; the username is ignored.
+    Environment_API_Key:
+      type: apiKey
+      in: header
+      name: X-Environment-Key
+      description: For SDK endpoints. <a href='https://docs.flagsmith.com/clients/rest#public-api-endpoints'>Find out more</a>.
+    Master_API_Key:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: For Management API endpoints. <a href='https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/management-api'>Find out more</a>.
+    basicAuth:
+      type: http
+      scheme: basic
+    tokenAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: Token-based authentication with required prefix "Token"

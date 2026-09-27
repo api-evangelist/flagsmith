@@ -1,17 +1,11 @@
 openapi: 3.2.0
 info:
-  title: Flagsmith Admin Projects API
-  description: The Flagsmith Admin API allows developers to programmatically manage all aspects of their Flagsmith projects. Anything that can be done through the Flagsmith dashboard can also be accomplished via this API, including creating, updating, and deleting projects, environments, feature flags, segments, and users. It uses a secret Organisation API Token for authentication and provides a Swagger interface at api.flagsmith.com/api/v1/docs for interactive exploration.
+  title: Flagsmith Projects API
   version: '1.0'
-  contact:
-    name: Flagsmith Support
-    url: https://www.flagsmith.com/contact-us
-  termsOfService: https://www.flagsmith.com/terms-of-service
+  description: 'Operations tagged Projects across 2 of this provider''s published API definitions: flagsmith-admin-api-openapi.yml, flagsmith-api-openapi.json. Each path carries the servers of the definition it was published in.'
 servers:
 - url: https://api.flagsmith.com/api/v1
   description: Flagsmith Production API
-security:
-- apiKeyAuth: []
 tags:
 - name: Projects
   description: Manage projects within an organisation. Projects contain environments and feature flags.
@@ -34,6 +28,8 @@ paths:
                   $ref: '#/components/schemas/Project'
         '401':
           description: Unauthorized - invalid or missing API token
+      security:
+      - apiKeyAuth: []
     post:
       operationId: createProject
       summary: Create a project
@@ -57,6 +53,11 @@ paths:
           description: Bad request - validation error
         '401':
           description: Unauthorized - invalid or missing API token
+      security:
+      - apiKeyAuth: []
+    servers:
+    - url: https://api.flagsmith.com/api/v1
+      description: Flagsmith Production API
   /projects/{project_id}/:
     get:
       operationId: getProject
@@ -77,6 +78,8 @@ paths:
           description: Unauthorized - invalid or missing API token
         '404':
           description: Project not found
+      security:
+      - apiKeyAuth: []
     put:
       operationId: updateProject
       summary: Update a project
@@ -104,6 +107,8 @@ paths:
           description: Unauthorized - invalid or missing API token
         '404':
           description: Project not found
+      security:
+      - apiKeyAuth: []
     delete:
       operationId: deleteProject
       summary: Delete a project
@@ -119,22 +124,1291 @@ paths:
           description: Unauthorized - invalid or missing API token
         '404':
           description: Project not found
+      security:
+      - apiKeyAuth: []
+    servers:
+    - url: https://api.flagsmith.com/api/v1
+      description: Flagsmith Production API
+  /api/v1/projects/:
+    get:
+      operationId: api_v1_projects_list
+      tags:
+      - Projects
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProjectList'
+          description: ''
+      summary: Api v1 projects list
+      x-summary-source: derived
+    post:
+      operationId: api_v1_projects_create
+      tags:
+      - Projects
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProjectCreate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ProjectCreate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ProjectCreate'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProjectCreate'
+          description: ''
+      summary: Api v1 projects create
+      x-summary-source: derived
+  /api/v1/projects/{id}/:
+    patch:
+      operationId: api_v1_projects_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this project.
+        required: true
+      tags:
+      - Projects
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedProjectUpdate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedProjectUpdate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedProjectUpdate'
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProjectUpdate'
+          description: ''
+      summary: Api v1 projects partial update
+      x-summary-source: derived
+    delete:
+      operationId: api_v1_projects_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this project.
+        required: true
+      tags:
+      - Projects
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '204':
+          description: No response body
+      summary: Api v1 projects destroy
+      x-summary-source: derived
+  /api/v1/projects/{id}/migrate-to-edge/:
+    post:
+      operationId: api_v1_projects_migrate_to_edge_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this project.
+        required: true
+      tags:
+      - Projects
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '202':
+          description: No response body
+      summary: Api v1 projects migrate to edge create
+      x-summary-source: derived
+  /api/v1/projects/{id}/my-permissions/:
+    get:
+      operationId: api_v1_projects_my_permissions_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this project.
+        required: true
+      tags:
+      - Projects
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserObjectPermissions'
+          description: ''
+      summary: Api v1 projects my permissions retrieve
+      x-summary-source: derived
+  /api/v1/projects/{id}/user-detailed-permissions/{user_id}/:
+    get:
+      operationId: api_v1_projects_user_detailed_permissions_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this project.
+        required: true
+      - in: path
+        name: user_id
+        schema:
+          type: string
+          pattern: ^\d+$
+        required: true
+      tags:
+      - Projects
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDetailedPermissions'
+          description: ''
+      summary: Api v1 projects user detailed permissions retrieve
+      x-summary-source: derived
+  /api/v1/projects/{project_pk}/all-user-permissions/{user_pk}/:
+    get:
+      operationId: api_v1_projects_all_user_permissions_retrieve
+      parameters:
+      - in: path
+        name: project_pk
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: user_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Projects
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserObjectPermissions'
+          description: ''
+      summary: Api v1 projects all user permissions retrieve
+      x-summary-source: derived
+  /api/v1/projects/{project_pk}/change-requests/:
+    post:
+      operationId: api_v1_projects_change_requests_create
+      parameters:
+      - in: path
+        name: project_pk
+        schema:
+          type: string
+        required: true
+      tags:
+      - Projects
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProjectChangeRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ProjectChangeRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ProjectChangeRequest'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProjectChangeRequest'
+          description: ''
+      summary: Api v1 projects change requests create
+      x-summary-source: derived
+  /api/v1/projects/{project_pk}/change-requests/{id}/:
+    get:
+      operationId: api_v1_projects_change_requests_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: project_pk
+        schema:
+          type: string
+        required: true
+      tags:
+      - Projects
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProjectChangeRequestRetrieve'
+          description: ''
+      summary: Api v1 projects change requests retrieve
+      x-summary-source: derived
+    put:
+      operationId: api_v1_projects_change_requests_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: project_pk
+        schema:
+          type: string
+        required: true
+      tags:
+      - Projects
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProjectChangeRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ProjectChangeRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ProjectChangeRequest'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProjectChangeRequest'
+          description: ''
+      summary: Api v1 projects change requests update
+      x-summary-source: derived
+    patch:
+      operationId: api_v1_projects_change_requests_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: project_pk
+        schema:
+          type: string
+        required: true
+      tags:
+      - Projects
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedProjectChangeRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedProjectChangeRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedProjectChangeRequest'
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProjectChangeRequest'
+          description: ''
+      summary: Api v1 projects change requests partial update
+      x-summary-source: derived
+    delete:
+      operationId: api_v1_projects_change_requests_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: project_pk
+        schema:
+          type: string
+        required: true
+      tags:
+      - Projects
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '204':
+          description: No response body
+      summary: Api v1 projects change requests destroy
+      x-summary-source: derived
+  /api/v1/projects/{project_pk}/change-requests/{id}/approve/:
+    post:
+      operationId: api_v1_projects_change_requests_approve_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: project_pk
+        schema:
+          type: string
+        required: true
+      tags:
+      - Projects
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProjectChangeRequestRetrieve'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkflowsError'
+          description: ''
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkflowsError'
+          description: ''
+      summary: Api v1 projects change requests approve create
+      x-summary-source: derived
+  /api/v1/projects/{project_pk}/change-requests/{id}/commit/:
+    post:
+      operationId: api_v1_projects_change_requests_commit_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: project_pk
+        schema:
+          type: string
+        required: true
+      tags:
+      - Projects
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProjectChangeRequestRetrieve'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkflowsError'
+          description: ''
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkflowsError'
+          description: ''
+      summary: Api v1 projects change requests commit create
+      x-summary-source: derived
+  /api/v1/projects/{project_pk}/code-references/:
+    post:
+      operationId: api_v1_projects_code_references_create
+      description: API view to create code references for a project
+      parameters:
+      - in: path
+        name: project_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Projects
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FeatureFlagCodeReferencesScan'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/FeatureFlagCodeReferencesScan'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/FeatureFlagCodeReferencesScan'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FeatureFlagCodeReferencesScan'
+          description: ''
+      summary: Api v1 projects code references create
+      x-summary-source: derived
+  /api/v1/projects/{project_pk}/feature-exports/:
+    get:
+      operationId: api_v1_projects_feature_exports_list
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - in: path
+        name: project_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Projects
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedFeatureExportList'
+          description: ''
+      summary: Api v1 projects feature exports list
+      x-summary-source: derived
+  /api/v1/projects/{project_pk}/feature-imports/:
+    get:
+      operationId: api_v1_projects_feature_imports_list
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - in: path
+        name: project_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Projects
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedFeatureImportList'
+          description: ''
+      summary: Api v1 projects feature imports list
+      x-summary-source: derived
+  /api/v1/projects/{project_pk}/gitlab/issues/:
+    get:
+      operationId: api_v1_projects_gitlab_issues_list
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - in: path
+        name: project_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Projects
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedSearchQueryParamsList'
+          description: ''
+      summary: Api v1 projects gitlab issues list
+      x-summary-source: derived
+  /api/v1/projects/{project_pk}/gitlab/merge-requests/:
+    get:
+      operationId: api_v1_projects_gitlab_merge_requests_list
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - in: path
+        name: project_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Projects
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedSearchQueryParamsList'
+          description: ''
+      summary: Api v1 projects gitlab merge requests list
+      x-summary-source: derived
+  /api/v1/projects/{project_pk}/gitlab/projects/:
+    get:
+      operationId: api_v1_projects_gitlab_projects_list
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - in: path
+        name: project_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Projects
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedPaginatedQueryParamsList'
+          description: ''
+      summary: Api v1 projects gitlab projects list
+      x-summary-source: derived
+  /api/v1/projects/{project_pk}/imports/launch-darkly/:
+    get:
+      operationId: api_v1_projects_imports_launch_darkly_list
+      parameters:
+      - in: path
+        name: project_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Projects
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/LaunchDarklyImportRequest'
+          description: ''
+      summary: Api v1 projects imports launch darkly list
+      x-summary-source: derived
+    post:
+      operationId: api_v1_projects_imports_launch_darkly_create
+      parameters:
+      - in: path
+        name: project_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Projects
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateLaunchDarklyImportRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CreateLaunchDarklyImportRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CreateLaunchDarklyImportRequest'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LaunchDarklyImportRequest'
+          description: ''
+      summary: Api v1 projects imports launch darkly create
+      x-summary-source: derived
+  /api/v1/projects/{project_pk}/imports/launch-darkly/{id}/:
+    get:
+      operationId: api_v1_projects_imports_launch_darkly_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this launch darkly import request.
+        required: true
+      - in: path
+        name: project_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Projects
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LaunchDarklyImportRequest'
+          description: ''
+      summary: Api v1 projects imports launch darkly retrieve
+      x-summary-source: derived
+  /api/v1/projects/{project_pk}/release-pipelines/:
+    post:
+      operationId: api_v1_projects_release_pipelines_create
+      parameters:
+      - in: path
+        name: project_pk
+        schema:
+          type: string
+        required: true
+      tags:
+      - Projects
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReleasePipelineDetail'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ReleasePipelineDetail'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ReleasePipelineDetail'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReleasePipelineDetail'
+          description: ''
+      summary: Api v1 projects release pipelines create
+      x-summary-source: derived
+  /api/v1/projects/{project_pk}/release-pipelines/{id}/:
+    put:
+      operationId: api_v1_projects_release_pipelines_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: project_pk
+        schema:
+          type: string
+        required: true
+      tags:
+      - Projects
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReleasePipelineDetail'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ReleasePipelineDetail'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ReleasePipelineDetail'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReleasePipelineDetail'
+          description: ''
+      summary: Api v1 projects release pipelines update
+      x-summary-source: derived
+    patch:
+      operationId: api_v1_projects_release_pipelines_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: project_pk
+        schema:
+          type: string
+        required: true
+      tags:
+      - Projects
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedReleasePipeline'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedReleasePipeline'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedReleasePipeline'
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReleasePipeline'
+          description: ''
+      summary: Api v1 projects release pipelines partial update
+      x-summary-source: derived
+    delete:
+      operationId: api_v1_projects_release_pipelines_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: project_pk
+        schema:
+          type: string
+        required: true
+      tags:
+      - Projects
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '204':
+          description: No response body
+      summary: Api v1 projects release pipelines destroy
+      x-summary-source: derived
+  /api/v1/projects/{project_pk}/release-pipelines/{id}/clone/:
+    post:
+      operationId: api_v1_projects_release_pipelines_clone_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: project_pk
+        schema:
+          type: string
+        required: true
+      tags:
+      - Projects
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReleasePipelineDetail'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ReleasePipelineDetail'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ReleasePipelineDetail'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReleasePipelineDetail'
+          description: ''
+      summary: Api v1 projects release pipelines clone create
+      x-summary-source: derived
+  /api/v1/projects/{project_pk}/release-pipelines/{id}/publish-pipeline/:
+    post:
+      operationId: api_v1_projects_release_pipelines_publish_pipeline_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: project_pk
+        schema:
+          type: string
+        required: true
+      tags:
+      - Projects
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReleasePipeline'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ReleasePipeline'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ReleasePipeline'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReleasePipeline'
+          description: ''
+      summary: Api v1 projects release pipelines publish pipeline create
+      x-summary-source: derived
+  /api/v1/projects/{project_pk}/release-pipelines/{id}/remove-feature/:
+    post:
+      operationId: api_v1_projects_release_pipelines_remove_feature_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: project_pk
+        schema:
+          type: string
+        required: true
+      tags:
+      - Projects
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReleasePipeline'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ReleasePipeline'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ReleasePipeline'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReleasePipeline'
+          description: ''
+      summary: Api v1 projects release pipelines remove feature create
+      x-summary-source: derived
+  /api/v1/projects/{project_pk}/release-pipelines/{id}/unpublish-pipeline/:
+    post:
+      operationId: api_v1_projects_release_pipelines_unpublish_pipeline_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: project_pk
+        schema:
+          type: string
+        required: true
+      tags:
+      - Projects
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReleasePipeline'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ReleasePipeline'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ReleasePipeline'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReleasePipeline'
+          description: ''
+      summary: Api v1 projects release pipelines unpublish pipeline create
+      x-summary-source: derived
+  /api/v1/projects/{project_pk}/tags/:
+    get:
+      operationId: api_v1_projects_tags_list
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - in: path
+        name: project_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Projects
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedTagList'
+          description: ''
+      summary: Api v1 projects tags list
+      x-summary-source: derived
+    post:
+      operationId: api_v1_projects_tags_create
+      parameters:
+      - in: path
+        name: project_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Projects
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Tag'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Tag'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Tag'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tag'
+          description: ''
+      summary: Api v1 projects tags create
+      x-summary-source: derived
+  /api/v1/projects/{project_pk}/tags/{id}/:
+    get:
+      operationId: api_v1_projects_tags_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this tag.
+        required: true
+      - in: path
+        name: project_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Projects
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tag'
+          description: ''
+      summary: Api v1 projects tags retrieve
+      x-summary-source: derived
+    put:
+      operationId: api_v1_projects_tags_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this tag.
+        required: true
+      - in: path
+        name: project_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Projects
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Tag'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Tag'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Tag'
+        required: true
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tag'
+          description: ''
+      summary: Api v1 projects tags update
+      x-summary-source: derived
+    patch:
+      operationId: api_v1_projects_tags_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this tag.
+        required: true
+      - in: path
+        name: project_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Projects
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedTag'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedTag'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedTag'
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tag'
+          description: ''
+      summary: Api v1 projects tags partial update
+      x-summary-source: derived
+    delete:
+      operationId: api_v1_projects_tags_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this tag.
+        required: true
+      - in: path
+        name: project_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Projects
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '204':
+          description: No response body
+      summary: Api v1 projects tags destroy
+      x-summary-source: derived
+  /api/v1/projects/{project_pk}/tags/get-by-uuid/{uuid}/:
+    get:
+      operationId: api_v1_projects_tags_get_by_uuid_retrieve
+      parameters:
+      - in: path
+        name: project_pk
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: uuid
+        schema:
+          type: string
+          pattern: ^[0-9a-f-]+$
+        required: true
+      tags:
+      - Projects
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tag'
+          description: ''
+      summary: Api v1 projects tags get by uuid retrieve
+      x-summary-source: derived
+  /api/v1/projects/get-by-uuid/{uuid}/:
+    get:
+      operationId: api_v1_projects_get_by_uuid_retrieve
+      parameters:
+      - in: path
+        name: uuid
+        schema:
+          type: string
+          pattern: ^[0-9a-f-]+$
+        required: true
+      tags:
+      - Projects
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProjectList'
+          description: ''
+      summary: Api v1 projects get by uuid retrieve
+      x-summary-source: derived
+  /api/v1/projects/permissions/:
+    get:
+      operationId: api_v1_projects_permissions_list
+      tags:
+      - Projects
+      security:
+      - tokenAuth: []
+      - Master API Key: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PermissionModel'
+          description: ''
+      summary: Api v1 projects permissions list
+      x-summary-source: derived
 components:
   schemas:
-    ProjectInput:
-      type: object
-      description: Input object for creating or updating a project
-      required:
-      - name
-      - organisation
-      properties:
-        name:
-          type: string
-          description: The name of the project
-          maxLength: 2000
-        organisation:
-          type: integer
-          description: The ID of the organisation to create the project in
     Project:
       type: object
       description: A project in Flagsmith, containing environments and feature flag definitions.
@@ -158,6 +1432,1738 @@ components:
         enable_realtime_updates:
           type: boolean
           description: Whether real-time flag updates are enabled
+    ProjectInput:
+      type: object
+      description: Input object for creating or updating a project
+      required:
+      - name
+      - organisation
+      properties:
+        name:
+          type: string
+          description: The name of the project
+          maxLength: 2000
+        organisation:
+          type: integer
+          description: The ID of the organisation to create the project in
+    EdgeV2MigrationStatusEnum:
+      enum:
+      - NOT_STARTED
+      - IN_PROGRESS
+      - COMPLETE
+      - INCOMPLETE
+      type: string
+      description: '* `NOT_STARTED` - Not Started
+
+        * `IN_PROGRESS` - In Progress
+
+        * `COMPLETE` - Complete
+
+        * `INCOMPLETE` - Incomplete (identity overrides skipped)'
+    SourceTypeEnum:
+      enum:
+      - csv
+      - amplitude
+      - mixpanel
+      type: string
+      description: '* `csv` - CSV
+
+        * `amplitude` - Amplitude
+
+        * `mixpanel` - Mixpanel'
+    LaunchDarklyImportRequest:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        created_by:
+          type: string
+          format: email
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        completed_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          readOnly: true
+        status:
+          $ref: '#/components/schemas/LaunchDarklyImportRequestStatus'
+        project:
+          type: integer
+          readOnly: true
+      required:
+      - status
+    NullEnum:
+      type: 'null'
+    FeatureExport:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          readOnly: true
+        environment_id:
+          type: integer
+          readOnly: true
+        status:
+          $ref: '#/components/schemas/Status6d4Enum'
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+    SearchQueryParams:
+      type: object
+      properties:
+        page:
+          type: integer
+          minimum: 1
+          default: 1
+        page_size:
+          type: integer
+          maximum: 100
+          minimum: 1
+          default: 100
+        gitlab_project_id:
+          type: integer
+        search_text:
+          type: string
+        state:
+          type: string
+          default: opened
+      required:
+      - gitlab_project_id
+    ReleasePipeline:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 255
+        project:
+          type: integer
+          readOnly: true
+        description:
+          type:
+          - string
+          - 'null'
+        stages_count:
+          type: integer
+          readOnly: true
+        published_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        published_by:
+          type:
+          - integer
+          - 'null'
+        features:
+          type: array
+          items:
+            type: integer
+          readOnly: true
+      required:
+      - name
+    Group:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+      required:
+      - id
+      - name
+    DerivedFrom:
+      type: object
+      properties:
+        groups:
+          type: array
+          items:
+            $ref: '#/components/schemas/Group'
+        roles:
+          type: array
+          items:
+            $ref: '#/components/schemas/PermissionRole'
+      required:
+      - groups
+      - roles
+    PatchedReleasePipeline:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 255
+        project:
+          type: integer
+          readOnly: true
+        description:
+          type:
+          - string
+          - 'null'
+        stages_count:
+          type: integer
+          readOnly: true
+        published_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        published_by:
+          type:
+          - integer
+          - 'null'
+        features:
+          type: array
+          items:
+            type: integer
+          readOnly: true
+    PermissionRole:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        tags:
+          type: array
+          items:
+            type: integer
+      required:
+      - id
+      - name
+    PipelineStage:
+      type: object
+      description: Adds nested create feature
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 255
+        pipeline:
+          type: integer
+          readOnly: true
+        environment:
+          type: integer
+        order:
+          type: integer
+          maximum: 30
+          minimum: 0
+        trigger:
+          $ref: '#/components/schemas/StageTrigger'
+        actions:
+          type: array
+          items:
+            $ref: '#/components/schemas/StageAction'
+        features:
+          type: string
+          readOnly: true
+      required:
+      - actions
+      - environment
+      - name
+      - order
+      - trigger
+    ProjectChangeRequest:
+      type: object
+      description: Adds nested create feature
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        approvals:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChangeRequestApproval'
+        committed_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          readOnly: true
+        committed_by:
+          type:
+          - integer
+          - 'null'
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        deleted_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          readOnly: true
+        description:
+          type:
+          - string
+          - 'null'
+        group_assignments:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChangeRequestGroupAssignment'
+        project_id:
+          type: integer
+          readOnly: true
+        segments:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChangeRequestSegment'
+        title:
+          type: string
+          maxLength: 500
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        user:
+          type:
+          - integer
+          - 'null'
+      required:
+      - segments
+      - title
+    _SegmentCohort:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        environment:
+          type: integer
+        environment_api_key:
+          type: string
+          readOnly: true
+        environment_name:
+          type: string
+          readOnly: true
+        source_type:
+          $ref: '#/components/schemas/SourceTypeEnum'
+        version:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+        deletion_requested_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+      required:
+      - environment
+    CreateLaunchDarklyImportRequest:
+      type: object
+      properties:
+        token:
+          type: string
+        project_key:
+          type: string
+      required:
+      - project_key
+      - token
+    _CodeReferenceSubmit:
+      type: object
+      properties:
+        file_path:
+          type: string
+          maxLength: 4096
+        line_number:
+          type: integer
+          minimum: 1
+        feature_name:
+          type: string
+          maxLength: 100
+      required:
+      - feature_name
+      - file_path
+      - line_number
+    WorkflowsError:
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+      - message
+    Tag:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        label:
+          type: string
+          maxLength: 100
+        color:
+          type: string
+          description: Hexadecimal value of the tag color
+          maxLength: 10
+        description:
+          type:
+          - string
+          - 'null'
+          maxLength: 512
+        project:
+          type: integer
+          readOnly: true
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+        is_permanent:
+          type: boolean
+          description: When applied to a feature, it means this feature should be excluded from stale flags logic.
+        is_system_tag:
+          type: boolean
+          readOnly: true
+          default: false
+          description: Indicates that a tag was created by the system, not the user.
+        type:
+          allOf:
+          - $ref: '#/components/schemas/TagTypeEnum'
+          readOnly: true
+          default: NONE
+          description: 'Field used to provide a consistent identifier for the FE and API to use for business logic.
+
+
+            * `NONE` - None
+
+            * `STALE` - Stale
+
+            * `GITHUB` - Github
+
+            * `UNHEALTHY` - Unhealthy
+
+            * `GITLAB` - Gitlab'
+      required:
+      - label
+    PaginatedQueryParams:
+      type: object
+      properties:
+        page:
+          type: integer
+          minimum: 1
+          default: 1
+        page_size:
+          type: integer
+          maximum: 100
+          minimum: 1
+          default: 100
+    ProjectUpdate:
+      type: object
+      description: "Mixin to add read only status to fields in a given serializer based on the existence\nof a subscription and a black list of plan ids\n\nExample usage:\n\n    class MySerializer(ReadOnlyIfNotValidPlanMixin, ModelSerializer):\n        class Meta:\n            model = MyModel\n            fields = (\"my_field\",)\n\n        invalid_plans = (\"free\",)\n        field_names = (\"my_field\",)\n\n        def get_subscription(self):\n            return subscription"
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+        name:
+          type: string
+          maxLength: 2000
+        organisation:
+          type: integer
+          readOnly: true
+        hide_disabled_flags:
+          type: boolean
+          description: If true will exclude flags from SDK which are disabled
+        enable_dynamo_db:
+          type: boolean
+          readOnly: true
+          description: If true will sync environment data with dynamodb and allow access to dynamodb identities
+        migration_status:
+          type: string
+          readOnly: true
+          description: 'Edge migration status of the project; can be one of: MIGRATION_SCHEDULED, MIGRATION_COMPLETED, MIGRATION_IN_PROGRESS, MIGRATION_NOT_STARTED, NOT_APPLICABLE'
+        use_edge_identities:
+          type: boolean
+          readOnly: true
+        prevent_flag_defaults:
+          type: boolean
+          description: Prevent defaults from being set in all environments when creating a feature.
+        enable_realtime_updates:
+          type: boolean
+          readOnly: true
+          description: Enable this to trigger a realtime(sse) event whenever the value of a flag changes
+        only_allow_lower_case_feature_names:
+          type: boolean
+          description: Used by UI to validate feature names
+        feature_name_regex:
+          type:
+          - string
+          - 'null'
+          description: Used for validating feature names
+          maxLength: 255
+        show_edge_identity_overrides_for_feature:
+          type: boolean
+          readOnly: true
+        stale_flags_limit_days:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+          readOnly: true
+          description: Number of days without modification in any environment before a flag is considered stale.
+        edge_v2_migration_status:
+          allOf:
+          - $ref: '#/components/schemas/EdgeV2MigrationStatusEnum'
+          readOnly: true
+          description: '[Edge V2 migration] Project migration status. Set to `IN_PROGRESS` to trigger migration start.
+
+
+            * `NOT_STARTED` - Not Started
+
+            * `IN_PROGRESS` - In Progress
+
+            * `COMPLETE` - Complete
+
+            * `INCOMPLETE` - Incomplete (identity overrides skipped)'
+        minimum_change_request_approvals:
+          type:
+          - integer
+          - 'null'
+          maximum: 2147483647
+          minimum: -2147483648
+        enforce_feature_owners:
+          type: boolean
+          description: Require at least one user or group owner when creating a feature.
+      required:
+      - name
+    VersionChangeSet:
+      type: object
+      description: Adds nested create feature
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        feature:
+          type: integer
+        live_from:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        feature_states_to_update:
+          type: array
+          items: {}
+          description: List of feature states to update as part of this change.
+        feature_states_to_create:
+          type: array
+          items: {}
+          description: List of feature states to create as part of this change.
+        segment_ids_to_delete_overrides:
+          type: array
+          items:
+            type: integer
+          description: List of segment IDs for which the overrides should be deleted as part of this change.
+      required:
+      - feature
+      - feature_states_to_create
+      - feature_states_to_update
+      - segment_ids_to_delete_overrides
+    Segment:
+      type: object
+      description: Functionality for serializers that need to handle metadata
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+        created_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          readOnly: true
+        updated_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          readOnly: true
+        name:
+          type: string
+          maxLength: 2000
+        description:
+          type:
+          - string
+          - 'null'
+        project:
+          type: integer
+          readOnly: true
+        feature:
+          type:
+          - integer
+          - 'null'
+        version_of:
+          type:
+          - integer
+          - 'null'
+        rules:
+          type: array
+          items:
+            $ref: '#/components/schemas/SegmentRule'
+        metadata:
+          type: array
+          items:
+            $ref: '#/components/schemas/Metadata'
+        membership_counts:
+          type: array
+          items:
+            $ref: '#/components/schemas/SegmentMembershipCount'
+          readOnly: true
+        managed_by:
+          readOnly: true
+          oneOf:
+          - $ref: '#/components/schemas/ManagedByEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+        cohort:
+          oneOf:
+          - $ref: '#/components/schemas/_SegmentCohort'
+          - type: 'null'
+          readOnly: true
+        has_overrides:
+          type: boolean
+          readOnly: true
+          description: Whether any feature override points at this segment, counting overrides that are live now or scheduled to go live.
+      required:
+      - name
+      - rules
+    StageTrigger:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        trigger_type:
+          $ref: '#/components/schemas/TriggerTypeEnum'
+        trigger_body:
+          oneOf:
+          - {}
+          - type: 'null'
+    UserObjectPermissions:
+      type: object
+      properties:
+        permissions:
+          type: array
+          items:
+            type: string
+        admin:
+          type: boolean
+        tag_based_permissions:
+          type: array
+          items:
+            $ref: '#/components/schemas/TagBasedPermission'
+      required:
+      - admin
+      - permissions
+      - tag_based_permissions
+    ReleasePipelineDetail:
+      type: object
+      description: Adds nested create feature
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 255
+        project:
+          type: integer
+          readOnly: true
+        description:
+          type:
+          - string
+          - 'null'
+        stages_count:
+          type: integer
+          readOnly: true
+        published_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        published_by:
+          type:
+          - integer
+          - 'null'
+        features:
+          type: array
+          items:
+            type: integer
+          readOnly: true
+        stages:
+          type: array
+          items:
+            $ref: '#/components/schemas/PipelineStage'
+        completed_features:
+          type: string
+          readOnly: true
+      required:
+      - name
+      - stages
+    TagBasedPermission:
+      type: object
+      properties:
+        permissions:
+          type: array
+          items:
+            type: string
+        tags:
+          type: array
+          items:
+            type: integer
+      required:
+      - permissions
+      - tags
+    FeatureImport:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        environment_id:
+          type: integer
+          readOnly: true
+        strategy:
+          $ref: '#/components/schemas/FeatureImportStrategyEnum'
+        status:
+          $ref: '#/components/schemas/Status6d4Enum'
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - strategy
+    Metadata:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        model_field:
+          type: integer
+        field_value:
+          type: string
+          maxLength: 2000
+      required:
+      - field_value
+      - model_field
+    TagTypeEnum:
+      enum:
+      - NONE
+      - STALE
+      - GITHUB
+      - UNHEALTHY
+      - GITLAB
+      type: string
+      description: '* `NONE` - None
+
+        * `STALE` - Stale
+
+        * `GITHUB` - Github
+
+        * `UNHEALTHY` - Unhealthy
+
+        * `GITLAB` - Gitlab'
+    _NestedSegmentRule:
+      type: object
+      description: Adds nested create feature
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        type:
+          $ref: '#/components/schemas/SegmentRuleTypeEnum'
+        conditions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Condition'
+        delete:
+          type: boolean
+          writeOnly: true
+      required:
+      - type
+    ChangeRequestApproval:
+      type: object
+      description: Adds nested create feature
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        user:
+          type: integer
+        approved_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          readOnly: true
+      required:
+      - user
+    VcsProviderEnum:
+      enum:
+      - github
+      type: string
+      description: '* `github` - GitHub'
+    PaginatedSearchQueryParamsList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/SearchQueryParams'
+    PaginatedTagList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Tag'
+    LaunchDarklyImportRequestStatus:
+      type: object
+      properties:
+        requested_environment_count:
+          type: integer
+          readOnly: true
+        requested_flag_count:
+          type: integer
+          readOnly: true
+        deprecated_flag_count:
+          type: integer
+          readOnly: true
+          default: 0
+        result:
+          readOnly: true
+          oneOf:
+          - $ref: '#/components/schemas/ResultEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        error_messages:
+          type: array
+          items:
+            type: string
+            readOnly: true
+      required:
+      - error_messages
+    ActionTypeEnum:
+      enum:
+      - TOGGLE_FEATURE
+      - UPDATE_FEATURE_VALUE
+      - TOGGLE_FEATURE_FOR_SEGMENT
+      - UPDATE_FEATURE_VALUE_FOR_SEGMENT
+      - PHASED_ROLLOUT
+      type: string
+      description: '* `TOGGLE_FEATURE` - Enable/Disable Feature for the environment
+
+        * `UPDATE_FEATURE_VALUE` - Update Feature Value for the environment
+
+        * `TOGGLE_FEATURE_FOR_SEGMENT` - Enable/Disable Feature for a specific segment
+
+        * `UPDATE_FEATURE_VALUE_FOR_SEGMENT` - Update Feature Value for a specific segment
+
+        * `PHASED_ROLLOUT` - Create Phased Rollout'
+    BlankEnum:
+      enum:
+      - ''
+    PaginatedFeatureImportList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/FeatureImport'
+    FeatureFlagCodeReferencesScan:
+      type: object
+      properties:
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        project:
+          type: integer
+          readOnly: true
+        repository_url:
+          type: string
+          format: uri
+        vcs_provider:
+          allOf:
+          - $ref: '#/components/schemas/VcsProviderEnum'
+          default: github
+        revision:
+          type: string
+          maxLength: 100
+        code_references:
+          type: array
+          items:
+            $ref: '#/components/schemas/_CodeReferenceSubmit'
+      required:
+      - code_references
+      - repository_url
+      - revision
+    ProjectCreate:
+      type: object
+      description: "Mixin to add read only status to fields in a given serializer based on the existence\nof a subscription and a black list of plan ids\n\nExample usage:\n\n    class MySerializer(ReadOnlyIfNotValidPlanMixin, ModelSerializer):\n        class Meta:\n            model = MyModel\n            fields = (\"my_field\",)\n\n        invalid_plans = (\"free\",)\n        field_names = (\"my_field\",)\n\n        def get_subscription(self):\n            return subscription"
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+        name:
+          type: string
+          maxLength: 2000
+        organisation:
+          type: integer
+        hide_disabled_flags:
+          type: boolean
+          description: If true will exclude flags from SDK which are disabled
+        enable_dynamo_db:
+          type: boolean
+          readOnly: true
+          description: If true will sync environment data with dynamodb and allow access to dynamodb identities
+        migration_status:
+          type: string
+          readOnly: true
+          description: 'Edge migration status of the project; can be one of: MIGRATION_SCHEDULED, MIGRATION_COMPLETED, MIGRATION_IN_PROGRESS, MIGRATION_NOT_STARTED, NOT_APPLICABLE'
+        use_edge_identities:
+          type: boolean
+          readOnly: true
+        prevent_flag_defaults:
+          type: boolean
+          description: Prevent defaults from being set in all environments when creating a feature.
+        enable_realtime_updates:
+          type: boolean
+          readOnly: true
+          description: Enable this to trigger a realtime(sse) event whenever the value of a flag changes
+        only_allow_lower_case_feature_names:
+          type: boolean
+          description: Used by UI to validate feature names
+        feature_name_regex:
+          type:
+          - string
+          - 'null'
+          description: Used for validating feature names
+          maxLength: 255
+        show_edge_identity_overrides_for_feature:
+          type: boolean
+          readOnly: true
+        stale_flags_limit_days:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+          readOnly: true
+          description: Number of days without modification in any environment before a flag is considered stale.
+        edge_v2_migration_status:
+          allOf:
+          - $ref: '#/components/schemas/EdgeV2MigrationStatusEnum'
+          readOnly: true
+          description: '[Edge V2 migration] Project migration status. Set to `IN_PROGRESS` to trigger migration start.
+
+
+            * `NOT_STARTED` - Not Started
+
+            * `IN_PROGRESS` - In Progress
+
+            * `COMPLETE` - Complete
+
+            * `INCOMPLETE` - Incomplete (identity overrides skipped)'
+        minimum_change_request_approvals:
+          type:
+          - integer
+          - 'null'
+          maximum: 2147483647
+          minimum: -2147483648
+        enforce_feature_owners:
+          type: boolean
+          description: Require at least one user or group owner when creating a feature.
+      required:
+      - name
+      - organisation
+    PatchedProjectUpdate:
+      type: object
+      description: "Mixin to add read only status to fields in a given serializer based on the existence\nof a subscription and a black list of plan ids\n\nExample usage:\n\n    class MySerializer(ReadOnlyIfNotValidPlanMixin, ModelSerializer):\n        class Meta:\n            model = MyModel\n            fields = (\"my_field\",)\n\n        invalid_plans = (\"free\",)\n        field_names = (\"my_field\",)\n\n        def get_subscription(self):\n            return subscription"
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+        name:
+          type: string
+          maxLength: 2000
+        organisation:
+          type: integer
+          readOnly: true
+        hide_disabled_flags:
+          type: boolean
+          description: If true will exclude flags from SDK which are disabled
+        enable_dynamo_db:
+          type: boolean
+          readOnly: true
+          description: If true will sync environment data with dynamodb and allow access to dynamodb identities
+        migration_status:
+          type: string
+          readOnly: true
+          description: 'Edge migration status of the project; can be one of: MIGRATION_SCHEDULED, MIGRATION_COMPLETED, MIGRATION_IN_PROGRESS, MIGRATION_NOT_STARTED, NOT_APPLICABLE'
+        use_edge_identities:
+          type: boolean
+          readOnly: true
+        prevent_flag_defaults:
+          type: boolean
+          description: Prevent defaults from being set in all environments when creating a feature.
+        enable_realtime_updates:
+          type: boolean
+          readOnly: true
+          description: Enable this to trigger a realtime(sse) event whenever the value of a flag changes
+        only_allow_lower_case_feature_names:
+          type: boolean
+          description: Used by UI to validate feature names
+        feature_name_regex:
+          type:
+          - string
+          - 'null'
+          description: Used for validating feature names
+          maxLength: 255
+        show_edge_identity_overrides_for_feature:
+          type: boolean
+          readOnly: true
+        stale_flags_limit_days:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+          readOnly: true
+          description: Number of days without modification in any environment before a flag is considered stale.
+        edge_v2_migration_status:
+          allOf:
+          - $ref: '#/components/schemas/EdgeV2MigrationStatusEnum'
+          readOnly: true
+          description: '[Edge V2 migration] Project migration status. Set to `IN_PROGRESS` to trigger migration start.
+
+
+            * `NOT_STARTED` - Not Started
+
+            * `IN_PROGRESS` - In Progress
+
+            * `COMPLETE` - Complete
+
+            * `INCOMPLETE` - Incomplete (identity overrides skipped)'
+        minimum_change_request_approvals:
+          type:
+          - integer
+          - 'null'
+          maximum: 2147483647
+          minimum: -2147483648
+        enforce_feature_owners:
+          type: boolean
+          description: Require at least one user or group owner when creating a feature.
+    PaginatedFeatureExportList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/FeatureExport'
+    SegmentMembershipCount:
+      type: object
+      properties:
+        environment:
+          type: integer
+          readOnly: true
+        count:
+          type: integer
+          readOnly: true
+        last_synced_at:
+          type: string
+          format: date-time
+          readOnly: true
+    SegmentRule:
+      type: object
+      description: Adds nested create feature
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        type:
+          $ref: '#/components/schemas/SegmentRuleTypeEnum'
+        rules:
+          type: array
+          items:
+            $ref: '#/components/schemas/_NestedSegmentRule'
+        conditions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Condition'
+        delete:
+          type: boolean
+          writeOnly: true
+      required:
+      - type
+    ProjectList:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+        name:
+          type: string
+          maxLength: 2000
+        organisation:
+          type: integer
+        hide_disabled_flags:
+          type: boolean
+          description: If true will exclude flags from SDK which are disabled
+        enable_dynamo_db:
+          type: boolean
+          readOnly: true
+          description: If true will sync environment data with dynamodb and allow access to dynamodb identities
+        migration_status:
+          type: string
+          readOnly: true
+          description: 'Edge migration status of the project; can be one of: MIGRATION_SCHEDULED, MIGRATION_COMPLETED, MIGRATION_IN_PROGRESS, MIGRATION_NOT_STARTED, NOT_APPLICABLE'
+        use_edge_identities:
+          type: boolean
+          readOnly: true
+        prevent_flag_defaults:
+          type: boolean
+          description: Prevent defaults from being set in all environments when creating a feature.
+        enable_realtime_updates:
+          type: boolean
+          description: Enable this to trigger a realtime(sse) event whenever the value of a flag changes
+        only_allow_lower_case_feature_names:
+          type: boolean
+          description: Used by UI to validate feature names
+        feature_name_regex:
+          type:
+          - string
+          - 'null'
+          description: Used for validating feature names
+          maxLength: 255
+        show_edge_identity_overrides_for_feature:
+          type: boolean
+          readOnly: true
+        stale_flags_limit_days:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+          description: Number of days without modification in any environment before a flag is considered stale.
+        edge_v2_migration_status:
+          allOf:
+          - $ref: '#/components/schemas/EdgeV2MigrationStatusEnum'
+          readOnly: true
+          description: '[Edge V2 migration] Project migration status. Set to `IN_PROGRESS` to trigger migration start.
+
+
+            * `NOT_STARTED` - Not Started
+
+            * `IN_PROGRESS` - In Progress
+
+            * `COMPLETE` - Complete
+
+            * `INCOMPLETE` - Incomplete (identity overrides skipped)'
+        minimum_change_request_approvals:
+          type:
+          - integer
+          - 'null'
+          maximum: 2147483647
+          minimum: -2147483648
+        enforce_feature_owners:
+          type: boolean
+          description: Require at least one user or group owner when creating a feature.
+      required:
+      - name
+      - organisation
+    UserDetailedPermissions:
+      type: object
+      properties:
+        admin:
+          type: boolean
+        permissions:
+          type: array
+          items:
+            $ref: '#/components/schemas/DetailedPermissions'
+        is_directly_granted:
+          type: boolean
+        derived_from:
+          $ref: '#/components/schemas/DerivedFrom'
+      required:
+      - admin
+      - derived_from
+      - is_directly_granted
+      - permissions
+    ChangeRequestSegment:
+      type: object
+      description: Functionality for serializers that need to handle metadata
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+        created_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          readOnly: true
+        updated_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          readOnly: true
+        name:
+          type: string
+          maxLength: 2000
+        description:
+          type:
+          - string
+          - 'null'
+        project:
+          type: integer
+          readOnly: true
+        feature:
+          type:
+          - integer
+          - 'null'
+        version_of:
+          type:
+          - integer
+          - 'null'
+        rules:
+          type: array
+          items:
+            $ref: '#/components/schemas/SegmentRule'
+        metadata:
+          type: array
+          items:
+            $ref: '#/components/schemas/Metadata'
+        membership_counts:
+          type: array
+          items:
+            $ref: '#/components/schemas/SegmentMembershipCount'
+          readOnly: true
+        managed_by:
+          readOnly: true
+          oneOf:
+          - $ref: '#/components/schemas/ManagedByEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+        cohort:
+          oneOf:
+          - $ref: '#/components/schemas/_SegmentCohort'
+          - type: 'null'
+          readOnly: true
+        has_overrides:
+          type: boolean
+          readOnly: true
+          description: Whether any feature override points at this segment, counting overrides that are live now or scheduled to go live.
+        change_request:
+          type:
+          - integer
+          - 'null'
+      required:
+      - name
+      - rules
+    ChangeRequestGroupAssignment:
+      type: object
+      description: Adds nested create feature
+      properties:
+        group:
+          type: integer
+      required:
+      - group
+    ResultEnum:
+      enum:
+      - success
+      - failure
+      - incomplete
+      type: string
+      description: '* `success` - success
+
+        * `failure` - failure
+
+        * `incomplete` - incomplete'
+    Condition:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        operator:
+          $ref: '#/components/schemas/ConditionOperatorEnum'
+        property:
+          type:
+          - string
+          - 'null'
+          maxLength: 1000
+        value:
+          type:
+          - string
+          - 'null'
+          maxLength: 1000
+        description:
+          type:
+          - string
+          - 'null'
+        delete:
+          type: boolean
+          writeOnly: true
+      required:
+      - operator
+    PatchedTag:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        label:
+          type: string
+          maxLength: 100
+        color:
+          type: string
+          description: Hexadecimal value of the tag color
+          maxLength: 10
+        description:
+          type:
+          - string
+          - 'null'
+          maxLength: 512
+        project:
+          type: integer
+          readOnly: true
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+        is_permanent:
+          type: boolean
+          description: When applied to a feature, it means this feature should be excluded from stale flags logic.
+        is_system_tag:
+          type: boolean
+          readOnly: true
+          default: false
+          description: Indicates that a tag was created by the system, not the user.
+        type:
+          allOf:
+          - $ref: '#/components/schemas/TagTypeEnum'
+          readOnly: true
+          default: NONE
+          description: 'Field used to provide a consistent identifier for the FE and API to use for business logic.
+
+
+            * `NONE` - None
+
+            * `STALE` - Stale
+
+            * `GITHUB` - Github
+
+            * `UNHEALTHY` - Unhealthy
+
+            * `GITLAB` - Gitlab'
+    ProjectChangeRequestRetrieve:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        environment:
+          type:
+          - integer
+          - 'null'
+          readOnly: true
+        title:
+          type: string
+          readOnly: true
+        description:
+          type:
+          - string
+          - 'null'
+          readOnly: true
+        user:
+          type:
+          - integer
+          - 'null'
+          readOnly: true
+        committed_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          readOnly: true
+        committed_by:
+          type:
+          - integer
+          - 'null'
+          readOnly: true
+        deleted_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          readOnly: true
+        approvals:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChangeRequestApproval'
+        is_approved:
+          type: boolean
+          readOnly: true
+        is_committed:
+          type: string
+          readOnly: true
+        group_assignments:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChangeRequestGroupAssignment'
+        segments:
+          type: array
+          items:
+            $ref: '#/components/schemas/Segment'
+        change_sets:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/VersionChangeSet'
+        conflicts:
+          type: array
+          items:
+            $ref: '#/components/schemas/Conflict'
+          readOnly: true
+      required:
+      - approvals
+      - group_assignments
+      - segments
+    DetailedPermissions:
+      type: object
+      properties:
+        permission_key:
+          type: string
+        is_directly_granted:
+          type: boolean
+        derived_from:
+          $ref: '#/components/schemas/DerivedFrom'
+      required:
+      - derived_from
+      - is_directly_granted
+      - permission_key
+    ConditionOperatorEnum:
+      enum:
+      - EQUAL
+      - GREATER_THAN
+      - LESS_THAN
+      - CONTAINS
+      - GREATER_THAN_INCLUSIVE
+      - LESS_THAN_INCLUSIVE
+      - NOT_CONTAINS
+      - NOT_EQUAL
+      - REGEX
+      - PERCENTAGE_SPLIT
+      - MODULO
+      - IS_SET
+      - IS_NOT_SET
+      - IN
+      type: string
+      description: '* `EQUAL` - Exactly Matches
+
+        * `GREATER_THAN` - Greater than
+
+        * `LESS_THAN` - Less than
+
+        * `CONTAINS` - Contains
+
+        * `GREATER_THAN_INCLUSIVE` - Greater than or equal to
+
+        * `LESS_THAN_INCLUSIVE` - Less than or equal to
+
+        * `NOT_CONTAINS` - Does not contain
+
+        * `NOT_EQUAL` - Does not match
+
+        * `REGEX` - Matches regex
+
+        * `PERCENTAGE_SPLIT` - Percentage split
+
+        * `MODULO` - Modulo Operation
+
+        * `IS_SET` - Is set
+
+        * `IS_NOT_SET` - Is not set
+
+        * `IN` - In'
+    PatchedProjectChangeRequest:
+      type: object
+      description: Adds nested create feature
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        approvals:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChangeRequestApproval'
+        committed_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          readOnly: true
+        committed_by:
+          type:
+          - integer
+          - 'null'
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        deleted_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          readOnly: true
+        description:
+          type:
+          - string
+          - 'null'
+        group_assignments:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChangeRequestGroupAssignment'
+        project_id:
+          type: integer
+          readOnly: true
+        segments:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChangeRequestSegment'
+        title:
+          type: string
+          maxLength: 500
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        user:
+          type:
+          - integer
+          - 'null'
+    StageAction:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        action_type:
+          $ref: '#/components/schemas/ActionTypeEnum'
+        action_body:
+          oneOf:
+          - {}
+          - type: 'null'
+    SegmentRuleTypeEnum:
+      enum:
+      - ALL
+      - ANY
+      - NONE
+      type: string
+      description: '* `ALL` - all
+
+        * `ANY` - any
+
+        * `NONE` - none'
+    PermissionModel:
+      type: object
+      properties:
+        key:
+          type: string
+          maxLength: 100
+        description:
+          type: string
+        supports_tag:
+          type: boolean
+          readOnly: true
+      required:
+      - description
+      - key
+    ManagedByEnum:
+      enum:
+      - cohort
+      type: string
+      description: '* `` - Unmanaged
+
+        * `cohort` - Cohort'
+    Conflict:
+      type: object
+      properties:
+        original_cr_id:
+          type: integer
+        segment_id:
+          type: integer
+        is_environment_default:
+          type: boolean
+        published_at:
+          type: string
+          format: date-time
+      required:
+      - is_environment_default
+      - original_cr_id
+      - published_at
+      - segment_id
+    FeatureImportStrategyEnum:
+      enum:
+      - SKIP
+      - OVERWRITE_DESTRUCTIVE
+      type: string
+      description: '* `SKIP` - Skip
+
+        * `OVERWRITE_DESTRUCTIVE` - Overwrite Destructive'
+    TriggerTypeEnum:
+      enum:
+      - ON_ENTER
+      - WAIT_FOR
+      type: string
+      description: '* `ON_ENTER` - Trigger when flag enters stage
+
+        * `WAIT_FOR` - Trigger after waiting for x amount of time'
+    Status6d4Enum:
+      enum:
+      - SUCCESS
+      - PROCESSING
+      - FAILED
+      type: string
+      description: '* `SUCCESS` - Success
+
+        * `PROCESSING` - Processing
+
+        * `FAILED` - Failed'
+    PaginatedPaginatedQueryParamsList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/PaginatedQueryParams'
   parameters:
     ProjectId:
       name: project_id
@@ -172,6 +3178,35 @@ components:
       in: header
       name: Authorization
       description: A secret Organisation API Token prefixed with 'Api-Key'. For example, 'Api-Key your-token-here'. This token should never be exposed in client-side code.
+    Cohort_Sync_Key:
+      type: http
+      scheme: bearer
+      description: For cohort sync endpoints called by an external cohort source, such as Amplitude.
+    Cohort_Sync_Key__Basic:
+      type: http
+      scheme: basic
+      description: For cohort sync endpoints called by an external cohort source that can only send Basic credentials, such as Mixpanel. The key is the password; the username is ignored.
+    Environment_API_Key:
+      type: apiKey
+      in: header
+      name: X-Environment-Key
+      description: For SDK endpoints. <a href='https://docs.flagsmith.com/clients/rest#public-api-endpoints'>Find out more</a>.
+    Master_API_Key:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: For Management API endpoints. <a href='https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/management-api'>Find out more</a>.
+    basicAuth:
+      type: http
+      scheme: basic
+    tokenAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: Token-based authentication with required prefix "Token"
 externalDocs:
   description: Flagsmith Admin API Documentation
   url: https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/admin-api
+x-refined-from:
+- flagsmith-admin-api-openapi.yml
+- flagsmith-api-openapi.json
