@@ -269,49 +269,6 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    EdgeV2MigrationStatusEnum:
-      enum:
-      - NOT_STARTED
-      - IN_PROGRESS
-      - COMPLETE
-      - INCOMPLETE
-      type: string
-      description: '* `NOT_STARTED` - Not Started
-
-        * `IN_PROGRESS` - In Progress
-
-        * `COMPLETE` - Complete
-
-        * `INCOMPLETE` - Incomplete (identity overrides skipped)'
-    UserList:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        email:
-          type: string
-          format: email
-          maxLength: 254
-        first_name:
-          type: string
-          maxLength: 150
-        last_name:
-          type: string
-          maxLength: 150
-        last_login:
-          type:
-          - string
-          - 'null'
-          format: date-time
-        uuid:
-          type: string
-          format: uuid
-          readOnly: true
-      required:
-      - email
-      - first_name
-      - last_name
     AuditLogRetrieve:
       type: object
       properties:
@@ -378,6 +335,114 @@ components:
       - environment
       - log
       - project
+    ProjectList:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+        name:
+          type: string
+          maxLength: 2000
+        organisation:
+          type: integer
+        hide_disabled_flags:
+          type: boolean
+          description: If true will exclude flags from SDK which are disabled
+        enable_dynamo_db:
+          type: boolean
+          readOnly: true
+          description: If true will sync environment data with dynamodb and allow access to dynamodb identities
+        migration_status:
+          type: string
+          readOnly: true
+          description: 'Edge migration status of the project; can be one of: MIGRATION_SCHEDULED, MIGRATION_COMPLETED, MIGRATION_IN_PROGRESS, MIGRATION_NOT_STARTED, NOT_APPLICABLE'
+        use_edge_identities:
+          type: boolean
+          readOnly: true
+        prevent_flag_defaults:
+          type: boolean
+          description: Prevent defaults from being set in all environments when creating a feature.
+        enable_realtime_updates:
+          type: boolean
+          description: Enable this to trigger a realtime(sse) event whenever the value of a flag changes
+        only_allow_lower_case_feature_names:
+          type: boolean
+          description: Used by UI to validate feature names
+        feature_name_regex:
+          type:
+          - string
+          - 'null'
+          description: Used for validating feature names
+          maxLength: 255
+        show_edge_identity_overrides_for_feature:
+          type: boolean
+          readOnly: true
+        stale_flags_limit_days:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+          description: Number of days without modification in any environment before a flag is considered stale.
+        edge_v2_migration_status:
+          allOf:
+          - $ref: '#/components/schemas/EdgeV2MigrationStatusEnum'
+          readOnly: true
+          description: '[Edge V2 migration] Project migration status. Set to `IN_PROGRESS` to trigger migration start.
+
+
+            * `NOT_STARTED` - Not Started
+
+            * `IN_PROGRESS` - In Progress
+
+            * `COMPLETE` - Complete
+
+            * `INCOMPLETE` - Incomplete (identity overrides skipped)'
+        minimum_change_request_approvals:
+          type:
+          - integer
+          - 'null'
+          maximum: 2147483647
+          minimum: -2147483648
+        enforce_feature_owners:
+          type: boolean
+          description: Require at least one user or group owner when creating a feature.
+      required:
+      - name
+      - organisation
+    ChangeTypeEnum:
+      enum:
+      - CREATE
+      - UPDATE
+      - DELETE
+      - UNKNOWN
+      type: string
+    PaginatedAuditLogListList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/AuditLogList'
     AuditLogList:
       type: object
       properties:
@@ -499,114 +564,49 @@ components:
       required:
       - name
       - project
-    ChangeTypeEnum:
-      enum:
-      - CREATE
-      - UPDATE
-      - DELETE
-      - UNKNOWN
-      type: string
-    ProjectList:
+    UserList:
       type: object
       properties:
         id:
           type: integer
           readOnly: true
+        email:
+          type: string
+          format: email
+          maxLength: 254
+        first_name:
+          type: string
+          maxLength: 150
+        last_name:
+          type: string
+          maxLength: 150
+        last_login:
+          type:
+          - string
+          - 'null'
+          format: date-time
         uuid:
           type: string
           format: uuid
           readOnly: true
-        name:
-          type: string
-          maxLength: 2000
-        organisation:
-          type: integer
-        hide_disabled_flags:
-          type: boolean
-          description: If true will exclude flags from SDK which are disabled
-        enable_dynamo_db:
-          type: boolean
-          readOnly: true
-          description: If true will sync environment data with dynamodb and allow access to dynamodb identities
-        migration_status:
-          type: string
-          readOnly: true
-          description: 'Edge migration status of the project; can be one of: MIGRATION_SCHEDULED, MIGRATION_COMPLETED, MIGRATION_IN_PROGRESS, MIGRATION_NOT_STARTED, NOT_APPLICABLE'
-        use_edge_identities:
-          type: boolean
-          readOnly: true
-        prevent_flag_defaults:
-          type: boolean
-          description: Prevent defaults from being set in all environments when creating a feature.
-        enable_realtime_updates:
-          type: boolean
-          description: Enable this to trigger a realtime(sse) event whenever the value of a flag changes
-        only_allow_lower_case_feature_names:
-          type: boolean
-          description: Used by UI to validate feature names
-        feature_name_regex:
-          type:
-          - string
-          - 'null'
-          description: Used for validating feature names
-          maxLength: 255
-        show_edge_identity_overrides_for_feature:
-          type: boolean
-          readOnly: true
-        stale_flags_limit_days:
-          type: integer
-          maximum: 2147483647
-          minimum: -2147483648
-          description: Number of days without modification in any environment before a flag is considered stale.
-        edge_v2_migration_status:
-          allOf:
-          - $ref: '#/components/schemas/EdgeV2MigrationStatusEnum'
-          readOnly: true
-          description: '[Edge V2 migration] Project migration status. Set to `IN_PROGRESS` to trigger migration start.
-
-
-            * `NOT_STARTED` - Not Started
-
-            * `IN_PROGRESS` - In Progress
-
-            * `COMPLETE` - Complete
-
-            * `INCOMPLETE` - Incomplete (identity overrides skipped)'
-        minimum_change_request_approvals:
-          type:
-          - integer
-          - 'null'
-          maximum: 2147483647
-          minimum: -2147483648
-        enforce_feature_owners:
-          type: boolean
-          description: Require at least one user or group owner when creating a feature.
       required:
-      - name
-      - organisation
-    PaginatedAuditLogListList:
-      type: object
-      required:
-      - count
-      - results
-      properties:
-        count:
-          type: integer
-          example: 123
-        next:
-          type: string
-          nullable: true
-          format: uri
-          example: http://api.example.org/accounts/?page=4
-        previous:
-          type: string
-          nullable: true
-          format: uri
-          example: http://api.example.org/accounts/?page=2
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/AuditLogList'
+      - email
+      - first_name
+      - last_name
+    EdgeV2MigrationStatusEnum:
+      enum:
+      - NOT_STARTED
+      - IN_PROGRESS
+      - COMPLETE
+      - INCOMPLETE
+      type: string
+      description: '* `NOT_STARTED` - Not Started
+
+        * `IN_PROGRESS` - In Progress
+
+        * `COMPLETE` - Complete
+
+        * `INCOMPLETE` - Incomplete (identity overrides skipped)'
   securitySchemes:
     Cohort_Sync_Key:
       type: http

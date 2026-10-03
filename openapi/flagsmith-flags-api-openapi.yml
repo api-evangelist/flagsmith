@@ -41,22 +41,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 components:
-  parameters:
-    FeatureNameQuery:
-      name: feature
-      in: query
-      description: Optional feature name to filter flags. When provided, returns only the flag matching the specified feature name.
-      required: false
-      schema:
-        type: string
   schemas:
-    Error:
-      type: object
-      description: An error response from the API
-      properties:
-        detail:
-          type: string
-          description: A human-readable error message
     Flag:
       type: object
       description: A feature flag object containing the feature definition, its enabled state, and any associated value for the environment.
@@ -118,6 +103,21 @@ components:
           - STANDARD
           - MULTIVARIATE
           description: The type of feature flag. STANDARD for simple on/off flags, MULTIVARIATE for flags with multiple value variations.
+    Error:
+      type: object
+      description: An error response from the API
+      properties:
+        detail:
+          type: string
+          description: A human-readable error message
+  parameters:
+    FeatureNameQuery:
+      name: feature
+      in: query
+      description: Optional feature name to filter flags. When provided, returns only the flag matching the specified feature name.
+      required: false
+      schema:
+        type: string
   securitySchemes:
     apiKeyAuth:
       type: apiKey

@@ -308,33 +308,29 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    MetadataModelFieldRequirement:
+    PaginatedMetadataFieldList:
       type: object
-      properties:
-        content_type:
-          type: integer
-        object_id:
-          type: integer
-          maximum: 2147483647
-          minimum: 0
       required:
-      - content_type
-      - object_id
-    MetadataModelFieldNested:
-      type: object
+      - count
+      - results
       properties:
-        id:
+        count:
           type: integer
-          readOnly: true
-        content_type:
-          type: integer
-        is_required_for:
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
           type: array
           items:
-            $ref: '#/components/schemas/MetadataModelFieldRequirement'
-          readOnly: true
-      required:
-      - content_type
+            $ref: '#/components/schemas/MetadataField'
     MetadataField:
       type: object
       properties:
@@ -364,6 +360,18 @@ components:
       required:
       - name
       - organisation
+    MetadataModelFieldRequirement:
+      type: object
+      properties:
+        content_type:
+          type: integer
+        object_id:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+      required:
+      - content_type
+      - object_id
     MetadataFieldTypeEnum:
       enum:
       - int
@@ -381,6 +389,21 @@ components:
         * `url` - Url
 
         * `multiline_str` - Multiline String'
+    MetadataModelFieldNested:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        content_type:
+          type: integer
+        is_required_for:
+          type: array
+          items:
+            $ref: '#/components/schemas/MetadataModelFieldRequirement'
+          readOnly: true
+      required:
+      - content_type
     PatchedMetadataField:
       type: object
       properties:
@@ -407,29 +430,6 @@ components:
           items:
             $ref: '#/components/schemas/MetadataModelFieldNested'
           readOnly: true
-    PaginatedMetadataFieldList:
-      type: object
-      required:
-      - count
-      - results
-      properties:
-        count:
-          type: integer
-          example: 123
-        next:
-          type: string
-          nullable: true
-          format: uri
-          example: http://api.example.org/accounts/?page=4
-        previous:
-          type: string
-          nullable: true
-          format: uri
-          example: http://api.example.org/accounts/?page=2
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/MetadataField'
   securitySchemes:
     Cohort_Sync_Key:
       type: http

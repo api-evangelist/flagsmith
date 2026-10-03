@@ -99,6 +99,15 @@ components:
       - count
       - enabled_when_evaluated
       - feature_name
+    SDKAnalyticsFlags:
+      type: object
+      properties:
+        evaluations:
+          type: array
+          items:
+            $ref: '#/components/schemas/SDKAnalyticsFlagsSerializerDetail'
+      required:
+      - evaluations
     Telemetry:
       type: object
       properties:
@@ -127,15 +136,6 @@ components:
       - projects
       - segments
       - users
-    SDKAnalyticsFlags:
-      type: object
-      properties:
-        evaluations:
-          type: array
-          items:
-            $ref: '#/components/schemas/SDKAnalyticsFlagsSerializerDetail'
-      required:
-      - evaluations
   securitySchemes:
     Cohort_Sync_Key:
       type: http

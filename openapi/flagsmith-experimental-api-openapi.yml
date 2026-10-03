@@ -356,132 +356,6 @@ paths:
           description: No response body
 components:
   schemas:
-    UpdateFlagV2:
-      type: object
-      properties:
-        feature:
-          $ref: '#/components/schemas/FeatureIdentifier'
-        environment_default:
-          $ref: '#/components/schemas/EnvironmentDefault'
-        segment_overrides:
-          type: array
-          items:
-            $ref: '#/components/schemas/SegmentOverride'
-      required:
-      - environment_default
-      - feature
-    UpdateFlagResponseFlagValue:
-      properties:
-        type:
-          allOf:
-          - $ref: '#/components/schemas/Type68aEnum'
-          title: Type
-        value:
-          title: Value
-          type: string
-      required:
-      - type
-      - value
-      title: FlagValue
-      type: object
-    UpdateFlagRequestFlagValue:
-      properties:
-        type:
-          allOf:
-          - $ref: '#/components/schemas/Type68aEnum'
-          title: Type
-        value:
-          title: Value
-          type: string
-      required:
-      - type
-      - value
-      title: FlagValue
-      type: object
-    UpdateFlagResponseSegmentOverrideResponse:
-      properties:
-        segment:
-          $ref: '#/components/schemas/UpdateFlagResponseSegmentReference'
-        priority:
-          title: Priority
-          type: integer
-        enabled:
-          title: Enabled
-          type: boolean
-        value:
-          anyOf:
-          - $ref: '#/components/schemas/UpdateFlagResponseFlagValue'
-          - type: 'null'
-        variants:
-          items:
-            $ref: '#/components/schemas/UpdateFlagResponseVariant'
-          title: Variants
-          type: array
-      required:
-      - segment
-      - priority
-      - enabled
-      - value
-      - variants
-      title: SegmentOverrideResponse
-      type: object
-    PatchedUpdateFlagRequest:
-      properties:
-        environment_default:
-          $ref: '#/components/schemas/UpdateFlagRequestEnvironmentDefaultRequest'
-        segment_overrides:
-          items:
-            $ref: '#/components/schemas/UpdateFlagRequestSegmentOverrideRequest'
-          title: Segment Overrides
-          type: array
-      title: UpdateFlagRequest
-      type: object
-    UpdateFlagRequest:
-      properties:
-        environment_default:
-          $ref: '#/components/schemas/UpdateFlagRequestEnvironmentDefaultRequest'
-        segment_overrides:
-          items:
-            $ref: '#/components/schemas/UpdateFlagRequestSegmentOverrideRequest'
-          title: Segment Overrides
-          type: array
-      title: UpdateFlagRequest
-      type: object
-    UpdateFlag:
-      type: object
-      properties:
-        feature:
-          $ref: '#/components/schemas/FeatureIdentifier'
-        segment:
-          $ref: '#/components/schemas/FeatureUpdateSegmentData'
-        enabled:
-          type: boolean
-        value:
-          $ref: '#/components/schemas/FeatureValue'
-      required:
-      - enabled
-      - feature
-      - value
-    SegmentIdentifier:
-      type: object
-      properties:
-        id:
-          type: integer
-      required:
-      - id
-    UpdateFlagResponseVariant:
-      properties:
-        id:
-          title: Id
-          type: integer
-        weight:
-          title: Weight
-          type: number
-      required:
-      - id
-      - weight
-      title: Variant
-      type: object
     FeatureUpdateSegmentData:
       type: object
       properties:
@@ -493,6 +367,80 @@ components:
           - 'null'
       required:
       - id
+    UpdateFlagRequest:
+      properties:
+        environment_default:
+          $ref: '#/components/schemas/UpdateFlagRequestEnvironmentDefaultRequest'
+        segment_overrides:
+          items:
+            $ref: '#/components/schemas/UpdateFlagRequestSegmentOverrideRequest'
+          title: Segment Overrides
+          type: array
+      title: UpdateFlagRequest
+      type: object
+    FeatureIdentifier:
+      type: object
+      properties:
+        name:
+          type: string
+        id:
+          type: integer
+    SegmentOverride:
+      type: object
+      properties:
+        segment_id:
+          type: integer
+        priority:
+          type:
+          - integer
+          - 'null'
+        enabled:
+          type: boolean
+        value:
+          $ref: '#/components/schemas/FeatureValue'
+        multivariate_feature_state_values:
+          type: array
+          items:
+            $ref: '#/components/schemas/MultivariateValue'
+      required:
+      - enabled
+      - segment_id
+      - value
+    UpdateFlagRequestSegmentReference:
+      properties:
+        id:
+          title: Id
+          type: integer
+      required:
+      - id
+      title: SegmentReference
+      type: object
+    SegmentIdentifier:
+      type: object
+      properties:
+        id:
+          type: integer
+      required:
+      - id
+    FeatureValue:
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/FeatureValueTypeEnum'
+        value:
+          type: string
+      required:
+      - type
+      - value
+    UpdateFlagResponseSegmentReference:
+      properties:
+        id:
+          title: Id
+          type: integer
+      required:
+      - id
+      title: SegmentReference
+      type: object
     UpdateFlagRequestSegmentOverrideRequest:
       properties:
         segment:
@@ -524,44 +472,31 @@ components:
       required:
       - enabled
       - value
-    Type68aEnum:
-      enum:
-      - string
-      - integer
-      - boolean
-      type: string
-    SegmentOverride:
-      type: object
+    PatchedUpdateFlagRequest:
       properties:
-        segment_id:
-          type: integer
-        priority:
-          type:
-          - integer
-          - 'null'
-        enabled:
-          type: boolean
-        value:
-          $ref: '#/components/schemas/FeatureValue'
-        multivariate_feature_state_values:
-          type: array
+        environment_default:
+          $ref: '#/components/schemas/UpdateFlagRequestEnvironmentDefaultRequest'
+        segment_overrides:
           items:
-            $ref: '#/components/schemas/MultivariateValue'
+            $ref: '#/components/schemas/UpdateFlagRequestSegmentOverrideRequest'
+          title: Segment Overrides
+          type: array
+      title: UpdateFlagRequest
+      type: object
+    UpdateFlagResponse:
+      properties:
+        environment_default:
+          $ref: '#/components/schemas/UpdateFlagResponseEnvironmentDefaultResponse'
+        segment_overrides:
+          items:
+            $ref: '#/components/schemas/UpdateFlagResponseSegmentOverrideResponse'
+          title: Segment Overrides
+          type: array
       required:
-      - enabled
-      - segment_id
-      - value
-    FeatureValueTypeEnum:
-      enum:
-      - integer
-      - string
-      - boolean
-      type: string
-      description: '* `integer` - integer
-
-        * `string` - string
-
-        * `boolean` - boolean'
+      - environment_default
+      - segment_overrides
+      title: UpdateFlagResponse
+      type: object
     UpdateFlagRequestVariant:
       properties:
         id:
@@ -575,45 +510,17 @@ components:
       - weight
       title: Variant
       type: object
-    UpdateFlagResponseEnvironmentDefaultResponse:
-      properties:
-        enabled:
-          title: Enabled
-          type: boolean
-        value:
-          anyOf:
-          - $ref: '#/components/schemas/UpdateFlagResponseFlagValue'
-          - type: 'null'
-        variants:
-          items:
-            $ref: '#/components/schemas/UpdateFlagResponseVariant'
-          title: Variants
-          type: array
-      required:
-      - enabled
-      - value
-      - variants
-      title: EnvironmentDefaultResponse
-      type: object
-    UpdateFlagResponseSegmentReference:
-      properties:
-        id:
-          title: Id
-          type: integer
-      required:
-      - id
-      title: SegmentReference
-      type: object
-    FeatureValue:
-      type: object
-      properties:
-        type:
-          $ref: '#/components/schemas/FeatureValueTypeEnum'
-        value:
-          type: string
-      required:
-      - type
-      - value
+    FeatureValueTypeEnum:
+      enum:
+      - integer
+      - string
+      - boolean
+      type: string
+      description: '* `integer` - integer
+
+        * `string` - string
+
+        * `boolean` - boolean'
     DeleteSegmentOverride:
       type: object
       properties:
@@ -637,29 +544,115 @@ components:
       required:
       - multivariate_feature_option
       - percentage_allocation
-    UpdateFlagRequestSegmentReference:
+    UpdateFlagResponseFlagValue:
+      properties:
+        type:
+          allOf:
+          - $ref: '#/components/schemas/Type68aEnum'
+          title: Type
+        value:
+          title: Value
+          type: string
+      required:
+      - type
+      - value
+      title: FlagValue
+      type: object
+    UpdateFlag:
+      type: object
+      properties:
+        feature:
+          $ref: '#/components/schemas/FeatureIdentifier'
+        segment:
+          $ref: '#/components/schemas/FeatureUpdateSegmentData'
+        enabled:
+          type: boolean
+        value:
+          $ref: '#/components/schemas/FeatureValue'
+      required:
+      - enabled
+      - feature
+      - value
+    Type68aEnum:
+      enum:
+      - string
+      - integer
+      - boolean
+      type: string
+    UpdateFlagResponseVariant:
       properties:
         id:
           title: Id
           type: integer
+        weight:
+          title: Weight
+          type: number
       required:
       - id
-      title: SegmentReference
+      - weight
+      title: Variant
       type: object
-    UpdateFlagResponse:
+    UpdateFlagResponseSegmentOverrideResponse:
       properties:
-        environment_default:
-          $ref: '#/components/schemas/UpdateFlagResponseEnvironmentDefaultResponse'
-        segment_overrides:
+        segment:
+          $ref: '#/components/schemas/UpdateFlagResponseSegmentReference'
+        priority:
+          title: Priority
+          type: integer
+        enabled:
+          title: Enabled
+          type: boolean
+        value:
+          anyOf:
+          - $ref: '#/components/schemas/UpdateFlagResponseFlagValue'
+          - type: 'null'
+        variants:
           items:
-            $ref: '#/components/schemas/UpdateFlagResponseSegmentOverrideResponse'
-          title: Segment Overrides
+            $ref: '#/components/schemas/UpdateFlagResponseVariant'
+          title: Variants
           type: array
       required:
-      - environment_default
-      - segment_overrides
-      title: UpdateFlagResponse
+      - segment
+      - priority
+      - enabled
+      - value
+      - variants
+      title: SegmentOverrideResponse
       type: object
+    UpdateFlagResponseEnvironmentDefaultResponse:
+      properties:
+        enabled:
+          title: Enabled
+          type: boolean
+        value:
+          anyOf:
+          - $ref: '#/components/schemas/UpdateFlagResponseFlagValue'
+          - type: 'null'
+        variants:
+          items:
+            $ref: '#/components/schemas/UpdateFlagResponseVariant'
+          title: Variants
+          type: array
+      required:
+      - enabled
+      - value
+      - variants
+      title: EnvironmentDefaultResponse
+      type: object
+    UpdateFlagV2:
+      type: object
+      properties:
+        feature:
+          $ref: '#/components/schemas/FeatureIdentifier'
+        environment_default:
+          $ref: '#/components/schemas/EnvironmentDefault'
+        segment_overrides:
+          type: array
+          items:
+            $ref: '#/components/schemas/SegmentOverride'
+      required:
+      - environment_default
+      - feature
     UpdateFlagRequestEnvironmentDefaultRequest:
       properties:
         enabled:
@@ -674,13 +667,20 @@ components:
           type: array
       title: EnvironmentDefaultRequest
       type: object
-    FeatureIdentifier:
-      type: object
+    UpdateFlagRequestFlagValue:
       properties:
-        name:
+        type:
+          allOf:
+          - $ref: '#/components/schemas/Type68aEnum'
+          title: Type
+        value:
+          title: Value
           type: string
-        id:
-          type: integer
+      required:
+      - type
+      - value
+      title: FlagValue
+      type: object
   securitySchemes:
     Cohort_Sync_Key:
       type: http

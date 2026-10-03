@@ -42,13 +42,6 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    Error:
-      type: object
-      properties:
-        message:
-          type: string
-      required:
-      - message
     SelfHostedOnboardingReceiveSupport:
       type: object
       properties:
@@ -65,6 +58,13 @@ components:
       - email
       - first_name
       - last_name
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+      - message
   securitySchemes:
     Cohort_Sync_Key:
       type: http

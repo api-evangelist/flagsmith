@@ -1112,66 +1112,32 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    ListUserEnvironmentPermission:
+    PatchedUserPermissionGroupOrganisationPermissionUpdateCreate:
       type: object
       properties:
         id:
           type: integer
           readOnly: true
-        permissions:
-          type: array
-          items:
-            type: string
-        admin:
-          type: boolean
-        user:
-          $ref: '#/components/schemas/UserList'
-      required:
-      - user
-    CreateUpdateUserProjectPermission:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        permissions:
-          type: array
-          items:
-            type: string
-        admin:
-          type: boolean
-        user:
-          type: integer
-      required:
-      - user
-    CreateUpdateUserPermissionGroupProjectPermission:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        permissions:
-          type: array
-          items:
-            type: string
-        admin:
-          type: boolean
         group:
           type: integer
-      required:
-      - group
-    PatchedUserOrganisationPermissionUpdateCreate:
+        permissions:
+          type: array
+          items:
+            type: string
+    UserOrganisationPermissionList:
       type: object
       properties:
         id:
           type: integer
           readOnly: true
         user:
-          type: integer
+          $ref: '#/components/schemas/UserList'
         permissions:
           type: array
           items:
             type: string
+      required:
+      - user
     ListUserPermissionGroupEnvironmentPermission:
       type: object
       properties:
@@ -1188,47 +1154,7 @@ components:
           $ref: '#/components/schemas/UserPermissionGroupSerializerDetail'
       required:
       - group
-    PatchedUserPermissionGroupOrganisationPermissionUpdateCreate:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        group:
-          type: integer
-        permissions:
-          type: array
-          items:
-            type: string
-    UserPermissionGroupOrganisationPermissionList:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        group:
-          $ref: '#/components/schemas/UserPermissionGroup'
-        permissions:
-          type: array
-          items:
-            type: string
-      required:
-      - group
-    UserOrganisationPermissionList:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        user:
-          $ref: '#/components/schemas/UserList'
-        permissions:
-          type: array
-          items:
-            type: string
-      required:
-      - user
-    PatchedCreateUpdateUserPermissionGroupEnvironmentPermission:
+    CreateUpdateUserPermissionGroupProjectPermission:
       type: object
       properties:
         id:
@@ -1242,34 +1168,8 @@ components:
           type: boolean
         group:
           type: integer
-    UserPermissionGroupMembership:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        email:
-          type: string
-          format: email
-          maxLength: 254
-        first_name:
-          type: string
-          maxLength: 150
-        last_name:
-          type: string
-          maxLength: 150
-        last_login:
-          type:
-          - string
-          - 'null'
-          format: date-time
-        group_admin:
-          type: boolean
-          readOnly: true
       required:
-      - email
-      - first_name
-      - last_name
+      - group
     UserPermissionGroup:
       type: object
       properties:
@@ -1295,6 +1195,64 @@ components:
           maxLength: 255
       required:
       - name
+    PatchedCreateUpdateUserPermissionGroupEnvironmentPermission:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        permissions:
+          type: array
+          items:
+            type: string
+        admin:
+          type: boolean
+        group:
+          type: integer
+    ListUserProjectPermission:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        permissions:
+          type: array
+          items:
+            type: string
+        admin:
+          type: boolean
+        user:
+          $ref: '#/components/schemas/UserList'
+      required:
+      - user
+    UserPermissionGroupOrganisationPermissionList:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        group:
+          $ref: '#/components/schemas/UserPermissionGroup'
+        permissions:
+          type: array
+          items:
+            type: string
+      required:
+      - group
+    PatchedCreateUpdateUserEnvironmentPermission:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        permissions:
+          type: array
+          items:
+            type: string
+        admin:
+          type: boolean
+        user:
+          type: integer
     CreateUpdateUserEnvironmentPermission:
       type: object
       properties:
@@ -1311,6 +1269,20 @@ components:
           type: integer
       required:
       - user
+    PatchedCreateUpdateUserPermissionGroupProjectPermission:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        permissions:
+          type: array
+          items:
+            type: string
+        admin:
+          type: boolean
+        group:
+          type: integer
     UserPermissionGroupOrganisationPermissionUpdateCreate:
       type: object
       properties:
@@ -1323,38 +1295,6 @@ components:
           type: array
           items:
             type: string
-      required:
-      - group
-    CreateUpdateUserPermissionGroupEnvironmentPermission:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        permissions:
-          type: array
-          items:
-            type: string
-        admin:
-          type: boolean
-        group:
-          type: integer
-      required:
-      - group
-    ListUserPermissionGroupProjectPermission:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        permissions:
-          type: array
-          items:
-            type: string
-        admin:
-          type: boolean
-        group:
-          $ref: '#/components/schemas/UserPermissionGroup'
       required:
       - group
     UserOrganisationPermissionUpdateCreate:
@@ -1371,34 +1311,18 @@ components:
             type: string
       required:
       - user
-    PatchedCreateUpdateUserEnvironmentPermission:
+    PatchedUserOrganisationPermissionUpdateCreate:
       type: object
       properties:
         id:
           type: integer
           readOnly: true
-        permissions:
-          type: array
-          items:
-            type: string
-        admin:
-          type: boolean
         user:
           type: integer
-    PatchedCreateUpdateUserPermissionGroupProjectPermission:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
         permissions:
           type: array
           items:
             type: string
-        admin:
-          type: boolean
-        group:
-          type: integer
     UserList:
       type: object
       properties:
@@ -1428,7 +1352,7 @@ components:
       - email
       - first_name
       - last_name
-    ListUserProjectPermission:
+    CreateUpdateUserProjectPermission:
       type: object
       properties:
         id:
@@ -1441,9 +1365,83 @@ components:
         admin:
           type: boolean
         user:
-          $ref: '#/components/schemas/UserList'
+          type: integer
       required:
       - user
+    PatchedCreateUpdateUserProjectPermission:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        permissions:
+          type: array
+          items:
+            type: string
+        admin:
+          type: boolean
+        user:
+          type: integer
+    UserPermissionGroupMembership:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        email:
+          type: string
+          format: email
+          maxLength: 254
+        first_name:
+          type: string
+          maxLength: 150
+        last_name:
+          type: string
+          maxLength: 150
+        last_login:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        group_admin:
+          type: boolean
+          readOnly: true
+      required:
+      - email
+      - first_name
+      - last_name
+    ListUserPermissionGroupProjectPermission:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        permissions:
+          type: array
+          items:
+            type: string
+        admin:
+          type: boolean
+        group:
+          $ref: '#/components/schemas/UserPermissionGroup'
+      required:
+      - group
+    CreateUpdateUserPermissionGroupEnvironmentPermission:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        permissions:
+          type: array
+          items:
+            type: string
+        admin:
+          type: boolean
+        group:
+          type: integer
+      required:
+      - group
     UserPermissionGroupSerializerDetail:
       type: object
       properties:
@@ -1469,7 +1467,7 @@ components:
           maxLength: 255
       required:
       - name
-    PatchedCreateUpdateUserProjectPermission:
+    ListUserEnvironmentPermission:
       type: object
       properties:
         id:
@@ -1482,7 +1480,9 @@ components:
         admin:
           type: boolean
         user:
-          type: integer
+          $ref: '#/components/schemas/UserList'
+      required:
+      - user
   securitySchemes:
     Cohort_Sync_Key:
       type: http

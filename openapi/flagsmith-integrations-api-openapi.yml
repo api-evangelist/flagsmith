@@ -3403,200 +3403,6 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    SentryChangeTrackingConfiguration:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        environment:
-          type: integer
-          readOnly: true
-        webhook_url:
-          type: string
-          format: uri
-          maxLength: 200
-        secret:
-          type: string
-          maxLength: 60
-          minLength: 10
-      required:
-      - secret
-      - webhook_url
-    HeapConfiguration:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        api_key:
-          type: string
-          maxLength: 100
-        base_url:
-          type:
-          - string
-          - 'null'
-          format: uri
-          maxLength: 200
-      required:
-      - api_key
-    GithubRepository:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        github_configuration:
-          type: integer
-          readOnly: true
-        project:
-          type: integer
-        repository_owner:
-          type: string
-          maxLength: 100
-        repository_name:
-          type: string
-          maxLength: 100
-        tagging_enabled:
-          type: boolean
-      required:
-      - project
-      - repository_name
-      - repository_owner
-    PatchedMixpanelConfiguration:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        api_key:
-          type: string
-          maxLength: 100
-        base_url:
-          type:
-          - string
-          - 'null'
-          format: uri
-          maxLength: 200
-    PatchedSentryChangeTrackingConfiguration:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        environment:
-          type: integer
-          readOnly: true
-        webhook_url:
-          type: string
-          format: uri
-          maxLength: 200
-        secret:
-          type: string
-          maxLength: 60
-          minLength: 10
-    GithubConfiguration:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        installation_id:
-          type: string
-          maxLength: 100
-        organisation:
-          type: integer
-          readOnly: true
-      required:
-      - installation_id
-    PatchedGithubConfiguration:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        installation_id:
-          type: string
-          maxLength: 100
-        organisation:
-          type: integer
-          readOnly: true
-    PatchedHeapConfiguration:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        api_key:
-          type: string
-          maxLength: 100
-        base_url:
-          type:
-          - string
-          - 'null'
-          format: uri
-          maxLength: 200
-    PatchedGrafanaProjectConfiguration:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        base_url:
-          type:
-          - string
-          - 'null'
-          format: uri
-          maxLength: 200
-        api_key:
-          type: string
-          maxLength: 100
-    RudderstackConfiguration:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        base_url:
-          type:
-          - string
-          - 'null'
-          format: uri
-          maxLength: 200
-        api_key:
-          type: string
-          maxLength: 100
-      required:
-      - api_key
-    SlackChannelList:
-      type: object
-      properties:
-        cursor:
-          type: string
-        channels:
-          type: array
-          items:
-            $ref: '#/components/schemas/SlackChannel'
-      required:
-      - channels
-      - cursor
-    GrafanaProjectConfiguration:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        base_url:
-          type:
-          - string
-          - 'null'
-          format: uri
-          maxLength: 200
-        api_key:
-          type: string
-          maxLength: 100
-      required:
-      - api_key
     PatchedGithubRepository:
       type: object
       properties:
@@ -3630,151 +3436,29 @@ components:
           type: boolean
       required:
       - channel_id
-    PatchedGitLabConfiguration:
+    GithubRepository:
       type: object
       properties:
         id:
           type: integer
           readOnly: true
-        gitlab_instance_url:
+        github_configuration:
+          type: integer
+          readOnly: true
+        project:
+          type: integer
+        repository_owner:
           type: string
-          format: uri
-          maxLength: 200
-        access_token:
+          maxLength: 100
+        repository_name:
           type: string
-          maxLength: 300
-        labeling_enabled:
+          maxLength: 100
+        tagging_enabled:
           type: boolean
-    PatchedDynatraceConfiguration:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        base_url:
-          type:
-          - string
-          - 'null'
-          format: uri
-          maxLength: 200
-        api_key:
-          type: string
-          maxLength: 100
-        entity_selector:
-          type: string
-          maxLength: 1000
-    PatchedNewRelicConfiguration:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        base_url:
-          type:
-          - string
-          - 'null'
-          format: uri
-          maxLength: 200
-        api_key:
-          type: string
-          maxLength: 100
-        app_id:
-          type: string
-          maxLength: 100
-    WebhookConfiguration:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        url:
-          type: string
-          format: uri
-          maxLength: 200
-        secret:
-          type: string
-          maxLength: 255
       required:
-      - url
-    PatchedWebhookConfiguration:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        url:
-          type: string
-          format: uri
-          maxLength: 200
-        secret:
-          type: string
-          maxLength: 255
-    NewRelicConfiguration:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        base_url:
-          type:
-          - string
-          - 'null'
-          format: uri
-          maxLength: 200
-        api_key:
-          type: string
-          maxLength: 100
-        app_id:
-          type: string
-          maxLength: 100
-      required:
-      - api_key
-      - app_id
-    PatchedGrafanaOrganisationConfiguration:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        base_url:
-          type:
-          - string
-          - 'null'
-          format: uri
-          maxLength: 200
-        api_key:
-          type: string
-          maxLength: 100
-    PatchedRudderstackConfiguration:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        base_url:
-          type:
-          - string
-          - 'null'
-          format: uri
-          maxLength: 200
-        api_key:
-          type: string
-          maxLength: 100
-    AmplitudeConfiguration:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        api_key:
-          type: string
-          maxLength: 100
-        base_url:
-          type: string
-          format: uri
-          maxLength: 200
-      required:
-      - api_key
+      - project
+      - repository_name
+      - repository_owner
     PaginatedGithubRepositoryList:
       type: object
       required:
@@ -3798,53 +3482,58 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/GithubRepository'
-    DynatraceConfiguration:
+    MixpanelConfiguration:
       type: object
       properties:
         id:
           type: integer
           readOnly: true
+        api_key:
+          type: string
+          maxLength: 100
         base_url:
           type:
           - string
           - 'null'
           format: uri
           maxLength: 200
-        api_key:
-          type: string
-          maxLength: 100
-        entity_selector:
-          type: string
-          maxLength: 1000
       required:
       - api_key
-      - entity_selector
-    GitLabConfiguration:
+    SentryChangeTrackingConfiguration:
       type: object
       properties:
         id:
           type: integer
           readOnly: true
-        gitlab_instance_url:
+        environment:
+          type: integer
+          readOnly: true
+        webhook_url:
           type: string
           format: uri
           maxLength: 200
-        access_token:
+        secret:
           type: string
-          maxLength: 300
-        labeling_enabled:
-          type: boolean
+          maxLength: 60
+          minLength: 10
       required:
-      - access_token
-      - gitlab_instance_url
-    BaseUrlEnum:
-      enum:
-      - https://api.segment.io/
-      - https://events.eu1.segmentapis.com/
-      type: string
-      description: '* `https://api.segment.io/` - https://api.segment.io/
-
-        * `https://events.eu1.segmentapis.com/` - https://events.eu1.segmentapis.com/'
+      - secret
+      - webhook_url
+    PatchedDataDogConfiguration:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        base_url:
+          type: string
+          format: uri
+          maxLength: 200
+        api_key:
+          type: string
+          maxLength: 100
+        use_custom_source:
+          type: boolean
     PaginatedGithubConfigurationList:
       type: object
       required:
@@ -3868,6 +3557,137 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/GithubConfiguration'
+    PatchedAmplitudeConfiguration:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        api_key:
+          type: string
+          maxLength: 100
+        base_url:
+          type: string
+          format: uri
+          maxLength: 200
+    PatchedRudderstackConfiguration:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        base_url:
+          type:
+          - string
+          - 'null'
+          format: uri
+          maxLength: 200
+        api_key:
+          type: string
+          maxLength: 100
+    PatchedSegmentConfiguration:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        api_key:
+          type: string
+          maxLength: 100
+        base_url:
+          allOf:
+          - $ref: '#/components/schemas/BaseUrlEnum'
+          default: https://api.segment.io/
+    GitLabConfiguration:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        gitlab_instance_url:
+          type: string
+          format: uri
+          maxLength: 200
+        access_token:
+          type: string
+          maxLength: 300
+        labeling_enabled:
+          type: boolean
+      required:
+      - access_token
+      - gitlab_instance_url
+    SlackChannel:
+      type: object
+      properties:
+        channel_name:
+          type: string
+        channel_id:
+          type: string
+      required:
+      - channel_id
+      - channel_name
+    PatchedDynatraceConfiguration:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        base_url:
+          type:
+          - string
+          - 'null'
+          format: uri
+          maxLength: 200
+        api_key:
+          type: string
+          maxLength: 100
+        entity_selector:
+          type: string
+          maxLength: 1000
+    GithubConfiguration:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        installation_id:
+          type: string
+          maxLength: 100
+        organisation:
+          type: integer
+          readOnly: true
+      required:
+      - installation_id
+    PatchedGitLabConfiguration:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        gitlab_instance_url:
+          type: string
+          format: uri
+          maxLength: 200
+        access_token:
+          type: string
+          maxLength: 300
+        labeling_enabled:
+          type: boolean
+    PatchedHeapConfiguration:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        api_key:
+          type: string
+          maxLength: 100
+        base_url:
+          type:
+          - string
+          - 'null'
+          format: uri
+          maxLength: 200
     DataDogConfiguration:
       type: object
       properties:
@@ -3886,20 +3706,56 @@ components:
       required:
       - api_key
       - base_url
-    PatchedSegmentConfiguration:
+    PatchedSlackEnvironment:
       type: object
       properties:
         id:
           type: integer
           readOnly: true
-        api_key:
+        channel_id:
+          type: string
+          description: Id of the slack channel to post messages to
+          maxLength: 50
+        enabled:
+          type: boolean
+    PatchedWebhookConfiguration:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        url:
+          type: string
+          format: uri
+          maxLength: 200
+        secret:
+          type: string
+          maxLength: 255
+    SlackChannelList:
+      type: object
+      properties:
+        cursor:
+          type: string
+        channels:
+          type: array
+          items:
+            $ref: '#/components/schemas/SlackChannel'
+      required:
+      - channels
+      - cursor
+    PatchedGithubConfiguration:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        installation_id:
           type: string
           maxLength: 100
-        base_url:
-          allOf:
-          - $ref: '#/components/schemas/BaseUrlEnum'
-          default: https://api.segment.io/
-    MixpanelConfiguration:
+        organisation:
+          type: integer
+          readOnly: true
+    HeapConfiguration:
       type: object
       properties:
         id:
@@ -3916,6 +3772,81 @@ components:
           maxLength: 200
       required:
       - api_key
+    GrafanaProjectConfiguration:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        base_url:
+          type:
+          - string
+          - 'null'
+          format: uri
+          maxLength: 200
+        api_key:
+          type: string
+          maxLength: 100
+      required:
+      - api_key
+    PatchedNewRelicConfiguration:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        base_url:
+          type:
+          - string
+          - 'null'
+          format: uri
+          maxLength: 200
+        api_key:
+          type: string
+          maxLength: 100
+        app_id:
+          type: string
+          maxLength: 100
+    BaseUrlEnum:
+      enum:
+      - https://api.segment.io/
+      - https://events.eu1.segmentapis.com/
+      type: string
+      description: '* `https://api.segment.io/` - https://api.segment.io/
+
+        * `https://events.eu1.segmentapis.com/` - https://events.eu1.segmentapis.com/'
+    RudderstackConfiguration:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        base_url:
+          type:
+          - string
+          - 'null'
+          format: uri
+          maxLength: 200
+        api_key:
+          type: string
+          maxLength: 100
+      required:
+      - api_key
+    PatchedGrafanaProjectConfiguration:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        base_url:
+          type:
+          - string
+          - 'null'
+          format: uri
+          maxLength: 200
+        api_key:
+          type: string
+          maxLength: 100
     SegmentConfiguration:
       type: object
       properties:
@@ -3931,17 +3862,43 @@ components:
           default: https://api.segment.io/
       required:
       - api_key
-    SlackChannel:
+    PatchedMixpanelConfiguration:
       type: object
       properties:
-        channel_name:
+        id:
+          type: integer
+          readOnly: true
+        api_key:
           type: string
-        channel_id:
+          maxLength: 100
+        base_url:
+          type:
+          - string
+          - 'null'
+          format: uri
+          maxLength: 200
+    DynatraceConfiguration:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        base_url:
+          type:
+          - string
+          - 'null'
+          format: uri
+          maxLength: 200
+        api_key:
           type: string
+          maxLength: 100
+        entity_selector:
+          type: string
+          maxLength: 1000
       required:
-      - channel_id
-      - channel_name
-    PatchedAmplitudeConfiguration:
+      - api_key
+      - entity_selector
+    AmplitudeConfiguration:
       type: object
       properties:
         id:
@@ -3954,21 +3911,61 @@ components:
           type: string
           format: uri
           maxLength: 200
-    PatchedDataDogConfiguration:
+      required:
+      - api_key
+    WebhookConfiguration:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        url:
+          type: string
+          format: uri
+          maxLength: 200
+        secret:
+          type: string
+          maxLength: 255
+      required:
+      - url
+    PatchedSentryChangeTrackingConfiguration:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        environment:
+          type: integer
+          readOnly: true
+        webhook_url:
+          type: string
+          format: uri
+          maxLength: 200
+        secret:
+          type: string
+          maxLength: 60
+          minLength: 10
+    NewRelicConfiguration:
       type: object
       properties:
         id:
           type: integer
           readOnly: true
         base_url:
-          type: string
+          type:
+          - string
+          - 'null'
           format: uri
           maxLength: 200
         api_key:
           type: string
           maxLength: 100
-        use_custom_source:
-          type: boolean
+        app_id:
+          type: string
+          maxLength: 100
+      required:
+      - api_key
+      - app_id
     GrafanaOrganisationConfiguration:
       type: object
       properties:
@@ -3986,18 +3983,21 @@ components:
           maxLength: 100
       required:
       - api_key
-    PatchedSlackEnvironment:
+    PatchedGrafanaOrganisationConfiguration:
       type: object
       properties:
         id:
           type: integer
           readOnly: true
-        channel_id:
+        base_url:
+          type:
+          - string
+          - 'null'
+          format: uri
+          maxLength: 200
+        api_key:
           type: string
-          description: Id of the slack channel to post messages to
-          maxLength: 50
-        enabled:
-          type: boolean
+          maxLength: 100
   securitySchemes:
     Cohort_Sync_Key:
       type: http

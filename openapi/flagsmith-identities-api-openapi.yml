@@ -1677,36 +1677,20 @@ paths:
       security:
       - apiKeyAuth: []
 components:
-  parameters:
-    EnvironmentApiKey:
-      name: environment_api_key
-      in: path
-      description: The API key for the environment
-      required: true
-      schema:
-        type: string
-    IdentityId:
-      name: identity_id
-      in: path
-      description: The unique identifier for the identity
-      required: true
-      schema:
-        type: integer
-    TransientQuery:
-      name: transient
-      in: query
-      description: When set to true, the identity is treated as transient and will not be persisted. The identity will be used for flag evaluation only.
-      required: false
-      schema:
-        type: boolean
-    IdentifierQuery:
-      name: identifier
-      in: query
-      description: The unique identifier for the user identity. This is typically a user ID, email, or other unique string that identifies the user in your application.
-      required: true
-      schema:
-        type: string
   schemas:
+    Identity:
+      type: object
+      description: A user identity within an environment, representing an individual user with their associated traits.
+      properties:
+        id:
+          type: integer
+          description: The unique identifier for this identity
+        identifier:
+          type: string
+          description: The user-provided identifier for this identity
+        environment:
+          type: integer
+          description: The ID of the environment this identity belongs to
     PaginatedResponse:
       type: object
       description: A paginated response wrapper containing the results count and navigation links.
@@ -1729,20 +1713,81 @@ components:
           description: The array of result objects for this page
           items:
             type: object
-    Identity:
+    EdgeIdentitySourceIdentityRequest:
       type: object
-      description: A user identity within an environment, representing an individual user with their associated traits.
+      properties:
+        source_identity_uuid:
+          type: string
+          description: UUID of the source identity to clone feature states from.
+      required:
+      - source_identity_uuid
+    ValueTypeEnum:
+      enum:
+      - int
+      - unicode
+      - bool
+      - float
+      type: string
+      description: '* `int` - Integer
+
+        * `unicode` - String
+
+        * `bool` - Boolean
+
+        * `float` - Float'
+    PatchedTrait:
+      type: object
       properties:
         id:
           type: integer
-          description: The unique identifier for this identity
-        identifier:
+          readOnly: true
+        trait_key:
           type: string
-          description: The user-provided identifier for this identity
-        environment:
+          maxLength: 200
+        value_type:
+          oneOf:
+          - $ref: '#/components/schemas/ValueTypeEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        integer_value:
+          type:
+          - integer
+          - 'null'
+          maximum: 2147483647
+          minimum: -2147483648
+        string_value:
+          type:
+          - string
+          - 'null'
+          maxLength: 2000
+        boolean_value:
+          type:
+          - boolean
+          - 'null'
+        float_value:
+          type:
+          - number
+          - 'null'
+          format: double
+        created_date:
+          type: string
+          format: date-time
+          readOnly: true
+          title: DateCreated
+    EdgeMultivariateFeatureStateValue:
+      type: object
+      properties:
+        multivariate_feature_option:
           type: integer
-          description: The ID of the environment this identity belongs to
-    PatchedIdentity:
+        percentage_allocation:
+          type: number
+          format: double
+          maximum: 100
+          minimum: 0
+      required:
+      - multivariate_feature_option
+      - percentage_allocation
+    _Identity:
       type: object
       properties:
         id:
@@ -1751,10 +1796,47 @@ components:
         identifier:
           type: string
           maxLength: 2000
-        environment:
+      required:
+      - identifier
+    EdgeIdentityFeatureState:
+      type: object
+      properties:
+        feature_state_value:
+          type:
+          - string
+          - integer
+          - boolean
+          - 'null'
+          description: Feature state value (string, integer, or boolean)
+        feature:
           type: integer
+          description: Feature ID
+        multivariate_feature_state_values:
+          type: array
+          items:
+            $ref: '#/components/schemas/EdgeMultivariateFeatureStateValue'
+        enabled:
+          type: boolean
+          default: false
+        featurestate_uuid:
+          type: string
           readOnly: true
-    EdgeIdentityUpdate:
+        identity_uuid:
+          type: string
+          format: uuid
+          readOnly: true
+      required:
+      - feature
+    FeatureStateSerializerCreate:
+      type: object
+      properties:
+        feature:
+          type: integer
+        enabled:
+          type: boolean
+      required:
+      - feature
+    PatchedEdgeIdentityUpdate:
       type: object
       properties:
         identity_uuid:
@@ -1767,6 +1849,219 @@ components:
         dashboard_alias:
           type: string
           maxLength: 100
+    EdgeIdentity:
+      type: object
+      properties:
+        identity_uuid:
+          type: string
+          readOnly: true
+        identifier:
+          type: string
+          maxLength: 2000
+        dashboard_alias:
+          type: string
+          maxLength: 100
+      required:
+      - identifier
+    MultivariateFeatureStateValue:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        multivariate_feature_option:
+          type: integer
+        percentage_allocation:
+          type: number
+          format: double
+          maximum: 100
+          minimum: 0
+      required:
+      - multivariate_feature_option
+      - percentage_allocation
+    PaginatedFeatureStateSerializerWithIdentityList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/FeatureStateSerializerWithIdentity'
+    PaginatedTraitList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Trait'
+    IdentityAllFeatureStatesFeature:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        type:
+          type: string
+      required:
+      - id
+      - name
+      - type
+    PaginatedEdgeIdentityTraitsList:
+      type: object
+      required:
+      - results
+      properties:
+        last_evaluated_key:
+          type: string
+          nullable: true
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/EdgeIdentityTraits'
+    PaginatedIdentityAllFeatureStatesList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/IdentityAllFeatureStates'
+    PaginatedIdentityList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Identity_2'
+    IncrementTraitValue:
+      type: object
+      properties:
+        trait_key:
+          type: string
+        increment_by:
+          type: integer
+          writeOnly: true
+        identifier:
+          type: string
+        trait_value:
+          type: integer
+          readOnly: true
+      required:
+      - identifier
+      - increment_by
+      - trait_key
+    SDKBulkCreateUpdateTrait:
+      type: object
+      properties:
+        identity:
+          $ref: '#/components/schemas/IdentifierOnlyIdentity'
+        trait_value:
+          type:
+          - string
+          - integer
+          - number
+          - boolean
+          - 'null'
+          description: Can be string, integer, float, or boolean
+        trait_key:
+          type: string
+      required:
+      - identity
+      - trait_key
+      - trait_value
+    IdentityAllFeatureStatesMVFeatureStateValue:
+      type: object
+      properties:
+        multivariate_feature_option:
+          $ref: '#/components/schemas/IdentityAllFeatureStatesMVFeatureOption'
+        percentage_allocation:
+          type: number
+          format: double
+      required:
+      - multivariate_feature_option
+      - percentage_allocation
+    PatchedFeatureStateSerializerCreate:
+      type: object
+      properties:
+        feature:
+          type: integer
+        enabled:
+          type: boolean
+    Identity_2:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        identifier:
+          type: string
+          maxLength: 2000
+        environment:
+          type: integer
+          readOnly: true
       required:
       - identifier
     FeatureStateSerializerWithIdentity:
@@ -1845,49 +2140,39 @@ components:
       required:
       - feature
       - identity
-    NullEnum:
-      type: 'null'
-    PaginatedEdgeIdentityList:
-      type: object
-      required:
-      - results
-      properties:
-        last_evaluated_key:
-          type: string
-          nullable: true
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/EdgeIdentity'
-    FeatureStateSerializerCreate:
+    IdentityAllFeatureStatesSegment:
       type: object
       properties:
-        feature:
+        id:
           type: integer
-        enabled:
-          type: boolean
-      required:
-      - feature
-    EdgeIdentitySourceIdentityRequest:
-      type: object
-      properties:
-        source_identity_uuid:
+        name:
           type: string
-          description: UUID of the source identity to clone feature states from.
       required:
-      - source_identity_uuid
-    IdentityAllFeatureStatesMVFeatureStateValue:
+      - id
+      - name
+    IdentityAllFeatureStatesMVFeatureOption:
       type: object
       properties:
-        multivariate_feature_option:
-          $ref: '#/components/schemas/IdentityAllFeatureStatesMVFeatureOption'
-        percentage_allocation:
-          type: number
-          format: double
+        value:
+          oneOf:
+          - type: string
+          - type: integer
+          - type: boolean
+          description: 'Can be any of the following types: integer, boolean, string.'
+          readOnly: true
+    EdgeIdentityTraits:
+      type: object
+      properties:
+        trait_key:
+          type: string
+        trait_value:
+          type:
+          - string
+          - 'null'
       required:
-      - multivariate_feature_option
-      - percentage_allocation
-    PatchedEdgeIdentityUpdate:
+      - trait_key
+      - trait_value
+    EdgeIdentityUpdate:
       type: object
       properties:
         identity_uuid:
@@ -1900,165 +2185,8 @@ components:
         dashboard_alias:
           type: string
           maxLength: 100
-    IdentitySourceIdentityRequest:
-      type: object
-      properties:
-        source_identity_id:
-          type: integer
-          description: ID of the source identity to clone feature states from.
       required:
-      - source_identity_id
-    PatchedTrait:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        trait_key:
-          type: string
-          maxLength: 200
-        value_type:
-          oneOf:
-          - $ref: '#/components/schemas/ValueTypeEnum'
-          - $ref: '#/components/schemas/BlankEnum'
-          - $ref: '#/components/schemas/NullEnum'
-        integer_value:
-          type:
-          - integer
-          - 'null'
-          maximum: 2147483647
-          minimum: -2147483648
-        string_value:
-          type:
-          - string
-          - 'null'
-          maxLength: 2000
-        boolean_value:
-          type:
-          - boolean
-          - 'null'
-        float_value:
-          type:
-          - number
-          - 'null'
-          format: double
-        created_date:
-          type: string
-          format: date-time
-          readOnly: true
-          title: DateCreated
-    PaginatedFeatureStateSerializerWithIdentityList:
-      type: object
-      required:
-      - count
-      - results
-      properties:
-        count:
-          type: integer
-          example: 123
-        next:
-          type: string
-          nullable: true
-          format: uri
-          example: http://api.example.org/accounts/?page=4
-        previous:
-          type: string
-          nullable: true
-          format: uri
-          example: http://api.example.org/accounts/?page=2
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/FeatureStateSerializerWithIdentity'
-    PaginatedIdentityAllFeatureStatesList:
-      type: object
-      required:
-      - count
-      - results
-      properties:
-        count:
-          type: integer
-          example: 123
-        next:
-          type: string
-          nullable: true
-          format: uri
-          example: http://api.example.org/accounts/?page=4
-        previous:
-          type: string
-          nullable: true
-          format: uri
-          example: http://api.example.org/accounts/?page=2
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/IdentityAllFeatureStates'
-    PaginatedIdentityList:
-      type: object
-      required:
-      - count
-      - results
-      properties:
-        count:
-          type: integer
-          example: 123
-        next:
-          type: string
-          nullable: true
-          format: uri
-          example: http://api.example.org/accounts/?page=4
-        previous:
-          type: string
-          nullable: true
-          format: uri
-          example: http://api.example.org/accounts/?page=2
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/Identity_2'
-    ValueTypeEnum:
-      enum:
-      - int
-      - unicode
-      - bool
-      - float
-      type: string
-      description: '* `int` - Integer
-
-        * `unicode` - String
-
-        * `bool` - Boolean
-
-        * `float` - Float'
-    SDKBulkCreateUpdateTrait:
-      type: object
-      properties:
-        identity:
-          $ref: '#/components/schemas/IdentifierOnlyIdentity'
-        trait_value:
-          type:
-          - string
-          - integer
-          - number
-          - boolean
-          - 'null'
-          description: Can be string, integer, float, or boolean
-        trait_key:
-          type: string
-      required:
-      - identity
-      - trait_key
-      - trait_value
-    IdentityAllFeatureStatesSegment:
-      type: object
-      properties:
-        id:
-          type: integer
-        name:
-          type: string
-      required:
-      - id
-      - name
+      - identifier
     EdgeIdentityWithIdentifierFeatureStateRequestBody:
       type: object
       properties:
@@ -2096,119 +2224,7 @@ components:
       required:
       - feature
       - identifier
-    EdgeIdentity:
-      type: object
-      properties:
-        identity_uuid:
-          type: string
-          readOnly: true
-        identifier:
-          type: string
-          maxLength: 2000
-        dashboard_alias:
-          type: string
-          maxLength: 100
-      required:
-      - identifier
-    IdentifierOnlyIdentity:
-      type: object
-      properties:
-        identifier:
-          type: string
-          maxLength: 2000
-      required:
-      - identifier
-    IdentityAllFeatureStatesFeature:
-      type: object
-      properties:
-        id:
-          type: integer
-        name:
-          type: string
-        type:
-          type: string
-      required:
-      - id
-      - name
-      - type
-    PaginatedTraitList:
-      type: object
-      required:
-      - count
-      - results
-      properties:
-        count:
-          type: integer
-          example: 123
-        next:
-          type: string
-          nullable: true
-          format: uri
-          example: http://api.example.org/accounts/?page=4
-        previous:
-          type: string
-          nullable: true
-          format: uri
-          example: http://api.example.org/accounts/?page=2
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/Trait'
-    EdgeIdentityTraits:
-      type: object
-      properties:
-        trait_key:
-          type: string
-        trait_value:
-          type:
-          - string
-          - 'null'
-      required:
-      - trait_key
-      - trait_value
-    EdgeMultivariateFeatureStateValue:
-      type: object
-      properties:
-        multivariate_feature_option:
-          type: integer
-        percentage_allocation:
-          type: number
-          format: double
-          maximum: 100
-          minimum: 0
-      required:
-      - multivariate_feature_option
-      - percentage_allocation
-    EdgeIdentityFeatureState:
-      type: object
-      properties:
-        feature_state_value:
-          type:
-          - string
-          - integer
-          - boolean
-          - 'null'
-          description: Feature state value (string, integer, or boolean)
-        feature:
-          type: integer
-          description: Feature ID
-        multivariate_feature_state_values:
-          type: array
-          items:
-            $ref: '#/components/schemas/EdgeMultivariateFeatureStateValue'
-        enabled:
-          type: boolean
-          default: false
-        featurestate_uuid:
-          type: string
-          readOnly: true
-        identity_uuid:
-          type: string
-          format: uuid
-          readOnly: true
-      required:
-      - feature
-    Identity_2:
+    PatchedIdentity:
       type: object
       properties:
         id:
@@ -2220,26 +2236,14 @@ components:
         environment:
           type: integer
           readOnly: true
-      required:
-      - identifier
-    SDKCreateUpdateTrait:
+    IdentifierOnlyIdentity:
       type: object
       properties:
-        identity:
-          $ref: '#/components/schemas/IdentifierOnlyIdentity'
-        trait_value:
-          type:
-          - string
-          - integer
-          - number
-          - boolean
-          description: Can be string, integer, float, or boolean
-        trait_key:
+        identifier:
           type: string
+          maxLength: 2000
       required:
-      - identity
-      - trait_key
-      - trait_value
+      - identifier
     IdentityAllFeatureStates:
       type: object
       properties:
@@ -2272,16 +2276,6 @@ components:
       - enabled
       - feature
       - multivariate_feature_state_values
-    PatchedFeatureStateSerializerCreate:
-      type: object
-      properties:
-        feature:
-          type: integer
-        enabled:
-          type: boolean
-    BlankEnum:
-      enum:
-      - ''
     FeatureStateSerializerBasic:
       type: object
       description: Adds nested create feature
@@ -2359,39 +2353,46 @@ components:
           format: uuid
       required:
       - feature
-    IncrementTraitValue:
+    NullEnum:
+      type: 'null'
+    IdentitySourceIdentityRequest:
       type: object
       properties:
+        source_identity_id:
+          type: integer
+          description: ID of the source identity to clone feature states from.
+      required:
+      - source_identity_id
+    PaginatedEdgeIdentityList:
+      type: object
+      required:
+      - results
+      properties:
+        last_evaluated_key:
+          type: string
+          nullable: true
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/EdgeIdentity'
+    SDKCreateUpdateTrait:
+      type: object
+      properties:
+        identity:
+          $ref: '#/components/schemas/IdentifierOnlyIdentity'
+        trait_value:
+          type:
+          - string
+          - integer
+          - number
+          - boolean
+          description: Can be string, integer, float, or boolean
         trait_key:
           type: string
-        increment_by:
-          type: integer
-          writeOnly: true
-        identifier:
-          type: string
-        trait_value:
-          type: integer
-          readOnly: true
       required:
-      - identifier
-      - increment_by
+      - identity
       - trait_key
-    MultivariateFeatureStateValue:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        multivariate_feature_option:
-          type: integer
-        percentage_allocation:
-          type: number
-          format: double
-          maximum: 100
-          minimum: 0
-      required:
-      - multivariate_feature_option
-      - percentage_allocation
+      - trait_value
     Trait:
       type: object
       properties:
@@ -2433,39 +2434,9 @@ components:
           title: DateCreated
       required:
       - trait_key
-    _Identity:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        identifier:
-          type: string
-          maxLength: 2000
-      required:
-      - identifier
-    PaginatedEdgeIdentityTraitsList:
-      type: object
-      required:
-      - results
-      properties:
-        last_evaluated_key:
-          type: string
-          nullable: true
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/EdgeIdentityTraits'
-    IdentityAllFeatureStatesMVFeatureOption:
-      type: object
-      properties:
-        value:
-          oneOf:
-          - type: string
-          - type: integer
-          - type: boolean
-          description: 'Can be any of the following types: integer, boolean, string.'
-          readOnly: true
+    BlankEnum:
+      enum:
+      - ''
     IdentityRequest:
       type: object
       description: The request body for identifying a user and optionally setting traits.
@@ -2483,62 +2454,6 @@ components:
         transient:
           type: boolean
           description: When true, the identity is transient and will not be persisted.
-    Error:
-      type: object
-      description: An error response from the API
-      properties:
-        detail:
-          type: string
-          description: A human-readable error message
-    TraitRequest:
-      type: object
-      description: Request body for setting a trait on an identity.
-      required:
-      - identity
-      - trait_key
-      - trait_value
-      properties:
-        identity:
-          type: object
-          description: The identity to set the trait on
-          required:
-          - identifier
-          properties:
-            identifier:
-              type: string
-              description: The unique identifier for the user identity
-        trait_key:
-          type: string
-          description: The key name of the trait to set
-        trait_value:
-          description: The value to set for the trait. Set to null to delete the trait.
-          oneOf:
-          - type: string
-          - type: integer
-          - type: number
-          - type: boolean
-          - type: 'null'
-    TraitInput:
-      type: object
-      description: Input object for setting a trait value on an identity.
-      required:
-      - trait_key
-      - trait_value
-      properties:
-        trait_key:
-          type: string
-          description: The key name of the trait to set
-        trait_value:
-          description: The value to set for the trait. Can be a string, integer, float, or boolean. Set to null to delete the trait.
-          oneOf:
-          - type: string
-          - type: integer
-          - type: number
-          - type: boolean
-          - type: 'null'
-        transient:
-          type: boolean
-          description: When true, this trait is transient and will be used for evaluation but not persisted.
     IdentityResponse:
       type: object
       description: The response object for an identity flags request, containing the evaluated flags and traits for the specified identity.
@@ -2553,36 +2468,6 @@ components:
           description: The traits associated with this identity
           items:
             $ref: '#/components/schemas/Trait_2'
-    Flag:
-      type: object
-      description: A feature flag object containing the feature definition, its enabled state, and any associated value for the environment.
-      properties:
-        id:
-          type: integer
-          description: The unique identifier for this feature state
-        feature:
-          $ref: '#/components/schemas/Feature'
-        feature_state_value:
-          description: The value associated with this feature state. Can be a string, integer, boolean, or null depending on the feature configuration.
-          oneOf:
-          - type: string
-          - type: integer
-          - type: boolean
-          - type: 'null'
-        enabled:
-          type: boolean
-          description: Whether this feature flag is currently enabled
-        environment:
-          type: integer
-          description: The ID of the environment this flag belongs to
-        identity:
-          type: integer
-          nullable: true
-          description: The identity ID if this is an identity-specific override, or null for environment defaults
-        feature_segment:
-          type: integer
-          nullable: true
-          description: The feature segment ID if this flag state is a segment override, or null otherwise
     Trait_2:
       type: object
       description: A trait is a key-value pair associated with an identity, used for segment evaluation and personalization.
@@ -2600,6 +2485,13 @@ components:
           - type: integer
           - type: number
           - type: boolean
+    Error:
+      type: object
+      description: An error response from the API
+      properties:
+        detail:
+          type: string
+          description: A human-readable error message
     Feature:
       type: object
       description: A feature definition containing metadata about the feature flag including its name, type, and default configuration.
@@ -2631,6 +2523,114 @@ components:
           - STANDARD
           - MULTIVARIATE
           description: The type of feature flag. STANDARD for simple on/off flags, MULTIVARIATE for flags with multiple value variations.
+    TraitRequest:
+      type: object
+      description: Request body for setting a trait on an identity.
+      required:
+      - identity
+      - trait_key
+      - trait_value
+      properties:
+        identity:
+          type: object
+          description: The identity to set the trait on
+          required:
+          - identifier
+          properties:
+            identifier:
+              type: string
+              description: The unique identifier for the user identity
+        trait_key:
+          type: string
+          description: The key name of the trait to set
+        trait_value:
+          description: The value to set for the trait. Set to null to delete the trait.
+          oneOf:
+          - type: string
+          - type: integer
+          - type: number
+          - type: boolean
+          - type: 'null'
+    Flag:
+      type: object
+      description: A feature flag object containing the feature definition, its enabled state, and any associated value for the environment.
+      properties:
+        id:
+          type: integer
+          description: The unique identifier for this feature state
+        feature:
+          $ref: '#/components/schemas/Feature'
+        feature_state_value:
+          description: The value associated with this feature state. Can be a string, integer, boolean, or null depending on the feature configuration.
+          oneOf:
+          - type: string
+          - type: integer
+          - type: boolean
+          - type: 'null'
+        enabled:
+          type: boolean
+          description: Whether this feature flag is currently enabled
+        environment:
+          type: integer
+          description: The ID of the environment this flag belongs to
+        identity:
+          type: integer
+          nullable: true
+          description: The identity ID if this is an identity-specific override, or null for environment defaults
+        feature_segment:
+          type: integer
+          nullable: true
+          description: The feature segment ID if this flag state is a segment override, or null otherwise
+    TraitInput:
+      type: object
+      description: Input object for setting a trait value on an identity.
+      required:
+      - trait_key
+      - trait_value
+      properties:
+        trait_key:
+          type: string
+          description: The key name of the trait to set
+        trait_value:
+          description: The value to set for the trait. Can be a string, integer, float, or boolean. Set to null to delete the trait.
+          oneOf:
+          - type: string
+          - type: integer
+          - type: number
+          - type: boolean
+          - type: 'null'
+        transient:
+          type: boolean
+          description: When true, this trait is transient and will be used for evaluation but not persisted.
+  parameters:
+    EnvironmentApiKey:
+      name: environment_api_key
+      in: path
+      description: The API key for the environment
+      required: true
+      schema:
+        type: string
+    IdentityId:
+      name: identity_id
+      in: path
+      description: The unique identifier for the identity
+      required: true
+      schema:
+        type: integer
+    IdentifierQuery:
+      name: identifier
+      in: query
+      description: The unique identifier for the user identity. This is typically a user ID, email, or other unique string that identifies the user in your application.
+      required: true
+      schema:
+        type: string
+    TransientQuery:
+      name: transient
+      in: query
+      description: When set to true, the identity is treated as transient and will not be persisted. The identity will be used for flag evaluation only.
+      required: false
+      schema:
+        type: boolean
   securitySchemes:
     apiKeyAuth:
       type: apiKey

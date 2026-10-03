@@ -290,6 +290,242 @@ paths:
       x-summary-source: derived
 components:
   schemas:
+    V1IdentitiesResponseTrait:
+      description: Represents a key-value pair associated with an identity.
+      properties:
+        trait_key:
+          title: Trait Key
+          type: string
+        trait_value:
+          anyOf:
+          - type: integer
+          - type: number
+          - type: boolean
+          - type: string
+          - type: 'null'
+          title: Trait Value
+      required:
+      - trait_key
+      - trait_value
+      title: Trait
+      type: object
+    TypeD77Enum:
+      enum:
+      - STANDARD
+      - MULTIVARIATE
+      type: string
+      description: '* `STANDARD` - STANDARD
+
+        * `MULTIVARIATE` - MULTIVARIATE'
+    V1IdentitiesResponseV1Flag:
+      description: Represents a single flag (feature state) returned by the Flagsmith SDK.
+      properties:
+        feature:
+          $ref: '#/components/schemas/V1IdentitiesResponseFeature'
+        enabled:
+          title: Enabled
+          type: boolean
+        feature_state_value:
+          anyOf:
+          - type: integer
+          - type: boolean
+          - type: string
+          - type: 'null'
+          title: Feature State Value
+        variant:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Variant
+        reason:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Reason
+        metadata:
+          $ref: '#/components/schemas/V1IdentitiesResponseFeatureStateMetadata'
+      required:
+      - feature
+      - enabled
+      - feature_state_value
+      title: V1Flag
+      type: object
+    V1EnvironmentDocumentResponseFeatureSegment:
+      description: Represents data specific to a segment feature override.
+      properties:
+        priority:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Priority
+      required:
+      - priority
+      title: FeatureSegment
+      type: object
+    V1EnvironmentDocumentResponse:
+      description: '`/api/v1/environment-documents/` response.
+
+
+        Powers Flagsmith SDK''s local evaluation mode.'
+      properties:
+        api_key:
+          title: Api Key
+          type: string
+        feature_states:
+          items:
+            $ref: '#/components/schemas/V1EnvironmentDocumentResponseFeatureState'
+          title: Feature States
+          type: array
+        identity_overrides:
+          items:
+            $ref: '#/components/schemas/V1EnvironmentDocumentResponseIdentityOverride'
+          title: Identity Overrides
+          type: array
+        name:
+          title: Name
+          type: string
+        project:
+          $ref: '#/components/schemas/V1EnvironmentDocumentResponseProject'
+      required:
+      - api_key
+      - feature_states
+      - identity_overrides
+      - name
+      - project
+      title: V1EnvironmentDocumentResponse
+      type: object
+    V1IdentitiesRequestTraitInput:
+      description: Represents a key-value pair trait provided as input when creating or updating an identity.
+      properties:
+        trait_key:
+          title: Trait Key
+          type: string
+        trait_value:
+          anyOf:
+          - type: integer
+          - type: number
+          - type: boolean
+          - type: string
+          - type: 'null'
+          title: Trait Value
+        transient:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Transient
+      required:
+      - trait_key
+      - trait_value
+      title: TraitInput
+      type: object
+    V1EnvironmentDocumentResponseSegmentRuleTypeEnum:
+      enum:
+      - ALL
+      - ANY
+      - NONE
+      type: string
+    V1EnvironmentDocumentResponseMultivariateFeatureOption:
+      description: Represents a single multivariate feature option in the Flagsmith UI.
+      properties:
+        value:
+          title: Value
+          type: string
+      required:
+      - value
+      title: MultivariateFeatureOption
+      type: object
+    V1IdentitiesResponseFeature:
+      description: Represents a Flagsmith feature, defined at project level.
+      properties:
+        id:
+          title: Id
+          type: integer
+        name:
+          title: Name
+          type: string
+        type:
+          allOf:
+          - $ref: '#/components/schemas/TypeD77Enum'
+          title: Type
+      required:
+      - id
+      - name
+      - type
+      title: Feature
+      type: object
+    V1EnvironmentDocumentResponseFeatureStateMetadata:
+      additionalProperties: true
+      description: Additional, non-evaluation data about a feature state.
+      properties:
+        experiment:
+          $ref: '#/components/schemas/V1EnvironmentDocumentResponseExperimentMetadata'
+      title: FeatureStateMetadata
+      type: object
+    V1EnvironmentDocumentResponseSegmentRule:
+      description: Represents a rule within a segment used by Flagsmith engine. Root rules usually contain nested rules.
+      properties:
+        type:
+          allOf:
+          - $ref: '#/components/schemas/V1EnvironmentDocumentResponseSegmentRuleTypeEnum'
+          title: Type
+        rules:
+          items:
+            $ref: '#/components/schemas/V1EnvironmentDocumentResponseSegmentRule'
+          title: Rules
+          type: array
+        conditions:
+          items:
+            $ref: '#/components/schemas/V1EnvironmentDocumentResponseSegmentCondition'
+          title: Conditions
+          type: array
+      required:
+      - type
+      - rules
+      - conditions
+      title: SegmentRule
+      type: object
+    V1EnvironmentDocumentResponseSegmentConditionOperatorEnum:
+      enum:
+      - EQUAL
+      - GREATER_THAN
+      - LESS_THAN
+      - LESS_THAN_INCLUSIVE
+      - CONTAINS
+      - GREATER_THAN_INCLUSIVE
+      - NOT_CONTAINS
+      - NOT_EQUAL
+      - REGEX
+      - PERCENTAGE_SPLIT
+      - MODULO
+      - IS_SET
+      - IS_NOT_SET
+      - IN
+      type: string
+    V1IdentitiesResponse:
+      description: '`/api/v1/identities/` response.
+
+
+        Represents the identity created or updated, along with its flags.'
+      properties:
+        identifier:
+          title: Identifier
+          type: string
+        flags:
+          items:
+            $ref: '#/components/schemas/V1IdentitiesResponseV1Flag'
+          title: Flags
+          type: array
+        traits:
+          items:
+            $ref: '#/components/schemas/V1IdentitiesResponseTrait'
+          title: Traits
+          type: array
+      required:
+      - identifier
+      - flags
+      - traits
+      title: V1IdentitiesResponse
+      type: object
     V1EnvironmentDocumentResponseProject:
       description: Represents a Flagsmith project. For SDKs, this is mainly used to convey segment data.
       properties:
@@ -327,124 +563,30 @@ components:
       - rules
       title: Segment
       type: object
-    V1IdentitiesResponseExperimentMetadata:
-      description: Represents the experiment a feature state is part of. Only present while the experiment is running.
+    V1IdentitiesRequest:
+      description: '`/api/v1/identities/` request.
+
+
+        Used to retrieve flags for an identity and store its traits.'
       properties:
-        id:
-          title: Id
-          type: integer
-        name:
-          title: Name
+        identifier:
+          title: Identifier
           type: string
-        in_experiment:
-          title: In Experiment
-          type: boolean
-      required:
-      - id
-      - name
-      - in_experiment
-      title: ExperimentMetadata
-      type: object
-    V1EnvironmentDocumentResponseMultivariateFeatureStateValue:
-      description: Represents a multivariate feature state value.
-      properties:
-        id:
+        traits:
           anyOf:
-          - type: integer
+          - items:
+              $ref: '#/components/schemas/V1IdentitiesRequestTraitInput'
+            type: array
           - type: 'null'
-          title: Id
-        mv_fs_value_uuid:
-          anyOf:
-          - format: uuid
-            type: string
-          - type: 'null'
-          title: Mv Fs Value Uuid
-        percentage_allocation:
-          title: Percentage Allocation
-          type: number
-        multivariate_feature_option:
-          $ref: '#/components/schemas/V1EnvironmentDocumentResponseMultivariateFeatureOption'
-      required:
-      - id
-      - mv_fs_value_uuid
-      - percentage_allocation
-      - multivariate_feature_option
-      title: MultivariateFeatureStateValue
-      type: object
-    V1EnvironmentDocumentResponseFeatureStateMetadata:
-      additionalProperties: true
-      description: Additional, non-evaluation data about a feature state.
-      properties:
-        experiment:
-          $ref: '#/components/schemas/V1EnvironmentDocumentResponseExperimentMetadata'
-      title: FeatureStateMetadata
-      type: object
-    V1EnvironmentDocumentResponseFeatureSegment:
-      description: Represents data specific to a segment feature override.
-      properties:
-        priority:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Priority
-      required:
-      - priority
-      title: FeatureSegment
-      type: object
-    V1IdentitiesRequestTraitInput:
-      description: Represents a key-value pair trait provided as input when creating or updating an identity.
-      properties:
-        trait_key:
-          title: Trait Key
-          type: string
-        trait_value:
-          anyOf:
-          - type: integer
-          - type: number
-          - type: boolean
-          - type: string
-          - type: 'null'
-          title: Trait Value
+          title: Traits
         transient:
           anyOf:
           - type: boolean
           - type: 'null'
           title: Transient
       required:
-      - trait_key
-      - trait_value
-      title: TraitInput
-      type: object
-    V1EnvironmentDocumentResponseSegmentRuleTypeEnum:
-      enum:
-      - ALL
-      - ANY
-      - NONE
-      type: string
-    V1IdentitiesResponse:
-      description: '`/api/v1/identities/` response.
-
-
-        Represents the identity created or updated, along with its flags.'
-      properties:
-        identifier:
-          title: Identifier
-          type: string
-        flags:
-          items:
-            $ref: '#/components/schemas/V1IdentitiesResponseV1Flag'
-          title: Flags
-          type: array
-        traits:
-          items:
-            $ref: '#/components/schemas/V1IdentitiesResponseTrait'
-          title: Traits
-          type: array
-      required:
       - identifier
-      - flags
-      - traits
-      title: V1IdentitiesResponse
+      title: V1IdentitiesRequest
       type: object
     V1EnvironmentDocumentResponseFeatureState:
       description: Used to define the state of a feature for an environment, segment overrides, and identity overrides.
@@ -485,123 +627,31 @@ components:
       - multivariate_feature_state_values
       title: FeatureState
       type: object
-    V1EnvironmentDocumentResponseMultivariateFeatureOption:
-      description: Represents a single multivariate feature option in the Flagsmith UI.
-      properties:
-        value:
-          title: Value
-          type: string
-      required:
-      - value
-      title: MultivariateFeatureOption
-      type: object
-    V1EnvironmentDocumentResponseFeature:
-      description: Represents a Flagsmith feature, defined at project level.
+    V1EnvironmentDocumentResponseMultivariateFeatureStateValue:
+      description: Represents a multivariate feature state value.
       properties:
         id:
+          anyOf:
+          - type: integer
+          - type: 'null'
           title: Id
-          type: integer
-        name:
-          title: Name
-          type: string
-        type:
-          allOf:
-          - $ref: '#/components/schemas/TypeD77Enum'
-          title: Type
+        mv_fs_value_uuid:
+          anyOf:
+          - format: uuid
+            type: string
+          - type: 'null'
+          title: Mv Fs Value Uuid
+        percentage_allocation:
+          title: Percentage Allocation
+          type: number
+        multivariate_feature_option:
+          $ref: '#/components/schemas/V1EnvironmentDocumentResponseMultivariateFeatureOption'
       required:
       - id
-      - name
-      - type
-      title: Feature
-      type: object
-    V1EnvironmentDocumentResponseSegmentRule:
-      description: Represents a rule within a segment used by Flagsmith engine. Root rules usually contain nested rules.
-      properties:
-        type:
-          allOf:
-          - $ref: '#/components/schemas/V1EnvironmentDocumentResponseSegmentRuleTypeEnum'
-          title: Type
-        rules:
-          items:
-            $ref: '#/components/schemas/V1EnvironmentDocumentResponseSegmentRule'
-          title: Rules
-          type: array
-        conditions:
-          items:
-            $ref: '#/components/schemas/V1EnvironmentDocumentResponseSegmentCondition'
-          title: Conditions
-          type: array
-      required:
-      - type
-      - rules
-      - conditions
-      title: SegmentRule
-      type: object
-    V1EnvironmentDocumentResponseIdentityOverride:
-      description: Represents an identity override, defining feature states specific to an identity.
-      properties:
-        identifier:
-          title: Identifier
-          type: string
-        identity_features:
-          items:
-            $ref: '#/components/schemas/V1EnvironmentDocumentResponseFeatureState'
-          title: Identity Features
-          type: array
-      required:
-      - identifier
-      - identity_features
-      title: IdentityOverride
-      type: object
-    V1EnvironmentDocumentResponse:
-      description: '`/api/v1/environment-documents/` response.
-
-
-        Powers Flagsmith SDK''s local evaluation mode.'
-      properties:
-        api_key:
-          title: Api Key
-          type: string
-        feature_states:
-          items:
-            $ref: '#/components/schemas/V1EnvironmentDocumentResponseFeatureState'
-          title: Feature States
-          type: array
-        identity_overrides:
-          items:
-            $ref: '#/components/schemas/V1EnvironmentDocumentResponseIdentityOverride'
-          title: Identity Overrides
-          type: array
-        name:
-          title: Name
-          type: string
-        project:
-          $ref: '#/components/schemas/V1EnvironmentDocumentResponseProject'
-      required:
-      - api_key
-      - feature_states
-      - identity_overrides
-      - name
-      - project
-      title: V1EnvironmentDocumentResponse
-      type: object
-    V1EnvironmentDocumentResponseExperimentMetadata:
-      description: Represents the experiment a feature state is part of. Only present while the experiment is running.
-      properties:
-        id:
-          title: Id
-          type: integer
-        name:
-          title: Name
-          type: string
-        in_experiment:
-          title: In Experiment
-          type: boolean
-      required:
-      - id
-      - name
-      - in_experiment
-      title: ExperimentMetadata
+      - mv_fs_value_uuid
+      - percentage_allocation
+      - multivariate_feature_option
+      title: MultivariateFeatureStateValue
       type: object
     V1EnvironmentDocumentResponseSegmentCondition:
       description: Represents a condition within a segment rule used by Flagsmith engine.
@@ -622,109 +672,7 @@ components:
       - property_
       title: SegmentCondition
       type: object
-    V1EnvironmentDocumentResponseSegmentConditionOperatorEnum:
-      enum:
-      - EQUAL
-      - GREATER_THAN
-      - LESS_THAN
-      - LESS_THAN_INCLUSIVE
-      - CONTAINS
-      - GREATER_THAN_INCLUSIVE
-      - NOT_CONTAINS
-      - NOT_EQUAL
-      - REGEX
-      - PERCENTAGE_SPLIT
-      - MODULO
-      - IS_SET
-      - IS_NOT_SET
-      - IN
-      type: string
-    V1IdentitiesRequest:
-      description: '`/api/v1/identities/` request.
-
-
-        Used to retrieve flags for an identity and store its traits.'
-      properties:
-        identifier:
-          title: Identifier
-          type: string
-        traits:
-          anyOf:
-          - items:
-              $ref: '#/components/schemas/V1IdentitiesRequestTraitInput'
-            type: array
-          - type: 'null'
-          title: Traits
-        transient:
-          anyOf:
-          - type: boolean
-          - type: 'null'
-          title: Transient
-      required:
-      - identifier
-      title: V1IdentitiesRequest
-      type: object
-    V1IdentitiesResponseFeatureStateMetadata:
-      additionalProperties: true
-      description: Additional, non-evaluation data about a feature state.
-      properties:
-        experiment:
-          $ref: '#/components/schemas/V1IdentitiesResponseExperimentMetadata'
-      title: FeatureStateMetadata
-      type: object
-    V1IdentitiesResponseV1Flag:
-      description: Represents a single flag (feature state) returned by the Flagsmith SDK.
-      properties:
-        feature:
-          $ref: '#/components/schemas/V1IdentitiesResponseFeature'
-        enabled:
-          title: Enabled
-          type: boolean
-        feature_state_value:
-          anyOf:
-          - type: integer
-          - type: boolean
-          - type: string
-          - type: 'null'
-          title: Feature State Value
-        variant:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Variant
-        reason:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Reason
-        metadata:
-          $ref: '#/components/schemas/V1IdentitiesResponseFeatureStateMetadata'
-      required:
-      - feature
-      - enabled
-      - feature_state_value
-      title: V1Flag
-      type: object
-    V1IdentitiesResponseTrait:
-      description: Represents a key-value pair associated with an identity.
-      properties:
-        trait_key:
-          title: Trait Key
-          type: string
-        trait_value:
-          anyOf:
-          - type: integer
-          - type: number
-          - type: boolean
-          - type: string
-          - type: 'null'
-          title: Trait Value
-      required:
-      - trait_key
-      - trait_value
-      title: Trait
-      type: object
-    V1IdentitiesResponseFeature:
+    V1EnvironmentDocumentResponseFeature:
       description: Represents a Flagsmith feature, defined at project level.
       properties:
         id:
@@ -743,14 +691,66 @@ components:
       - type
       title: Feature
       type: object
-    TypeD77Enum:
-      enum:
-      - STANDARD
-      - MULTIVARIATE
-      type: string
-      description: '* `STANDARD` - STANDARD
-
-        * `MULTIVARIATE` - MULTIVARIATE'
+    V1EnvironmentDocumentResponseExperimentMetadata:
+      description: Represents the experiment a feature state is part of. Only present while the experiment is running.
+      properties:
+        id:
+          title: Id
+          type: integer
+        name:
+          title: Name
+          type: string
+        in_experiment:
+          title: In Experiment
+          type: boolean
+      required:
+      - id
+      - name
+      - in_experiment
+      title: ExperimentMetadata
+      type: object
+    V1IdentitiesResponseExperimentMetadata:
+      description: Represents the experiment a feature state is part of. Only present while the experiment is running.
+      properties:
+        id:
+          title: Id
+          type: integer
+        name:
+          title: Name
+          type: string
+        in_experiment:
+          title: In Experiment
+          type: boolean
+      required:
+      - id
+      - name
+      - in_experiment
+      title: ExperimentMetadata
+      type: object
+    V1EnvironmentDocumentResponseIdentityOverride:
+      description: Represents an identity override, defining feature states specific to an identity.
+      properties:
+        identifier:
+          title: Identifier
+          type: string
+        identity_features:
+          items:
+            $ref: '#/components/schemas/V1EnvironmentDocumentResponseFeatureState'
+          title: Identity Features
+          type: array
+      required:
+      - identifier
+      - identity_features
+      title: IdentityOverride
+      type: object
+    V1IdentitiesResponseFeatureStateMetadata:
+      additionalProperties: true
+      description: Additional, non-evaluation data about a feature state.
+      properties:
+        experiment:
+          $ref: '#/components/schemas/V1IdentitiesResponseExperimentMetadata'
+      title: FeatureStateMetadata
+      type: object
   securitySchemes:
     Cohort_Sync_Key:
       type: http

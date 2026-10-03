@@ -36,7 +36,7 @@
   "errors": [],
   "warnings": [
     "flagsmith-flags-api-openapi.yml: previously refined output kept for 1 operation(s) no archived document covers (e.g. /flags/ get); its other 0 operation(s) came from the archive and were dropped from it. The archive is incomplete for this provider \u2014 re-harvest to restore _original/ as the full source of truth.",
-    "flagsmith-identities-api-openapi.yml: previously refined output kept for 4 operation(s) no archived document covers (e.g. /identities/ get, /identities/ post, /traits/ post); its other 3 operation(s) came from the archive and were dropped from it. The archive is incomplete for this provider \u2014 re-harvest to restore _original/ as the full source of truth."
+    "flagsmith-identities-api-openapi.yml: previously refined output kept for 4 operation(s) no archived document covers (e.g. /identities/ get, /identities/ post, /traits/ post); its other 43 operation(s) came from the archive and were dropped from it. The archive is incomplete for this provider \u2014 re-harvest to restore _original/ as the full source of truth."
   ],
   "notes": [
     "sourced from openapi/_original/ (2 archived document(s)); previously refined output at the top level was skipped rather than re-split",
@@ -51,13 +51,28 @@
     "tag 'Projects' spans 2 source specs (flagsmith-admin-api-openapi.yml, flagsmith-api-openapi.json): per-path servers applied",
     "tag 'Segments' spans 2 source specs (flagsmith-admin-api-openapi.yml, flagsmith-api-openapi.json): per-path servers applied",
     "tag 'Webhooks' spans 2 source specs (flagsmith-admin-api-openapi.yml, flagsmith-api-openapi.json): per-path servers applied",
-    "apis.yml register: written (+15 apis, 24 total)"
+    "apis.yml register: already-registered"
   ],
   "skipped": [
+    "flagsmith-admin-dashboard-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "flagsmith-analytics-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "flagsmith-audit-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "flagsmith-authentication-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "flagsmith-environments-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "flagsmith-experimental-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "flagsmith-feature-states-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "flagsmith-features-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "flagsmith-integrations-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "flagsmith-mcp-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "flagsmith-metadata-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "flagsmith-o-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "flagsmith-onboarding-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "flagsmith-organisations-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "flagsmith-other-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "flagsmith-permissions-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "flagsmith-processor-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "flagsmith-projects-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "flagsmith-sdk-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "flagsmith-segments-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "flagsmith-users-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "flagsmith-webhooks-api-openapi.yml: previously refined output, superseded by openapi/_original/"

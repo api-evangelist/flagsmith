@@ -1408,6 +1408,14 @@ paths:
       summary: Api v1 projects permissions list
       x-summary-source: derived
 components:
+  parameters:
+    ProjectId:
+      name: project_id
+      in: path
+      description: The unique identifier for the project
+      required: true
+      schema:
+        type: integer
   schemas:
     Project:
       type: object
@@ -1446,103 +1454,6 @@ components:
         organisation:
           type: integer
           description: The ID of the organisation to create the project in
-    EdgeV2MigrationStatusEnum:
-      enum:
-      - NOT_STARTED
-      - IN_PROGRESS
-      - COMPLETE
-      - INCOMPLETE
-      type: string
-      description: '* `NOT_STARTED` - Not Started
-
-        * `IN_PROGRESS` - In Progress
-
-        * `COMPLETE` - Complete
-
-        * `INCOMPLETE` - Incomplete (identity overrides skipped)'
-    SourceTypeEnum:
-      enum:
-      - csv
-      - amplitude
-      - mixpanel
-      type: string
-      description: '* `csv` - CSV
-
-        * `amplitude` - Amplitude
-
-        * `mixpanel` - Mixpanel'
-    LaunchDarklyImportRequest:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        created_by:
-          type: string
-          format: email
-          readOnly: true
-        created_at:
-          type: string
-          format: date-time
-          readOnly: true
-        updated_at:
-          type: string
-          format: date-time
-          readOnly: true
-        completed_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          readOnly: true
-        status:
-          $ref: '#/components/schemas/LaunchDarklyImportRequestStatus'
-        project:
-          type: integer
-          readOnly: true
-      required:
-      - status
-    NullEnum:
-      type: 'null'
-    FeatureExport:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        name:
-          type: string
-          readOnly: true
-        environment_id:
-          type: integer
-          readOnly: true
-        status:
-          $ref: '#/components/schemas/Status6d4Enum'
-        created_at:
-          type: string
-          format: date-time
-          readOnly: true
-    SearchQueryParams:
-      type: object
-      properties:
-        page:
-          type: integer
-          minimum: 1
-          default: 1
-        page_size:
-          type: integer
-          maximum: 100
-          minimum: 1
-          default: 100
-        gitlab_project_id:
-          type: integer
-        search_text:
-          type: string
-        state:
-          type: string
-          default: opened
-      required:
-      - gitlab_project_id
     ReleasePipeline:
       type: object
       properties:
@@ -1578,111 +1489,18 @@ components:
           readOnly: true
       required:
       - name
-    Group:
-      type: object
-      properties:
-        id:
-          type: integer
-        name:
-          type: string
-      required:
-      - id
-      - name
-    DerivedFrom:
-      type: object
-      properties:
-        groups:
-          type: array
-          items:
-            $ref: '#/components/schemas/Group'
-        roles:
-          type: array
-          items:
-            $ref: '#/components/schemas/PermissionRole'
-      required:
-      - groups
-      - roles
-    PatchedReleasePipeline:
+    StageTrigger:
       type: object
       properties:
         id:
           type: integer
           readOnly: true
-        name:
-          type: string
-          maxLength: 255
-        project:
-          type: integer
-          readOnly: true
-        description:
-          type:
-          - string
-          - 'null'
-        stages_count:
-          type: integer
-          readOnly: true
-        published_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-        published_by:
-          type:
-          - integer
-          - 'null'
-        features:
-          type: array
-          items:
-            type: integer
-          readOnly: true
-    PermissionRole:
-      type: object
-      properties:
-        id:
-          type: integer
-        name:
-          type: string
-        tags:
-          type: array
-          items:
-            type: integer
-      required:
-      - id
-      - name
-    PipelineStage:
-      type: object
-      description: Adds nested create feature
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        name:
-          type: string
-          maxLength: 255
-        pipeline:
-          type: integer
-          readOnly: true
-        environment:
-          type: integer
-        order:
-          type: integer
-          maximum: 30
-          minimum: 0
-        trigger:
-          $ref: '#/components/schemas/StageTrigger'
-        actions:
-          type: array
-          items:
-            $ref: '#/components/schemas/StageAction'
-        features:
-          type: string
-          readOnly: true
-      required:
-      - actions
-      - environment
-      - name
-      - order
-      - trigger
+        trigger_type:
+          $ref: '#/components/schemas/TriggerTypeEnum'
+        trigger_body:
+          oneOf:
+          - {}
+          - type: 'null'
     ProjectChangeRequest:
       type: object
       description: Adds nested create feature
@@ -1744,66 +1562,218 @@ components:
       required:
       - segments
       - title
-    _SegmentCohort:
+    Conflict:
+      type: object
+      properties:
+        original_cr_id:
+          type: integer
+        segment_id:
+          type: integer
+        is_environment_default:
+          type: boolean
+        published_at:
+          type: string
+          format: date-time
+      required:
+      - is_environment_default
+      - original_cr_id
+      - published_at
+      - segment_id
+    FeatureExport:
       type: object
       properties:
         id:
           type: integer
           readOnly: true
-        environment:
-          type: integer
-        environment_api_key:
+        name:
           type: string
           readOnly: true
-        environment_name:
-          type: string
-          readOnly: true
-        source_type:
-          $ref: '#/components/schemas/SourceTypeEnum'
-        version:
+        environment_id:
           type: integer
-          maximum: 2147483647
-          minimum: 0
-        deletion_requested_at:
+          readOnly: true
+        status:
+          $ref: '#/components/schemas/Status6d4Enum'
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+    Segment:
+      type: object
+      description: Functionality for serializers that need to handle metadata
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+        created_at:
           type:
           - string
           - 'null'
           format: date-time
+          readOnly: true
+        updated_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          readOnly: true
+        name:
+          type: string
+          maxLength: 2000
+        description:
+          type:
+          - string
+          - 'null'
+        project:
+          type: integer
+          readOnly: true
+        feature:
+          type:
+          - integer
+          - 'null'
+        version_of:
+          type:
+          - integer
+          - 'null'
+        rules:
+          type: array
+          items:
+            $ref: '#/components/schemas/SegmentRule'
+        metadata:
+          type: array
+          items:
+            $ref: '#/components/schemas/Metadata'
+        membership_counts:
+          type: array
+          items:
+            $ref: '#/components/schemas/SegmentMembershipCount'
+          readOnly: true
+        managed_by:
+          readOnly: true
+          oneOf:
+          - $ref: '#/components/schemas/ManagedByEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+        cohort:
+          oneOf:
+          - $ref: '#/components/schemas/_SegmentCohort'
+          - type: 'null'
+          readOnly: true
+        has_overrides:
+          type: boolean
+          readOnly: true
+          description: Whether any feature override points at this segment, counting overrides that are live now or scheduled to go live.
       required:
-      - environment
-    CreateLaunchDarklyImportRequest:
+      - name
+      - rules
+    DetailedPermissions:
       type: object
       properties:
-        token:
+        permission_key:
           type: string
-        project_key:
-          type: string
+        is_directly_granted:
+          type: boolean
+        derived_from:
+          $ref: '#/components/schemas/DerivedFrom'
       required:
-      - project_key
-      - token
-    _CodeReferenceSubmit:
+      - derived_from
+      - is_directly_granted
+      - permission_key
+    PaginatedPaginatedQueryParamsList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/PaginatedQueryParams'
+    PaginatedQueryParams:
       type: object
       properties:
-        file_path:
-          type: string
-          maxLength: 4096
-        line_number:
+        page:
           type: integer
           minimum: 1
-        feature_name:
-          type: string
-          maxLength: 100
-      required:
-      - feature_name
-      - file_path
-      - line_number
-    WorkflowsError:
+          default: 1
+        page_size:
+          type: integer
+          maximum: 100
+          minimum: 1
+          default: 100
+    TriggerTypeEnum:
+      enum:
+      - ON_ENTER
+      - WAIT_FOR
+      type: string
+      description: '* `ON_ENTER` - Trigger when flag enters stage
+
+        * `WAIT_FOR` - Trigger after waiting for x amount of time'
+    PatchedTag:
       type: object
       properties:
-        message:
+        id:
+          type: integer
+          readOnly: true
+        label:
           type: string
-      required:
-      - message
+          maxLength: 100
+        color:
+          type: string
+          description: Hexadecimal value of the tag color
+          maxLength: 10
+        description:
+          type:
+          - string
+          - 'null'
+          maxLength: 512
+        project:
+          type: integer
+          readOnly: true
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+        is_permanent:
+          type: boolean
+          description: When applied to a feature, it means this feature should be excluded from stale flags logic.
+        is_system_tag:
+          type: boolean
+          readOnly: true
+          default: false
+          description: Indicates that a tag was created by the system, not the user.
+        type:
+          allOf:
+          - $ref: '#/components/schemas/TagTypeEnum'
+          readOnly: true
+          default: NONE
+          description: 'Field used to provide a consistent identifier for the FE and API to use for business logic.
+
+
+            * `NONE` - None
+
+            * `STALE` - Stale
+
+            * `GITHUB` - Github
+
+            * `UNHEALTHY` - Unhealthy
+
+            * `GITLAB` - Gitlab'
     Tag:
       type: object
       properties:
@@ -1856,7 +1826,133 @@ components:
             * `GITLAB` - Gitlab'
       required:
       - label
-    PaginatedQueryParams:
+    BlankEnum:
+      enum:
+      - ''
+    UserDetailedPermissions:
+      type: object
+      properties:
+        admin:
+          type: boolean
+        permissions:
+          type: array
+          items:
+            $ref: '#/components/schemas/DetailedPermissions'
+        is_directly_granted:
+          type: boolean
+        derived_from:
+          $ref: '#/components/schemas/DerivedFrom'
+      required:
+      - admin
+      - derived_from
+      - is_directly_granted
+      - permissions
+    PatchedProjectUpdate:
+      type: object
+      description: "Mixin to add read only status to fields in a given serializer based on the existence\nof a subscription and a black list of plan ids\n\nExample usage:\n\n    class MySerializer(ReadOnlyIfNotValidPlanMixin, ModelSerializer):\n        class Meta:\n            model = MyModel\n            fields = (\"my_field\",)\n\n        invalid_plans = (\"free\",)\n        field_names = (\"my_field\",)\n\n        def get_subscription(self):\n            return subscription"
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+        name:
+          type: string
+          maxLength: 2000
+        organisation:
+          type: integer
+          readOnly: true
+        hide_disabled_flags:
+          type: boolean
+          description: If true will exclude flags from SDK which are disabled
+        enable_dynamo_db:
+          type: boolean
+          readOnly: true
+          description: If true will sync environment data with dynamodb and allow access to dynamodb identities
+        migration_status:
+          type: string
+          readOnly: true
+          description: 'Edge migration status of the project; can be one of: MIGRATION_SCHEDULED, MIGRATION_COMPLETED, MIGRATION_IN_PROGRESS, MIGRATION_NOT_STARTED, NOT_APPLICABLE'
+        use_edge_identities:
+          type: boolean
+          readOnly: true
+        prevent_flag_defaults:
+          type: boolean
+          description: Prevent defaults from being set in all environments when creating a feature.
+        enable_realtime_updates:
+          type: boolean
+          readOnly: true
+          description: Enable this to trigger a realtime(sse) event whenever the value of a flag changes
+        only_allow_lower_case_feature_names:
+          type: boolean
+          description: Used by UI to validate feature names
+        feature_name_regex:
+          type:
+          - string
+          - 'null'
+          description: Used for validating feature names
+          maxLength: 255
+        show_edge_identity_overrides_for_feature:
+          type: boolean
+          readOnly: true
+        stale_flags_limit_days:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+          readOnly: true
+          description: Number of days without modification in any environment before a flag is considered stale.
+        edge_v2_migration_status:
+          allOf:
+          - $ref: '#/components/schemas/EdgeV2MigrationStatusEnum'
+          readOnly: true
+          description: '[Edge V2 migration] Project migration status. Set to `IN_PROGRESS` to trigger migration start.
+
+
+            * `NOT_STARTED` - Not Started
+
+            * `IN_PROGRESS` - In Progress
+
+            * `COMPLETE` - Complete
+
+            * `INCOMPLETE` - Incomplete (identity overrides skipped)'
+        minimum_change_request_approvals:
+          type:
+          - integer
+          - 'null'
+          maximum: 2147483647
+          minimum: -2147483648
+        enforce_feature_owners:
+          type: boolean
+          description: Require at least one user or group owner when creating a feature.
+    TagBasedPermission:
+      type: object
+      properties:
+        permissions:
+          type: array
+          items:
+            type: string
+        tags:
+          type: array
+          items:
+            type: integer
+      required:
+      - permissions
+      - tags
+    StageAction:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        action_type:
+          $ref: '#/components/schemas/ActionTypeEnum'
+        action_body:
+          oneOf:
+          - {}
+          - type: 'null'
+    SearchQueryParams:
       type: object
       properties:
         page:
@@ -1868,6 +1964,15 @@ components:
           maximum: 100
           minimum: 1
           default: 100
+        gitlab_project_id:
+          type: integer
+        search_text:
+          type: string
+        state:
+          type: string
+          default: opened
+      required:
+      - gitlab_project_id
     ProjectUpdate:
       type: object
       description: "Mixin to add read only status to fields in a given serializer based on the existence\nof a subscription and a black list of plan ids\n\nExample usage:\n\n    class MySerializer(ReadOnlyIfNotValidPlanMixin, ModelSerializer):\n        class Meta:\n            model = MyModel\n            fields = (\"my_field\",)\n\n        invalid_plans = (\"free\",)\n        field_names = (\"my_field\",)\n\n        def get_subscription(self):\n            return subscription"
@@ -1949,332 +2054,6 @@ components:
           description: Require at least one user or group owner when creating a feature.
       required:
       - name
-    VersionChangeSet:
-      type: object
-      description: Adds nested create feature
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        feature:
-          type: integer
-        live_from:
-          type:
-          - string
-          - 'null'
-          format: date-time
-        feature_states_to_update:
-          type: array
-          items: {}
-          description: List of feature states to update as part of this change.
-        feature_states_to_create:
-          type: array
-          items: {}
-          description: List of feature states to create as part of this change.
-        segment_ids_to_delete_overrides:
-          type: array
-          items:
-            type: integer
-          description: List of segment IDs for which the overrides should be deleted as part of this change.
-      required:
-      - feature
-      - feature_states_to_create
-      - feature_states_to_update
-      - segment_ids_to_delete_overrides
-    Segment:
-      type: object
-      description: Functionality for serializers that need to handle metadata
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        uuid:
-          type: string
-          format: uuid
-          readOnly: true
-        created_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          readOnly: true
-        updated_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          readOnly: true
-        name:
-          type: string
-          maxLength: 2000
-        description:
-          type:
-          - string
-          - 'null'
-        project:
-          type: integer
-          readOnly: true
-        feature:
-          type:
-          - integer
-          - 'null'
-        version_of:
-          type:
-          - integer
-          - 'null'
-        rules:
-          type: array
-          items:
-            $ref: '#/components/schemas/SegmentRule'
-        metadata:
-          type: array
-          items:
-            $ref: '#/components/schemas/Metadata'
-        membership_counts:
-          type: array
-          items:
-            $ref: '#/components/schemas/SegmentMembershipCount'
-          readOnly: true
-        managed_by:
-          readOnly: true
-          oneOf:
-          - $ref: '#/components/schemas/ManagedByEnum'
-          - $ref: '#/components/schemas/BlankEnum'
-        cohort:
-          oneOf:
-          - $ref: '#/components/schemas/_SegmentCohort'
-          - type: 'null'
-          readOnly: true
-        has_overrides:
-          type: boolean
-          readOnly: true
-          description: Whether any feature override points at this segment, counting overrides that are live now or scheduled to go live.
-      required:
-      - name
-      - rules
-    StageTrigger:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        trigger_type:
-          $ref: '#/components/schemas/TriggerTypeEnum'
-        trigger_body:
-          oneOf:
-          - {}
-          - type: 'null'
-    UserObjectPermissions:
-      type: object
-      properties:
-        permissions:
-          type: array
-          items:
-            type: string
-        admin:
-          type: boolean
-        tag_based_permissions:
-          type: array
-          items:
-            $ref: '#/components/schemas/TagBasedPermission'
-      required:
-      - admin
-      - permissions
-      - tag_based_permissions
-    ReleasePipelineDetail:
-      type: object
-      description: Adds nested create feature
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        name:
-          type: string
-          maxLength: 255
-        project:
-          type: integer
-          readOnly: true
-        description:
-          type:
-          - string
-          - 'null'
-        stages_count:
-          type: integer
-          readOnly: true
-        published_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-        published_by:
-          type:
-          - integer
-          - 'null'
-        features:
-          type: array
-          items:
-            type: integer
-          readOnly: true
-        stages:
-          type: array
-          items:
-            $ref: '#/components/schemas/PipelineStage'
-        completed_features:
-          type: string
-          readOnly: true
-      required:
-      - name
-      - stages
-    TagBasedPermission:
-      type: object
-      properties:
-        permissions:
-          type: array
-          items:
-            type: string
-        tags:
-          type: array
-          items:
-            type: integer
-      required:
-      - permissions
-      - tags
-    FeatureImport:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        environment_id:
-          type: integer
-          readOnly: true
-        strategy:
-          $ref: '#/components/schemas/FeatureImportStrategyEnum'
-        status:
-          $ref: '#/components/schemas/Status6d4Enum'
-        created_at:
-          type: string
-          format: date-time
-          readOnly: true
-      required:
-      - strategy
-    Metadata:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        model_field:
-          type: integer
-        field_value:
-          type: string
-          maxLength: 2000
-      required:
-      - field_value
-      - model_field
-    TagTypeEnum:
-      enum:
-      - NONE
-      - STALE
-      - GITHUB
-      - UNHEALTHY
-      - GITLAB
-      type: string
-      description: '* `NONE` - None
-
-        * `STALE` - Stale
-
-        * `GITHUB` - Github
-
-        * `UNHEALTHY` - Unhealthy
-
-        * `GITLAB` - Gitlab'
-    _NestedSegmentRule:
-      type: object
-      description: Adds nested create feature
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        type:
-          $ref: '#/components/schemas/SegmentRuleTypeEnum'
-        conditions:
-          type: array
-          items:
-            $ref: '#/components/schemas/Condition'
-        delete:
-          type: boolean
-          writeOnly: true
-      required:
-      - type
-    ChangeRequestApproval:
-      type: object
-      description: Adds nested create feature
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        user:
-          type: integer
-        approved_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          readOnly: true
-      required:
-      - user
-    VcsProviderEnum:
-      enum:
-      - github
-      type: string
-      description: '* `github` - GitHub'
-    PaginatedSearchQueryParamsList:
-      type: object
-      required:
-      - count
-      - results
-      properties:
-        count:
-          type: integer
-          example: 123
-        next:
-          type: string
-          nullable: true
-          format: uri
-          example: http://api.example.org/accounts/?page=4
-        previous:
-          type: string
-          nullable: true
-          format: uri
-          example: http://api.example.org/accounts/?page=2
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/SearchQueryParams'
-    PaginatedTagList:
-      type: object
-      required:
-      - count
-      - results
-      properties:
-        count:
-          type: integer
-          example: 123
-        next:
-          type: string
-          nullable: true
-          format: uri
-          example: http://api.example.org/accounts/?page=4
-        previous:
-          type: string
-          nullable: true
-          format: uri
-          example: http://api.example.org/accounts/?page=2
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/Tag'
     LaunchDarklyImportRequestStatus:
       type: object
       properties:
@@ -2317,9 +2096,6 @@ components:
         * `UPDATE_FEATURE_VALUE_FOR_SEGMENT` - Update Feature Value for a specific segment
 
         * `PHASED_ROLLOUT` - Create Phased Rollout'
-    BlankEnum:
-      enum:
-      - ''
     PaginatedFeatureImportList:
       type: object
       required:
@@ -2343,34 +2119,68 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/FeatureImport'
-    FeatureFlagCodeReferencesScan:
+    ConditionOperatorEnum:
+      enum:
+      - EQUAL
+      - GREATER_THAN
+      - LESS_THAN
+      - CONTAINS
+      - GREATER_THAN_INCLUSIVE
+      - LESS_THAN_INCLUSIVE
+      - NOT_CONTAINS
+      - NOT_EQUAL
+      - REGEX
+      - PERCENTAGE_SPLIT
+      - MODULO
+      - IS_SET
+      - IS_NOT_SET
+      - IN
+      type: string
+      description: '* `EQUAL` - Exactly Matches
+
+        * `GREATER_THAN` - Greater than
+
+        * `LESS_THAN` - Less than
+
+        * `CONTAINS` - Contains
+
+        * `GREATER_THAN_INCLUSIVE` - Greater than or equal to
+
+        * `LESS_THAN_INCLUSIVE` - Less than or equal to
+
+        * `NOT_CONTAINS` - Does not contain
+
+        * `NOT_EQUAL` - Does not match
+
+        * `REGEX` - Matches regex
+
+        * `PERCENTAGE_SPLIT` - Percentage split
+
+        * `MODULO` - Modulo Operation
+
+        * `IS_SET` - Is set
+
+        * `IS_NOT_SET` - Is not set
+
+        * `IN` - In'
+    WorkflowsError:
       type: object
       properties:
-        created_at:
+        message:
           type: string
-          format: date-time
-          readOnly: true
-        project:
-          type: integer
-          readOnly: true
-        repository_url:
-          type: string
-          format: uri
-        vcs_provider:
-          allOf:
-          - $ref: '#/components/schemas/VcsProviderEnum'
-          default: github
-        revision:
-          type: string
-          maxLength: 100
-        code_references:
-          type: array
-          items:
-            $ref: '#/components/schemas/_CodeReferenceSubmit'
       required:
-      - code_references
-      - repository_url
-      - revision
+      - message
+    SourceTypeEnum:
+      enum:
+      - csv
+      - amplitude
+      - mixpanel
+      type: string
+      description: '* `csv` - CSV
+
+        * `amplitude` - Amplitude
+
+        * `mixpanel` - Mixpanel'
     ProjectCreate:
       type: object
       description: "Mixin to add read only status to fields in a given serializer based on the existence\nof a subscription and a black list of plan ids\n\nExample usage:\n\n    class MySerializer(ReadOnlyIfNotValidPlanMixin, ModelSerializer):\n        class Meta:\n            model = MyModel\n            fields = (\"my_field\",)\n\n        invalid_plans = (\"free\",)\n        field_names = (\"my_field\",)\n\n        def get_subscription(self):\n            return subscription"
@@ -2452,108 +2262,113 @@ components:
       required:
       - name
       - organisation
-    PatchedProjectUpdate:
+    SegmentRuleTypeEnum:
+      enum:
+      - ALL
+      - ANY
+      - NONE
+      type: string
+      description: '* `ALL` - all
+
+        * `ANY` - any
+
+        * `NONE` - none'
+    UserObjectPermissions:
       type: object
-      description: "Mixin to add read only status to fields in a given serializer based on the existence\nof a subscription and a black list of plan ids\n\nExample usage:\n\n    class MySerializer(ReadOnlyIfNotValidPlanMixin, ModelSerializer):\n        class Meta:\n            model = MyModel\n            fields = (\"my_field\",)\n\n        invalid_plans = (\"free\",)\n        field_names = (\"my_field\",)\n\n        def get_subscription(self):\n            return subscription"
+      properties:
+        permissions:
+          type: array
+          items:
+            type: string
+        admin:
+          type: boolean
+        tag_based_permissions:
+          type: array
+          items:
+            $ref: '#/components/schemas/TagBasedPermission'
+      required:
+      - admin
+      - permissions
+      - tag_based_permissions
+    Status6d4Enum:
+      enum:
+      - SUCCESS
+      - PROCESSING
+      - FAILED
+      type: string
+      description: '* `SUCCESS` - Success
+
+        * `PROCESSING` - Processing
+
+        * `FAILED` - Failed'
+    TagTypeEnum:
+      enum:
+      - NONE
+      - STALE
+      - GITHUB
+      - UNHEALTHY
+      - GITLAB
+      type: string
+      description: '* `NONE` - None
+
+        * `STALE` - Stale
+
+        * `GITHUB` - Github
+
+        * `UNHEALTHY` - Unhealthy
+
+        * `GITLAB` - Gitlab'
+    FeatureImport:
+      type: object
       properties:
         id:
           type: integer
           readOnly: true
-        uuid:
-          type: string
-          format: uuid
+        environment_id:
+          type: integer
           readOnly: true
+        strategy:
+          $ref: '#/components/schemas/FeatureImportStrategyEnum'
+        status:
+          $ref: '#/components/schemas/Status6d4Enum'
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - strategy
+    PermissionRole:
+      type: object
+      properties:
+        id:
+          type: integer
         name:
           type: string
-          maxLength: 2000
-        organisation:
-          type: integer
-          readOnly: true
-        hide_disabled_flags:
-          type: boolean
-          description: If true will exclude flags from SDK which are disabled
-        enable_dynamo_db:
-          type: boolean
-          readOnly: true
-          description: If true will sync environment data with dynamodb and allow access to dynamodb identities
-        migration_status:
-          type: string
-          readOnly: true
-          description: 'Edge migration status of the project; can be one of: MIGRATION_SCHEDULED, MIGRATION_COMPLETED, MIGRATION_IN_PROGRESS, MIGRATION_NOT_STARTED, NOT_APPLICABLE'
-        use_edge_identities:
-          type: boolean
-          readOnly: true
-        prevent_flag_defaults:
-          type: boolean
-          description: Prevent defaults from being set in all environments when creating a feature.
-        enable_realtime_updates:
-          type: boolean
-          readOnly: true
-          description: Enable this to trigger a realtime(sse) event whenever the value of a flag changes
-        only_allow_lower_case_feature_names:
-          type: boolean
-          description: Used by UI to validate feature names
-        feature_name_regex:
-          type:
-          - string
-          - 'null'
-          description: Used for validating feature names
-          maxLength: 255
-        show_edge_identity_overrides_for_feature:
-          type: boolean
-          readOnly: true
-        stale_flags_limit_days:
-          type: integer
-          maximum: 2147483647
-          minimum: -2147483648
-          readOnly: true
-          description: Number of days without modification in any environment before a flag is considered stale.
-        edge_v2_migration_status:
-          allOf:
-          - $ref: '#/components/schemas/EdgeV2MigrationStatusEnum'
-          readOnly: true
-          description: '[Edge V2 migration] Project migration status. Set to `IN_PROGRESS` to trigger migration start.
-
-
-            * `NOT_STARTED` - Not Started
-
-            * `IN_PROGRESS` - In Progress
-
-            * `COMPLETE` - Complete
-
-            * `INCOMPLETE` - Incomplete (identity overrides skipped)'
-        minimum_change_request_approvals:
-          type:
-          - integer
-          - 'null'
-          maximum: 2147483647
-          minimum: -2147483648
-        enforce_feature_owners:
-          type: boolean
-          description: Require at least one user or group owner when creating a feature.
-    PaginatedFeatureExportList:
-      type: object
-      required:
-      - count
-      - results
-      properties:
-        count:
-          type: integer
-          example: 123
-        next:
-          type: string
-          nullable: true
-          format: uri
-          example: http://api.example.org/accounts/?page=4
-        previous:
-          type: string
-          nullable: true
-          format: uri
-          example: http://api.example.org/accounts/?page=2
-        results:
+        tags:
           type: array
           items:
-            $ref: '#/components/schemas/FeatureExport'
+            type: integer
+      required:
+      - id
+      - name
+    _NestedSegmentRule:
+      type: object
+      description: Adds nested create feature
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        type:
+          $ref: '#/components/schemas/SegmentRuleTypeEnum'
+        conditions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Condition'
+        delete:
+          type: boolean
+          writeOnly: true
+      required:
+      - type
     SegmentMembershipCount:
       type: object
       properties:
@@ -2567,28 +2382,88 @@ components:
           type: string
           format: date-time
           readOnly: true
-    SegmentRule:
+    PipelineStage:
       type: object
       description: Adds nested create feature
       properties:
         id:
           type: integer
           readOnly: true
-        type:
-          $ref: '#/components/schemas/SegmentRuleTypeEnum'
-        rules:
+        name:
+          type: string
+          maxLength: 255
+        pipeline:
+          type: integer
+          readOnly: true
+        environment:
+          type: integer
+        order:
+          type: integer
+          maximum: 30
+          minimum: 0
+        trigger:
+          $ref: '#/components/schemas/StageTrigger'
+        actions:
           type: array
           items:
-            $ref: '#/components/schemas/_NestedSegmentRule'
-        conditions:
-          type: array
-          items:
-            $ref: '#/components/schemas/Condition'
-        delete:
-          type: boolean
-          writeOnly: true
+            $ref: '#/components/schemas/StageAction'
+        features:
+          type: string
+          readOnly: true
       required:
-      - type
+      - actions
+      - environment
+      - name
+      - order
+      - trigger
+    EdgeV2MigrationStatusEnum:
+      enum:
+      - NOT_STARTED
+      - IN_PROGRESS
+      - COMPLETE
+      - INCOMPLETE
+      type: string
+      description: '* `NOT_STARTED` - Not Started
+
+        * `IN_PROGRESS` - In Progress
+
+        * `COMPLETE` - Complete
+
+        * `INCOMPLETE` - Incomplete (identity overrides skipped)'
+    VcsProviderEnum:
+      enum:
+      - github
+      type: string
+      description: '* `github` - GitHub'
+    ResultEnum:
+      enum:
+      - success
+      - failure
+      - incomplete
+      type: string
+      description: '* `success` - success
+
+        * `failure` - failure
+
+        * `incomplete` - incomplete'
+    ChangeRequestGroupAssignment:
+      type: object
+      description: Adds nested create feature
+      properties:
+        group:
+          type: integer
+      required:
+      - group
+    Group:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+      required:
+      - id
+      - name
     ProjectList:
       type: object
       properties:
@@ -2667,195 +2542,23 @@ components:
       required:
       - name
       - organisation
-    UserDetailedPermissions:
-      type: object
-      properties:
-        admin:
-          type: boolean
-        permissions:
-          type: array
-          items:
-            $ref: '#/components/schemas/DetailedPermissions'
-        is_directly_granted:
-          type: boolean
-        derived_from:
-          $ref: '#/components/schemas/DerivedFrom'
-      required:
-      - admin
-      - derived_from
-      - is_directly_granted
-      - permissions
-    ChangeRequestSegment:
-      type: object
-      description: Functionality for serializers that need to handle metadata
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        uuid:
-          type: string
-          format: uuid
-          readOnly: true
-        created_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          readOnly: true
-        updated_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          readOnly: true
-        name:
-          type: string
-          maxLength: 2000
-        description:
-          type:
-          - string
-          - 'null'
-        project:
-          type: integer
-          readOnly: true
-        feature:
-          type:
-          - integer
-          - 'null'
-        version_of:
-          type:
-          - integer
-          - 'null'
-        rules:
-          type: array
-          items:
-            $ref: '#/components/schemas/SegmentRule'
-        metadata:
-          type: array
-          items:
-            $ref: '#/components/schemas/Metadata'
-        membership_counts:
-          type: array
-          items:
-            $ref: '#/components/schemas/SegmentMembershipCount'
-          readOnly: true
-        managed_by:
-          readOnly: true
-          oneOf:
-          - $ref: '#/components/schemas/ManagedByEnum'
-          - $ref: '#/components/schemas/BlankEnum'
-        cohort:
-          oneOf:
-          - $ref: '#/components/schemas/_SegmentCohort'
-          - type: 'null'
-          readOnly: true
-        has_overrides:
-          type: boolean
-          readOnly: true
-          description: Whether any feature override points at this segment, counting overrides that are live now or scheduled to go live.
-        change_request:
-          type:
-          - integer
-          - 'null'
-      required:
-      - name
-      - rules
-    ChangeRequestGroupAssignment:
+    ChangeRequestApproval:
       type: object
       description: Adds nested create feature
       properties:
-        group:
-          type: integer
-      required:
-      - group
-    ResultEnum:
-      enum:
-      - success
-      - failure
-      - incomplete
-      type: string
-      description: '* `success` - success
-
-        * `failure` - failure
-
-        * `incomplete` - incomplete'
-    Condition:
-      type: object
-      properties:
         id:
           type: integer
           readOnly: true
-        operator:
-          $ref: '#/components/schemas/ConditionOperatorEnum'
-        property:
+        user:
+          type: integer
+        approved_at:
           type:
           - string
           - 'null'
-          maxLength: 1000
-        value:
-          type:
-          - string
-          - 'null'
-          maxLength: 1000
-        description:
-          type:
-          - string
-          - 'null'
-        delete:
-          type: boolean
-          writeOnly: true
+          format: date-time
+          readOnly: true
       required:
-      - operator
-    PatchedTag:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        label:
-          type: string
-          maxLength: 100
-        color:
-          type: string
-          description: Hexadecimal value of the tag color
-          maxLength: 10
-        description:
-          type:
-          - string
-          - 'null'
-          maxLength: 512
-        project:
-          type: integer
-          readOnly: true
-        uuid:
-          type: string
-          format: uuid
-          readOnly: true
-        is_permanent:
-          type: boolean
-          description: When applied to a feature, it means this feature should be excluded from stale flags logic.
-        is_system_tag:
-          type: boolean
-          readOnly: true
-          default: false
-          description: Indicates that a tag was created by the system, not the user.
-        type:
-          allOf:
-          - $ref: '#/components/schemas/TagTypeEnum'
-          readOnly: true
-          default: NONE
-          description: 'Field used to provide a consistent identifier for the FE and API to use for business logic.
-
-
-            * `NONE` - None
-
-            * `STALE` - Stale
-
-            * `GITHUB` - Github
-
-            * `UNHEALTHY` - Unhealthy
-
-            * `GITLAB` - Gitlab'
+      - user
     ProjectChangeRequestRetrieve:
       type: object
       properties:
@@ -2938,63 +2641,99 @@ components:
       - approvals
       - group_assignments
       - segments
-    DetailedPermissions:
+    Condition:
       type: object
       properties:
-        permission_key:
-          type: string
-        is_directly_granted:
+        id:
+          type: integer
+          readOnly: true
+        operator:
+          $ref: '#/components/schemas/ConditionOperatorEnum'
+        property:
+          type:
+          - string
+          - 'null'
+          maxLength: 1000
+        value:
+          type:
+          - string
+          - 'null'
+          maxLength: 1000
+        description:
+          type:
+          - string
+          - 'null'
+        delete:
           type: boolean
-        derived_from:
-          $ref: '#/components/schemas/DerivedFrom'
+          writeOnly: true
       required:
-      - derived_from
-      - is_directly_granted
-      - permission_key
-    ConditionOperatorEnum:
-      enum:
-      - EQUAL
-      - GREATER_THAN
-      - LESS_THAN
-      - CONTAINS
-      - GREATER_THAN_INCLUSIVE
-      - LESS_THAN_INCLUSIVE
-      - NOT_CONTAINS
-      - NOT_EQUAL
-      - REGEX
-      - PERCENTAGE_SPLIT
-      - MODULO
-      - IS_SET
-      - IS_NOT_SET
-      - IN
-      type: string
-      description: '* `EQUAL` - Exactly Matches
-
-        * `GREATER_THAN` - Greater than
-
-        * `LESS_THAN` - Less than
-
-        * `CONTAINS` - Contains
-
-        * `GREATER_THAN_INCLUSIVE` - Greater than or equal to
-
-        * `LESS_THAN_INCLUSIVE` - Less than or equal to
-
-        * `NOT_CONTAINS` - Does not contain
-
-        * `NOT_EQUAL` - Does not match
-
-        * `REGEX` - Matches regex
-
-        * `PERCENTAGE_SPLIT` - Percentage split
-
-        * `MODULO` - Modulo Operation
-
-        * `IS_SET` - Is set
-
-        * `IS_NOT_SET` - Is not set
-
-        * `IN` - In'
+      - operator
+    _SegmentCohort:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        environment:
+          type: integer
+        environment_api_key:
+          type: string
+          readOnly: true
+        environment_name:
+          type: string
+          readOnly: true
+        source_type:
+          $ref: '#/components/schemas/SourceTypeEnum'
+        version:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+        deletion_requested_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+      required:
+      - environment
+    _CodeReferenceSubmit:
+      type: object
+      properties:
+        file_path:
+          type: string
+          maxLength: 4096
+        line_number:
+          type: integer
+          minimum: 1
+        feature_name:
+          type: string
+          maxLength: 100
+      required:
+      - feature_name
+      - file_path
+      - line_number
+    PaginatedTagList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Tag'
     PatchedProjectChangeRequest:
       type: object
       description: Adds nested create feature
@@ -3053,29 +2792,68 @@ components:
           type:
           - integer
           - 'null'
-    StageAction:
+    CreateLaunchDarklyImportRequest:
+      type: object
+      properties:
+        token:
+          type: string
+        project_key:
+          type: string
+      required:
+      - project_key
+      - token
+    Metadata:
       type: object
       properties:
         id:
           type: integer
           readOnly: true
-        action_type:
-          $ref: '#/components/schemas/ActionTypeEnum'
-        action_body:
-          oneOf:
-          - {}
-          - type: 'null'
-    SegmentRuleTypeEnum:
-      enum:
-      - ALL
-      - ANY
-      - NONE
-      type: string
-      description: '* `ALL` - all
-
-        * `ANY` - any
-
-        * `NONE` - none'
+        model_field:
+          type: integer
+        field_value:
+          type: string
+          maxLength: 2000
+      required:
+      - field_value
+      - model_field
+    DerivedFrom:
+      type: object
+      properties:
+        groups:
+          type: array
+          items:
+            $ref: '#/components/schemas/Group'
+        roles:
+          type: array
+          items:
+            $ref: '#/components/schemas/PermissionRole'
+      required:
+      - groups
+      - roles
+    SegmentRule:
+      type: object
+      description: Adds nested create feature
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        type:
+          $ref: '#/components/schemas/SegmentRuleTypeEnum'
+        rules:
+          type: array
+          items:
+            $ref: '#/components/schemas/_NestedSegmentRule'
+        conditions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Condition'
+        delete:
+          type: boolean
+          writeOnly: true
+      required:
+      - type
+    NullEnum:
+      type: 'null'
     PermissionModel:
       type: object
       properties:
@@ -3090,6 +2868,50 @@ components:
       required:
       - description
       - key
+    ReleasePipelineDetail:
+      type: object
+      description: Adds nested create feature
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 255
+        project:
+          type: integer
+          readOnly: true
+        description:
+          type:
+          - string
+          - 'null'
+        stages_count:
+          type: integer
+          readOnly: true
+        published_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        published_by:
+          type:
+          - integer
+          - 'null'
+        features:
+          type: array
+          items:
+            type: integer
+          readOnly: true
+        stages:
+          type: array
+          items:
+            $ref: '#/components/schemas/PipelineStage'
+        completed_features:
+          type: string
+          readOnly: true
+      required:
+      - name
+      - stages
     ManagedByEnum:
       enum:
       - cohort
@@ -3097,51 +2919,7 @@ components:
       description: '* `` - Unmanaged
 
         * `cohort` - Cohort'
-    Conflict:
-      type: object
-      properties:
-        original_cr_id:
-          type: integer
-        segment_id:
-          type: integer
-        is_environment_default:
-          type: boolean
-        published_at:
-          type: string
-          format: date-time
-      required:
-      - is_environment_default
-      - original_cr_id
-      - published_at
-      - segment_id
-    FeatureImportStrategyEnum:
-      enum:
-      - SKIP
-      - OVERWRITE_DESTRUCTIVE
-      type: string
-      description: '* `SKIP` - Skip
-
-        * `OVERWRITE_DESTRUCTIVE` - Overwrite Destructive'
-    TriggerTypeEnum:
-      enum:
-      - ON_ENTER
-      - WAIT_FOR
-      type: string
-      description: '* `ON_ENTER` - Trigger when flag enters stage
-
-        * `WAIT_FOR` - Trigger after waiting for x amount of time'
-    Status6d4Enum:
-      enum:
-      - SUCCESS
-      - PROCESSING
-      - FAILED
-      type: string
-      description: '* `SUCCESS` - Success
-
-        * `PROCESSING` - Processing
-
-        * `FAILED` - Failed'
-    PaginatedPaginatedQueryParamsList:
+    PaginatedFeatureExportList:
       type: object
       required:
       - count
@@ -3163,15 +2941,237 @@ components:
         results:
           type: array
           items:
-            $ref: '#/components/schemas/PaginatedQueryParams'
-  parameters:
-    ProjectId:
-      name: project_id
-      in: path
-      description: The unique identifier for the project
-      required: true
-      schema:
-        type: integer
+            $ref: '#/components/schemas/FeatureExport'
+    VersionChangeSet:
+      type: object
+      description: Adds nested create feature
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        feature:
+          type: integer
+        live_from:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        feature_states_to_update:
+          type: array
+          items: {}
+          description: List of feature states to update as part of this change.
+        feature_states_to_create:
+          type: array
+          items: {}
+          description: List of feature states to create as part of this change.
+        segment_ids_to_delete_overrides:
+          type: array
+          items:
+            type: integer
+          description: List of segment IDs for which the overrides should be deleted as part of this change.
+      required:
+      - feature
+      - feature_states_to_create
+      - feature_states_to_update
+      - segment_ids_to_delete_overrides
+    PaginatedSearchQueryParamsList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/SearchQueryParams'
+    FeatureFlagCodeReferencesScan:
+      type: object
+      properties:
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        project:
+          type: integer
+          readOnly: true
+        repository_url:
+          type: string
+          format: uri
+        vcs_provider:
+          allOf:
+          - $ref: '#/components/schemas/VcsProviderEnum'
+          default: github
+        revision:
+          type: string
+          maxLength: 100
+        code_references:
+          type: array
+          items:
+            $ref: '#/components/schemas/_CodeReferenceSubmit'
+      required:
+      - code_references
+      - repository_url
+      - revision
+    LaunchDarklyImportRequest:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        created_by:
+          type: string
+          format: email
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        completed_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          readOnly: true
+        status:
+          $ref: '#/components/schemas/LaunchDarklyImportRequestStatus'
+        project:
+          type: integer
+          readOnly: true
+      required:
+      - status
+    FeatureImportStrategyEnum:
+      enum:
+      - SKIP
+      - OVERWRITE_DESTRUCTIVE
+      type: string
+      description: '* `SKIP` - Skip
+
+        * `OVERWRITE_DESTRUCTIVE` - Overwrite Destructive'
+    PatchedReleasePipeline:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 255
+        project:
+          type: integer
+          readOnly: true
+        description:
+          type:
+          - string
+          - 'null'
+        stages_count:
+          type: integer
+          readOnly: true
+        published_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        published_by:
+          type:
+          - integer
+          - 'null'
+        features:
+          type: array
+          items:
+            type: integer
+          readOnly: true
+    ChangeRequestSegment:
+      type: object
+      description: Functionality for serializers that need to handle metadata
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+        created_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          readOnly: true
+        updated_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          readOnly: true
+        name:
+          type: string
+          maxLength: 2000
+        description:
+          type:
+          - string
+          - 'null'
+        project:
+          type: integer
+          readOnly: true
+        feature:
+          type:
+          - integer
+          - 'null'
+        version_of:
+          type:
+          - integer
+          - 'null'
+        rules:
+          type: array
+          items:
+            $ref: '#/components/schemas/SegmentRule'
+        metadata:
+          type: array
+          items:
+            $ref: '#/components/schemas/Metadata'
+        membership_counts:
+          type: array
+          items:
+            $ref: '#/components/schemas/SegmentMembershipCount'
+          readOnly: true
+        managed_by:
+          readOnly: true
+          oneOf:
+          - $ref: '#/components/schemas/ManagedByEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+        cohort:
+          oneOf:
+          - $ref: '#/components/schemas/_SegmentCohort'
+          - type: 'null'
+          readOnly: true
+        has_overrides:
+          type: boolean
+          readOnly: true
+          description: Whether any feature override points at this segment, counting overrides that are live now or scheduled to go live.
+        change_request:
+          type:
+          - integer
+          - 'null'
+      required:
+      - name
+      - rules
   securitySchemes:
     apiKeyAuth:
       type: apiKey
