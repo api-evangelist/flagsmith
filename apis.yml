@@ -13,6 +13,9 @@ image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/flagsmith.
 url: https://raw.githubusercontent.com/api-evangelist/flagsmith/refs/heads/main/apis.yml
 created: '2026-05-03'
 modified: '2026-09-17'
+x-docs-platform: docusaurus
+x-docs-platform-confidence: medium
+x-docs-platform-checked: 2026-10-03
 tags:
 - Feature Flags
 - Remote Config
@@ -378,6 +381,8 @@ apis:
   humanURL: https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/flags-api/
   baseURL: https://edge.api.flagsmith.com
   tags:
+  - Experimental
+  tags_raw:
   - experimental
   properties:
   - type: OpenAPI
@@ -398,6 +403,8 @@ apis:
   humanURL: https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/flags-api/
   baseURL: https://edge.api.flagsmith.com
   tags:
+  - Integration
+  tags_raw:
   - Integrations
   properties:
   - type: OpenAPI
@@ -408,6 +415,8 @@ apis:
   humanURL: https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/flags-api/
   baseURL: https://edge.api.flagsmith.com
   tags:
+  - MCP
+  tags_raw:
   - mcp
   properties:
   - type: OpenAPI
@@ -428,6 +437,8 @@ apis:
   humanURL: https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/flags-api/
   baseURL: https://edge.api.flagsmith.com
   tags:
+  - O
+  tags_raw:
   - o
   properties:
   - type: OpenAPI
@@ -447,7 +458,8 @@ apis:
   description: Other endpoints.
   humanURL: https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/flags-api/
   baseURL: https://edge.api.flagsmith.com
-  tags:
+  tags: []
+  tags_raw:
   - Other
   properties:
   - type: OpenAPI
@@ -468,6 +480,8 @@ apis:
   humanURL: https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/flags-api/
   baseURL: https://edge.api.flagsmith.com
   tags:
+  - Processors
+  tags_raw:
   - processor
   properties:
   - type: OpenAPI
@@ -478,11 +492,16 @@ apis:
   humanURL: https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/flags-api/
   baseURL: https://edge.api.flagsmith.com
   tags:
+  - SDK
+  tags_raw:
   - sdk
   properties:
   - type: OpenAPI
     url: openapi/flagsmith-sdk-api-openapi.yml
 common:
+- type: CapabilityMap
+  url: capabilities/flagsmith-capability-edges.yml
+  name: Flagsmith Business Capability Map
 - type: Website
   url: https://flagsmith.com
 - type: AgenticAccess
