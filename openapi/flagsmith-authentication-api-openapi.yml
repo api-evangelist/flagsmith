@@ -1673,100 +1673,6 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    OrganisationSerializerBasic:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        name:
-          type: string
-          maxLength: 2000
-      required:
-      - name
-    PaginatedSamlConfigurationList:
-      type: object
-      required:
-      - count
-      - results
-      properties:
-        count:
-          type: integer
-          example: 123
-        next:
-          type: string
-          nullable: true
-          format: uri
-          example: http://api.example.org/accounts/?page=4
-        previous:
-          type: string
-          nullable: true
-          format: uri
-          example: http://api.example.org/accounts/?page=2
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/SamlConfiguration'
-    SamlUserToken:
-      type: object
-      properties:
-        key:
-          type: string
-          maxLength: 40
-      required:
-      - key
-    SignUpTypeEnum:
-      enum:
-      - NO_INVITE
-      - INVITE_EMAIL
-      - INVITE_LINK
-      type: string
-      description: '* `NO_INVITE` - No Invite
-
-        * `INVITE_EMAIL` - Invite Email
-
-        * `INVITE_LINK` - Invite Link'
-    Error:
-      type: object
-      properties:
-        message:
-          type: string
-      required:
-      - message
-    DjangoAttributeNameEnum:
-      enum:
-      - email
-      - first_name
-      - last_name
-      - groups
-      type: string
-      description: '* `email` - Email
-
-        * `first_name` - First / Given name
-
-        * `last_name` - Last name / Surname
-
-        * `groups` - Groups'
-    SamlRequestHeaders:
-      type: object
-      properties:
-        Location:
-          type: string
-      required:
-      - Location
-    BlankEnum:
-      enum:
-      - ''
-    Activation:
-      type: object
-      properties:
-        uid:
-          type: string
-        token:
-          type: string
-      required:
-      - token
-      - uid
     User:
       type: object
       properties:
@@ -1791,488 +1697,6 @@ components:
       required:
       - first_name
       - last_name
-    UserRole:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        user:
-          type: integer
-        role:
-          type: integer
-          readOnly: true
-      required:
-      - user
-    RoleEnum:
-      enum:
-      - ADMIN
-      - USER
-      type: string
-      description: '* `ADMIN` - Admin
-
-        * `USER` - User'
-    SendEmailReset:
-      type: object
-      properties:
-        email:
-          type: string
-          format: email
-      required:
-      - email
-    SamlLogin:
-      type: object
-      properties:
-        access_token:
-          type: string
-          description: Code or access token returned from the FE interaction with the third party login provider.
-      required:
-      - access_token
-    UserOrganisation:
-      type: object
-      properties:
-        role:
-          $ref: '#/components/schemas/RoleEnum'
-        organisation:
-          allOf:
-          - $ref: '#/components/schemas/OrganisationSerializerBasic'
-          readOnly: true
-        is_active:
-          type: boolean
-          readOnly: true
-          description: Inactive members can still log in, but cannot access the organisation, and do not count towards its seat limit.
-      required:
-      - role
-    UsernameResetConfirm:
-      type: object
-      properties:
-        new_email:
-          type: string
-          format: email
-          title: Email
-          maxLength: 254
-      required:
-      - new_email
-    SamlConfiguration:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        organisation:
-          type: integer
-        name:
-          type: string
-          description: An alphanumeric string to uniquely identify the saml configuration.
-          pattern: ^[A-Za-z0-9-]
-          maxLength: 100
-        frontend_url:
-          type: string
-          format: uri
-          description: Base URL to redirect to on a successful SAML authentication, e.g. https://app.flagsmith.com/
-          maxLength: 200
-        idp_metadata_xml:
-          type:
-          - string
-          - 'null'
-        allow_idp_initiated:
-          type: boolean
-          title: Allow IdP-initiated (unsolicited) login
-      required:
-      - frontend_url
-      - name
-      - organisation
-    GithubLogin:
-      type: object
-      properties:
-        access_token:
-          type: string
-          description: Code or access token returned from the FE interaction with the third party login provider.
-        sign_up_type:
-          writeOnly: true
-          description: 'Provide information about how the user signed up (i.e. via invite or not)
-
-
-            * `NO_INVITE` - No Invite
-
-            * `INVITE_EMAIL` - Invite Email
-
-            * `INVITE_LINK` - Invite Link'
-          oneOf:
-          - $ref: '#/components/schemas/SignUpTypeEnum'
-          - $ref: '#/components/schemas/BlankEnum'
-          - $ref: '#/components/schemas/NullEnum'
-        hubspot_cookie:
-          type:
-          - string
-          - 'null'
-        marketing_consent_given:
-          type:
-          - boolean
-          - 'null'
-        utm_data:
-          oneOf:
-          - $ref: '#/components/schemas/UTMData'
-          - type: 'null'
-      required:
-      - access_token
-    PaginatedUserList:
-      type: object
-      required:
-      - count
-      - results
-      properties:
-        count:
-          type: integer
-          example: 123
-        next:
-          type: string
-          nullable: true
-          format: uri
-          example: http://api.example.org/accounts/?page=4
-        previous:
-          type: string
-          nullable: true
-          format: uri
-          example: http://api.example.org/accounts/?page=2
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/User'
-    OAuthToken:
-      type: object
-      properties:
-        key:
-          type: string
-          readOnly: true
-        is_new_user:
-          type: boolean
-          readOnly: true
-    TokenCreate:
-      type: object
-      properties:
-        password:
-          type: string
-        email:
-          type: string
-    SamlAttributeMapping:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        saml_configuration:
-          type: integer
-        django_attribute_name:
-          $ref: '#/components/schemas/DjangoAttributeNameEnum'
-        idp_attribute_name:
-          type: string
-          maxLength: 200
-      required:
-      - django_attribute_name
-      - idp_attribute_name
-      - saml_configuration
-    SamlRequest:
-      type: object
-      properties:
-        headers:
-          $ref: '#/components/schemas/SamlRequestHeaders'
-        status:
-          type: integer
-        url:
-          type: string
-      required:
-      - headers
-      - status
-      - url
-    SetPasswordRetype:
-      type: object
-      properties:
-        new_password:
-          type: string
-        re_new_password:
-          type: string
-        current_password:
-          type: string
-      required:
-      - current_password
-      - new_password
-      - re_new_password
-    PaginatedRoleList:
-      type: object
-      required:
-      - count
-      - results
-      properties:
-        count:
-          type: integer
-          example: 123
-        next:
-          type: string
-          nullable: true
-          format: uri
-          example: http://api.example.org/accounts/?page=4
-        previous:
-          type: string
-          nullable: true
-          format: uri
-          example: http://api.example.org/accounts/?page=2
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/Role'
-    UTMData:
-      type: object
-      properties:
-        utm_source:
-          type: string
-        utm_medium:
-          type: string
-        utm_campaign:
-          type: string
-        utm_term:
-          type: string
-        utm_content:
-          type: string
-    PasswordResetConfirmRetype:
-      type: object
-      properties:
-        uid:
-          type: string
-        token:
-          type: string
-        new_password:
-          type: string
-        re_new_password:
-          type: string
-      required:
-      - new_password
-      - re_new_password
-      - token
-      - uid
-    PatchedSamlCurrentUser:
-      type: object
-      properties:
-        first_name:
-          type: string
-          maxLength: 150
-        last_name:
-          type: string
-          maxLength: 150
-        sign_up_type:
-          oneOf:
-          - $ref: '#/components/schemas/SignUpTypeEnum'
-          - $ref: '#/components/schemas/BlankEnum'
-          - $ref: '#/components/schemas/NullEnum'
-        id:
-          type: integer
-          readOnly: true
-        email:
-          type: string
-          format: email
-          readOnly: true
-        auth_type:
-          type: string
-          readOnly: true
-        is_superuser:
-          type: boolean
-          readOnly: true
-        date_joined:
-          type: string
-          format: date-time
-        uuid:
-          type: string
-          format: uuid
-          readOnly: true
-        pylon_email_signature:
-          type: string
-          readOnly: true
-    PatchedSamlAttributeMapping:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        saml_configuration:
-          type: integer
-        django_attribute_name:
-          $ref: '#/components/schemas/DjangoAttributeNameEnum'
-        idp_attribute_name:
-          type: string
-          maxLength: 200
-    UserList:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        email:
-          type: string
-          format: email
-          maxLength: 254
-        first_name:
-          type: string
-          maxLength: 150
-        last_name:
-          type: string
-          maxLength: 150
-        last_login:
-          type:
-          - string
-          - 'null'
-          format: date-time
-        uuid:
-          type: string
-          format: uuid
-          readOnly: true
-      required:
-      - email
-      - first_name
-      - last_name
-    PatchedUser:
-      type: object
-      properties:
-        first_name:
-          type: string
-          maxLength: 150
-        last_name:
-          type: string
-          maxLength: 150
-        sign_up_type:
-          oneOf:
-          - $ref: '#/components/schemas/SignUpTypeEnum'
-          - $ref: '#/components/schemas/BlankEnum'
-          - $ref: '#/components/schemas/NullEnum'
-        id:
-          type: integer
-          readOnly: true
-        email:
-          type: string
-          format: email
-          readOnly: true
-    PaginatedSamlAttributeMappingList:
-      type: object
-      required:
-      - count
-      - results
-      properties:
-        count:
-          type: integer
-          example: 123
-        next:
-          type: string
-          nullable: true
-          format: uri
-          example: http://api.example.org/accounts/?page=4
-        previous:
-          type: string
-          nullable: true
-          format: uri
-          example: http://api.example.org/accounts/?page=2
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/SamlAttributeMapping'
-    TokenExchangeRequest:
-      type: object
-      properties:
-        token:
-          type: string
-          description: An OIDC token issued by a trusted identity provider, e.g. a GitHub Actions job token.
-      required:
-      - token
-    Role:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        name:
-          type: string
-          maxLength: 255
-        description:
-          type:
-          - string
-          - 'null'
-        organisation:
-          type: integer
-          readOnly: true
-        tags:
-          type: array
-          items:
-            type: integer
-      required:
-      - name
-    NullEnum:
-      type: 'null'
-    GoogleLogin:
-      type: object
-      properties:
-        access_token:
-          type: string
-          description: Code or access token returned from the FE interaction with the third party login provider.
-        sign_up_type:
-          writeOnly: true
-          description: 'Provide information about how the user signed up (i.e. via invite or not)
-
-
-            * `NO_INVITE` - No Invite
-
-            * `INVITE_EMAIL` - Invite Email
-
-            * `INVITE_LINK` - Invite Link'
-          oneOf:
-          - $ref: '#/components/schemas/SignUpTypeEnum'
-          - $ref: '#/components/schemas/BlankEnum'
-          - $ref: '#/components/schemas/NullEnum'
-        hubspot_cookie:
-          type:
-          - string
-          - 'null'
-        marketing_consent_given:
-          type:
-          - boolean
-          - 'null'
-        utm_data:
-          oneOf:
-          - $ref: '#/components/schemas/UTMData'
-          - type: 'null'
-      required:
-      - access_token
-    PatchedUserRole:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        user:
-          type: integer
-        role:
-          type: integer
-          readOnly: true
-    PaginatedUserRoleList:
-      type: object
-      required:
-      - count
-      - results
-      properties:
-        count:
-          type: integer
-          example: 123
-        next:
-          type: string
-          nullable: true
-          format: uri
-          example: http://api.example.org/accounts/?page=4
-        previous:
-          type: string
-          nullable: true
-          format: uri
-          example: http://api.example.org/accounts/?page=2
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/UserRole'
     SetUsername:
       type: object
       properties:
@@ -2286,6 +1710,17 @@ components:
       required:
       - current_password
       - new_email
+    SignUpTypeEnum:
+      enum:
+      - NO_INVITE
+      - INVITE_EMAIL
+      - INVITE_LINK
+      type: string
+      description: '* `NO_INVITE` - No Invite
+
+        * `INVITE_EMAIL` - Invite Email
+
+        * `INVITE_LINK` - Invite Link'
     SamlCurrentUser:
       type: object
       properties:
@@ -2326,22 +1761,109 @@ components:
       required:
       - first_name
       - last_name
-    TokenExchangeResponse:
+    SamlRequest:
+      type: object
+      properties:
+        headers:
+          $ref: '#/components/schemas/SamlRequestHeaders'
+        status:
+          type: integer
+        url:
+          type: string
+      required:
+      - headers
+      - status
+      - url
+    OAuthToken:
+      type: object
+      properties:
+        key:
+          type: string
+          readOnly: true
+        is_new_user:
+          type: boolean
+          readOnly: true
+    SamlLogin:
       type: object
       properties:
         access_token:
           type: string
-          description: Short-lived access token for the Management API.
-        token_type:
-          type: string
-          description: Always "Bearer".
-        expires_in:
-          type: integer
-          description: Access token lifetime in seconds.
+          description: Code or access token returned from the FE interaction with the third party login provider.
       required:
       - access_token
-      - expires_in
-      - token_type
+    PatchedSamlCurrentUser:
+      type: object
+      properties:
+        first_name:
+          type: string
+          maxLength: 150
+        last_name:
+          type: string
+          maxLength: 150
+        sign_up_type:
+          oneOf:
+          - $ref: '#/components/schemas/SignUpTypeEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        id:
+          type: integer
+          readOnly: true
+        email:
+          type: string
+          format: email
+          readOnly: true
+        auth_type:
+          type: string
+          readOnly: true
+        is_superuser:
+          type: boolean
+          readOnly: true
+        date_joined:
+          type: string
+          format: date-time
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+        pylon_email_signature:
+          type: string
+          readOnly: true
+    UserRole:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        user:
+          type: integer
+        role:
+          type: integer
+          readOnly: true
+      required:
+      - user
+    SetPasswordRetype:
+      type: object
+      properties:
+        new_password:
+          type: string
+        re_new_password:
+          type: string
+        current_password:
+          type: string
+      required:
+      - current_password
+      - new_password
+      - re_new_password
+    Activation:
+      type: object
+      properties:
+        uid:
+          type: string
+        token:
+          type: string
+      required:
+      - token
+      - uid
     PatchedSamlConfiguration:
       type: object
       properties:
@@ -2367,6 +1889,210 @@ components:
         allow_idp_initiated:
           type: boolean
           title: Allow IdP-initiated (unsolicited) login
+    PaginatedRoleList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Role'
+    Role:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 255
+        description:
+          type:
+          - string
+          - 'null'
+        organisation:
+          type: integer
+          readOnly: true
+        tags:
+          type: array
+          items:
+            type: integer
+      required:
+      - name
+    PatchedUser:
+      type: object
+      properties:
+        first_name:
+          type: string
+          maxLength: 150
+        last_name:
+          type: string
+          maxLength: 150
+        sign_up_type:
+          oneOf:
+          - $ref: '#/components/schemas/SignUpTypeEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        id:
+          type: integer
+          readOnly: true
+        email:
+          type: string
+          format: email
+          readOnly: true
+    PaginatedSamlConfigurationList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/SamlConfiguration'
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+      - message
+    PaginatedSamlAttributeMappingList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/SamlAttributeMapping'
+    TokenCreate:
+      type: object
+      properties:
+        password:
+          type: string
+        email:
+          type: string
+    UTMData:
+      type: object
+      properties:
+        utm_source:
+          type: string
+        utm_medium:
+          type: string
+        utm_campaign:
+          type: string
+        utm_term:
+          type: string
+        utm_content:
+          type: string
+    SamlUserToken:
+      type: object
+      properties:
+        key:
+          type: string
+          maxLength: 40
+      required:
+      - key
+    PaginatedUserList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/User'
+    UsernameResetConfirm:
+      type: object
+      properties:
+        new_email:
+          type: string
+          format: email
+          title: Email
+          maxLength: 254
+      required:
+      - new_email
+    TokenExchangeRequest:
+      type: object
+      properties:
+        token:
+          type: string
+          description: An OIDC token issued by a trusted identity provider, e.g. a GitHub Actions job token.
+      required:
+      - token
+    TokenExchangeResponse:
+      type: object
+      properties:
+        access_token:
+          type: string
+          description: Short-lived access token for the Management API.
+        token_type:
+          type: string
+          description: Always "Bearer".
+        expires_in:
+          type: integer
+          description: Access token lifetime in seconds.
+      required:
+      - access_token
+      - expires_in
+      - token_type
     CustomUserCreate:
       type: object
       properties:
@@ -2412,6 +2138,280 @@ components:
       - first_name
       - last_name
       - password
+    SamlConfiguration:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        organisation:
+          type: integer
+        name:
+          type: string
+          description: An alphanumeric string to uniquely identify the saml configuration.
+          pattern: ^[A-Za-z0-9-]
+          maxLength: 100
+        frontend_url:
+          type: string
+          format: uri
+          description: Base URL to redirect to on a successful SAML authentication, e.g. https://app.flagsmith.com/
+          maxLength: 200
+        idp_metadata_xml:
+          type:
+          - string
+          - 'null'
+        allow_idp_initiated:
+          type: boolean
+          title: Allow IdP-initiated (unsolicited) login
+      required:
+      - frontend_url
+      - name
+      - organisation
+    PatchedUserRole:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        user:
+          type: integer
+        role:
+          type: integer
+          readOnly: true
+    PatchedSamlAttributeMapping:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        saml_configuration:
+          type: integer
+        django_attribute_name:
+          $ref: '#/components/schemas/DjangoAttributeNameEnum'
+        idp_attribute_name:
+          type: string
+          maxLength: 200
+    SamlAttributeMapping:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        saml_configuration:
+          type: integer
+        django_attribute_name:
+          $ref: '#/components/schemas/DjangoAttributeNameEnum'
+        idp_attribute_name:
+          type: string
+          maxLength: 200
+      required:
+      - django_attribute_name
+      - idp_attribute_name
+      - saml_configuration
+    SamlRequestHeaders:
+      type: object
+      properties:
+        Location:
+          type: string
+      required:
+      - Location
+    NullEnum:
+      type: 'null'
+    UserOrganisation:
+      type: object
+      properties:
+        role:
+          $ref: '#/components/schemas/RoleEnum'
+        organisation:
+          allOf:
+          - $ref: '#/components/schemas/OrganisationSerializerBasic'
+          readOnly: true
+        is_active:
+          type: boolean
+          readOnly: true
+          description: Inactive members can still log in, but cannot access the organisation, and do not count towards its seat limit.
+      required:
+      - role
+    BlankEnum:
+      enum:
+      - ''
+    RoleEnum:
+      enum:
+      - ADMIN
+      - USER
+      type: string
+      description: '* `ADMIN` - Admin
+
+        * `USER` - User'
+    DjangoAttributeNameEnum:
+      enum:
+      - email
+      - first_name
+      - last_name
+      - groups
+      type: string
+      description: '* `email` - Email
+
+        * `first_name` - First / Given name
+
+        * `last_name` - Last name / Surname
+
+        * `groups` - Groups'
+    GithubLogin:
+      type: object
+      properties:
+        access_token:
+          type: string
+          description: Code or access token returned from the FE interaction with the third party login provider.
+        sign_up_type:
+          writeOnly: true
+          description: 'Provide information about how the user signed up (i.e. via invite or not)
+
+
+            * `NO_INVITE` - No Invite
+
+            * `INVITE_EMAIL` - Invite Email
+
+            * `INVITE_LINK` - Invite Link'
+          oneOf:
+          - $ref: '#/components/schemas/SignUpTypeEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        hubspot_cookie:
+          type:
+          - string
+          - 'null'
+        marketing_consent_given:
+          type:
+          - boolean
+          - 'null'
+        utm_data:
+          oneOf:
+          - $ref: '#/components/schemas/UTMData'
+          - type: 'null'
+      required:
+      - access_token
+    SendEmailReset:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+      required:
+      - email
+    GoogleLogin:
+      type: object
+      properties:
+        access_token:
+          type: string
+          description: Code or access token returned from the FE interaction with the third party login provider.
+        sign_up_type:
+          writeOnly: true
+          description: 'Provide information about how the user signed up (i.e. via invite or not)
+
+
+            * `NO_INVITE` - No Invite
+
+            * `INVITE_EMAIL` - Invite Email
+
+            * `INVITE_LINK` - Invite Link'
+          oneOf:
+          - $ref: '#/components/schemas/SignUpTypeEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        hubspot_cookie:
+          type:
+          - string
+          - 'null'
+        marketing_consent_given:
+          type:
+          - boolean
+          - 'null'
+        utm_data:
+          oneOf:
+          - $ref: '#/components/schemas/UTMData'
+          - type: 'null'
+      required:
+      - access_token
+    UserList:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        email:
+          type: string
+          format: email
+          maxLength: 254
+        first_name:
+          type: string
+          maxLength: 150
+        last_name:
+          type: string
+          maxLength: 150
+        last_login:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+      required:
+      - email
+      - first_name
+      - last_name
+    OrganisationSerializerBasic:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 2000
+      required:
+      - name
+    PaginatedUserRoleList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserRole'
+    PasswordResetConfirmRetype:
+      type: object
+      properties:
+        uid:
+          type: string
+        token:
+          type: string
+        new_password:
+          type: string
+        re_new_password:
+          type: string
+      required:
+      - new_password
+      - re_new_password
+      - token
+      - uid
   securitySchemes:
     Cohort_Sync_Key:
       type: http

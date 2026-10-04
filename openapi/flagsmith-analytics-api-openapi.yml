@@ -84,30 +84,6 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    SDKAnalyticsFlagsSerializerDetail:
-      type: object
-      properties:
-        feature_name:
-          type: string
-        identity_identifier:
-          type: string
-        enabled_when_evaluated:
-          type: boolean
-        count:
-          type: integer
-      required:
-      - count
-      - enabled_when_evaluated
-      - feature_name
-    SDKAnalyticsFlags:
-      type: object
-      properties:
-        evaluations:
-          type: array
-          items:
-            $ref: '#/components/schemas/SDKAnalyticsFlagsSerializerDetail'
-      required:
-      - evaluations
     Telemetry:
       type: object
       properties:
@@ -136,6 +112,30 @@ components:
       - projects
       - segments
       - users
+    SDKAnalyticsFlagsSerializerDetail:
+      type: object
+      properties:
+        feature_name:
+          type: string
+        identity_identifier:
+          type: string
+        enabled_when_evaluated:
+          type: boolean
+        count:
+          type: integer
+      required:
+      - count
+      - enabled_when_evaluated
+      - feature_name
+    SDKAnalyticsFlags:
+      type: object
+      properties:
+        evaluations:
+          type: array
+          items:
+            $ref: '#/components/schemas/SDKAnalyticsFlagsSerializerDetail'
+      required:
+      - evaluations
   securitySchemes:
     Cohort_Sync_Key:
       type: http

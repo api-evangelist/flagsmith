@@ -1989,25 +1989,6 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    EnvironmentInput:
-      type: object
-      description: Input object for updating an environment
-      required:
-      - name
-      properties:
-        name:
-          type: string
-          description: The name of the environment
-        description:
-          type: string
-          nullable: true
-          description: A description of the environment
-        allow_client_traits:
-          type: boolean
-          description: Whether client-side SDKs can set traits
-        hide_sensitive_data:
-          type: boolean
-          description: Whether sensitive data is hidden in the dashboard
     Environment:
       type: object
       description: An environment in Flagsmith representing a deployment stage such as development, staging, or production.
@@ -2038,44 +2019,231 @@ components:
         hide_sensitive_data:
           type: boolean
           description: Whether sensitive data is hidden in the dashboard
-    DetailedPermissions:
+    EnvironmentInput:
       type: object
-      properties:
-        permission_key:
-          type: string
-        is_directly_granted:
-          type: boolean
-        derived_from:
-          $ref: '#/components/schemas/DerivedFrom'
+      description: Input object for updating an environment
       required:
-      - derived_from
-      - is_directly_granted
-      - permission_key
-    EnvironmentMetrics:
+      - name
+      properties:
+        name:
+          type: string
+          description: The name of the environment
+        description:
+          type: string
+          nullable: true
+          description: A description of the environment
+        allow_client_traits:
+          type: boolean
+          description: Whether client-side SDKs can set traits
+        hide_sensitive_data:
+          type: boolean
+          description: Whether sensitive data is hidden in the dashboard
+    V1EnvironmentDocumentResponseExperimentMetadata:
+      description: Represents the experiment a feature state is part of. Only present while the experiment is running.
+      properties:
+        id:
+          title: Id
+          type: integer
+        name:
+          title: Name
+          type: string
+        in_experiment:
+          title: In Experiment
+          type: boolean
+      required:
+      - id
+      - name
+      - in_experiment
+      title: ExperimentMetadata
+      type: object
+    Group:
       type: object
       properties:
+        id:
+          type: integer
+        name:
+          type: string
+      required:
+      - id
+      - name
+    AggregationEnum:
+      enum:
+      - count
+      - sum
+      - mean
+      - occurrence
+      type: string
+      description: '* `count` - Count
+
+        * `sum` - Sum
+
+        * `mean` - Mean
+
+        * `occurrence` - Occurrence (event happened at least once)'
+    Experiment:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        feature:
+          type: integer
+        name:
+          type: string
+          maxLength: 255
+        hypothesis:
+          type: string
+        status:
+          allOf:
+          - $ref: '#/components/schemas/Status7a8Enum'
+          readOnly: true
         metrics:
           type: array
           items:
-            $ref: '#/components/schemas/MetricItem'
+            $ref: '#/components/schemas/ExperimentMetricInline'
+          writeOnly: true
+        experiment_rollout:
+          allOf:
+          - $ref: '#/components/schemas/ExperimentRollout'
+          writeOnly: true
+        created_at:
+          type: string
+          format: date-time
           readOnly: true
-    Error:
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        started_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          readOnly: true
+        ended_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          readOnly: true
+      required:
+      - feature
+      - hypothesis
+      - name
+    V1EnvironmentDocumentResponseFeature:
+      description: Represents a Flagsmith feature, defined at project level.
+      properties:
+        id:
+          title: Id
+          type: integer
+        name:
+          title: Name
+          type: string
+        type:
+          allOf:
+          - $ref: '#/components/schemas/TypeD77Enum'
+          title: Type
+      required:
+      - id
+      - name
+      - type
+      title: Feature
+      type: object
+    V1EnvironmentDocumentResponse:
+      description: '`/api/v1/environment-documents/` response.
+
+
+        Powers Flagsmith SDK''s local evaluation mode.'
+      properties:
+        api_key:
+          title: Api Key
+          type: string
+        feature_states:
+          items:
+            $ref: '#/components/schemas/V1EnvironmentDocumentResponseFeatureState'
+          title: Feature States
+          type: array
+        identity_overrides:
+          items:
+            $ref: '#/components/schemas/V1EnvironmentDocumentResponseIdentityOverride'
+          title: Identity Overrides
+          type: array
+        name:
+          title: Name
+          type: string
+        project:
+          $ref: '#/components/schemas/V1EnvironmentDocumentResponseProject'
+      required:
+      - api_key
+      - feature_states
+      - identity_overrides
+      - name
+      - project
+      title: V1EnvironmentDocumentResponse
+      type: object
+    ExperimentVariantResult:
+      type: object
+      description: Serializer for individual variant results.
+      properties:
+        variant:
+          type: string
+        evaluations:
+          type: integer
+        conversions:
+          type: integer
+        conversion_rate:
+          type: number
+          format: double
+      required:
+      - conversion_rate
+      - conversions
+      - evaluations
+      - variant
+    WarehouseConnection:
       type: object
       properties:
-        message:
+        id:
+          type: integer
+          readOnly: true
+        warehouse_type:
+          $ref: '#/components/schemas/WarehouseTypeEnum'
+        status:
+          allOf:
+          - $ref: '#/components/schemas/WarehouseConnectionStatusEnum'
+          readOnly: true
+        status_detail:
+          type:
+          - string
+          - 'null'
+          readOnly: true
+        name:
           type: string
-      required:
-      - message
-    ExperimentMetricInline:
-      type: object
-      properties:
-        metric:
+          maxLength: 255
+        config:
+          oneOf:
+          - {}
+          - type: 'null'
+        credentials:
+          oneOf:
+          - {}
+          - type: 'null'
+          writeOnly: true
+        created_at:
           type: string
-        expected_direction:
-          $ref: '#/components/schemas/ExpectedDirectionEnum'
+          format: date-time
+          readOnly: true
+        total_events_received:
+          type:
+          - integer
+          - 'null'
+          readOnly: true
+        unique_events_count:
+          type:
+          - integer
+          - 'null'
+          readOnly: true
       required:
-      - expected_direction
-      - metric
+      - warehouse_type
     PatchedWarehouseConnection:
       type: object
       properties:
@@ -2119,200 +2287,93 @@ components:
           - integer
           - 'null'
           readOnly: true
-    FeatureValue:
+    CohortCsvSyncIgnoredRows:
       type: object
       properties:
-        type:
-          $ref: '#/components/schemas/FeatureValueTypeEnum'
-        value:
-          type: string
+        empty:
+          type: integer
+          minimum: 0
+        duplicates:
+          type: integer
+          minimum: 0
+        too_long:
+          type: integer
+          minimum: 0
       required:
-      - type
-      - value
-    V1EnvironmentDocumentResponse:
-      description: '`/api/v1/environment-documents/` response.
+      - duplicates
+      - empty
+      - too_long
+    WarehouseTypeEnum:
+      enum:
+      - flagsmith
+      - snowflake
+      - clickhouse
+      type: string
+      description: '* `flagsmith` - Flagsmith
 
+        * `snowflake` - Snowflake
 
-        Powers Flagsmith SDK''s local evaluation mode.'
-      properties:
-        api_key:
-          title: Api Key
-          type: string
-        feature_states:
-          items:
-            $ref: '#/components/schemas/V1EnvironmentDocumentResponseFeatureState'
-          title: Feature States
-          type: array
-        identity_overrides:
-          items:
-            $ref: '#/components/schemas/V1EnvironmentDocumentResponseIdentityOverride'
-          title: Identity Overrides
-          type: array
-        name:
-          title: Name
-          type: string
-        project:
-          $ref: '#/components/schemas/V1EnvironmentDocumentResponseProject'
-      required:
-      - api_key
-      - feature_states
-      - identity_overrides
-      - name
-      - project
-      title: V1EnvironmentDocumentResponse
+        * `clickhouse` - ClickHouse'
+    Metadata:
       type: object
-    UpdateEnvironment:
-      type: object
-      description: "Mixin to add read only status to fields in a given serializer based on the existence\nof a subscription and a black list of plan ids\n\nExample usage:\n\n    class MySerializer(ReadOnlyIfNotValidPlanMixin, ModelSerializer):\n        class Meta:\n            model = MyModel\n            fields = (\"my_field\",)\n\n        invalid_plans = (\"free\",)\n        field_names = (\"my_field\",)\n\n        def get_subscription(self):\n            return subscription"
       properties:
         id:
           type: integer
           readOnly: true
-        uuid:
-          type: string
-          format: uuid
-          readOnly: true
-        name:
+        model_field:
+          type: integer
+        field_value:
           type: string
           maxLength: 2000
-        api_key:
-          type: string
-          maxLength: 100
-        description:
-          type:
-          - string
-          - 'null'
-          maxLength: 20000
-        project:
-          type: integer
-          readOnly: true
-          description: Changing the project selected will remove all previous Feature States for the previously associated projects Features that are related to this Environment. New default Feature States will be created for the new selected projects Features for this Environment.
-        minimum_change_request_approvals:
-          type:
-          - integer
-          - 'null'
-          maximum: 2147483647
-          minimum: -2147483648
-          readOnly: true
-        allow_client_traits:
-          type: boolean
-          description: Allows clients using the client API key to set traits.
-        banner_text:
-          type:
-          - string
-          - 'null'
-          maxLength: 255
-        banner_colour:
-          type:
-          - string
-          - 'null'
-          description: hex code for the banner colour
-          maxLength: 7
-        hide_disabled_flags:
-          type:
-          - boolean
-          - 'null'
-          description: 'If true will exclude flags from SDK which are disabled. NOTE: If set, this will override the project `hide_disabled_flags`'
-        use_mv_v2_evaluation:
-          type: boolean
-          description: 'To avoid breaking the API, we return this field as well.
-
-
-            Warning: this will still mean that sending the `use_mv_v2_evaluation` field
-
-            (e.g. in a PUT request) will not behave as expected but, since this is a minor
-
-            issue, I think we can ignore.'
-          readOnly: true
-        use_identity_composite_key_for_hashing:
-          type: boolean
-          description: Enable this to have consistent multivariate and percentage split evaluations across all SDKs (in local and server side mode)
-        hide_sensitive_data:
-          type: boolean
-          description: 'If true, will hide sensitive data(e.g: traits, description etc) from the SDK endpoints'
-        use_v2_feature_versioning:
-          type: boolean
-          readOnly: true
-        use_identity_overrides_in_local_eval:
-          type: boolean
-          description: When enabled, identity overrides will be included in the environment document
-        is_creating:
-          type: boolean
-          readOnly: true
-          description: Attribute used to indicate when an environment is still being created (via clone for example)
-        metadata:
+      required:
+      - field_value
+      - model_field
+    GetEdgeIdentityOverrides:
+      type: object
+      properties:
+        results:
           type: array
           items:
-            $ref: '#/components/schemas/Metadata'
+            $ref: '#/components/schemas/GetEdgeIdentityOverridesResult'
       required:
-      - name
-    SourceTypeEnum:
-      enum:
-      - csv
-      - amplitude
-      - mixpanel
-      type: string
-      description: '* `csv` - CSV
-
-        * `amplitude` - Amplitude
-
-        * `mixpanel` - Mixpanel'
-    ExperimentMetric:
+      - results
+    EdgeMultivariateFeatureStateValue:
       type: object
       properties:
-        id:
+        multivariate_feature_option:
           type: integer
-          readOnly: true
-        metric:
-          type: integer
-        metric_name:
-          type: string
-          readOnly: true
-        aggregation:
-          type: string
-          readOnly: true
-        direction:
-          allOf:
-          - $ref: '#/components/schemas/DirectionEnum'
-          readOnly: true
-        expected_direction:
-          $ref: '#/components/schemas/ExpectedDirectionEnum'
-        created_at:
-          type: string
-          format: date-time
-          readOnly: true
+        percentage_allocation:
+          type: number
+          format: double
+          maximum: 100
+          minimum: 0
       required:
-      - expected_direction
-      - metric
-    V1EnvironmentDocumentResponseMultivariateFeatureOption:
-      description: Represents a single multivariate feature option in the Flagsmith UI.
-      properties:
-        value:
-          title: Value
-          type: string
-      required:
-      - value
-      title: MultivariateFeatureOption
-      type: object
-    FeatureValueTypeEnum:
+      - multivariate_feature_option
+      - percentage_allocation
+    DirectionEnum:
       enum:
-      - integer
-      - string
-      - boolean
+      - up
+      - down
+      - informational
       type: string
-      description: '* `integer` - integer
+      description: '* `up` - Higher is better
 
-        * `string` - string
+        * `down` - Lower is better
 
-        * `boolean` - boolean'
-    V1EnvironmentDocumentResponseFeatureStateMetadata:
-      additionalProperties: true
-      description: Additional, non-evaluation data about a feature state.
-      properties:
-        experiment:
-          $ref: '#/components/schemas/V1EnvironmentDocumentResponseExperimentMetadata'
-      title: FeatureStateMetadata
+        * `informational` - Informational only'
+    MultivariateValue:
       type: object
+      properties:
+        multivariate_feature_option:
+          type: integer
+        percentage_allocation:
+          type: number
+          format: double
+          maximum: 100
+          minimum: 0
+      required:
+      - multivariate_feature_option
+      - percentage_allocation
     CreateEnvironment:
       type: object
       description: "Mixin to add read only status to fields in a given serializer based on the existence\nof a subscription and a black list of plan ids\n\nExample usage:\n\n    class MySerializer(ReadOnlyIfNotValidPlanMixin, ModelSerializer):\n        class Meta:\n            model = MyModel\n            fields = (\"my_field\",)\n\n        invalid_plans = (\"free\",)\n        field_names = (\"my_field\",)\n\n        def get_subscription(self):\n            return subscription"
@@ -2398,6 +2459,308 @@ components:
       required:
       - name
       - project
+    PatchedExperimentMetric:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        metric:
+          type: integer
+        metric_name:
+          type: string
+          readOnly: true
+        aggregation:
+          type: string
+          readOnly: true
+        direction:
+          allOf:
+          - $ref: '#/components/schemas/DirectionEnum'
+          readOnly: true
+        expected_direction:
+          $ref: '#/components/schemas/ExpectedDirectionEnum'
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+    PermissionModel:
+      type: object
+      properties:
+        key:
+          type: string
+          maxLength: 100
+        description:
+          type: string
+        supports_tag:
+          type: boolean
+          readOnly: true
+      required:
+      - description
+      - key
+    ExperimentList:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        feature:
+          allOf:
+          - $ref: '#/components/schemas/ExperimentFeature'
+          readOnly: true
+        name:
+          type: string
+          maxLength: 255
+        hypothesis:
+          type: string
+        status:
+          allOf:
+          - $ref: '#/components/schemas/Status7a8Enum'
+          readOnly: true
+        metrics:
+          type: array
+          items:
+            $ref: '#/components/schemas/ExperimentMetric'
+          readOnly: true
+        experiment_rollout:
+          allOf:
+          - $ref: '#/components/schemas/ExperimentRollout'
+          writeOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        started_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          readOnly: true
+        ended_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          readOnly: true
+      required:
+      - hypothesis
+      - name
+    V1EnvironmentDocumentResponseProject:
+      description: Represents a Flagsmith project. For SDKs, this is mainly used to convey segment data.
+      properties:
+        segments:
+          items:
+            $ref: '#/components/schemas/V1EnvironmentDocumentResponseSegment'
+          title: Segments
+          type: array
+      required:
+      - segments
+      title: Project
+      type: object
+    V1EnvironmentDocumentResponseSegmentConditionOperatorEnum:
+      enum:
+      - EQUAL
+      - GREATER_THAN
+      - LESS_THAN
+      - LESS_THAN_INCLUSIVE
+      - CONTAINS
+      - GREATER_THAN_INCLUSIVE
+      - NOT_CONTAINS
+      - NOT_EQUAL
+      - REGEX
+      - PERCENTAGE_SPLIT
+      - MODULO
+      - IS_SET
+      - IS_NOT_SET
+      - IN
+      type: string
+    GetEdgeIdentityOverridesResult:
+      type: object
+      properties:
+        identifier:
+          type: string
+        identity_uuid:
+          type: string
+        feature_state:
+          $ref: '#/components/schemas/BaseEdgeIdentityFeatureState'
+      required:
+      - feature_state
+      - identifier
+      - identity_uuid
+    TraitKeys:
+      type: object
+      properties:
+        keys:
+          type: array
+          items:
+            type: string
+      required:
+      - keys
+    V1EnvironmentDocumentResponseSegmentRule:
+      description: Represents a rule within a segment used by Flagsmith engine. Root rules usually contain nested rules.
+      properties:
+        type:
+          allOf:
+          - $ref: '#/components/schemas/V1EnvironmentDocumentResponseSegmentRuleTypeEnum'
+          title: Type
+        rules:
+          items:
+            $ref: '#/components/schemas/V1EnvironmentDocumentResponseSegmentRule'
+          title: Rules
+          type: array
+        conditions:
+          items:
+            $ref: '#/components/schemas/V1EnvironmentDocumentResponseSegmentCondition'
+          title: Conditions
+          type: array
+      required:
+      - type
+      - rules
+      - conditions
+      title: SegmentRule
+      type: object
+    WarehouseEventNamesUnsupported:
+      type: object
+      properties:
+        detail:
+          type: string
+      required:
+      - detail
+    WarehouseConnectionStatusEnum:
+      enum:
+      - created
+      - pending_connection
+      - connected
+      - errored
+      type: string
+      description: '* `created` - Created
+
+        * `pending_connection` - Pending Connection
+
+        * `connected` - Connected
+
+        * `errored` - Errored'
+    V1EnvironmentDocumentResponseSegment:
+      description: Represents a Flagsmith segment. Carries rules and feature overrides.
+      properties:
+        id:
+          title: Id
+          type: integer
+        name:
+          title: Name
+          type: string
+        rules:
+          items:
+            $ref: '#/components/schemas/V1EnvironmentDocumentResponseSegmentRule'
+          title: Rules
+          type: array
+        feature_states:
+          items:
+            $ref: '#/components/schemas/V1EnvironmentDocumentResponseFeatureState'
+          title: Feature States
+          type: array
+      required:
+      - id
+      - name
+      - rules
+      title: Segment
+      type: object
+    UserDetailedPermissions:
+      type: object
+      properties:
+        admin:
+          type: boolean
+        permissions:
+          type: array
+          items:
+            $ref: '#/components/schemas/DetailedPermissions'
+        is_directly_granted:
+          type: boolean
+        derived_from:
+          $ref: '#/components/schemas/DerivedFrom'
+      required:
+      - admin
+      - derived_from
+      - is_directly_granted
+      - permissions
+    WarehouseEventNamesResult:
+      type: object
+      properties:
+        events:
+          type: array
+          items:
+            type: string
+        is_truncated:
+          type: boolean
+      required:
+      - events
+      - is_truncated
+    EnvironmentOnboardingStatus:
+      type: object
+      properties:
+        first_evaluated_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: When the environment's flags were first evaluated by an SDK.
+        first_evaluated_sdk_label:
+          type:
+          - string
+          - 'null'
+          description: SDK that first evaluated the environment's flags.
+          maxLength: 100
+    V1EnvironmentDocumentResponseSegmentRuleTypeEnum:
+      enum:
+      - ALL
+      - ANY
+      - NONE
+      type: string
+    PaginatedPermissionModelList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/PermissionModel'
+    V1EnvironmentDocumentResponseSegmentCondition:
+      description: Represents a condition within a segment rule used by Flagsmith engine.
+      properties:
+        operator:
+          allOf:
+          - $ref: '#/components/schemas/V1EnvironmentDocumentResponseSegmentConditionOperatorEnum'
+          title: Operator
+        value:
+          title: Value
+          type: string
+        property_:
+          title: Property
+          type: string
+      required:
+      - operator
+      - value
+      - property_
+      title: SegmentCondition
+      type: object
     DerivedFrom:
       type: object
       properties:
@@ -2412,18 +2775,400 @@ components:
       required:
       - groups
       - roles
-    V1EnvironmentDocumentResponseProject:
-      description: Represents a Flagsmith project. For SDKs, this is mainly used to convey segment data.
-      properties:
-        segments:
-          items:
-            $ref: '#/components/schemas/V1EnvironmentDocumentResponseSegment'
-          title: Segments
-          type: array
-      required:
-      - segments
-      title: Project
+    DetailedPermissions:
       type: object
+      properties:
+        permission_key:
+          type: string
+        is_directly_granted:
+          type: boolean
+        derived_from:
+          $ref: '#/components/schemas/DerivedFrom'
+      required:
+      - derived_from
+      - is_directly_granted
+      - permission_key
+    CloneEnvironment:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 2000
+        api_key:
+          type: string
+          readOnly: true
+        project:
+          type: integer
+          readOnly: true
+          description: Changing the project selected will remove all previous Feature States for the previously associated projects Features that are related to this Environment. New default Feature States will be created for the new selected projects Features for this Environment.
+        clone_feature_states_async:
+          type: boolean
+          writeOnly: true
+          default: false
+          description: 'If True, the environment will be created immediately, but the feature states will be created asynchronously. Environment will have `is_creating: true` until this process is completed.'
+      required:
+      - name
+    V1EnvironmentDocumentResponseMultivariateFeatureOption:
+      description: Represents a single multivariate feature option in the Flagsmith UI.
+      properties:
+        value:
+          title: Value
+          type: string
+      required:
+      - value
+      title: MultivariateFeatureOption
+      type: object
+    FeatureValue:
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/FeatureValueTypeEnum'
+        value:
+          type: string
+      required:
+      - type
+      - value
+    V1EnvironmentDocumentResponseFeatureStateMetadata:
+      additionalProperties: true
+      description: Additional, non-evaluation data about a feature state.
+      properties:
+        experiment:
+          $ref: '#/components/schemas/V1EnvironmentDocumentResponseExperimentMetadata'
+      title: FeatureStateMetadata
+      type: object
+    FeatureValueTypeEnum:
+      enum:
+      - integer
+      - string
+      - boolean
+      type: string
+      description: '* `integer` - integer
+
+        * `string` - string
+
+        * `boolean` - boolean'
+    V1EnvironmentDocumentResponseFeatureSegment:
+      description: Represents data specific to a segment feature override.
+      properties:
+        priority:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Priority
+      required:
+      - priority
+      title: FeatureSegment
+      type: object
+    WarehouseEventNamesUnavailable:
+      type: object
+      properties:
+        detail:
+          type: string
+      required:
+      - detail
+    PatchedExperimentRollout:
+      type: object
+      properties:
+        enabled:
+          type: boolean
+        rollout_percentage:
+          type: number
+          format: double
+          maximum: 100
+          minimum: 0
+        feature_state_value:
+          $ref: '#/components/schemas/FeatureValue'
+        multivariate_feature_state_values:
+          type: array
+          items:
+            $ref: '#/components/schemas/MultivariateValue'
+        audience:
+          $ref: '#/components/schemas/ExperimentAudience'
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+      - message
+    DeleteAllTraitKeys:
+      type: object
+      properties:
+        key:
+          type: string
+      required:
+      - key
+    ExperimentFeature:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          readOnly: true
+        type:
+          allOf:
+          - $ref: '#/components/schemas/TypeD77Enum'
+          readOnly: true
+        initial_value:
+          type:
+          - string
+          - 'null'
+          readOnly: true
+        multivariate_options:
+          type: array
+          items:
+            type: object
+            additionalProperties: {}
+          readOnly: true
+    CohortCsvSyncResult:
+      type: object
+      properties:
+        version:
+          type: integer
+          minimum: 0
+        added:
+          type: integer
+          minimum: 0
+        removed:
+          type: integer
+          minimum: 0
+        unchanged:
+          type: integer
+          minimum: 0
+        ignored:
+          $ref: '#/components/schemas/CohortCsvSyncIgnoredRows'
+      required:
+      - added
+      - ignored
+      - removed
+      - unchanged
+      - version
+    ExperimentAudience:
+      type: object
+      properties:
+        match:
+          allOf:
+          - $ref: '#/components/schemas/MatchEnum'
+          default: any
+        segment_ids:
+          type: array
+          items:
+            type: integer
+          maxItems: 1
+      required:
+      - segment_ids
+    Cohort:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+        name:
+          type: string
+          maxLength: 2000
+        description:
+          type:
+          - string
+          - 'null'
+        metadata:
+          type: array
+          items:
+            $ref: '#/components/schemas/Metadata'
+          writeOnly: true
+        segment:
+          type: integer
+          readOnly: true
+        source_type:
+          allOf:
+          - $ref: '#/components/schemas/SourceTypeEnum'
+          readOnly: true
+        version:
+          type: integer
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        last_synced_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          readOnly: true
+        membership_counts:
+          allOf:
+          - $ref: '#/components/schemas/CohortMembershipCounts'
+          readOnly: true
+      required:
+      - name
+    CohortSyncKey:
+      type: object
+      properties:
+        prefix:
+          type: string
+          readOnly: true
+        name:
+          type: string
+          maxLength: 50
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        key:
+          type:
+          - string
+          - 'null'
+          readOnly: true
+      required:
+      - name
+    PatchedCohort:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+        name:
+          type: string
+          maxLength: 2000
+        description:
+          type:
+          - string
+          - 'null'
+        metadata:
+          type: array
+          items:
+            $ref: '#/components/schemas/Metadata'
+          writeOnly: true
+        segment:
+          type: integer
+          readOnly: true
+        source_type:
+          allOf:
+          - $ref: '#/components/schemas/SourceTypeEnum'
+          readOnly: true
+        version:
+          type: integer
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        last_synced_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          readOnly: true
+        membership_counts:
+          allOf:
+          - $ref: '#/components/schemas/CohortMembershipCounts'
+          readOnly: true
+    TagBasedPermission:
+      type: object
+      properties:
+        permissions:
+          type: array
+          items:
+            type: string
+        tags:
+          type: array
+          items:
+            type: integer
+      required:
+      - permissions
+      - tags
+    EnvironmentMetrics:
+      type: object
+      properties:
+        metrics:
+          type: array
+          items:
+            $ref: '#/components/schemas/MetricItem'
+          readOnly: true
+    ExperimentStatistics:
+      type: object
+      description: Serializer for statistical analysis results.
+      properties:
+        p_value:
+          type: number
+          format: double
+        significant:
+          type: boolean
+        chance_to_win:
+          type: object
+          additionalProperties:
+            type: number
+            format: double
+        lift:
+          type: string
+        winner:
+          type:
+          - string
+          - 'null'
+        recommendation:
+          type: string
+        sample_size_warning:
+          type:
+          - string
+          - 'null'
+      required:
+      - chance_to_win
+      - lift
+      - p_value
+      - recommendation
+      - significant
+      - winner
+    Status7a8Enum:
+      enum:
+      - created
+      - running
+      - paused
+      - completed
+      type: string
+      description: '* `created` - Created
+
+        * `running` - Running
+
+        * `paused` - Paused
+
+        * `completed` - Completed'
+    ExperimentResults:
+      type: object
+      description: Serializer for the full experiment results response.
+      properties:
+        feature:
+          type: string
+        variants:
+          type: array
+          items:
+            $ref: '#/components/schemas/ExperimentVariantResult'
+        statistics:
+          $ref: '#/components/schemas/ExperimentStatistics'
+      required:
+      - feature
+      - statistics
+      - variants
+    MatchEnum:
+      enum:
+      - any
+      - all
+      type: string
+      description: '* `any` - Any
+
+        * `all` - All'
     V1EnvironmentDocumentResponseFeatureState:
       description: Used to define the state of a feature for an environment, segment overrides, and identity overrides.
       properties:
@@ -2463,822 +3208,31 @@ components:
       - multivariate_feature_state_values
       title: FeatureState
       type: object
-    Status7a8Enum:
+    SourceTypeEnum:
       enum:
-      - created
-      - running
-      - paused
-      - completed
+      - csv
+      - amplitude
+      - mixpanel
       type: string
-      description: '* `created` - Created
+      description: '* `csv` - CSV
 
-        * `running` - Running
+        * `amplitude` - Amplitude
 
-        * `paused` - Paused
-
-        * `completed` - Completed'
-    CohortMembershipCounts:
-      type: object
-      properties:
-        applied:
-          type: integer
-          minimum: 0
-        pending_add:
-          type: integer
-          minimum: 0
-        pending_remove:
-          type: integer
-          minimum: 0
-      required:
-      - applied
-      - pending_add
-      - pending_remove
-    GetEdgeIdentityOverridesResult:
-      type: object
-      properties:
-        identifier:
-          type: string
-        identity_uuid:
-          type: string
-        feature_state:
-          $ref: '#/components/schemas/BaseEdgeIdentityFeatureState'
-      required:
-      - feature_state
-      - identifier
-      - identity_uuid
-    PatchedExperimentMetric:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        metric:
-          type: integer
-        metric_name:
-          type: string
-          readOnly: true
-        aggregation:
-          type: string
-          readOnly: true
-        direction:
-          allOf:
-          - $ref: '#/components/schemas/DirectionEnum'
-          readOnly: true
-        expected_direction:
-          $ref: '#/components/schemas/ExpectedDirectionEnum'
-        created_at:
-          type: string
-          format: date-time
-          readOnly: true
-    ExpectedDirectionEnum:
-      enum:
-      - increase
-      - decrease
-      - not_increase
-      - not_decrease
-      type: string
-      description: '* `increase` - Increase
-
-        * `decrease` - Decrease
-
-        * `not_increase` - Should not increase
-
-        * `not_decrease` - Should not decrease'
-    DirectionEnum:
-      enum:
-      - up
-      - down
-      - informational
-      type: string
-      description: '* `up` - Higher is better
-
-        * `down` - Lower is better
-
-        * `informational` - Informational only'
-    ExperimentFeature:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        name:
-          type: string
-          readOnly: true
-        type:
-          allOf:
-          - $ref: '#/components/schemas/TypeD77Enum'
-          readOnly: true
-        initial_value:
-          type:
-          - string
-          - 'null'
-          readOnly: true
-        multivariate_options:
-          type: array
-          items:
-            type: object
-            additionalProperties: {}
-          readOnly: true
-    Metric:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        name:
-          type: string
-          maxLength: 255
-        description:
-          type: string
-        aggregation:
-          $ref: '#/components/schemas/AggregationEnum'
-        direction:
-          $ref: '#/components/schemas/DirectionEnum'
-        definition: {}
-        experiments:
-          type: array
-          items:
-            type: object
-            description: 'A lightweight view of an experiment using a metric, as returned in the
-
-              metric''s ``experiments`` field.'
-            properties:
-              id:
-                type: integer
-              name:
-                type: string
-              status:
-                type: string
-            required:
-            - id
-            - name
-            - status
-          readOnly: true
-        created_at:
-          type: string
-          format: date-time
-          readOnly: true
-        updated_at:
-          type: string
-          format: date-time
-          readOnly: true
-      required:
-      - definition
-      - name
-    V1EnvironmentDocumentResponseFeatureSegment:
-      description: Represents data specific to a segment feature override.
-      properties:
-        priority:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Priority
-      required:
-      - priority
-      title: FeatureSegment
-      type: object
-    UserDetailedPermissions:
-      type: object
-      properties:
-        admin:
-          type: boolean
-        permissions:
-          type: array
-          items:
-            $ref: '#/components/schemas/DetailedPermissions'
-        is_directly_granted:
-          type: boolean
-        derived_from:
-          $ref: '#/components/schemas/DerivedFrom'
-      required:
-      - admin
-      - derived_from
-      - is_directly_granted
-      - permissions
-    WarehouseConnectionStatusEnum:
-      enum:
-      - created
-      - pending_connection
-      - connected
-      - errored
-      type: string
-      description: '* `created` - Created
-
-        * `pending_connection` - Pending Connection
-
-        * `connected` - Connected
-
-        * `errored` - Errored'
-    Experiment:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        feature:
-          type: integer
-        name:
-          type: string
-          maxLength: 255
-        hypothesis:
-          type: string
-        status:
-          allOf:
-          - $ref: '#/components/schemas/Status7a8Enum'
-          readOnly: true
-        metrics:
-          type: array
-          items:
-            $ref: '#/components/schemas/ExperimentMetricInline'
-          writeOnly: true
-        experiment_rollout:
-          allOf:
-          - $ref: '#/components/schemas/ExperimentRollout'
-          writeOnly: true
-        created_at:
-          type: string
-          format: date-time
-          readOnly: true
-        updated_at:
-          type: string
-          format: date-time
-          readOnly: true
-        started_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          readOnly: true
-        ended_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          readOnly: true
-      required:
-      - feature
-      - hypothesis
-      - name
-    V1EnvironmentDocumentResponseSegmentRuleTypeEnum:
-      enum:
-      - ALL
-      - ANY
-      - NONE
-      type: string
-    PatchedExperimentRollout:
-      type: object
-      properties:
-        enabled:
-          type: boolean
-        rollout_percentage:
-          type: number
-          format: double
-          maximum: 100
-          minimum: 0
-        feature_state_value:
-          $ref: '#/components/schemas/FeatureValue'
-        multivariate_feature_state_values:
-          type: array
-          items:
-            $ref: '#/components/schemas/MultivariateValue'
-        audience:
-          $ref: '#/components/schemas/ExperimentAudience'
-    BaseEdgeIdentityFeatureState:
-      type: object
-      properties:
-        feature_state_value:
-          type:
-          - string
-          - integer
-          - boolean
-          - 'null'
-          description: Feature state value (string, integer, or boolean)
-        feature:
-          type: integer
-          description: Feature ID
-        multivariate_feature_state_values:
-          type: array
-          items:
-            $ref: '#/components/schemas/EdgeMultivariateFeatureStateValue'
-        enabled:
-          type: boolean
-          default: false
-        featurestate_uuid:
-          type: string
-          readOnly: true
-      required:
-      - feature
-    Group:
+        * `mixpanel` - Mixpanel'
+    PermissionRole:
       type: object
       properties:
         id:
           type: integer
         name:
           type: string
+        tags:
+          type: array
+          items:
+            type: integer
       required:
       - id
       - name
-    MultivariateValue:
-      type: object
-      properties:
-        multivariate_feature_option:
-          type: integer
-        percentage_allocation:
-          type: number
-          format: double
-          maximum: 100
-          minimum: 0
-      required:
-      - multivariate_feature_option
-      - percentage_allocation
-    ExperimentVariantResult:
-      type: object
-      description: Serializer for individual variant results.
-      properties:
-        variant:
-          type: string
-        evaluations:
-          type: integer
-        conversions:
-          type: integer
-        conversion_rate:
-          type: number
-          format: double
-      required:
-      - conversion_rate
-      - conversions
-      - evaluations
-      - variant
-    WarehouseEventNamesResult:
-      type: object
-      properties:
-        events:
-          type: array
-          items:
-            type: string
-        is_truncated:
-          type: boolean
-      required:
-      - events
-      - is_truncated
-    MatchEnum:
-      enum:
-      - any
-      - all
-      type: string
-      description: '* `any` - Any
-
-        * `all` - All'
-    CohortCsvSyncIgnoredRows:
-      type: object
-      properties:
-        empty:
-          type: integer
-          minimum: 0
-        duplicates:
-          type: integer
-          minimum: 0
-        too_long:
-          type: integer
-          minimum: 0
-      required:
-      - duplicates
-      - empty
-      - too_long
-    V1EnvironmentDocumentResponseFeature:
-      description: Represents a Flagsmith feature, defined at project level.
-      properties:
-        id:
-          title: Id
-          type: integer
-        name:
-          title: Name
-          type: string
-        type:
-          allOf:
-          - $ref: '#/components/schemas/TypeD77Enum'
-          title: Type
-      required:
-      - id
-      - name
-      - type
-      title: Feature
-      type: object
-    ExperimentStatistics:
-      type: object
-      description: Serializer for statistical analysis results.
-      properties:
-        p_value:
-          type: number
-          format: double
-        significant:
-          type: boolean
-        chance_to_win:
-          type: object
-          additionalProperties:
-            type: number
-            format: double
-        lift:
-          type: string
-        winner:
-          type:
-          - string
-          - 'null'
-        recommendation:
-          type: string
-        sample_size_warning:
-          type:
-          - string
-          - 'null'
-      required:
-      - chance_to_win
-      - lift
-      - p_value
-      - recommendation
-      - significant
-      - winner
-    EnvironmentSerializerWithMetadata:
-      type: object
-      description: Functionality for serializers that need to handle metadata
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        uuid:
-          type: string
-          format: uuid
-          readOnly: true
-        name:
-          type: string
-          maxLength: 2000
-        api_key:
-          type: string
-          maxLength: 100
-        description:
-          type:
-          - string
-          - 'null'
-          maxLength: 20000
-        project:
-          type: integer
-          description: Changing the project selected will remove all previous Feature States for the previously associated projects Features that are related to this Environment. New default Feature States will be created for the new selected projects Features for this Environment.
-        minimum_change_request_approvals:
-          type:
-          - integer
-          - 'null'
-          maximum: 2147483647
-          minimum: -2147483648
-        allow_client_traits:
-          type: boolean
-          description: Allows clients using the client API key to set traits.
-        banner_text:
-          type:
-          - string
-          - 'null'
-          maxLength: 255
-        banner_colour:
-          type:
-          - string
-          - 'null'
-          description: hex code for the banner colour
-          maxLength: 7
-        hide_disabled_flags:
-          type:
-          - boolean
-          - 'null'
-          description: 'If true will exclude flags from SDK which are disabled. NOTE: If set, this will override the project `hide_disabled_flags`'
-        use_mv_v2_evaluation:
-          type: boolean
-          description: 'To avoid breaking the API, we return this field as well.
-
-
-            Warning: this will still mean that sending the `use_mv_v2_evaluation` field
-
-            (e.g. in a PUT request) will not behave as expected but, since this is a minor
-
-            issue, I think we can ignore.'
-          readOnly: true
-        use_identity_composite_key_for_hashing:
-          type: boolean
-          description: Enable this to have consistent multivariate and percentage split evaluations across all SDKs (in local and server side mode)
-        hide_sensitive_data:
-          type: boolean
-          description: 'If true, will hide sensitive data(e.g: traits, description etc) from the SDK endpoints'
-        use_v2_feature_versioning:
-          type: boolean
-          readOnly: true
-        use_identity_overrides_in_local_eval:
-          type: boolean
-          description: When enabled, identity overrides will be included in the environment document
-        is_creating:
-          type: boolean
-          readOnly: true
-          description: Attribute used to indicate when an environment is still being created (via clone for example)
-        metadata:
-          type: array
-          items:
-            $ref: '#/components/schemas/Metadata'
-      required:
-      - name
-      - project
-    TypeD77Enum:
-      enum:
-      - STANDARD
-      - MULTIVARIATE
-      type: string
-      description: '* `STANDARD` - STANDARD
-
-        * `MULTIVARIATE` - MULTIVARIATE'
-    EnvironmentAPIKey:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        key:
-          type: string
-          readOnly: true
-        active:
-          type: boolean
-        created_at:
-          type: string
-          format: date-time
-          readOnly: true
-        name:
-          type: string
-          maxLength: 100
-        expires_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-      required:
-      - name
-    WarehouseConnection:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        warehouse_type:
-          $ref: '#/components/schemas/WarehouseTypeEnum'
-        status:
-          allOf:
-          - $ref: '#/components/schemas/WarehouseConnectionStatusEnum'
-          readOnly: true
-        status_detail:
-          type:
-          - string
-          - 'null'
-          readOnly: true
-        name:
-          type: string
-          maxLength: 255
-        config:
-          oneOf:
-          - {}
-          - type: 'null'
-        credentials:
-          oneOf:
-          - {}
-          - type: 'null'
-          writeOnly: true
-        created_at:
-          type: string
-          format: date-time
-          readOnly: true
-        total_events_received:
-          type:
-          - integer
-          - 'null'
-          readOnly: true
-        unique_events_count:
-          type:
-          - integer
-          - 'null'
-          readOnly: true
-      required:
-      - warehouse_type
-    CohortSyncKey:
-      type: object
-      properties:
-        prefix:
-          type: string
-          readOnly: true
-        name:
-          type: string
-          maxLength: 50
-        created:
-          type: string
-          format: date-time
-          readOnly: true
-        key:
-          type:
-          - string
-          - 'null'
-          readOnly: true
-      required:
-      - name
-    V1EnvironmentDocumentResponseSegmentRule:
-      description: Represents a rule within a segment used by Flagsmith engine. Root rules usually contain nested rules.
-      properties:
-        type:
-          allOf:
-          - $ref: '#/components/schemas/V1EnvironmentDocumentResponseSegmentRuleTypeEnum'
-          title: Type
-        rules:
-          items:
-            $ref: '#/components/schemas/V1EnvironmentDocumentResponseSegmentRule'
-          title: Rules
-          type: array
-        conditions:
-          items:
-            $ref: '#/components/schemas/V1EnvironmentDocumentResponseSegmentCondition'
-          title: Conditions
-          type: array
-      required:
-      - type
-      - rules
-      - conditions
-      title: SegmentRule
-      type: object
-    Metadata:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        model_field:
-          type: integer
-        field_value:
-          type: string
-          maxLength: 2000
-      required:
-      - field_value
-      - model_field
-    V1EnvironmentDocumentResponseSegmentConditionOperatorEnum:
-      enum:
-      - EQUAL
-      - GREATER_THAN
-      - LESS_THAN
-      - LESS_THAN_INCLUSIVE
-      - CONTAINS
-      - GREATER_THAN_INCLUSIVE
-      - NOT_CONTAINS
-      - NOT_EQUAL
-      - REGEX
-      - PERCENTAGE_SPLIT
-      - MODULO
-      - IS_SET
-      - IS_NOT_SET
-      - IN
-      type: string
-    PatchedExperiment:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        feature:
-          type: integer
-        name:
-          type: string
-          maxLength: 255
-        hypothesis:
-          type: string
-        status:
-          allOf:
-          - $ref: '#/components/schemas/Status7a8Enum'
-          readOnly: true
-        metrics:
-          type: array
-          items:
-            $ref: '#/components/schemas/ExperimentMetricInline'
-          writeOnly: true
-        experiment_rollout:
-          allOf:
-          - $ref: '#/components/schemas/ExperimentRollout'
-          writeOnly: true
-        created_at:
-          type: string
-          format: date-time
-          readOnly: true
-        updated_at:
-          type: string
-          format: date-time
-          readOnly: true
-        started_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          readOnly: true
-        ended_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          readOnly: true
-    WarehouseTypeEnum:
-      enum:
-      - flagsmith
-      - snowflake
-      - clickhouse
-      type: string
-      description: '* `flagsmith` - Flagsmith
-
-        * `snowflake` - Snowflake
-
-        * `clickhouse` - ClickHouse'
-    PermissionModel:
-      type: object
-      properties:
-        key:
-          type: string
-          maxLength: 100
-        description:
-          type: string
-        supports_tag:
-          type: boolean
-          readOnly: true
-      required:
-      - description
-      - key
-    PatchedMetric:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        name:
-          type: string
-          maxLength: 255
-        description:
-          type: string
-        aggregation:
-          $ref: '#/components/schemas/AggregationEnum'
-        direction:
-          $ref: '#/components/schemas/DirectionEnum'
-        definition: {}
-        experiments:
-          type: array
-          items:
-            type: object
-            description: 'A lightweight view of an experiment using a metric, as returned in the
-
-              metric''s ``experiments`` field.'
-            properties:
-              id:
-                type: integer
-              name:
-                type: string
-              status:
-                type: string
-            required:
-            - id
-            - name
-            - status
-          readOnly: true
-        created_at:
-          type: string
-          format: date-time
-          readOnly: true
-        updated_at:
-          type: string
-          format: date-time
-          readOnly: true
-    PaginatedPermissionModelList:
-      type: object
-      required:
-      - count
-      - results
-      properties:
-        count:
-          type: integer
-          example: 123
-        next:
-          type: string
-          nullable: true
-          format: uri
-          example: http://api.example.org/accounts/?page=4
-        previous:
-          type: string
-          nullable: true
-          format: uri
-          example: http://api.example.org/accounts/?page=2
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/PermissionModel'
-    TraitKeys:
-      type: object
-      properties:
-        keys:
-          type: array
-          items:
-            type: string
-      required:
-      - keys
     V1EnvironmentDocumentResponseMultivariateFeatureStateValue:
       description: Represents a multivariate feature state value.
       properties:
@@ -3305,106 +3259,6 @@ components:
       - multivariate_feature_option
       title: MultivariateFeatureStateValue
       type: object
-    CohortCsvSync:
-      type: object
-      properties:
-        file:
-          type: string
-          format: uri
-        identifier_column:
-          type: integer
-          minimum: 0
-          default: 0
-        has_header:
-          type: boolean
-          default: true
-      required:
-      - file
-    V1EnvironmentDocumentResponseIdentityOverride:
-      description: Represents an identity override, defining feature states specific to an identity.
-      properties:
-        identifier:
-          title: Identifier
-          type: string
-        identity_features:
-          items:
-            $ref: '#/components/schemas/V1EnvironmentDocumentResponseFeatureState'
-          title: Identity Features
-          type: array
-      required:
-      - identifier
-      - identity_features
-      title: IdentityOverride
-      type: object
-    PatchedEnvironmentAPIKey:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        key:
-          type: string
-          readOnly: true
-        active:
-          type: boolean
-        created_at:
-          type: string
-          format: date-time
-          readOnly: true
-        name:
-          type: string
-          maxLength: 100
-        expires_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-    CloneEnvironment:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        name:
-          type: string
-          maxLength: 2000
-        api_key:
-          type: string
-          readOnly: true
-        project:
-          type: integer
-          readOnly: true
-          description: Changing the project selected will remove all previous Feature States for the previously associated projects Features that are related to this Environment. New default Feature States will be created for the new selected projects Features for this Environment.
-        clone_feature_states_async:
-          type: boolean
-          writeOnly: true
-          default: false
-          description: 'If True, the environment will be created immediately, but the feature states will be created asynchronously. Environment will have `is_creating: true` until this process is completed.'
-      required:
-      - name
-    PaginatedEnvironmentMetricsList:
-      type: object
-      required:
-      - count
-      - results
-      properties:
-        count:
-          type: integer
-          example: 123
-        next:
-          type: string
-          nullable: true
-          format: uri
-          example: http://api.example.org/accounts/?page=4
-        previous:
-          type: string
-          nullable: true
-          format: uri
-          example: http://api.example.org/accounts/?page=2
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/EnvironmentMetrics'
     PatchedUpdateEnvironment:
       type: object
       description: "Mixin to add read only status to fields in a given serializer based on the existence\nof a subscription and a black list of plan ids\n\nExample usage:\n\n    class MySerializer(ReadOnlyIfNotValidPlanMixin, ModelSerializer):\n        class Meta:\n            model = MyModel\n            fields = (\"my_field\",)\n\n        invalid_plans = (\"free\",)\n        field_names = (\"my_field\",)\n\n        def get_subscription(self):\n            return subscription"
@@ -3488,115 +3342,125 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Metadata'
-    CohortCsvSyncResult:
+    PatchedEnvironmentAPIKey:
       type: object
       properties:
-        version:
+        id:
           type: integer
-          minimum: 0
-        added:
-          type: integer
-          minimum: 0
-        removed:
-          type: integer
-          minimum: 0
-        unchanged:
-          type: integer
-          minimum: 0
-        ignored:
-          $ref: '#/components/schemas/CohortCsvSyncIgnoredRows'
-      required:
-      - added
-      - ignored
-      - removed
-      - unchanged
-      - version
-    ExperimentRollout:
-      type: object
-      properties:
-        enabled:
+          readOnly: true
+        key:
+          type: string
+          readOnly: true
+        active:
           type: boolean
-        rollout_percentage:
-          type: number
-          format: double
-          maximum: 100
-          minimum: 0
-        feature_state_value:
-          $ref: '#/components/schemas/FeatureValue'
-        multivariate_feature_state_values:
-          type: array
-          items:
-            $ref: '#/components/schemas/MultivariateValue'
-        audience:
-          $ref: '#/components/schemas/ExperimentAudience'
-      required:
-      - enabled
-      - feature_state_value
-      - rollout_percentage
-    AggregationEnum:
-      enum:
-      - count
-      - sum
-      - mean
-      - occurrence
-      type: string
-      description: '* `count` - Count
-
-        * `sum` - Sum
-
-        * `mean` - Mean
-
-        * `occurrence` - Occurrence (event happened at least once)'
-    EdgeMultivariateFeatureStateValue:
-      type: object
-      properties:
-        multivariate_feature_option:
-          type: integer
-        percentage_allocation:
-          type: number
-          format: double
-          maximum: 100
-          minimum: 0
-      required:
-      - multivariate_feature_option
-      - percentage_allocation
-    TagBasedPermission:
-      type: object
-      properties:
-        permissions:
-          type: array
-          items:
-            type: string
-        tags:
-          type: array
-          items:
-            type: integer
-      required:
-      - permissions
-      - tags
-    GetEdgeIdentityOverrides:
-      type: object
-      properties:
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/GetEdgeIdentityOverridesResult'
-      required:
-      - results
-    WarehouseConnectionTestResult:
-      type: object
-      properties:
-        status:
-          $ref: '#/components/schemas/WarehouseConnectionStatusEnum'
-        status_detail:
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        name:
+          type: string
+          maxLength: 100
+        expires_at:
           type:
           - string
           - 'null'
-      required:
-      - status
-      - status_detail
-    PatchedCohort:
+          format: date-time
+    ExperimentMetricInline:
       type: object
+      properties:
+        metric:
+          type: string
+        expected_direction:
+          $ref: '#/components/schemas/ExpectedDirectionEnum'
+      required:
+      - expected_direction
+      - metric
+    EnvironmentAPIKey:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        key:
+          type: string
+          readOnly: true
+        active:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        name:
+          type: string
+          maxLength: 100
+        expires_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+      required:
+      - name
+    CohortCsvSync:
+      type: object
+      properties:
+        file:
+          type: string
+          format: uri
+        identifier_column:
+          type: integer
+          minimum: 0
+          default: 0
+        has_header:
+          type: boolean
+          default: true
+      required:
+      - file
+    PatchedMetric:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 255
+        description:
+          type: string
+        aggregation:
+          $ref: '#/components/schemas/AggregationEnum'
+        direction:
+          $ref: '#/components/schemas/DirectionEnum'
+        definition: {}
+        experiments:
+          type: array
+          items:
+            type: object
+            description: 'A lightweight view of an experiment using a metric, as returned in the
+
+              metric''s ``experiments`` field.'
+            properties:
+              id:
+                type: integer
+              name:
+                type: string
+              status:
+                type: string
+            required:
+            - id
+            - name
+            - status
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+    UpdateEnvironment:
+      type: object
+      description: "Mixin to add read only status to fields in a given serializer based on the existence\nof a subscription and a black list of plan ids\n\nExample usage:\n\n    class MySerializer(ReadOnlyIfNotValidPlanMixin, ModelSerializer):\n        class Meta:\n            model = MyModel\n            fields = (\"my_field\",)\n\n        invalid_plans = (\"free\",)\n        field_names = (\"my_field\",)\n\n        def get_subscription(self):\n            return subscription"
       properties:
         id:
           type: integer
@@ -3608,70 +3472,154 @@ components:
         name:
           type: string
           maxLength: 2000
+        api_key:
+          type: string
+          maxLength: 100
         description:
           type:
           - string
           - 'null'
+          maxLength: 20000
+        project:
+          type: integer
+          readOnly: true
+          description: Changing the project selected will remove all previous Feature States for the previously associated projects Features that are related to this Environment. New default Feature States will be created for the new selected projects Features for this Environment.
+        minimum_change_request_approvals:
+          type:
+          - integer
+          - 'null'
+          maximum: 2147483647
+          minimum: -2147483648
+          readOnly: true
+        allow_client_traits:
+          type: boolean
+          description: Allows clients using the client API key to set traits.
+        banner_text:
+          type:
+          - string
+          - 'null'
+          maxLength: 255
+        banner_colour:
+          type:
+          - string
+          - 'null'
+          description: hex code for the banner colour
+          maxLength: 7
+        hide_disabled_flags:
+          type:
+          - boolean
+          - 'null'
+          description: 'If true will exclude flags from SDK which are disabled. NOTE: If set, this will override the project `hide_disabled_flags`'
+        use_mv_v2_evaluation:
+          type: boolean
+          description: 'To avoid breaking the API, we return this field as well.
+
+
+            Warning: this will still mean that sending the `use_mv_v2_evaluation` field
+
+            (e.g. in a PUT request) will not behave as expected but, since this is a minor
+
+            issue, I think we can ignore.'
+          readOnly: true
+        use_identity_composite_key_for_hashing:
+          type: boolean
+          description: Enable this to have consistent multivariate and percentage split evaluations across all SDKs (in local and server side mode)
+        hide_sensitive_data:
+          type: boolean
+          description: 'If true, will hide sensitive data(e.g: traits, description etc) from the SDK endpoints'
+        use_v2_feature_versioning:
+          type: boolean
+          readOnly: true
+        use_identity_overrides_in_local_eval:
+          type: boolean
+          description: When enabled, identity overrides will be included in the environment document
+        is_creating:
+          type: boolean
+          readOnly: true
+          description: Attribute used to indicate when an environment is still being created (via clone for example)
         metadata:
           type: array
           items:
             $ref: '#/components/schemas/Metadata'
-          writeOnly: true
-        segment:
+      required:
+      - name
+    TypeD77Enum:
+      enum:
+      - STANDARD
+      - MULTIVARIATE
+      type: string
+      description: '* `STANDARD` - STANDARD
+
+        * `MULTIVARIATE` - MULTIVARIATE'
+    PaginatedEnvironmentMetricsList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/EnvironmentMetrics'
+    PatchedExperiment:
+      type: object
+      properties:
+        id:
           type: integer
           readOnly: true
-        source_type:
+        feature:
+          type: integer
+        name:
+          type: string
+          maxLength: 255
+        hypothesis:
+          type: string
+        status:
           allOf:
-          - $ref: '#/components/schemas/SourceTypeEnum'
+          - $ref: '#/components/schemas/Status7a8Enum'
           readOnly: true
-        version:
-          type: integer
-          readOnly: true
+        metrics:
+          type: array
+          items:
+            $ref: '#/components/schemas/ExperimentMetricInline'
+          writeOnly: true
+        experiment_rollout:
+          allOf:
+          - $ref: '#/components/schemas/ExperimentRollout'
+          writeOnly: true
         created_at:
           type: string
           format: date-time
           readOnly: true
-        last_synced_at:
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        started_at:
           type:
           - string
           - 'null'
           format: date-time
           readOnly: true
-        membership_counts:
-          allOf:
-          - $ref: '#/components/schemas/CohortMembershipCounts'
+        ended_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
           readOnly: true
-    UserObjectPermissions:
-      type: object
-      properties:
-        permissions:
-          type: array
-          items:
-            type: string
-        admin:
-          type: boolean
-        tag_based_permissions:
-          type: array
-          items:
-            $ref: '#/components/schemas/TagBasedPermission'
-      required:
-      - admin
-      - permissions
-      - tag_based_permissions
-    PermissionRole:
-      type: object
-      properties:
-        id:
-          type: integer
-        name:
-          type: string
-        tags:
-          type: array
-          items:
-            type: integer
-      required:
-      - id
-      - name
     EnvironmentRetrieveSerializerWithMetadata:
       type: object
       description: Functionality for serializers that need to handle metadata
@@ -3759,13 +3707,90 @@ components:
       - name
       - project
       - total_segment_overrides
-    WarehouseEventNamesUnavailable:
+    EnvironmentSerializerWithMetadata:
       type: object
+      description: Functionality for serializers that need to handle metadata
       properties:
-        detail:
+        id:
+          type: integer
+          readOnly: true
+        uuid:
           type: string
+          format: uuid
+          readOnly: true
+        name:
+          type: string
+          maxLength: 2000
+        api_key:
+          type: string
+          maxLength: 100
+        description:
+          type:
+          - string
+          - 'null'
+          maxLength: 20000
+        project:
+          type: integer
+          description: Changing the project selected will remove all previous Feature States for the previously associated projects Features that are related to this Environment. New default Feature States will be created for the new selected projects Features for this Environment.
+        minimum_change_request_approvals:
+          type:
+          - integer
+          - 'null'
+          maximum: 2147483647
+          minimum: -2147483648
+        allow_client_traits:
+          type: boolean
+          description: Allows clients using the client API key to set traits.
+        banner_text:
+          type:
+          - string
+          - 'null'
+          maxLength: 255
+        banner_colour:
+          type:
+          - string
+          - 'null'
+          description: hex code for the banner colour
+          maxLength: 7
+        hide_disabled_flags:
+          type:
+          - boolean
+          - 'null'
+          description: 'If true will exclude flags from SDK which are disabled. NOTE: If set, this will override the project `hide_disabled_flags`'
+        use_mv_v2_evaluation:
+          type: boolean
+          description: 'To avoid breaking the API, we return this field as well.
+
+
+            Warning: this will still mean that sending the `use_mv_v2_evaluation` field
+
+            (e.g. in a PUT request) will not behave as expected but, since this is a minor
+
+            issue, I think we can ignore.'
+          readOnly: true
+        use_identity_composite_key_for_hashing:
+          type: boolean
+          description: Enable this to have consistent multivariate and percentage split evaluations across all SDKs (in local and server side mode)
+        hide_sensitive_data:
+          type: boolean
+          description: 'If true, will hide sensitive data(e.g: traits, description etc) from the SDK endpoints'
+        use_v2_feature_versioning:
+          type: boolean
+          readOnly: true
+        use_identity_overrides_in_local_eval:
+          type: boolean
+          description: When enabled, identity overrides will be included in the environment document
+        is_creating:
+          type: boolean
+          readOnly: true
+          description: Attribute used to indicate when an environment is still being created (via clone for example)
+        metadata:
+          type: array
+          items:
+            $ref: '#/components/schemas/Metadata'
       required:
-      - detail
+      - name
+      - project
     MetricItem:
       type: object
       properties:
@@ -3784,55 +3809,74 @@ components:
       - entity
       - name
       - value
-    ExperimentAudience:
+    CohortMembershipCounts:
       type: object
       properties:
-        match:
-          allOf:
-          - $ref: '#/components/schemas/MatchEnum'
-          default: any
-        segment_ids:
+        applied:
+          type: integer
+          minimum: 0
+        pending_add:
+          type: integer
+          minimum: 0
+        pending_remove:
+          type: integer
+          minimum: 0
+      required:
+      - applied
+      - pending_add
+      - pending_remove
+    UserObjectPermissions:
+      type: object
+      properties:
+        permissions:
           type: array
           items:
-            type: integer
-          maxItems: 1
+            type: string
+        admin:
+          type: boolean
+        tag_based_permissions:
+          type: array
+          items:
+            $ref: '#/components/schemas/TagBasedPermission'
       required:
-      - segment_ids
-    DeleteAllTraitKeys:
-      type: object
-      properties:
-        key:
-          type: string
-      required:
-      - key
-    ExperimentList:
+      - admin
+      - permissions
+      - tag_based_permissions
+    Metric:
       type: object
       properties:
         id:
           type: integer
           readOnly: true
-        feature:
-          allOf:
-          - $ref: '#/components/schemas/ExperimentFeature'
-          readOnly: true
         name:
           type: string
           maxLength: 255
-        hypothesis:
+        description:
           type: string
-        status:
-          allOf:
-          - $ref: '#/components/schemas/Status7a8Enum'
-          readOnly: true
-        metrics:
+        aggregation:
+          $ref: '#/components/schemas/AggregationEnum'
+        direction:
+          $ref: '#/components/schemas/DirectionEnum'
+        definition: {}
+        experiments:
           type: array
           items:
-            $ref: '#/components/schemas/ExperimentMetric'
+            type: object
+            description: 'A lightweight view of an experiment using a metric, as returned in the
+
+              metric''s ``experiments`` field.'
+            properties:
+              id:
+                type: integer
+              name:
+                type: string
+              status:
+                type: string
+            required:
+            - id
+            - name
+            - status
           readOnly: true
-        experiment_rollout:
-          allOf:
-          - $ref: '#/components/schemas/ExperimentRollout'
-          writeOnly: true
         created_at:
           type: string
           format: date-time
@@ -3841,169 +3885,125 @@ components:
           type: string
           format: date-time
           readOnly: true
-        started_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          readOnly: true
-        ended_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          readOnly: true
       required:
-      - hypothesis
+      - definition
       - name
-    V1EnvironmentDocumentResponseSegment:
-      description: Represents a Flagsmith segment. Carries rules and feature overrides.
-      properties:
-        id:
-          title: Id
-          type: integer
-        name:
-          title: Name
-          type: string
-        rules:
-          items:
-            $ref: '#/components/schemas/V1EnvironmentDocumentResponseSegmentRule'
-          title: Rules
-          type: array
-        feature_states:
-          items:
-            $ref: '#/components/schemas/V1EnvironmentDocumentResponseFeatureState'
-          title: Feature States
-          type: array
-      required:
-      - id
-      - name
-      - rules
-      title: Segment
-      type: object
-    EnvironmentOnboardingStatus:
+    ExpectedDirectionEnum:
+      enum:
+      - increase
+      - decrease
+      - not_increase
+      - not_decrease
+      type: string
+      description: '* `increase` - Increase
+
+        * `decrease` - Decrease
+
+        * `not_increase` - Should not increase
+
+        * `not_decrease` - Should not decrease'
+    ExperimentRollout:
       type: object
       properties:
-        first_evaluated_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          description: When the environment's flags were first evaluated by an SDK.
-        first_evaluated_sdk_label:
-          type:
-          - string
-          - 'null'
-          description: SDK that first evaluated the environment's flags.
-          maxLength: 100
-    V1EnvironmentDocumentResponseSegmentCondition:
-      description: Represents a condition within a segment rule used by Flagsmith engine.
-      properties:
-        operator:
-          allOf:
-          - $ref: '#/components/schemas/V1EnvironmentDocumentResponseSegmentConditionOperatorEnum'
-          title: Operator
-        value:
-          title: Value
-          type: string
-        property_:
-          title: Property
-          type: string
-      required:
-      - operator
-      - value
-      - property_
-      title: SegmentCondition
-      type: object
-    WarehouseEventNamesUnsupported:
-      type: object
-      properties:
-        detail:
-          type: string
-      required:
-      - detail
-    V1EnvironmentDocumentResponseExperimentMetadata:
-      description: Represents the experiment a feature state is part of. Only present while the experiment is running.
-      properties:
-        id:
-          title: Id
-          type: integer
-        name:
-          title: Name
-          type: string
-        in_experiment:
-          title: In Experiment
+        enabled:
           type: boolean
+        rollout_percentage:
+          type: number
+          format: double
+          maximum: 100
+          minimum: 0
+        feature_state_value:
+          $ref: '#/components/schemas/FeatureValue'
+        multivariate_feature_state_values:
+          type: array
+          items:
+            $ref: '#/components/schemas/MultivariateValue'
+        audience:
+          $ref: '#/components/schemas/ExperimentAudience'
       required:
-      - id
-      - name
-      - in_experiment
-      title: ExperimentMetadata
-      type: object
-    Cohort:
+      - enabled
+      - feature_state_value
+      - rollout_percentage
+    ExperimentMetric:
       type: object
       properties:
         id:
           type: integer
           readOnly: true
-        uuid:
-          type: string
-          format: uuid
-          readOnly: true
-        name:
-          type: string
-          maxLength: 2000
-        description:
-          type:
-          - string
-          - 'null'
-        metadata:
-          type: array
-          items:
-            $ref: '#/components/schemas/Metadata'
-          writeOnly: true
-        segment:
+        metric:
           type: integer
+        metric_name:
+          type: string
           readOnly: true
-        source_type:
+        aggregation:
+          type: string
+          readOnly: true
+        direction:
           allOf:
-          - $ref: '#/components/schemas/SourceTypeEnum'
+          - $ref: '#/components/schemas/DirectionEnum'
           readOnly: true
-        version:
-          type: integer
-          readOnly: true
+        expected_direction:
+          $ref: '#/components/schemas/ExpectedDirectionEnum'
         created_at:
           type: string
           format: date-time
           readOnly: true
-        last_synced_at:
+      required:
+      - expected_direction
+      - metric
+    V1EnvironmentDocumentResponseIdentityOverride:
+      description: Represents an identity override, defining feature states specific to an identity.
+      properties:
+        identifier:
+          title: Identifier
+          type: string
+        identity_features:
+          items:
+            $ref: '#/components/schemas/V1EnvironmentDocumentResponseFeatureState'
+          title: Identity Features
+          type: array
+      required:
+      - identifier
+      - identity_features
+      title: IdentityOverride
+      type: object
+    BaseEdgeIdentityFeatureState:
+      type: object
+      properties:
+        feature_state_value:
+          type:
+          - string
+          - integer
+          - boolean
+          - 'null'
+          description: Feature state value (string, integer, or boolean)
+        feature:
+          type: integer
+          description: Feature ID
+        multivariate_feature_state_values:
+          type: array
+          items:
+            $ref: '#/components/schemas/EdgeMultivariateFeatureStateValue'
+        enabled:
+          type: boolean
+          default: false
+        featurestate_uuid:
+          type: string
+          readOnly: true
+      required:
+      - feature
+    WarehouseConnectionTestResult:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/WarehouseConnectionStatusEnum'
+        status_detail:
           type:
           - string
           - 'null'
-          format: date-time
-          readOnly: true
-        membership_counts:
-          allOf:
-          - $ref: '#/components/schemas/CohortMembershipCounts'
-          readOnly: true
       required:
-      - name
-    ExperimentResults:
-      type: object
-      description: Serializer for the full experiment results response.
-      properties:
-        feature:
-          type: string
-        variants:
-          type: array
-          items:
-            $ref: '#/components/schemas/ExperimentVariantResult'
-        statistics:
-          $ref: '#/components/schemas/ExperimentStatistics'
-      required:
-      - feature
-      - statistics
-      - variants
+      - status
+      - status_detail
   parameters:
     EnvironmentApiKey:
       name: environment_api_key

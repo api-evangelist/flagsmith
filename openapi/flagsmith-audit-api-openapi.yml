@@ -269,72 +269,6 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    AuditLogRetrieve:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        created_date:
-          type: string
-          format: date-time
-          title: DateCreated
-        log:
-          type: string
-        author:
-          $ref: '#/components/schemas/UserList'
-        environment:
-          $ref: '#/components/schemas/EnvironmentSerializerLight'
-        project:
-          $ref: '#/components/schemas/ProjectList'
-        related_object_id:
-          type:
-          - integer
-          - 'null'
-          maximum: 2147483647
-          minimum: -2147483648
-        related_object_uuid:
-          type:
-          - string
-          - 'null'
-          maxLength: 36
-        related_object_type:
-          type:
-          - string
-          - 'null'
-          maxLength: 20
-        is_system_event:
-          type: boolean
-        change_details:
-          type: array
-          items:
-            type: object
-            properties:
-              field:
-                type: string
-              old:
-                type:
-                - string
-                - number
-                - boolean
-                - 'null'
-              new:
-                type:
-                - string
-                - number
-                - boolean
-                - 'null'
-          readOnly: true
-        change_type:
-          allOf:
-          - $ref: '#/components/schemas/ChangeTypeEnum'
-          readOnly: true
-      required:
-      - author
-      - created_date
-      - environment
-      - log
-      - project
     ProjectList:
       type: object
       properties:
@@ -413,78 +347,6 @@ components:
       required:
       - name
       - organisation
-    ChangeTypeEnum:
-      enum:
-      - CREATE
-      - UPDATE
-      - DELETE
-      - UNKNOWN
-      type: string
-    PaginatedAuditLogListList:
-      type: object
-      required:
-      - count
-      - results
-      properties:
-        count:
-          type: integer
-          example: 123
-        next:
-          type: string
-          nullable: true
-          format: uri
-          example: http://api.example.org/accounts/?page=4
-        previous:
-          type: string
-          nullable: true
-          format: uri
-          example: http://api.example.org/accounts/?page=2
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/AuditLogList'
-    AuditLogList:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        created_date:
-          type: string
-          format: date-time
-          title: DateCreated
-        log:
-          type: string
-        author:
-          $ref: '#/components/schemas/UserList'
-        environment:
-          $ref: '#/components/schemas/EnvironmentSerializerLight'
-        project:
-          $ref: '#/components/schemas/ProjectList'
-        related_object_id:
-          type:
-          - integer
-          - 'null'
-          maximum: 2147483647
-          minimum: -2147483648
-        related_object_uuid:
-          type:
-          - string
-          - 'null'
-          maxLength: 36
-        related_object_type:
-          type:
-          - string
-          - 'null'
-          maxLength: 20
-        is_system_event:
-          type: boolean
-      required:
-      - author
-      - created_date
-      - environment
-      - log
-      - project
     EnvironmentSerializerLight:
       type: object
       properties:
@@ -564,6 +426,71 @@ components:
       required:
       - name
       - project
+    PaginatedAuditLogListList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/AuditLogList'
+    AuditLogList:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        created_date:
+          type: string
+          format: date-time
+          title: DateCreated
+        log:
+          type: string
+        author:
+          $ref: '#/components/schemas/UserList'
+        environment:
+          $ref: '#/components/schemas/EnvironmentSerializerLight'
+        project:
+          $ref: '#/components/schemas/ProjectList'
+        related_object_id:
+          type:
+          - integer
+          - 'null'
+          maximum: 2147483647
+          minimum: -2147483648
+        related_object_uuid:
+          type:
+          - string
+          - 'null'
+          maxLength: 36
+        related_object_type:
+          type:
+          - string
+          - 'null'
+          maxLength: 20
+        is_system_event:
+          type: boolean
+      required:
+      - author
+      - created_date
+      - environment
+      - log
+      - project
     UserList:
       type: object
       properties:
@@ -607,6 +534,79 @@ components:
         * `COMPLETE` - Complete
 
         * `INCOMPLETE` - Incomplete (identity overrides skipped)'
+    ChangeTypeEnum:
+      enum:
+      - CREATE
+      - UPDATE
+      - DELETE
+      - UNKNOWN
+      type: string
+    AuditLogRetrieve:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        created_date:
+          type: string
+          format: date-time
+          title: DateCreated
+        log:
+          type: string
+        author:
+          $ref: '#/components/schemas/UserList'
+        environment:
+          $ref: '#/components/schemas/EnvironmentSerializerLight'
+        project:
+          $ref: '#/components/schemas/ProjectList'
+        related_object_id:
+          type:
+          - integer
+          - 'null'
+          maximum: 2147483647
+          minimum: -2147483648
+        related_object_uuid:
+          type:
+          - string
+          - 'null'
+          maxLength: 36
+        related_object_type:
+          type:
+          - string
+          - 'null'
+          maxLength: 20
+        is_system_event:
+          type: boolean
+        change_details:
+          type: array
+          items:
+            type: object
+            properties:
+              field:
+                type: string
+              old:
+                type:
+                - string
+                - number
+                - boolean
+                - 'null'
+              new:
+                type:
+                - string
+                - number
+                - boolean
+                - 'null'
+          readOnly: true
+        change_type:
+          allOf:
+          - $ref: '#/components/schemas/ChangeTypeEnum'
+          readOnly: true
+      required:
+      - author
+      - created_date
+      - environment
+      - log
+      - project
   securitySchemes:
     Cohort_Sync_Key:
       type: http

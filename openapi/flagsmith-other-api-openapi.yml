@@ -157,14 +157,6 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    AmplitudeList:
-      type: object
-      properties:
-        name:
-          type: string
-          maxLength: 2000
-      required:
-      - name
     CohortSyncMembers:
       type: object
       properties:
@@ -194,6 +186,14 @@ components:
       required:
       - list_id
       - response
+    AmplitudeList:
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 2000
+      required:
+      - name
   securitySchemes:
     Cohort_Sync_Key:
       type: http

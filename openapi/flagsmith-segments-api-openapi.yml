@@ -356,21 +356,6 @@ paths:
       summary: Api v1 segments get by uuid retrieve
       x-summary-source: derived
 components:
-  parameters:
-    ProjectId:
-      name: project_id
-      in: path
-      description: The unique identifier for the project
-      required: true
-      schema:
-        type: integer
-    SegmentId:
-      name: segment_id
-      in: path
-      description: The unique identifier for the segment
-      required: true
-      schema:
-        type: integer
   schemas:
     SegmentRule:
       type: object
@@ -393,28 +378,28 @@ components:
           description: The conditions that make up this rule
           items:
             $ref: '#/components/schemas/SegmentCondition'
-    PaginatedResponse:
+    Segment:
       type: object
-      description: A paginated response wrapper containing the results count and navigation links.
+      description: A segment defines a group of users based on trait-based rules for targeted feature flag delivery.
       properties:
-        count:
+        id:
           type: integer
-          description: The total number of results
-        next:
+          description: The unique identifier for this segment
+        name:
+          type: string
+          description: The name of the segment
+        description:
           type: string
           nullable: true
-          format: uri
-          description: URL to the next page of results
-        previous:
-          type: string
-          nullable: true
-          format: uri
-          description: URL to the previous page of results
-        results:
+          description: A description of the segment
+        project:
+          type: integer
+          description: The ID of the project this segment belongs to
+        rules:
           type: array
-          description: The array of result objects for this page
+          description: The rules that define segment membership
           items:
-            type: object
+            $ref: '#/components/schemas/SegmentRule'
     SegmentInput:
       type: object
       description: Input object for creating or updating a segment
@@ -438,28 +423,28 @@ components:
           description: The rules that define segment membership
           items:
             $ref: '#/components/schemas/SegmentRule'
-    Segment:
+    PaginatedResponse:
       type: object
-      description: A segment defines a group of users based on trait-based rules for targeted feature flag delivery.
+      description: A paginated response wrapper containing the results count and navigation links.
       properties:
-        id:
+        count:
           type: integer
-          description: The unique identifier for this segment
-        name:
-          type: string
-          description: The name of the segment
-        description:
+          description: The total number of results
+        next:
           type: string
           nullable: true
-          description: A description of the segment
-        project:
-          type: integer
-          description: The ID of the project this segment belongs to
-        rules:
+          format: uri
+          description: URL to the next page of results
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          description: URL to the previous page of results
+        results:
           type: array
-          description: The rules that define segment membership
+          description: The array of result objects for this page
           items:
-            $ref: '#/components/schemas/SegmentRule'
+            type: object
     SegmentCondition:
       type: object
       description: A condition within a segment rule that evaluates a trait against a value using an operator.
@@ -487,20 +472,60 @@ components:
         value:
           type: string
           description: The value to compare against
-    SegmentAssociatedFeatureState:
+    _SegmentCohort:
       type: object
       properties:
         id:
           type: integer
           readOnly: true
-        feature:
-          type: integer
         environment:
+          type: integer
+        environment_api_key:
+          type: string
+          readOnly: true
+        environment_name:
+          type: string
+          readOnly: true
+        source_type:
+          $ref: '#/components/schemas/SourceTypeEnum'
+        version:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+        deletion_requested_at:
           type:
-          - integer
+          - string
           - 'null'
+          format: date-time
       required:
-      - feature
+      - environment
+    Condition:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        operator:
+          $ref: '#/components/schemas/ConditionOperatorEnum'
+        property:
+          type:
+          - string
+          - 'null'
+          maxLength: 1000
+        value:
+          type:
+          - string
+          - 'null'
+          maxLength: 1000
+        description:
+          type:
+          - string
+          - 'null'
+        delete:
+          type: boolean
+          writeOnly: true
+      required:
+      - operator
     SegmentRule_2:
       type: object
       description: Adds nested create feature
@@ -523,6 +548,177 @@ components:
           writeOnly: true
       required:
       - type
+    SegmentMembershipCount:
+      type: object
+      properties:
+        environment:
+          type: integer
+          readOnly: true
+        count:
+          type: integer
+          readOnly: true
+        last_synced_at:
+          type: string
+          format: date-time
+          readOnly: true
+    PatchedSegment:
+      type: object
+      description: Functionality for serializers that need to handle metadata
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+        created_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          readOnly: true
+        updated_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          readOnly: true
+        name:
+          type: string
+          maxLength: 2000
+        description:
+          type:
+          - string
+          - 'null'
+        project:
+          type: integer
+          readOnly: true
+        feature:
+          type:
+          - integer
+          - 'null'
+        version_of:
+          type:
+          - integer
+          - 'null'
+        rules:
+          type: array
+          items:
+            $ref: '#/components/schemas/SegmentRule_2'
+        metadata:
+          type: array
+          items:
+            $ref: '#/components/schemas/Metadata'
+        membership_counts:
+          type: array
+          items:
+            $ref: '#/components/schemas/SegmentMembershipCount'
+          readOnly: true
+        managed_by:
+          readOnly: true
+          oneOf:
+          - $ref: '#/components/schemas/ManagedByEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+        cohort:
+          oneOf:
+          - $ref: '#/components/schemas/_SegmentCohort'
+          - type: 'null'
+          readOnly: true
+        has_overrides:
+          type: boolean
+          readOnly: true
+          description: Whether any feature override points at this segment, counting overrides that are live now or scheduled to go live.
+    SegmentMembersResponse:
+      type: object
+      properties:
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/SegmentMember'
+        next_cursor:
+          type:
+          - string
+          - 'null'
+          description: Pass as `cursor` to fetch the next page; null when there are no more rows.
+      required:
+      - next_cursor
+      - results
+    ManagedByEnum:
+      enum:
+      - cohort
+      type: string
+      description: '* `` - Unmanaged
+
+        * `cohort` - Cohort'
+    Metadata:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        model_field:
+          type: integer
+        field_value:
+          type: string
+          maxLength: 2000
+      required:
+      - field_value
+      - model_field
+    SegmentRuleTypeEnum:
+      enum:
+      - ALL
+      - ANY
+      - NONE
+      type: string
+      description: '* `ALL` - all
+
+        * `ANY` - any
+
+        * `NONE` - none'
+    SegmentAssociatedFeatureState:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        feature:
+          type: integer
+        environment:
+          type:
+          - integer
+          - 'null'
+      required:
+      - feature
+    SourceTypeEnum:
+      enum:
+      - csv
+      - amplitude
+      - mixpanel
+      type: string
+      description: '* `csv` - CSV
+
+        * `amplitude` - Amplitude
+
+        * `mixpanel` - Mixpanel'
+    _NestedSegmentRule:
+      type: object
+      description: Adds nested create feature
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        type:
+          $ref: '#/components/schemas/SegmentRuleTypeEnum'
+        conditions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Condition'
+        delete:
+          type: boolean
+          writeOnly: true
+      required:
+      - type
     SegmentMember:
       type: object
       properties:
@@ -535,13 +731,6 @@ components:
       - identifier
       - identity_key
       - traits
-    ManagedByEnum:
-      enum:
-      - cohort
-      type: string
-      description: '* `` - Unmanaged
-
-        * `cohort` - Cohort'
     ConditionOperatorEnum:
       enum:
       - EQUAL
@@ -586,6 +775,17 @@ components:
         * `IS_NOT_SET` - Is not set
 
         * `IN` - In'
+    CloneSegment:
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 2000
+      required:
+      - name
+    BlankEnum:
+      enum:
+      - ''
     Segment_2:
       type: object
       description: Functionality for serializers that need to handle metadata
@@ -657,221 +857,21 @@ components:
       required:
       - name
       - rules
-    PatchedSegment:
-      type: object
-      description: Functionality for serializers that need to handle metadata
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        uuid:
-          type: string
-          format: uuid
-          readOnly: true
-        created_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          readOnly: true
-        updated_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          readOnly: true
-        name:
-          type: string
-          maxLength: 2000
-        description:
-          type:
-          - string
-          - 'null'
-        project:
-          type: integer
-          readOnly: true
-        feature:
-          type:
-          - integer
-          - 'null'
-        version_of:
-          type:
-          - integer
-          - 'null'
-        rules:
-          type: array
-          items:
-            $ref: '#/components/schemas/SegmentRule_2'
-        metadata:
-          type: array
-          items:
-            $ref: '#/components/schemas/Metadata'
-        membership_counts:
-          type: array
-          items:
-            $ref: '#/components/schemas/SegmentMembershipCount'
-          readOnly: true
-        managed_by:
-          readOnly: true
-          oneOf:
-          - $ref: '#/components/schemas/ManagedByEnum'
-          - $ref: '#/components/schemas/BlankEnum'
-        cohort:
-          oneOf:
-          - $ref: '#/components/schemas/_SegmentCohort'
-          - type: 'null'
-          readOnly: true
-        has_overrides:
-          type: boolean
-          readOnly: true
-          description: Whether any feature override points at this segment, counting overrides that are live now or scheduled to go live.
-    SourceTypeEnum:
-      enum:
-      - csv
-      - amplitude
-      - mixpanel
-      type: string
-      description: '* `csv` - CSV
-
-        * `amplitude` - Amplitude
-
-        * `mixpanel` - Mixpanel'
-    Condition:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        operator:
-          $ref: '#/components/schemas/ConditionOperatorEnum'
-        property:
-          type:
-          - string
-          - 'null'
-          maxLength: 1000
-        value:
-          type:
-          - string
-          - 'null'
-          maxLength: 1000
-        description:
-          type:
-          - string
-          - 'null'
-        delete:
-          type: boolean
-          writeOnly: true
-      required:
-      - operator
-    SegmentRuleTypeEnum:
-      enum:
-      - ALL
-      - ANY
-      - NONE
-      type: string
-      description: '* `ALL` - all
-
-        * `ANY` - any
-
-        * `NONE` - none'
-    CloneSegment:
-      type: object
-      properties:
-        name:
-          type: string
-          maxLength: 2000
-      required:
-      - name
-    BlankEnum:
-      enum:
-      - ''
-    _NestedSegmentRule:
-      type: object
-      description: Adds nested create feature
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        type:
-          $ref: '#/components/schemas/SegmentRuleTypeEnum'
-        conditions:
-          type: array
-          items:
-            $ref: '#/components/schemas/Condition'
-        delete:
-          type: boolean
-          writeOnly: true
-      required:
-      - type
-    SegmentMembershipCount:
-      type: object
-      properties:
-        environment:
-          type: integer
-          readOnly: true
-        count:
-          type: integer
-          readOnly: true
-        last_synced_at:
-          type: string
-          format: date-time
-          readOnly: true
-    SegmentMembersResponse:
-      type: object
-      properties:
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/SegmentMember'
-        next_cursor:
-          type:
-          - string
-          - 'null'
-          description: Pass as `cursor` to fetch the next page; null when there are no more rows.
-      required:
-      - next_cursor
-      - results
-    Metadata:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        model_field:
-          type: integer
-        field_value:
-          type: string
-          maxLength: 2000
-      required:
-      - field_value
-      - model_field
-    _SegmentCohort:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        environment:
-          type: integer
-        environment_api_key:
-          type: string
-          readOnly: true
-        environment_name:
-          type: string
-          readOnly: true
-        source_type:
-          $ref: '#/components/schemas/SourceTypeEnum'
-        version:
-          type: integer
-          maximum: 2147483647
-          minimum: 0
-        deletion_requested_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-      required:
-      - environment
+  parameters:
+    SegmentId:
+      name: segment_id
+      in: path
+      description: The unique identifier for the segment
+      required: true
+      schema:
+        type: integer
+    ProjectId:
+      name: project_id
+      in: path
+      description: The unique identifier for the project
+      required: true
+      schema:
+        type: integer
   securitySchemes:
     apiKeyAuth:
       type: apiKey

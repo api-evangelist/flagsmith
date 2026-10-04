@@ -3415,292 +3415,6 @@ components:
         persist_trait_data:
           type: boolean
           description: Whether trait data is persisted for identities
-    InviteList:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        email:
-          type: string
-          format: email
-          maxLength: 254
-        date_created:
-          type: string
-          format: date-time
-          readOnly: true
-          title: DateCreated
-        invited_by:
-          $ref: '#/components/schemas/UserList'
-        permission_groups:
-          type: array
-          items:
-            type: integer
-      required:
-      - email
-      - invited_by
-    Invite:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        email:
-          type: string
-          format: email
-          maxLength: 254
-        role:
-          $ref: '#/components/schemas/RoleEnum'
-        date_created:
-          type: string
-          format: date-time
-          readOnly: true
-          title: DateCreated
-        permission_groups:
-          type: array
-          items:
-            type:
-            - integer
-            - 'null'
-      required:
-      - email
-    OrganisationAPIUsageNotification:
-      type: object
-      properties:
-        organisation_id:
-          type: integer
-        percent_usage:
-          type: integer
-        notified_at:
-          type: string
-          format: date-time
-      required:
-      - notified_at
-      - organisation_id
-      - percent_usage
-    DetailedPermissions:
-      type: object
-      properties:
-        permission_key:
-          type: string
-        is_directly_granted:
-          type: boolean
-        derived_from:
-          $ref: '#/components/schemas/DerivedFrom'
-      required:
-      - derived_from
-      - is_directly_granted
-      - permission_key
-    UsageTotalCount:
-      type: object
-      properties:
-        count:
-          type: integer
-      required:
-      - count
-    ListUserPermissionGroupMembership:
-      type: object
-      properties:
-        id:
-          type: integer
-        email:
-          type: string
-          format: email
-        first_name:
-          type: string
-        last_name:
-          type: string
-        last_login:
-          type: string
-        group_admin:
-          type: boolean
-      required:
-      - email
-      - first_name
-      - id
-      - last_login
-      - last_name
-    PatchedTrustRelationship:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        name:
-          type: string
-          description: Display name for this trust relationship.
-          maxLength: 100
-        issuer:
-          type: string
-          format: uri
-          description: OIDC issuer URL expected in exchanged tokens' `iss` claim.
-          maxLength: 500
-        audience:
-          type: string
-          description: Expected value of the `aud` claim in exchanged tokens.
-          maxLength: 500
-        claim_rules:
-          type: array
-          items:
-            $ref: '#/components/schemas/ClaimRule'
-        is_admin:
-          type: boolean
-        master_api_key_id:
-          type: string
-          readOnly: true
-        master_api_key_prefix:
-          type: string
-          readOnly: true
-        created_at:
-          type: string
-          format: date-time
-          readOnly: true
-        created_by:
-          type:
-          - integer
-          - 'null'
-          readOnly: true
-    UserDetailedPermissions:
-      type: object
-      properties:
-        admin:
-          type: boolean
-        permissions:
-          type: array
-          items:
-            $ref: '#/components/schemas/DetailedPermissions'
-        is_directly_granted:
-          type: boolean
-        derived_from:
-          $ref: '#/components/schemas/DerivedFrom'
-      required:
-      - admin
-      - derived_from
-      - is_directly_granted
-      - permissions
-    PaginatedRoleEnvironmentPermissionList:
-      type: object
-      required:
-      - count
-      - results
-      properties:
-        count:
-          type: integer
-          example: 123
-        next:
-          type: string
-          nullable: true
-          format: uri
-          example: http://api.example.org/accounts/?page=4
-        previous:
-          type: string
-          nullable: true
-          format: uri
-          example: http://api.example.org/accounts/?page=2
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/RoleEnvironmentPermission'
-    PatchedMasterAPIKeyRole:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        master_api_key:
-          type: string
-        role:
-          type: integer
-          readOnly: true
-        role_name:
-          type: string
-          readOnly: true
-    TagBasedPermission:
-      type: object
-      properties:
-        permissions:
-          type: array
-          items:
-            type: string
-        tags:
-          type: array
-          items:
-            type: integer
-      required:
-      - permissions
-      - tags
-    RoleEnum:
-      enum:
-      - ADMIN
-      - USER
-      type: string
-      description: '* `ADMIN` - Admin
-
-        * `USER` - User'
-    PaginatedMetaDataModelFieldList:
-      type: object
-      required:
-      - count
-      - results
-      properties:
-        count:
-          type: integer
-          example: 123
-        next:
-          type: string
-          nullable: true
-          format: uri
-          example: http://api.example.org/accounts/?page=4
-        previous:
-          type: string
-          nullable: true
-          format: uri
-          example: http://api.example.org/accounts/?page=2
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/MetaDataModelField'
-    RoleEnvironmentPermission:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        role:
-          type: integer
-          readOnly: true
-        environment:
-          type: integer
-        permissions:
-          type: array
-          items:
-            $ref: '#/components/schemas/PermissionsTagBasedPermission'
-        admin:
-          type: boolean
-      required:
-      - environment
-      - permissions
-    InfluxData:
-      type: object
-      properties:
-        events_list:
-          type: array
-          items:
-            type: object
-            additionalProperties: {}
-      required:
-      - events_list
-    PermissionsTagBasedPermission:
-      type: object
-      properties:
-        permission_key:
-          type: string
-        tags:
-          type: array
-          items:
-            type: integer
-      required:
-      - permission_key
     GroupRole:
       type: object
       properties:
@@ -3714,308 +3428,6 @@ components:
           readOnly: true
       required:
       - group
-    PaginatedMasterAPIKeyRoleList:
-      type: object
-      required:
-      - count
-      - results
-      properties:
-        count:
-          type: integer
-          example: 123
-        next:
-          type: string
-          nullable: true
-          format: uri
-          example: http://api.example.org/accounts/?page=4
-        previous:
-          type: string
-          nullable: true
-          format: uri
-          example: http://api.example.org/accounts/?page=2
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/MasterAPIKeyRole'
-    SubscriptionDetails:
-      type: object
-      properties:
-        max_seats:
-          type: integer
-        max_api_calls:
-          type: integer
-        max_projects:
-          type:
-          - integer
-          - 'null'
-        payment_source:
-          oneOf:
-          - $ref: '#/components/schemas/PaymentSourceEnum'
-          - $ref: '#/components/schemas/NullEnum'
-        chargebee_email:
-          type: string
-          format: email
-        feature_history_visibility_days:
-          type:
-          - integer
-          - 'null'
-        audit_log_visibility_days:
-          type:
-          - integer
-          - 'null'
-      required:
-      - audit_log_visibility_days
-      - chargebee_email
-      - feature_history_visibility_days
-      - max_api_calls
-      - max_projects
-      - max_seats
-      - payment_source
-    MasterAPIKey:
-      type: object
-      properties:
-        id:
-          type: string
-          readOnly: true
-        prefix:
-          type: string
-          readOnly: true
-        created:
-          type: string
-          format: date-time
-          readOnly: true
-        name:
-          type: string
-          description: A free-form name for the API key. Need not be unique. 50 characters max.
-          maxLength: 50
-        revoked:
-          type: boolean
-          description: If the API key is revoked, clients cannot use it anymore. (This cannot be undone.)
-        expiry_date:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          title: Expires
-          description: Once API key expires, clients cannot use it anymore.
-        key:
-          type: string
-          readOnly: true
-          description: 'Since we don''t store the api key itself(i.e: we only store the hash) this key will be none for every endpoint apart from create'
-        is_admin:
-          type: boolean
-          default: true
-        has_expired:
-          type: boolean
-          readOnly: true
-        created_by:
-          type:
-          - integer
-          - 'null'
-          readOnly: true
-    UserPermissionGroupSummary:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        name:
-          type: string
-          readOnly: true
-    RoleOrganisationPermisssion:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        role:
-          type: integer
-          readOnly: true
-        permissions:
-          type: array
-          items:
-            type: string
-    PaginatedRoleProjectPermissionList:
-      type: object
-      required:
-      - count
-      - results
-      properties:
-        count:
-          type: integer
-          example: 123
-        next:
-          type: string
-          nullable: true
-          format: uri
-          example: http://api.example.org/accounts/?page=4
-        previous:
-          type: string
-          nullable: true
-          format: uri
-          example: http://api.example.org/accounts/?page=2
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/RoleProjectPermission'
-    PatchedRoleProjectPermission:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        role:
-          type: integer
-          readOnly: true
-        project:
-          type: integer
-        permissions:
-          type: array
-          items:
-            $ref: '#/components/schemas/PermissionsTagBasedPermission'
-        admin:
-          type: boolean
-    UserObjectPermissions:
-      type: object
-      properties:
-        permissions:
-          type: array
-          items:
-            type: string
-        admin:
-          type: boolean
-        tag_based_permissions:
-          type: array
-          items:
-            $ref: '#/components/schemas/TagBasedPermission'
-      required:
-      - admin
-      - permissions
-      - tag_based_permissions
-    PatchedRoleOrganisationPermisssion:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        role:
-          type: integer
-          readOnly: true
-        permissions:
-          type: array
-          items:
-            type: string
-    InviteLink:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        hash:
-          type: string
-          readOnly: true
-        date_created:
-          type: string
-          format: date-time
-          readOnly: true
-          title: DateCreated
-        role:
-          $ref: '#/components/schemas/RoleEnum'
-        expires_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          description: Datetime that the invite link will cease to be active. Leave blank to enable indefinitely.
-    UserIds:
-      type: object
-      properties:
-        user_ids:
-          type: array
-          items:
-            type: integer
-      required:
-      - user_ids
-    PatchedRole:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        name:
-          type: string
-          maxLength: 255
-        description:
-          type:
-          - string
-          - 'null'
-        organisation:
-          type: integer
-          readOnly: true
-        tags:
-          type: array
-          items:
-            type: integer
-    PaginatedTrustRelationshipList:
-      type: object
-      required:
-      - count
-      - results
-      properties:
-        count:
-          type: integer
-          example: 123
-        next:
-          type: string
-          nullable: true
-          format: uri
-          example: http://api.example.org/accounts/?page=4
-        previous:
-          type: string
-          nullable: true
-          format: uri
-          example: http://api.example.org/accounts/?page=2
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/TrustRelationship'
-    PermissionRole:
-      type: object
-      properties:
-        id:
-          type: integer
-        name:
-          type: string
-        tags:
-          type: array
-          items:
-            type: integer
-      required:
-      - id
-      - name
-    PaginatedMasterAPIKeyList:
-      type: object
-      required:
-      - count
-      - results
-      properties:
-        count:
-          type: integer
-          example: 123
-        next:
-          type: string
-          nullable: true
-          format: uri
-          example: http://api.example.org/accounts/?page=4
-        previous:
-          type: string
-          nullable: true
-          format: uri
-          example: http://api.example.org/accounts/?page=2
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/MasterAPIKey'
     PatchedMasterAPIKey:
       type: object
       properties:
@@ -4058,46 +3470,192 @@ components:
           - integer
           - 'null'
           readOnly: true
-    RoleProjectPermission:
+    Group:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+      required:
+      - id
+      - name
+    Invite:
       type: object
       properties:
         id:
           type: integer
           readOnly: true
+        email:
+          type: string
+          format: email
+          maxLength: 254
         role:
-          type: integer
+          $ref: '#/components/schemas/RoleEnum'
+        date_created:
+          type: string
+          format: date-time
           readOnly: true
-        project:
-          type: integer
-        permissions:
+          title: DateCreated
+        permission_groups:
           type: array
           items:
-            $ref: '#/components/schemas/PermissionsTagBasedPermission'
-        admin:
-          type: boolean
+            type:
+            - integer
+            - 'null'
       required:
-      - permissions
-      - project
-    PatchedGroupRole:
+      - email
+    PaginatedRoleProjectPermissionList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/RoleProjectPermission'
+    UserPermissionGroupSerializerDetail:
       type: object
       properties:
         id:
           type: integer
           readOnly: true
-        group:
-          type: integer
-        role:
-          type: integer
+        name:
+          type: string
+          maxLength: 200
+        users:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserPermissionGroupMembership'
           readOnly: true
-    PortalUrl:
+        is_default:
+          type: boolean
+          description: If set to true, all new users will be added to this group
+        external_id:
+          type:
+          - string
+          - 'null'
+          description: Unique ID of the group in an external system
+          maxLength: 255
+      required:
+      - name
+    OrganisationSerializerFull:
       type: object
       properties:
-        url:
+        id:
+          type: integer
+          readOnly: true
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+        name:
+          type: string
+          maxLength: 2000
+        created_date:
+          type: string
+          format: date-time
+          readOnly: true
+          title: DateCreated
+        webhook_notification_email:
+          type:
+          - string
+          - 'null'
+          format: email
+          maxLength: 254
+        num_seats:
+          type: integer
+          readOnly: true
+        subscription:
+          $ref: '#/components/schemas/Subscription'
+        role:
+          type:
+          - string
+          - 'null'
+          readOnly: true
+        persist_trait_data:
+          type: boolean
+          readOnly: true
+          description: Disable this if you don't want Flagsmith to store trait data for this org's identities.
+        block_access_to_admin:
+          type: boolean
+          readOnly: true
+          description: Enable this to block all the access to admin interface for the organisation
+        restrict_project_create_to_admin:
+          type: boolean
+        force_2fa:
+          type: boolean
+        targeting_key:
+          type:
+          - string
+          - 'null'
+          writeOnly: true
+          description: Flagsmith-on-Flagsmith targeting key. Immutable; org.<id> is used when unset.
+          maxLength: 64
+      required:
+      - name
+    PatchedTrustRelationship:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          description: Display name for this trust relationship.
+          maxLength: 100
+        issuer:
           type: string
           format: uri
+          description: OIDC issuer URL expected in exchanged tokens' `iss` claim.
+          maxLength: 500
+        audience:
+          type: string
+          description: Expected value of the `aud` claim in exchanged tokens.
+          maxLength: 500
+        claim_rules:
+          type: array
+          items:
+            $ref: '#/components/schemas/ClaimRule'
+        is_admin:
+          type: boolean
+        master_api_key_id:
+          type: string
+          readOnly: true
+        master_api_key_prefix:
+          type: string
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type:
+          - integer
+          - 'null'
+          readOnly: true
+    UsageTotalCount:
+      type: object
+      properties:
+        count:
+          type: integer
       required:
-      - url
-    PatchedListUserPermissionGroup:
+      - count
+    ListUserPermissionGroup:
       type: object
       properties:
         id:
@@ -4120,106 +3678,22 @@ components:
           - 'null'
           description: Unique ID of the group in an external system
           maxLength: 255
-    ClaimRule:
-      type: object
-      properties:
-        claim:
-          type: string
-          maxLength: 255
-        values:
-          type: array
-          items:
-            type: string
-            maxLength: 500
-          minItems: 1
       required:
-      - claim
-      - values
-    Group:
+      - name
+    PermissionRole:
       type: object
       properties:
         id:
           type: integer
         name:
           type: string
+        tags:
+          type: array
+          items:
+            type: integer
       required:
       - id
       - name
-    PaginatedRoleList:
-      type: object
-      required:
-      - count
-      - results
-      properties:
-        count:
-          type: integer
-          example: 123
-        next:
-          type: string
-          nullable: true
-          format: uri
-          example: http://api.example.org/accounts/?page=4
-        previous:
-          type: string
-          nullable: true
-          format: uri
-          example: http://api.example.org/accounts/?page=2
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/Role'
-    UpdateSubscription:
-      type: object
-      properties:
-        hosted_page_id:
-          type: string
-      required:
-      - hosted_page_id
-    MultiInvites:
-      type: object
-      properties:
-        invites:
-          type: array
-          items:
-            $ref: '#/components/schemas/Invite'
-        emails:
-          type: array
-          items:
-            type: string
-            format: email
-    UserId:
-      type: object
-      properties:
-        id:
-          type: integer
-      required:
-      - id
-    PaymentMethodEnum:
-      enum:
-      - CHARGEBEE
-      - XERO
-      - AWS_MARKETPLACE
-      type: string
-      description: '* `CHARGEBEE` - Chargebee
-
-        * `XERO` - Xero
-
-        * `AWS_MARKETPLACE` - AWS Marketplace'
-    PatchedMetaDataModelField:
-      type: object
-      description: Adds nested create feature
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        field:
-          type: integer
-        content_type:
-          type: integer
-        is_required_for:
-          type: array
-          items:
-            $ref: '#/components/schemas/MetadataModelFieldRequirement'
     PaginatedRoleOrganisationPermisssionList:
       type: object
       required:
@@ -4243,36 +3717,103 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/RoleOrganisationPermisssion'
-    MetaDataModelField:
+    PaginatedTrustRelationshipList:
       type: object
-      description: Adds nested create feature
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/TrustRelationship'
+    PatchedRoleProjectPermission:
+      type: object
       properties:
         id:
           type: integer
           readOnly: true
-        field:
+        role:
           type: integer
-        content_type:
+          readOnly: true
+        project:
           type: integer
-        is_required_for:
+        permissions:
           type: array
           items:
-            $ref: '#/components/schemas/MetadataModelFieldRequirement'
-      required:
-      - content_type
-      - field
-    MetadataModelFieldRequirement:
+            $ref: '#/components/schemas/PermissionsTagBasedPermission'
+        admin:
+          type: boolean
+    PatchedRole:
       type: object
       properties:
-        content_type:
+        id:
           type: integer
-        object_id:
+          readOnly: true
+        name:
+          type: string
+          maxLength: 255
+        description:
+          type:
+          - string
+          - 'null'
+        organisation:
           type: integer
-          maximum: 2147483647
-          minimum: 0
+          readOnly: true
+        tags:
+          type: array
+          items:
+            type: integer
+    Labels:
+      type: object
+      properties:
+        client_application_name:
+          type:
+          - string
+          - 'null'
+        client_application_version:
+          type:
+          - string
+          - 'null'
+        user_agent:
+          type:
+          - string
+          - 'null'
+    ListUserPermissionGroupMembership:
+      type: object
+      properties:
+        id:
+          type: integer
+        email:
+          type: string
+          format: email
+        first_name:
+          type: string
+        last_name:
+          type: string
+        last_login:
+          type: string
+        group_admin:
+          type: boolean
       required:
-      - content_type
-      - object_id
+      - email
+      - first_name
+      - id
+      - last_login
+      - last_name
     PatchedOrganisationSerializerFull:
       type: object
       properties:
@@ -4326,52 +3867,49 @@ components:
           writeOnly: true
           description: Flagsmith-on-Flagsmith targeting key. Immutable; org.<id> is used when unset.
           maxLength: 64
-    MasterAPIKeyRole:
+    MasterAPIKey:
       type: object
       properties:
         id:
-          type: integer
-          readOnly: true
-        master_api_key:
-          type: string
-        role:
-          type: integer
-          readOnly: true
-        role_name:
           type: string
           readOnly: true
-      required:
-      - master_api_key
-    UserList:
-      type: object
-      properties:
-        id:
-          type: integer
+        prefix:
+          type: string
           readOnly: true
-        email:
+        created:
           type: string
-          format: email
-          maxLength: 254
-        first_name:
+          format: date-time
+          readOnly: true
+        name:
           type: string
-          maxLength: 150
-        last_name:
-          type: string
-          maxLength: 150
-        last_login:
+          description: A free-form name for the API key. Need not be unique. 50 characters max.
+          maxLength: 50
+        revoked:
+          type: boolean
+          description: If the API key is revoked, clients cannot use it anymore. (This cannot be undone.)
+        expiry_date:
           type:
           - string
           - 'null'
           format: date-time
-        uuid:
+          title: Expires
+          description: Once API key expires, clients cannot use it anymore.
+        key:
           type: string
-          format: uuid
           readOnly: true
-      required:
-      - email
-      - first_name
-      - last_name
-    PaginatedOrganisationAPIUsageNotificationList:
+          description: 'Since we don''t store the api key itself(i.e: we only store the hash) this key will be none for every endpoint apart from create'
+        is_admin:
+          type: boolean
+          default: true
+        has_expired:
+          type: boolean
+          readOnly: true
+        created_by:
+          type:
+          - integer
+          - 'null'
+          readOnly: true
+    PaginatedRoleList:
       type: object
       required:
       - count
@@ -4393,7 +3931,167 @@ components:
         results:
           type: array
           items:
-            $ref: '#/components/schemas/OrganisationAPIUsageNotification'
+            $ref: '#/components/schemas/Role'
+    BillingStatusEnum:
+      enum:
+      - ACTIVE
+      - DUNNING
+      type: string
+      description: '* `ACTIVE` - Active
+
+        * `DUNNING` - Dunning'
+    Role:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 255
+        description:
+          type:
+          - string
+          - 'null'
+        organisation:
+          type: integer
+          readOnly: true
+        tags:
+          type: array
+          items:
+            type: integer
+      required:
+      - name
+    PaginatedRoleEnvironmentPermissionList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/RoleEnvironmentPermission'
+    RoleProjectPermission:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        role:
+          type: integer
+          readOnly: true
+        project:
+          type: integer
+        permissions:
+          type: array
+          items:
+            $ref: '#/components/schemas/PermissionsTagBasedPermission'
+        admin:
+          type: boolean
+      required:
+      - permissions
+      - project
+    PaginatedContentTypeList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/ContentType'
+    MetaDataModelField:
+      type: object
+      description: Adds nested create feature
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        field:
+          type: integer
+        content_type:
+          type: integer
+        is_required_for:
+          type: array
+          items:
+            $ref: '#/components/schemas/MetadataModelFieldRequirement'
+      required:
+      - content_type
+      - field
+    PatchedListUserPermissionGroup:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 200
+        users:
+          type: array
+          items:
+            $ref: '#/components/schemas/ListUserPermissionGroupMembership'
+          readOnly: true
+        is_default:
+          type: boolean
+          description: If set to true, all new users will be added to this group
+        external_id:
+          type:
+          - string
+          - 'null'
+          description: Unique ID of the group in an external system
+          maxLength: 255
+    PaginatedMetaDataModelFieldList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/MetaDataModelField'
     Subscription:
       type: object
       properties:
@@ -4462,47 +4160,98 @@ components:
           - string
           - 'null'
           maxLength: 500
-    PaymentSourceEnum:
-      enum:
-      - CHARGEBEE
-      type: string
-      description: '* `CHARGEBEE` - CHARGEBEE'
-    DerivedFrom:
+    PaginatedMasterAPIKeyRoleList:
       type: object
-      properties:
-        groups:
-          type: array
-          items:
-            $ref: '#/components/schemas/Group'
-        roles:
-          type: array
-          items:
-            $ref: '#/components/schemas/PermissionRole'
       required:
-      - groups
-      - roles
-    Role:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/MasterAPIKeyRole'
+    InviteLink:
       type: object
       properties:
         id:
           type: integer
           readOnly: true
-        name:
+        hash:
           type: string
-          maxLength: 255
-        description:
+          readOnly: true
+        date_created:
+          type: string
+          format: date-time
+          readOnly: true
+          title: DateCreated
+        role:
+          $ref: '#/components/schemas/RoleEnum'
+        expires_at:
           type:
           - string
           - 'null'
-        organisation:
+          format: date-time
+          description: Datetime that the invite link will cease to be active. Leave blank to enable indefinitely.
+    InviteList:
+      type: object
+      properties:
+        id:
           type: integer
           readOnly: true
-        tags:
+        email:
+          type: string
+          format: email
+          maxLength: 254
+        date_created:
+          type: string
+          format: date-time
+          readOnly: true
+          title: DateCreated
+        invited_by:
+          $ref: '#/components/schemas/UserList'
+        permission_groups:
           type: array
           items:
             type: integer
       required:
-      - name
+      - email
+      - invited_by
+    UpdateSubscription:
+      type: object
+      properties:
+        hosted_page_id:
+          type: string
+      required:
+      - hosted_page_id
+    MasterAPIKeyRole:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        master_api_key:
+          type: string
+        role:
+          type: integer
+          readOnly: true
+        role_name:
+          type: string
+          readOnly: true
+      required:
+      - master_api_key
     UserPermissionGroupMembership:
       type: object
       properties:
@@ -4531,155 +4280,30 @@ components:
       - email
       - first_name
       - last_name
-    NullEnum:
-      type: 'null'
-    OrganisationSerializerFull:
+    PermissionsTagBasedPermission:
+      type: object
+      properties:
+        permission_key:
+          type: string
+        tags:
+          type: array
+          items:
+            type: integer
+      required:
+      - permission_key
+    RoleOrganisationPermisssion:
       type: object
       properties:
         id:
           type: integer
           readOnly: true
-        uuid:
-          type: string
-          format: uuid
-          readOnly: true
-        name:
-          type: string
-          maxLength: 2000
-        created_date:
-          type: string
-          format: date-time
-          readOnly: true
-          title: DateCreated
-        webhook_notification_email:
-          type:
-          - string
-          - 'null'
-          format: email
-          maxLength: 254
-        num_seats:
-          type: integer
-          readOnly: true
-        subscription:
-          $ref: '#/components/schemas/Subscription'
         role:
-          type:
-          - string
-          - 'null'
-          readOnly: true
-        persist_trait_data:
-          type: boolean
-          readOnly: true
-          description: Disable this if you don't want Flagsmith to store trait data for this org's identities.
-        block_access_to_admin:
-          type: boolean
-          readOnly: true
-          description: Enable this to block all the access to admin interface for the organisation
-        restrict_project_create_to_admin:
-          type: boolean
-        force_2fa:
-          type: boolean
-        targeting_key:
-          type:
-          - string
-          - 'null'
-          writeOnly: true
-          description: Flagsmith-on-Flagsmith targeting key. Immutable; org.<id> is used when unset.
-          maxLength: 64
-      required:
-      - name
-    PermissionModel:
-      type: object
-      properties:
-        key:
-          type: string
-          maxLength: 100
-        description:
-          type: string
-        supports_tag:
-          type: boolean
-          readOnly: true
-      required:
-      - description
-      - key
-    ContentType:
-      type: object
-      properties:
-        id:
           type: integer
           readOnly: true
-        app_label:
-          type: string
-          maxLength: 100
-        model:
-          type: string
-          title: Python model class name
-          maxLength: 100
-      required:
-      - app_label
-      - model
-    PaginatedGroupRoleList:
-      type: object
-      required:
-      - count
-      - results
-      properties:
-        count:
-          type: integer
-          example: 123
-        next:
-          type: string
-          nullable: true
-          format: uri
-          example: http://api.example.org/accounts/?page=4
-        previous:
-          type: string
-          nullable: true
-          format: uri
-          example: http://api.example.org/accounts/?page=2
-        results:
+        permissions:
           type: array
           items:
-            $ref: '#/components/schemas/GroupRole'
-    PaginatedContentTypeList:
-      type: object
-      required:
-      - count
-      - results
-      properties:
-        count:
-          type: integer
-          example: 123
-        next:
-          type: string
-          nullable: true
-          format: uri
-          example: http://api.example.org/accounts/?page=4
-        previous:
-          type: string
-          nullable: true
-          format: uri
-          example: http://api.example.org/accounts/?page=2
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/ContentType'
-    GetHostedPageForSubscriptionUpgrade:
-      type: object
-      properties:
-        plan_id:
-          type: string
-          writeOnly: true
-        subscription_id:
-          type: string
-          writeOnly: true
-        url:
-          type: string
-          format: uri
-          readOnly: true
-      required:
-      - plan_id
-      - subscription_id
+            type: string
     TrustRelationship:
       type: object
       properties:
@@ -4725,54 +4349,19 @@ components:
       - is_admin
       - issuer
       - name
-    UserPermissionGroupSerializerDetail:
+    PatchedRoleOrganisationPermisssion:
       type: object
       properties:
         id:
           type: integer
           readOnly: true
-        name:
-          type: string
-          maxLength: 200
-        users:
+        role:
+          type: integer
+          readOnly: true
+        permissions:
           type: array
           items:
-            $ref: '#/components/schemas/UserPermissionGroupMembership'
-          readOnly: true
-        is_default:
-          type: boolean
-          description: If set to true, all new users will be added to this group
-        external_id:
-          type:
-          - string
-          - 'null'
-          description: Unique ID of the group in an external system
-          maxLength: 255
-      required:
-      - name
-    BillingStatusEnum:
-      enum:
-      - ACTIVE
-      - DUNNING
-      type: string
-      description: '* `ACTIVE` - Active
-
-        * `DUNNING` - Dunning'
-    Labels:
-      type: object
-      properties:
-        client_application_name:
-          type:
-          - string
-          - 'null'
-        client_application_version:
-          type:
-          - string
-          - 'null'
-        user_agent:
-          type:
-          - string
-          - 'null'
+            type: string
     PatchedRoleEnvironmentPermission:
       type: object
       properties:
@@ -4790,10 +4379,417 @@ components:
             $ref: '#/components/schemas/PermissionsTagBasedPermission'
         admin:
           type: boolean
+    RoleEnvironmentPermission:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        role:
+          type: integer
+          readOnly: true
+        environment:
+          type: integer
+        permissions:
+          type: array
+          items:
+            $ref: '#/components/schemas/PermissionsTagBasedPermission'
+        admin:
+          type: boolean
+      required:
+      - environment
+      - permissions
+    PaginatedMasterAPIKeyList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/MasterAPIKey'
+    UserDetailedPermissions:
+      type: object
+      properties:
+        admin:
+          type: boolean
+        permissions:
+          type: array
+          items:
+            $ref: '#/components/schemas/DetailedPermissions'
+        is_directly_granted:
+          type: boolean
+        derived_from:
+          $ref: '#/components/schemas/DerivedFrom'
+      required:
+      - admin
+      - derived_from
+      - is_directly_granted
+      - permissions
+    UserId:
+      type: object
+      properties:
+        id:
+          type: integer
+      required:
+      - id
+    MultiInvites:
+      type: object
+      properties:
+        invites:
+          type: array
+          items:
+            $ref: '#/components/schemas/Invite'
+        emails:
+          type: array
+          items:
+            type: string
+            format: email
+    UserObjectPermissions:
+      type: object
+      properties:
+        permissions:
+          type: array
+          items:
+            type: string
+        admin:
+          type: boolean
+        tag_based_permissions:
+          type: array
+          items:
+            $ref: '#/components/schemas/TagBasedPermission'
+      required:
+      - admin
+      - permissions
+      - tag_based_permissions
+    NullEnum:
+      type: 'null'
+    OrganisationAPIUsageNotification:
+      type: object
+      properties:
+        organisation_id:
+          type: integer
+        percent_usage:
+          type: integer
+        notified_at:
+          type: string
+          format: date-time
+      required:
+      - notified_at
+      - organisation_id
+      - percent_usage
+    PatchedMasterAPIKeyRole:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        master_api_key:
+          type: string
+        role:
+          type: integer
+          readOnly: true
+        role_name:
+          type: string
+          readOnly: true
+    RoleEnum:
+      enum:
+      - ADMIN
+      - USER
+      type: string
+      description: '* `ADMIN` - Admin
+
+        * `USER` - User'
     BlankEnum:
       enum:
       - ''
-    ListUserPermissionGroup:
+    PaymentMethodEnum:
+      enum:
+      - CHARGEBEE
+      - XERO
+      - AWS_MARKETPLACE
+      type: string
+      description: '* `CHARGEBEE` - Chargebee
+
+        * `XERO` - Xero
+
+        * `AWS_MARKETPLACE` - AWS Marketplace'
+    ContentType:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        app_label:
+          type: string
+          maxLength: 100
+        model:
+          type: string
+          title: Python model class name
+          maxLength: 100
+      required:
+      - app_label
+      - model
+    PaymentSourceEnum:
+      enum:
+      - CHARGEBEE
+      type: string
+      description: '* `CHARGEBEE` - CHARGEBEE'
+    ClaimRule:
+      type: object
+      properties:
+        claim:
+          type: string
+          maxLength: 255
+        values:
+          type: array
+          items:
+            type: string
+            maxLength: 500
+          minItems: 1
+      required:
+      - claim
+      - values
+    MetadataModelFieldRequirement:
+      type: object
+      properties:
+        content_type:
+          type: integer
+        object_id:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+      required:
+      - content_type
+      - object_id
+    PaginatedGroupRoleList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/GroupRole'
+    PermissionModel:
+      type: object
+      properties:
+        key:
+          type: string
+          maxLength: 100
+        description:
+          type: string
+        supports_tag:
+          type: boolean
+          readOnly: true
+      required:
+      - description
+      - key
+    PaginatedOrganisationAPIUsageNotificationList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrganisationAPIUsageNotification'
+    GetHostedPageForSubscriptionUpgrade:
+      type: object
+      properties:
+        plan_id:
+          type: string
+          writeOnly: true
+        subscription_id:
+          type: string
+          writeOnly: true
+        url:
+          type: string
+          format: uri
+          readOnly: true
+      required:
+      - plan_id
+      - subscription_id
+    SubscriptionDetails:
+      type: object
+      properties:
+        max_seats:
+          type: integer
+        max_api_calls:
+          type: integer
+        max_projects:
+          type:
+          - integer
+          - 'null'
+        payment_source:
+          oneOf:
+          - $ref: '#/components/schemas/PaymentSourceEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        chargebee_email:
+          type: string
+          format: email
+        feature_history_visibility_days:
+          type:
+          - integer
+          - 'null'
+        audit_log_visibility_days:
+          type:
+          - integer
+          - 'null'
+      required:
+      - audit_log_visibility_days
+      - chargebee_email
+      - feature_history_visibility_days
+      - max_api_calls
+      - max_projects
+      - max_seats
+      - payment_source
+    PatchedMetaDataModelField:
+      type: object
+      description: Adds nested create feature
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        field:
+          type: integer
+        content_type:
+          type: integer
+        is_required_for:
+          type: array
+          items:
+            $ref: '#/components/schemas/MetadataModelFieldRequirement'
+    PortalUrl:
+      type: object
+      properties:
+        url:
+          type: string
+          format: uri
+      required:
+      - url
+    TagBasedPermission:
+      type: object
+      properties:
+        permissions:
+          type: array
+          items:
+            type: string
+        tags:
+          type: array
+          items:
+            type: integer
+      required:
+      - permissions
+      - tags
+    DerivedFrom:
+      type: object
+      properties:
+        groups:
+          type: array
+          items:
+            $ref: '#/components/schemas/Group'
+        roles:
+          type: array
+          items:
+            $ref: '#/components/schemas/PermissionRole'
+      required:
+      - groups
+      - roles
+    DetailedPermissions:
+      type: object
+      properties:
+        permission_key:
+          type: string
+        is_directly_granted:
+          type: boolean
+        derived_from:
+          $ref: '#/components/schemas/DerivedFrom'
+      required:
+      - derived_from
+      - is_directly_granted
+      - permission_key
+    UserList:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        email:
+          type: string
+          format: email
+          maxLength: 254
+        first_name:
+          type: string
+          maxLength: 150
+        last_name:
+          type: string
+          maxLength: 150
+        last_login:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+      required:
+      - email
+      - first_name
+      - last_name
+    InfluxData:
+      type: object
+      properties:
+        events_list:
+          type: array
+          items:
+            type: object
+            additionalProperties: {}
+      required:
+      - events_list
+    UserPermissionGroupSummary:
       type: object
       properties:
         id:
@@ -4801,23 +4797,27 @@ components:
           readOnly: true
         name:
           type: string
-          maxLength: 200
-        users:
+          readOnly: true
+    UserIds:
+      type: object
+      properties:
+        user_ids:
           type: array
           items:
-            $ref: '#/components/schemas/ListUserPermissionGroupMembership'
-          readOnly: true
-        is_default:
-          type: boolean
-          description: If set to true, all new users will be added to this group
-        external_id:
-          type:
-          - string
-          - 'null'
-          description: Unique ID of the group in an external system
-          maxLength: 255
+            type: integer
       required:
-      - name
+      - user_ids
+    PatchedGroupRole:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        group:
+          type: integer
+        role:
+          type: integer
+          readOnly: true
     UsageData:
       type: object
       properties:

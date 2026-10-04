@@ -72,6 +72,13 @@ components:
           type: integer
           nullable: true
           description: The feature segment ID if this flag state is a segment override, or null otherwise
+    Error:
+      type: object
+      description: An error response from the API
+      properties:
+        detail:
+          type: string
+          description: A human-readable error message
     Feature:
       type: object
       description: A feature definition containing metadata about the feature flag including its name, type, and default configuration.
@@ -103,13 +110,6 @@ components:
           - STANDARD
           - MULTIVARIATE
           description: The type of feature flag. STANDARD for simple on/off flags, MULTIVARIATE for flags with multiple value variations.
-    Error:
-      type: object
-      description: An error response from the API
-      properties:
-        detail:
-          type: string
-          description: A human-readable error message
   parameters:
     FeatureNameQuery:
       name: feature

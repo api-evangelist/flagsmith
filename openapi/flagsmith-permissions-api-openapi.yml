@@ -1112,18 +1112,22 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    PatchedUserPermissionGroupOrganisationPermissionUpdateCreate:
+    ListUserEnvironmentPermission:
       type: object
       properties:
         id:
           type: integer
           readOnly: true
-        group:
-          type: integer
         permissions:
           type: array
           items:
             type: string
+        admin:
+          type: boolean
+        user:
+          $ref: '#/components/schemas/UserList'
+      required:
+      - user
     UserOrganisationPermissionList:
       type: object
       properties:
@@ -1138,220 +1142,6 @@ components:
             type: string
       required:
       - user
-    ListUserPermissionGroupEnvironmentPermission:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        permissions:
-          type: array
-          items:
-            type: string
-        admin:
-          type: boolean
-        group:
-          $ref: '#/components/schemas/UserPermissionGroupSerializerDetail'
-      required:
-      - group
-    CreateUpdateUserPermissionGroupProjectPermission:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        permissions:
-          type: array
-          items:
-            type: string
-        admin:
-          type: boolean
-        group:
-          type: integer
-      required:
-      - group
-    UserPermissionGroup:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        name:
-          type: string
-          maxLength: 200
-        users:
-          type: array
-          items:
-            type: integer
-          readOnly: true
-        is_default:
-          type: boolean
-          description: If set to true, all new users will be added to this group
-        external_id:
-          type:
-          - string
-          - 'null'
-          description: Unique ID of the group in an external system
-          maxLength: 255
-      required:
-      - name
-    PatchedCreateUpdateUserPermissionGroupEnvironmentPermission:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        permissions:
-          type: array
-          items:
-            type: string
-        admin:
-          type: boolean
-        group:
-          type: integer
-    ListUserProjectPermission:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        permissions:
-          type: array
-          items:
-            type: string
-        admin:
-          type: boolean
-        user:
-          $ref: '#/components/schemas/UserList'
-      required:
-      - user
-    UserPermissionGroupOrganisationPermissionList:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        group:
-          $ref: '#/components/schemas/UserPermissionGroup'
-        permissions:
-          type: array
-          items:
-            type: string
-      required:
-      - group
-    PatchedCreateUpdateUserEnvironmentPermission:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        permissions:
-          type: array
-          items:
-            type: string
-        admin:
-          type: boolean
-        user:
-          type: integer
-    CreateUpdateUserEnvironmentPermission:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        permissions:
-          type: array
-          items:
-            type: string
-        admin:
-          type: boolean
-        user:
-          type: integer
-      required:
-      - user
-    PatchedCreateUpdateUserPermissionGroupProjectPermission:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        permissions:
-          type: array
-          items:
-            type: string
-        admin:
-          type: boolean
-        group:
-          type: integer
-    UserPermissionGroupOrganisationPermissionUpdateCreate:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        group:
-          type: integer
-        permissions:
-          type: array
-          items:
-            type: string
-      required:
-      - group
-    UserOrganisationPermissionUpdateCreate:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        user:
-          type: integer
-        permissions:
-          type: array
-          items:
-            type: string
-      required:
-      - user
-    PatchedUserOrganisationPermissionUpdateCreate:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        user:
-          type: integer
-        permissions:
-          type: array
-          items:
-            type: string
-    UserList:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        email:
-          type: string
-          format: email
-          maxLength: 254
-        first_name:
-          type: string
-          maxLength: 150
-        last_name:
-          type: string
-          maxLength: 150
-        last_login:
-          type:
-          - string
-          - 'null'
-          format: date-time
-        uuid:
-          type: string
-          format: uuid
-          readOnly: true
-      required:
-      - email
-      - first_name
-      - last_name
     CreateUpdateUserProjectPermission:
       type: object
       properties:
@@ -1368,7 +1158,7 @@ components:
           type: integer
       required:
       - user
-    PatchedCreateUpdateUserProjectPermission:
+    PatchedCreateUpdateUserEnvironmentPermission:
       type: object
       properties:
         id:
@@ -1381,6 +1171,103 @@ components:
         admin:
           type: boolean
         user:
+          type: integer
+    UserPermissionGroupSerializerDetail:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 200
+        users:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserPermissionGroupMembership'
+          readOnly: true
+        is_default:
+          type: boolean
+          description: If set to true, all new users will be added to this group
+        external_id:
+          type:
+          - string
+          - 'null'
+          description: Unique ID of the group in an external system
+          maxLength: 255
+      required:
+      - name
+    ListUserPermissionGroupEnvironmentPermission:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        permissions:
+          type: array
+          items:
+            type: string
+        admin:
+          type: boolean
+        group:
+          $ref: '#/components/schemas/UserPermissionGroupSerializerDetail'
+      required:
+      - group
+    ListUserProjectPermission:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        permissions:
+          type: array
+          items:
+            type: string
+        admin:
+          type: boolean
+        user:
+          $ref: '#/components/schemas/UserList'
+      required:
+      - user
+    UserPermissionGroupOrganisationPermissionUpdateCreate:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        group:
+          type: integer
+        permissions:
+          type: array
+          items:
+            type: string
+      required:
+      - group
+    PatchedUserPermissionGroupOrganisationPermissionUpdateCreate:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        group:
+          type: integer
+        permissions:
+          type: array
+          items:
+            type: string
+    PatchedCreateUpdateUserPermissionGroupEnvironmentPermission:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        permissions:
+          type: array
+          items:
+            type: string
+        admin:
+          type: boolean
+        group:
           type: integer
     UserPermissionGroupMembership:
       type: object
@@ -1410,22 +1297,6 @@ components:
       - email
       - first_name
       - last_name
-    ListUserPermissionGroupProjectPermission:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        permissions:
-          type: array
-          items:
-            type: string
-        admin:
-          type: boolean
-        group:
-          $ref: '#/components/schemas/UserPermissionGroup'
-      required:
-      - group
     CreateUpdateUserPermissionGroupEnvironmentPermission:
       type: object
       properties:
@@ -1442,32 +1313,19 @@ components:
           type: integer
       required:
       - group
-    UserPermissionGroupSerializerDetail:
+    PatchedUserOrganisationPermissionUpdateCreate:
       type: object
       properties:
         id:
           type: integer
           readOnly: true
-        name:
-          type: string
-          maxLength: 200
-        users:
+        user:
+          type: integer
+        permissions:
           type: array
           items:
-            $ref: '#/components/schemas/UserPermissionGroupMembership'
-          readOnly: true
-        is_default:
-          type: boolean
-          description: If set to true, all new users will be added to this group
-        external_id:
-          type:
-          - string
-          - 'null'
-          description: Unique ID of the group in an external system
-          maxLength: 255
-      required:
-      - name
-    ListUserEnvironmentPermission:
+            type: string
+    PatchedCreateUpdateUserProjectPermission:
       type: object
       properties:
         id:
@@ -1480,9 +1338,151 @@ components:
         admin:
           type: boolean
         user:
-          $ref: '#/components/schemas/UserList'
+          type: integer
+    CreateUpdateUserEnvironmentPermission:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        permissions:
+          type: array
+          items:
+            type: string
+        admin:
+          type: boolean
+        user:
+          type: integer
       required:
       - user
+    ListUserPermissionGroupProjectPermission:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        permissions:
+          type: array
+          items:
+            type: string
+        admin:
+          type: boolean
+        group:
+          $ref: '#/components/schemas/UserPermissionGroup'
+      required:
+      - group
+    UserPermissionGroup:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 200
+        users:
+          type: array
+          items:
+            type: integer
+          readOnly: true
+        is_default:
+          type: boolean
+          description: If set to true, all new users will be added to this group
+        external_id:
+          type:
+          - string
+          - 'null'
+          description: Unique ID of the group in an external system
+          maxLength: 255
+      required:
+      - name
+    PatchedCreateUpdateUserPermissionGroupProjectPermission:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        permissions:
+          type: array
+          items:
+            type: string
+        admin:
+          type: boolean
+        group:
+          type: integer
+    UserOrganisationPermissionUpdateCreate:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        user:
+          type: integer
+        permissions:
+          type: array
+          items:
+            type: string
+      required:
+      - user
+    CreateUpdateUserPermissionGroupProjectPermission:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        permissions:
+          type: array
+          items:
+            type: string
+        admin:
+          type: boolean
+        group:
+          type: integer
+      required:
+      - group
+    UserPermissionGroupOrganisationPermissionList:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        group:
+          $ref: '#/components/schemas/UserPermissionGroup'
+        permissions:
+          type: array
+          items:
+            type: string
+      required:
+      - group
+    UserList:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        email:
+          type: string
+          format: email
+          maxLength: 254
+        first_name:
+          type: string
+          maxLength: 150
+        last_name:
+          type: string
+          maxLength: 150
+        last_login:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+      required:
+      - email
+      - first_name
+      - last_name
   securitySchemes:
     Cohort_Sync_Key:
       type: http

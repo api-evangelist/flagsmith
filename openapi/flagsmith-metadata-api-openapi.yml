@@ -308,6 +308,32 @@ paths:
       x-summary-source: derived
 components:
   schemas:
+    PatchedMetadataField:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 255
+        type:
+          $ref: '#/components/schemas/MetadataFieldTypeEnum'
+        description:
+          type:
+          - string
+          - 'null'
+        organisation:
+          type: integer
+        project:
+          type:
+          - integer
+          - 'null'
+        model_fields:
+          type: array
+          items:
+            $ref: '#/components/schemas/MetadataModelFieldNested'
+          readOnly: true
     PaginatedMetadataFieldList:
       type: object
       required:
@@ -331,6 +357,35 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/MetadataField'
+    MetadataFieldTypeEnum:
+      enum:
+      - int
+      - str
+      - bool
+      - url
+      - multiline_str
+      type: string
+      description: '* `int` - Integer
+
+        * `str` - String
+
+        * `bool` - Boolean
+
+        * `url` - Url
+
+        * `multiline_str` - Multiline String'
+    MetadataModelFieldRequirement:
+      type: object
+      properties:
+        content_type:
+          type: integer
+        object_id:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+      required:
+      - content_type
+      - object_id
     MetadataField:
       type: object
       properties:
@@ -360,35 +415,6 @@ components:
       required:
       - name
       - organisation
-    MetadataModelFieldRequirement:
-      type: object
-      properties:
-        content_type:
-          type: integer
-        object_id:
-          type: integer
-          maximum: 2147483647
-          minimum: 0
-      required:
-      - content_type
-      - object_id
-    MetadataFieldTypeEnum:
-      enum:
-      - int
-      - str
-      - bool
-      - url
-      - multiline_str
-      type: string
-      description: '* `int` - Integer
-
-        * `str` - String
-
-        * `bool` - Boolean
-
-        * `url` - Url
-
-        * `multiline_str` - Multiline String'
     MetadataModelFieldNested:
       type: object
       properties:
@@ -404,32 +430,6 @@ components:
           readOnly: true
       required:
       - content_type
-    PatchedMetadataField:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        name:
-          type: string
-          maxLength: 255
-        type:
-          $ref: '#/components/schemas/MetadataFieldTypeEnum'
-        description:
-          type:
-          - string
-          - 'null'
-        organisation:
-          type: integer
-        project:
-          type:
-          - integer
-          - 'null'
-        model_fields:
-          type: array
-          items:
-            $ref: '#/components/schemas/MetadataModelFieldNested'
-          readOnly: true
   securitySchemes:
     Cohort_Sync_Key:
       type: http

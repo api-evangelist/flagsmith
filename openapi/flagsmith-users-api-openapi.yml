@@ -39,14 +39,6 @@ paths:
         '404':
           description: Organisation not found
 components:
-  parameters:
-    OrganisationId:
-      name: organisation_id
-      in: path
-      description: The unique identifier for the organisation
-      required: true
-      schema:
-        type: integer
   schemas:
     OrganisationUser:
       type: object
@@ -71,6 +63,14 @@ components:
           - ADMIN
           - USER
           description: The user's role within the organisation
+  parameters:
+    OrganisationId:
+      name: organisation_id
+      in: path
+      description: The unique identifier for the organisation
+      required: true
+      schema:
+        type: integer
   securitySchemes:
     apiKeyAuth:
       type: apiKey
