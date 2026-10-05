@@ -1,0 +1,100 @@
+slug: flagsmith
+provider: Flagsmith
+generated_by: planning/capability-mapping/scripts/classify_capabilities.py
+model: claude-opus-5
+frame:
+- Software & Technology
+min_confidence: 0.7
+capability_model:
+  source: https://github.com/vincentmakes/turbo-ea-capabilities
+  license: CC-BY-4.0
+  attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
+    CC BY 4.0
+  notice: NOTICE
+edge_count: 8
+edges:
+- tag: Features
+  spec_file: flagsmith-features-api-openapi.yml
+  capability_id: BC-4210.50
+  capability_id_l1: BC-4210
+  capability_name: Feature Flag Management
+  confidence: 0.9
+  evidence: POST /projects/{project_id}/features/ 'Create a feature flag'; DELETE ... 'Delete a feature
+    flag'; GET /environments/{environment_api_key}/featurestates/ 'List feature states for an environment'
+  reason: Explicit CRUD over feature flags and their environment states, with export/import of flag definitions
+    — the core Feature Flag Management capability.
+- tag: Flags
+  spec_file: flagsmith-flags-api-openapi.yml
+  capability_id: BC-4210.50
+  capability_id_l1: BC-4210
+  capability_name: Feature Flag Management
+  confidence: 0.9
+  evidence: GET /flags/ 'List all flags for an environment'; schemas Flag, Feature
+  reason: SDK/admin retrieval of the flag set evaluated for an environment — runtime control and delivery
+    of feature flags, BC-4210.50.
+- tag: Feature states
+  spec_file: flagsmith-feature-states-api-openapi.yml
+  capability_id: BC-4210.50
+  capability_id_l1: BC-4210
+  capability_name: Feature Flag Management
+  confidence: 0.85
+  evidence: GET/POST /api/v1/environments/{environment_api_key}/featurestates/ and 'api_v1_environment_feature_versions_retrieve';
+    schemas WritableNestedFeatureState, MultivariateFeatureStateValue
+  reason: Operations manage the per-environment on/off and multivariate state of feature flags plus their
+    versions — lifecycle and runtime control of feature flags, squarely BC-4210.50.
+- tag: Experimental
+  spec_file: flagsmith-experimental-api-openapi.yml
+  capability_id: BC-4210.50
+  capability_id_l1: BC-4210
+  capability_name: Feature Flag Management
+  confidence: 0.8
+  evidence: POST /api/experiments/environments/{environment_key}/update-flag-v2/ 'Update multiple feature
+    states'; schemas UpdateFlagRequest, SegmentOverride, MultivariateValue
+  reason: Despite the tag name, these are __future__/experimental-channel endpoints that read and write
+    feature states and segment overrides — runtime control and cohort targeting of feature flags, i.e.
+    Feature Flag Management, not experimentation programme management.
+- tag: SDK
+  spec_file: flagsmith-sdk-api-openapi.yml
+  capability_id: BC-4210.50
+  capability_id_l1: BC-4210
+  capability_name: Feature Flag Management
+  confidence: 0.8
+  evidence: GET /api/v1/flags/ sdk_v1_flags; GET /api/v1/environment-document/; schemas V1EnvironmentDocumentResponseFeatureState,
+    V1IdentitiesResponseV1Flag
+  reason: The SDK surface serves runtime feature-flag evaluation for an environment and per-identity flag
+    states — the runtime control side of Feature Flag Management, which explicitly covers targeting features
+    to cohorts at runtime.
+- tag: Webhooks
+  spec_file: flagsmith-webhooks-api-openapi.yml
+  capability_id: BC-4270.80
+  capability_id_l1: BC-4270
+  capability_name: Webhook & Event Subscription Management
+  confidence: 0.78
+  evidence: POST /environments/{environment_api_key}/webhooks/ createEnvironmentWebhook; POST /organisations/{organisation_id}/webhooks/
+    createOrganisationWebhook; schemas Webhook, TestWebhook, TestWebhookSuccessResponse
+  reason: Operations manage the lifecycle of outbound webhook subscriptions at environment and organisation
+    scope, including test-delivery endpoints — directly the Webhook & Event Subscription Management sub-capability.
+    A few inbound third-party webhook receivers (Mixpanel, Chargebee) dilute slightly.
+- tag: Identities
+  spec_file: flagsmith-identities-api-openapi.yml
+  capability_id: BC-4210.50
+  capability_id_l1: BC-4210
+  capability_name: Feature Flag Management
+  confidence: 0.7
+  evidence: GET /environments/{environment_api_key}/identities/ 'List identities for an environment' and
+    'api_v1_environments_edge_identities_edge_featurestates_list'; schemas EdgeIdentityFeatureState, PaginatedTraitList
+  reason: 'Identities and their traits exist to resolve per-user feature flag overrides (''edge-featurestates''
+    per identity) — flag targeting to individual users/cohorts, part of Feature Flag Management. Not customer
+    master data: these are end-user keys and traits owned by the flag platform''s customers. Moderate
+    confidence given the identity/trait store could also be read as a targeting data store.'
+- tag: Permissions
+  spec_file: flagsmith-permissions-api-openapi.yml
+  capability_id: BC-620.20
+  capability_id_l1: BC-620
+  capability_name: Identity & Access Management
+  confidence: 0.7
+  evidence: GET /api/v1/environments/{environment_api_key}/user-permissions/; schemas CreateUpdateUserProjectPermission,
+    UserPermissionGroup, UserOrganisationPermissionUpdateCreate
+  reason: Operations grant, update and revoke user and group permissions at organisation, project and
+    environment scope — authorisation/access administration, which maps to Identity & Access Management.
+    Some ambiguity remains as this is in-product RBAC rather than enterprise IAM tooling.
