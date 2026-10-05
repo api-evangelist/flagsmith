@@ -1,0 +1,12 @@
+{
+ "url": "https://api.flagsmith.com/api/v1/swagger.yaml",
+ "requested_url": "https://api.flagsmith.com/api/v1/swagger.yaml",
+ "status": 200,
+ "content_type": "application/yaml; charset=utf-8",
+ "bytes": 837607,
+ "sha256": "4aaaa1f0b44252891c2c36f2865307cecf142822c0acee417641d048752f1447",
+ "fetched_at": "2026-10-04",
+ "fetched_by": "APIEvangelist-Harvest/1.0 (+https://apievangelist.com)",
+ "match": "equivalent",
+ "note": "Re-fetched from the provider by verify-openapi-sources.py; the provider's current document describes the same operations (Jaccard 0.995), but the bytes differ, so the archive is an earlier or reformatted copy."
+}
