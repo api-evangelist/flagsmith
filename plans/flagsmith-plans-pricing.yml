@@ -124,3 +124,40 @@ plans:
 discounts:
 - {audience: open source / not-for-profit / charity, note: 'Discounted plan available on request'}
 - {audience: annual billing, note: '>10% saving, 12 months paid up front'}
+x-canonical:
+  generated: '2026-10-08'
+  vocabulary: all/0-working/economics/plans-canonical.yml
+  models:
+  - metered
+  - negotiated
+  - subscription
+  units: []
+  plans:
+  - name: Free
+    access: freemium
+    model: metered
+    model_how: derived
+    units: []
+    periods:
+    - month
+  - name: Start-Up
+    access: other
+    model: subscription
+    model_how: stated
+    units: []
+    periods:
+    - month
+  - name: Scale-Up
+    access: other
+    model: subscription
+    model_how: stated
+    units: []
+    periods:
+    - month
+  - name: Enterprise
+    access: negotiated
+    model: negotiated
+    model_how: stated
+    units: []
+    periods:
+    - month
