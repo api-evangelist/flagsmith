@@ -42,6 +42,13 @@ paths:
                 $ref: '#/components/schemas/Error'
 components:
   schemas:
+    Error:
+      type: object
+      description: An error response from the API
+      properties:
+        detail:
+          type: string
+          description: A human-readable error message
     Flag:
       type: object
       description: A feature flag object containing the feature definition, its enabled state, and any associated value for the environment.
@@ -72,13 +79,6 @@ components:
           type: integer
           nullable: true
           description: The feature segment ID if this flag state is a segment override, or null otherwise
-    Error:
-      type: object
-      description: An error response from the API
-      properties:
-        detail:
-          type: string
-          description: A human-readable error message
     Feature:
       type: object
       description: A feature definition containing metadata about the feature flag including its name, type, and default configuration.

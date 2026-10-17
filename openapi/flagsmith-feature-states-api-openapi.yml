@@ -589,324 +589,6 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    FeatureHealthEventReasonTextBlock:
-      type: object
-      properties:
-        text:
-          type: string
-        title:
-          type: string
-      required:
-      - text
-    FeatureHealthEventReasonUrlBlock:
-      type: object
-      properties:
-        url:
-          type: string
-        title:
-          type: string
-      required:
-      - url
-    EnvironmentFeatureVersionRetrieve:
-      type: object
-      properties:
-        created_at:
-          type: string
-          format: date-time
-          readOnly: true
-        updated_at:
-          type: string
-          format: date-time
-          readOnly: true
-        published:
-          type: boolean
-          readOnly: true
-        live_from:
-          type:
-          - string
-          - 'null'
-          format: date-time
-        uuid:
-          type: string
-          format: uuid
-          readOnly: true
-        is_live:
-          type: boolean
-          readOnly: true
-        published_by:
-          type:
-          - integer
-          - 'null'
-          readOnly: true
-        created_by:
-          type:
-          - integer
-          - 'null'
-          readOnly: true
-        description:
-          type:
-          - string
-          - 'null'
-        previous_version_uuid:
-          type:
-          - string
-          - 'null'
-          readOnly: true
-        feature:
-          type: integer
-          readOnly: true
-        environment:
-          type: integer
-          readOnly: true
-    CustomCreateSegmentOverrideFeatureSegment:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        segment:
-          type: integer
-        priority:
-          type: integer
-          minimum: 0
-        uuid:
-          type: string
-          format: uuid
-          readOnly: true
-      required:
-      - segment
-    FeatureStateSerializerWithIdentity:
-      type: object
-      description: Adds nested create feature
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        feature_state_value:
-          type:
-          - string
-          - integer
-          - number
-          - boolean
-          - 'null'
-          readOnly: true
-        multivariate_feature_state_values:
-          type: array
-          items:
-            $ref: '#/components/schemas/MultivariateFeatureStateValue'
-        identifier:
-          type: string
-          description: Can be passed as an alternative to `identity`
-        identity:
-          $ref: '#/components/schemas/_Identity'
-        deleted_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          readOnly: true
-        uuid:
-          type: string
-          format: uuid
-          readOnly: true
-        enabled:
-          type: boolean
-        created_at:
-          type: string
-          format: date-time
-          readOnly: true
-        updated_at:
-          type: string
-          format: date-time
-          readOnly: true
-        live_from:
-          type:
-          - string
-          - 'null'
-          format: date-time
-        version:
-          type:
-          - integer
-          - 'null'
-          readOnly: true
-        feature:
-          type: integer
-        environment:
-          type:
-          - integer
-          - 'null'
-        feature_segment:
-          type:
-          - integer
-          - 'null'
-        change_request:
-          type:
-          - integer
-          - 'null'
-        environment_feature_version:
-          type:
-          - string
-          - 'null'
-          format: uuid
-      required:
-      - feature
-      - identity
-    PaginatedWritableNestedFeatureStateList:
-      type: object
-      required:
-      - count
-      - results
-      properties:
-        count:
-          type: integer
-          example: 123
-        next:
-          type: string
-          nullable: true
-          format: uri
-          example: http://api.example.org/accounts/?page=4
-        previous:
-          type: string
-          nullable: true
-          format: uri
-          example: http://api.example.org/accounts/?page=2
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/WritableNestedFeatureState'
-    PaginatedFeatureStateSerializerWithIdentityList:
-      type: object
-      required:
-      - count
-      - results
-      properties:
-        count:
-          type: integer
-          example: 123
-        next:
-          type: string
-          nullable: true
-          format: uri
-          example: http://api.example.org/accounts/?page=4
-        previous:
-          type: string
-          nullable: true
-          format: uri
-          example: http://api.example.org/accounts/?page=2
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/FeatureStateSerializerWithIdentity'
-    PatchedWritableNestedFeatureState:
-      type: object
-      description: Adds nested create feature
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        feature_state_value:
-          $ref: '#/components/schemas/FeatureStateValue'
-        multivariate_feature_state_values:
-          type: array
-          items:
-            $ref: '#/components/schemas/MultivariateFeatureStateValue'
-        identifier:
-          type: string
-          description: Can be passed as an alternative to `identity`
-        deleted_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          readOnly: true
-        uuid:
-          type: string
-          format: uuid
-          readOnly: true
-        enabled:
-          type: boolean
-        created_at:
-          type: string
-          format: date-time
-          readOnly: true
-        updated_at:
-          type: string
-          format: date-time
-          readOnly: true
-        live_from:
-          type:
-          - string
-          - 'null'
-          format: date-time
-        version:
-          type:
-          - integer
-          - 'null'
-          readOnly: true
-        feature:
-          type: integer
-        environment:
-          type:
-          - integer
-          - 'null'
-        identity:
-          type:
-          - integer
-          - 'null'
-        feature_segment:
-          type:
-          - integer
-          - 'null'
-        change_request:
-          type:
-          - integer
-          - 'null'
-        environment_feature_version:
-          type:
-          - string
-          - 'null'
-          format: uuid
-    NameEnum:
-      enum:
-      - Webhook
-      - Grafana
-      type: string
-      description: '* `Webhook` - Webhook
-
-        * `Grafana` - Grafana'
-    FeatureHealthEvent:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        created_at:
-          type: string
-          format: date-time
-          readOnly: true
-        environment:
-          type:
-          - integer
-          - 'null'
-          readOnly: true
-        feature:
-          type: integer
-          readOnly: true
-        provider_name:
-          type:
-          - string
-          - 'null'
-          readOnly: true
-        reason:
-          oneOf:
-          - $ref: '#/components/schemas/FeatureHealthEventReason'
-          - type: 'null'
-        type:
-          allOf:
-          - $ref: '#/components/schemas/FeatureHealthEventTypeEnum'
-          readOnly: true
-      required:
-      - reason
     MultivariateFeatureStateValue:
       type: object
       properties:
@@ -923,7 +605,15 @@ components:
       required:
       - multivariate_feature_option
       - percentage_allocation
-    PatchedCustomEnvironmentFeatureVersionFeatureState:
+    NameEnum:
+      enum:
+      - Webhook
+      - Grafana
+      type: string
+      description: '* `Webhook` - Webhook
+
+        * `Grafana` - Grafana'
+    CustomEnvironmentFeatureVersionFeatureState:
       type: object
       description: Adds nested create feature
       properties:
@@ -984,15 +674,40 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/MultivariateFeatureStateValue'
-    FeatureStateSerializerCreate:
+      required:
+      - feature_state_value
+    FeatureHealthEventReasonTextBlock:
       type: object
       properties:
-        feature:
-          type: integer
-        enabled:
-          type: boolean
+        text:
+          type: string
+        title:
+          type: string
       required:
-      - feature
+      - text
+    PaginatedWritableNestedFeatureStateList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/WritableNestedFeatureState'
     WritableNestedFeatureState:
       type: object
       description: Adds nested create feature
@@ -1065,42 +780,135 @@ components:
       required:
       - environment
       - feature
-    NullEnum:
-      type: 'null'
-    FeatureStateValue:
+    PatchedWritableNestedFeatureState:
       type: object
+      description: Adds nested create feature
       properties:
-        type:
-          oneOf:
-          - $ref: '#/components/schemas/Type975Enum'
-          - $ref: '#/components/schemas/BlankEnum'
-          - $ref: '#/components/schemas/NullEnum'
-        string_value:
+        id:
+          type: integer
+          readOnly: true
+        feature_state_value:
+          $ref: '#/components/schemas/FeatureStateValue'
+        multivariate_feature_state_values:
+          type: array
+          items:
+            $ref: '#/components/schemas/MultivariateFeatureStateValue'
+        identifier:
+          type: string
+          description: Can be passed as an alternative to `identity`
+        deleted_at:
           type:
           - string
           - 'null'
-          maxLength: 20000
-        integer_value:
+          format: date-time
+          readOnly: true
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+        enabled:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        live_from:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        version:
           type:
           - integer
           - 'null'
-          maximum: 2147483647
-          minimum: -2147483648
-        boolean_value:
+          readOnly: true
+        feature:
+          type: integer
+        environment:
           type:
-          - boolean
+          - integer
           - 'null'
-    BlankEnum:
-      enum:
-      - ''
-    FeatureHealthEventTypeEnum:
-      enum:
-      - UNHEALTHY
-      - HEALTHY
-      type: string
-      description: '* `UNHEALTHY` - Unhealthy
-
-        * `HEALTHY` - Healthy'
+        identity:
+          type:
+          - integer
+          - 'null'
+        feature_segment:
+          type:
+          - integer
+          - 'null'
+        change_request:
+          type:
+          - integer
+          - 'null'
+        environment_feature_version:
+          type:
+          - string
+          - 'null'
+          format: uuid
+    CustomCreateSegmentOverrideFeatureSegment:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        segment:
+          type: integer
+        priority:
+          type: integer
+          minimum: 0
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+      required:
+      - segment
+    PaginatedFeatureStateSerializerWithIdentityList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/FeatureStateSerializerWithIdentity'
+    FeatureStateSerializerCreate:
+      type: object
+      properties:
+        feature:
+          type: integer
+        enabled:
+          type: boolean
+      required:
+      - feature
+    _Identity:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        identifier:
+          type: string
+          maxLength: 2000
+      required:
+      - identifier
     FeatureStateSerializerBasic:
       type: object
       description: Adds nested create feature
@@ -1178,14 +986,63 @@ components:
           format: uuid
       required:
       - feature
-    PatchedFeatureStateSerializerCreate:
+    BlankEnum:
+      enum:
+      - ''
+    FeatureHealthEventReasonUrlBlock:
       type: object
       properties:
+        url:
+          type: string
+        title:
+          type: string
+      required:
+      - url
+    Type975Enum:
+      enum:
+      - int
+      - unicode
+      - bool
+      type: string
+      description: '* `int` - Integer
+
+        * `unicode` - String
+
+        * `bool` - Boolean'
+    FeatureHealthEvent:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        environment:
+          type:
+          - integer
+          - 'null'
+          readOnly: true
         feature:
           type: integer
-        enabled:
-          type: boolean
-    CustomEnvironmentFeatureVersionFeatureState:
+          readOnly: true
+        provider_name:
+          type:
+          - string
+          - 'null'
+          readOnly: true
+        reason:
+          oneOf:
+          - $ref: '#/components/schemas/FeatureHealthEventReason'
+          - type: 'null'
+        type:
+          allOf:
+          - $ref: '#/components/schemas/FeatureHealthEventTypeEnum'
+          readOnly: true
+      required:
+      - reason
+    PatchedCustomEnvironmentFeatureVersionFeatureState:
       type: object
       description: Adds nested create feature
       properties:
@@ -1246,15 +1103,16 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/MultivariateFeatureStateValue'
-      required:
-      - feature_state_value
-    CreateFeatureHealthProvider:
-      type: object
-      properties:
-        name:
-          $ref: '#/components/schemas/NameEnum'
-      required:
-      - name
+    NullEnum:
+      type: 'null'
+    FeatureHealthEventTypeEnum:
+      enum:
+      - UNHEALTHY
+      - HEALTHY
+      type: string
+      description: '* `UNHEALTHY` - Unhealthy
+
+        * `HEALTHY` - Healthy'
     FeatureHealthEventReason:
       type: object
       properties:
@@ -1269,17 +1127,96 @@ components:
       required:
       - text_blocks
       - url_blocks
-    _Identity:
+    FeatureStateSerializerWithIdentity:
       type: object
+      description: Adds nested create feature
       properties:
         id:
           type: integer
           readOnly: true
+        feature_state_value:
+          type:
+          - string
+          - integer
+          - number
+          - boolean
+          - 'null'
+          readOnly: true
+        multivariate_feature_state_values:
+          type: array
+          items:
+            $ref: '#/components/schemas/MultivariateFeatureStateValue'
         identifier:
           type: string
-          maxLength: 2000
+          description: Can be passed as an alternative to `identity`
+        identity:
+          $ref: '#/components/schemas/_Identity'
+        deleted_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          readOnly: true
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+        enabled:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        live_from:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        version:
+          type:
+          - integer
+          - 'null'
+          readOnly: true
+        feature:
+          type: integer
+        environment:
+          type:
+          - integer
+          - 'null'
+        feature_segment:
+          type:
+          - integer
+          - 'null'
+        change_request:
+          type:
+          - integer
+          - 'null'
+        environment_feature_version:
+          type:
+          - string
+          - 'null'
+          format: uuid
       required:
-      - identifier
+      - feature
+      - identity
+    PatchedFeatureStateSerializerCreate:
+      type: object
+      properties:
+        feature:
+          type: integer
+        enabled:
+          type: boolean
+    CreateFeatureHealthProvider:
+      type: object
+      properties:
+        name:
+          $ref: '#/components/schemas/NameEnum'
+      required:
+      - name
     FeatureHealthProvider:
       type: object
       properties:
@@ -1297,17 +1234,80 @@ components:
       required:
       - name
       - project
-    Type975Enum:
-      enum:
-      - int
-      - unicode
-      - bool
-      type: string
-      description: '* `int` - Integer
-
-        * `unicode` - String
-
-        * `bool` - Boolean'
+    EnvironmentFeatureVersionRetrieve:
+      type: object
+      properties:
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        published:
+          type: boolean
+          readOnly: true
+        live_from:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+        is_live:
+          type: boolean
+          readOnly: true
+        published_by:
+          type:
+          - integer
+          - 'null'
+          readOnly: true
+        created_by:
+          type:
+          - integer
+          - 'null'
+          readOnly: true
+        description:
+          type:
+          - string
+          - 'null'
+        previous_version_uuid:
+          type:
+          - string
+          - 'null'
+          readOnly: true
+        feature:
+          type: integer
+          readOnly: true
+        environment:
+          type: integer
+          readOnly: true
+    FeatureStateValue:
+      type: object
+      properties:
+        type:
+          oneOf:
+          - $ref: '#/components/schemas/Type975Enum'
+          - $ref: '#/components/schemas/BlankEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        string_value:
+          type:
+          - string
+          - 'null'
+          maxLength: 20000
+        integer_value:
+          type:
+          - integer
+          - 'null'
+          maximum: 2147483647
+          minimum: -2147483648
+        boolean_value:
+          type:
+          - boolean
+          - 'null'
   securitySchemes:
     Cohort_Sync_Key:
       type: http

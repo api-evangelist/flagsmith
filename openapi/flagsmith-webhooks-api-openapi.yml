@@ -667,7 +667,38 @@ paths:
       summary: Api v1 webhooks test create
       x-summary-source: derived
 components:
+  parameters:
+    EnvironmentApiKey:
+      name: environment_api_key
+      in: path
+      description: The API key for the environment
+      required: true
+      schema:
+        type: string
+    OrganisationId:
+      name: organisation_id
+      in: path
+      description: The unique identifier for the organisation
+      required: true
+      schema:
+        type: integer
   schemas:
+    WebhookInput:
+      type: object
+      description: Input object for creating or updating a webhook
+      required:
+      - url
+      properties:
+        url:
+          type: string
+          format: uri
+          description: The URL to send webhook events to
+        enabled:
+          type: boolean
+          description: Whether the webhook should be enabled
+        secret:
+          type: string
+          description: Optional secret for signing webhook payloads with HMAC-SHA256
     Webhook:
       type: object
       description: A webhook configuration for receiving event notifications from Flagsmith.
@@ -693,154 +724,6 @@ components:
         secret:
           type: string
           description: Optional secret used to sign webhook payloads with HMAC-SHA256 for verification
-    WebhookInput:
-      type: object
-      description: Input object for creating or updating a webhook
-      required:
-      - url
-      properties:
-        url:
-          type: string
-          format: uri
-          description: The URL to send webhook events to
-        enabled:
-          type: boolean
-          description: Whether the webhook should be enabled
-        secret:
-          type: string
-          description: Optional secret for signing webhook payloads with HMAC-SHA256
-    PaginatedOrganisationWebhookList:
-      type: object
-      required:
-      - count
-      - results
-      properties:
-        count:
-          type: integer
-          example: 123
-        next:
-          type: string
-          nullable: true
-          format: uri
-          example: http://api.example.org/accounts/?page=4
-        previous:
-          type: string
-          nullable: true
-          format: uri
-          example: http://api.example.org/accounts/?page=2
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/OrganisationWebhook'
-    WebhookSyncMembers:
-      type: object
-      properties:
-        identifiers:
-          type: array
-          items:
-            type: string
-          description: Identity identifiers, each at most 1024 bytes of UTF-8.
-          maxItems: 10000
-          minItems: 1
-      required:
-      - identifiers
-    PatchedOrganisationWebhook:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        url:
-          type: string
-          format: uri
-          maxLength: 200
-        enabled:
-          type: boolean
-        secret:
-          type: string
-          maxLength: 255
-        created_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          readOnly: true
-        updated_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          readOnly: true
-    MixpanelWebhookError:
-      type: object
-      properties:
-        message:
-          type: string
-        code:
-          type: integer
-      required:
-      - code
-      - message
-    ActionEnum:
-      enum:
-      - members
-      - add_members
-      - remove_members
-      type: string
-      description: '* `members` - members
-
-        * `add_members` - add_members
-
-        * `remove_members` - remove_members'
-    MixpanelWebhookResponse:
-      type: object
-      properties:
-        action:
-          type: string
-        status:
-          type: string
-      required:
-      - action
-      - status
-    MixpanelWebhook:
-      type: object
-      properties:
-        action:
-          $ref: '#/components/schemas/ActionEnum'
-        parameters:
-          $ref: '#/components/schemas/MixpanelParameters'
-      required:
-      - action
-      - parameters
-    MixpanelMember:
-      type: object
-      properties:
-        mixpanel_distinct_id:
-          type: string
-      required:
-      - mixpanel_distinct_id
-    Scope:
-      type: object
-      properties:
-        type:
-          $ref: '#/components/schemas/WebhookScopeTypeEnum'
-      required:
-      - type
-    TestWebhook:
-      type: object
-      properties:
-        webhook_url:
-          type: string
-          format: uri
-        scope:
-          $ref: '#/components/schemas/Scope'
-        secret:
-          type:
-          - string
-          - 'null'
-      required:
-      - scope
-      - webhook_url
     PatchedWebhook:
       type: object
       properties:
@@ -864,21 +747,29 @@ components:
         secret:
           type: string
           maxLength: 255
-    MixpanelWebhookFailureResponse:
+    WebhookScopeTypeEnum:
+      enum:
+      - organisation
+      - environment
+      type: string
+      description: '* `organisation` - organisation
+
+        * `environment` - environment'
+    TestWebhook:
       type: object
       properties:
-        action:
+        webhook_url:
+          type: string
+          format: uri
+        scope:
+          $ref: '#/components/schemas/Scope'
+        secret:
           type:
           - string
           - 'null'
-        status:
-          type: string
-        error:
-          $ref: '#/components/schemas/MixpanelWebhookError'
       required:
-      - action
-      - error
-      - status
+      - scope
+      - webhook_url
     TestWebhookSuccessResponse:
       type: object
       properties:
@@ -889,45 +780,17 @@ components:
           default: 200
       required:
       - detail
-    Webhook_2:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        url:
-          type: string
-          format: uri
-          maxLength: 200
-        enabled:
-          type: boolean
-        created_at:
-          type: string
-          format: date-time
-          readOnly: true
-        updated_at:
-          type: string
-          format: date-time
-          readOnly: true
-        secret:
-          type: string
-          maxLength: 255
-      required:
-      - url
-    TestWebhookErrorResponse:
-      type: object
-      properties:
-        detail:
-          type: string
-        status:
-          type: integer
-        body:
-          type:
-          - string
-          - 'null'
-      required:
-      - detail
-      - status
+    ActionEnum:
+      enum:
+      - members
+      - add_members
+      - remove_members
+      type: string
+      description: '* `members` - members
+
+        * `add_members` - add_members
+
+        * `remove_members` - remove_members'
     MixpanelParameters:
       type: object
       properties:
@@ -945,14 +808,13 @@ components:
       - members
       - mixpanel_cohort_id
       - mixpanel_cohort_name
-    WebhookScopeTypeEnum:
-      enum:
-      - organisation
-      - environment
-      type: string
-      description: '* `organisation` - organisation
-
-        * `environment` - environment'
+    MixpanelMember:
+      type: object
+      properties:
+        mixpanel_distinct_id:
+          type: string
+      required:
+      - mixpanel_distinct_id
     OrganisationWebhook:
       type: object
       properties:
@@ -982,21 +844,159 @@ components:
           readOnly: true
       required:
       - url
-  parameters:
-    EnvironmentApiKey:
-      name: environment_api_key
-      in: path
-      description: The API key for the environment
-      required: true
-      schema:
-        type: string
-    OrganisationId:
-      name: organisation_id
-      in: path
-      description: The unique identifier for the organisation
-      required: true
-      schema:
-        type: integer
+    Webhook_2:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        url:
+          type: string
+          format: uri
+          maxLength: 200
+        enabled:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        secret:
+          type: string
+          maxLength: 255
+      required:
+      - url
+    WebhookSyncMembers:
+      type: object
+      properties:
+        identifiers:
+          type: array
+          items:
+            type: string
+          description: Identity identifiers, each at most 1024 bytes of UTF-8.
+          maxItems: 10000
+          minItems: 1
+      required:
+      - identifiers
+    MixpanelWebhookError:
+      type: object
+      properties:
+        message:
+          type: string
+        code:
+          type: integer
+      required:
+      - code
+      - message
+    PatchedOrganisationWebhook:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        url:
+          type: string
+          format: uri
+          maxLength: 200
+        enabled:
+          type: boolean
+        secret:
+          type: string
+          maxLength: 255
+        created_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          readOnly: true
+        updated_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          readOnly: true
+    MixpanelWebhookResponse:
+      type: object
+      properties:
+        action:
+          type: string
+        status:
+          type: string
+      required:
+      - action
+      - status
+    TestWebhookErrorResponse:
+      type: object
+      properties:
+        detail:
+          type: string
+        status:
+          type: integer
+        body:
+          type:
+          - string
+          - 'null'
+      required:
+      - detail
+      - status
+    MixpanelWebhookFailureResponse:
+      type: object
+      properties:
+        action:
+          type:
+          - string
+          - 'null'
+        status:
+          type: string
+        error:
+          $ref: '#/components/schemas/MixpanelWebhookError'
+      required:
+      - action
+      - error
+      - status
+    PaginatedOrganisationWebhookList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrganisationWebhook'
+    MixpanelWebhook:
+      type: object
+      properties:
+        action:
+          $ref: '#/components/schemas/ActionEnum'
+        parameters:
+          $ref: '#/components/schemas/MixpanelParameters'
+      required:
+      - action
+      - parameters
+    Scope:
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/WebhookScopeTypeEnum'
+      required:
+      - type
   securitySchemes:
     apiKeyAuth:
       type: apiKey

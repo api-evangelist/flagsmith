@@ -2152,116 +2152,20 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    FeatureHealthEventReasonTextBlock:
-      type: object
-      properties:
-        text:
-          type: string
-        title:
-          type: string
-      required:
-      - text
-    WorkflowsError:
-      type: object
-      properties:
-        message:
-          type: string
-      required:
-      - message
-    Invite:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        email:
-          type: string
-          format: email
-          maxLength: 254
-        role:
-          $ref: '#/components/schemas/RoleEnum'
-        date_created:
-          type: string
-          format: date-time
-          readOnly: true
-          title: DateCreated
-        permission_groups:
-          type: array
-          items:
-            type:
-            - integer
-            - 'null'
-      required:
-      - email
-    OrganisationSerializerFull:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        uuid:
-          type: string
-          format: uuid
-          readOnly: true
-        name:
-          type: string
-          maxLength: 2000
-        created_date:
-          type: string
-          format: date-time
-          readOnly: true
-          title: DateCreated
-        webhook_notification_email:
-          type:
-          - string
-          - 'null'
-          format: email
-          maxLength: 254
-        num_seats:
-          type: integer
-          readOnly: true
-        subscription:
-          $ref: '#/components/schemas/Subscription'
-        role:
-          type:
-          - string
-          - 'null'
-          readOnly: true
-        persist_trait_data:
-          type: boolean
-          readOnly: true
-          description: Disable this if you don't want Flagsmith to store trait data for this org's identities.
-        block_access_to_admin:
-          type: boolean
-          readOnly: true
-          description: Enable this to block all the access to admin interface for the organisation
-        restrict_project_create_to_admin:
-          type: boolean
-        force_2fa:
-          type: boolean
-        targeting_key:
-          type:
-          - string
-          - 'null'
-          writeOnly: true
-          description: Flagsmith-on-Flagsmith targeting key. Immutable; org.<id> is used when unset.
-          maxLength: 64
-      required:
-      - name
-    AggregationEnum:
+    ExpectedDirectionEnum:
       enum:
-      - count
-      - sum
-      - mean
-      - occurrence
+      - increase
+      - decrease
+      - not_increase
+      - not_decrease
       type: string
-      description: '* `count` - Count
+      description: '* `increase` - Increase
 
-        * `sum` - Sum
+        * `decrease` - Decrease
 
-        * `mean` - Mean
+        * `not_increase` - Should not increase
 
-        * `occurrence` - Occurrence (event happened at least once)'
+        * `not_decrease` - Should not decrease'
     Experiment:
       type: object
       properties:
@@ -2312,29 +2216,385 @@ components:
       - feature
       - hypothesis
       - name
-    PaginatedMultivariateFeatureOptionList:
+    FeatureFlagCodeReferencesRepositorySummary:
       type: object
-      required:
-      - count
-      - results
       properties:
-        count:
-          type: integer
-          example: 123
-        next:
+        repository_url:
           type: string
-          nullable: true
           format: uri
-          example: http://api.example.org/accounts/?page=4
-        previous:
+        vcs_provider:
+          $ref: '#/components/schemas/VcsProviderEnum'
+        revision:
           type: string
-          nullable: true
-          format: uri
-          example: http://api.example.org/accounts/?page=2
-        results:
+        last_successful_repository_scanned_at:
+          type: string
+          format: date-time
+        last_feature_found_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        code_references:
           type: array
           items:
-            $ref: '#/components/schemas/MultivariateFeatureOption'
+            $ref: '#/components/schemas/_CodeReferenceDetail'
+      required:
+      - code_references
+      - last_feature_found_at
+      - last_successful_repository_scanned_at
+      - repository_url
+      - revision
+      - vcs_provider
+    Metadata:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        model_field:
+          type: integer
+        field_value:
+          type: string
+          maxLength: 2000
+      required:
+      - field_value
+      - model_field
+    ListUserPermissionGroup:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 200
+        users:
+          type: array
+          items:
+            $ref: '#/components/schemas/ListUserPermissionGroupMembership'
+          readOnly: true
+        is_default:
+          type: boolean
+          description: If set to true, all new users will be added to this group
+        external_id:
+          type:
+          - string
+          - 'null'
+          description: Unique ID of the group in an external system
+          maxLength: 255
+      required:
+      - name
+    BillingStatusEnum:
+      enum:
+      - ACTIVE
+      - DUNNING
+      type: string
+      description: '* `ACTIVE` - Active
+
+        * `DUNNING` - Dunning'
+    ChangeRequestCreate:
+      type: object
+      description: Adds nested create feature
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        title:
+          type: string
+          maxLength: 500
+        description:
+          type:
+          - string
+          - 'null'
+        feature_states:
+          type: array
+          items:
+            $ref: '#/components/schemas/CreateChangeRequestFeatureState'
+        deleted_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          readOnly: true
+        environment:
+          type:
+          - integer
+          - 'null'
+          readOnly: true
+        committed_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          readOnly: true
+        approvals:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChangeRequestApproval'
+        user:
+          type:
+          - integer
+          - 'null'
+          readOnly: true
+        committed_by:
+          type:
+          - integer
+          - 'null'
+          readOnly: true
+        group_assignments:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChangeRequestGroupAssignment'
+        environment_feature_versions:
+          type: array
+          items:
+            type: string
+            format: uuid
+        change_sets:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/VersionChangeSet'
+        ignore_conflicts:
+          type: boolean
+      required:
+      - feature_states
+      - title
+    MultivariateFeatureOption:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+        type:
+          oneOf:
+          - $ref: '#/components/schemas/Type975Enum'
+          - $ref: '#/components/schemas/BlankEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        integer_value:
+          type:
+          - integer
+          - 'null'
+          maximum: 2147483647
+          minimum: -2147483648
+        string_value:
+          type:
+          - string
+          - 'null'
+          maxLength: 20000
+        boolean_value:
+          type:
+          - boolean
+          - 'null'
+        default_percentage_allocation:
+          type: number
+          format: double
+          maximum: 100
+          minimum: 0
+        key:
+          type:
+          - string
+          - 'null'
+          description: A stable, human-readable identifier for the variant.
+          pattern: ^[-a-zA-Z0-9_]+$
+          maxLength: 255
+        feature:
+          type: integer
+      required:
+      - feature
+    NestedMultivariateFeatureOption:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+        type:
+          oneOf:
+          - $ref: '#/components/schemas/Type975Enum'
+          - $ref: '#/components/schemas/BlankEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        integer_value:
+          type:
+          - integer
+          - 'null'
+          maximum: 2147483647
+          minimum: -2147483648
+        string_value:
+          type:
+          - string
+          - 'null'
+          maxLength: 20000
+        boolean_value:
+          type:
+          - boolean
+          - 'null'
+        default_percentage_allocation:
+          type: number
+          format: double
+          maximum: 100
+          minimum: 0
+        key:
+          type:
+          - string
+          - 'null'
+          readOnly: true
+          description: A stable, human-readable identifier for the variant.
+    WritableNestedFeatureState:
+      type: object
+      description: Adds nested create feature
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        feature_state_value:
+          $ref: '#/components/schemas/FeatureStateValue'
+        multivariate_feature_state_values:
+          type: array
+          items:
+            $ref: '#/components/schemas/MultivariateFeatureStateValue'
+        identifier:
+          type: string
+          description: Can be passed as an alternative to `identity`
+        deleted_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          readOnly: true
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+        enabled:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        live_from:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        version:
+          type:
+          - integer
+          - 'null'
+          readOnly: true
+        feature:
+          type: integer
+        environment:
+          type:
+          - integer
+          - 'null'
+        identity:
+          type:
+          - integer
+          - 'null'
+        feature_segment:
+          type:
+          - integer
+          - 'null'
+        change_request:
+          type:
+          - integer
+          - 'null'
+        environment_feature_version:
+          type:
+          - string
+          - 'null'
+          format: uuid
+      required:
+      - environment
+      - feature
+    ReleasePipelineDetail:
+      type: object
+      description: Adds nested create feature
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 255
+        project:
+          type: integer
+          readOnly: true
+        description:
+          type:
+          - string
+          - 'null'
+        stages_count:
+          type: integer
+          readOnly: true
+        published_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        published_by:
+          type:
+          - integer
+          - 'null'
+        features:
+          type: array
+          items:
+            type: integer
+          readOnly: true
+        stages:
+          type: array
+          items:
+            $ref: '#/components/schemas/PipelineStage'
+        completed_features:
+          type: string
+          readOnly: true
+      required:
+      - name
+      - stages
+    CustomCreateSegmentOverrideFeatureSegment:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        segment:
+          type: integer
+        priority:
+          type: integer
+          minimum: 0
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+      required:
+      - segment
+    EnvironmentFeatureVersionPublish:
+      type: object
+      properties:
+        live_from:
+          type: string
+          format: date-time
     ListFeature:
       type: object
       description: Functionality for serializers that need to handle metadata
@@ -2446,27 +2706,868 @@ components:
           readOnly: true
       required:
       - name
-    FeatureFlagCodeReferencesRepositoryCount:
+    FeatureValue:
       type: object
       properties:
-        repository_url:
+        type:
+          $ref: '#/components/schemas/FeatureValueTypeEnum'
+        value:
           type: string
-          format: uri
-        count:
+      required:
+      - type
+      - value
+    ProjectList:
+      type: object
+      properties:
+        id:
           type: integer
-        last_successful_repository_scanned_at:
+          readOnly: true
+        uuid:
           type: string
-          format: date-time
-        last_feature_found_at:
+          format: uuid
+          readOnly: true
+        name:
+          type: string
+          maxLength: 2000
+        organisation:
+          type: integer
+        hide_disabled_flags:
+          type: boolean
+          description: If true will exclude flags from SDK which are disabled
+        enable_dynamo_db:
+          type: boolean
+          readOnly: true
+          description: If true will sync environment data with dynamodb and allow access to dynamodb identities
+        migration_status:
+          type: string
+          readOnly: true
+          description: 'Edge migration status of the project; can be one of: MIGRATION_SCHEDULED, MIGRATION_COMPLETED, MIGRATION_IN_PROGRESS, MIGRATION_NOT_STARTED, NOT_APPLICABLE'
+        use_edge_identities:
+          type: boolean
+          readOnly: true
+        prevent_flag_defaults:
+          type: boolean
+          description: Prevent defaults from being set in all environments when creating a feature.
+        enable_realtime_updates:
+          type: boolean
+          description: Enable this to trigger a realtime(sse) event whenever the value of a flag changes
+        only_allow_lower_case_feature_names:
+          type: boolean
+          description: Used by UI to validate feature names
+        feature_name_regex:
+          type:
+          - string
+          - 'null'
+          description: Used for validating feature names
+          maxLength: 255
+        show_edge_identity_overrides_for_feature:
+          type: boolean
+          readOnly: true
+        stale_flags_limit_days:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+          description: Number of days without modification in any environment before a flag is considered stale.
+        edge_v2_migration_status:
+          allOf:
+          - $ref: '#/components/schemas/EdgeV2MigrationStatusEnum'
+          readOnly: true
+          description: '[Edge V2 migration] Project migration status. Set to `IN_PROGRESS` to trigger migration start.
+
+
+            * `NOT_STARTED` - Not Started
+
+            * `IN_PROGRESS` - In Progress
+
+            * `COMPLETE` - Complete
+
+            * `INCOMPLETE` - Incomplete (identity overrides skipped)'
+        minimum_change_request_approvals:
+          type:
+          - integer
+          - 'null'
+          maximum: 2147483647
+          minimum: -2147483648
+        enforce_feature_owners:
+          type: boolean
+          description: Require at least one user or group owner when creating a feature.
+      required:
+      - name
+      - organisation
+    ConditionOperatorEnum:
+      enum:
+      - EQUAL
+      - GREATER_THAN
+      - LESS_THAN
+      - CONTAINS
+      - GREATER_THAN_INCLUSIVE
+      - LESS_THAN_INCLUSIVE
+      - NOT_CONTAINS
+      - NOT_EQUAL
+      - REGEX
+      - PERCENTAGE_SPLIT
+      - MODULO
+      - IS_SET
+      - IS_NOT_SET
+      - IN
+      type: string
+      description: '* `EQUAL` - Exactly Matches
+
+        * `GREATER_THAN` - Greater than
+
+        * `LESS_THAN` - Less than
+
+        * `CONTAINS` - Contains
+
+        * `GREATER_THAN_INCLUSIVE` - Greater than or equal to
+
+        * `LESS_THAN_INCLUSIVE` - Less than or equal to
+
+        * `NOT_CONTAINS` - Does not contain
+
+        * `NOT_EQUAL` - Does not match
+
+        * `REGEX` - Matches regex
+
+        * `PERCENTAGE_SPLIT` - Percentage split
+
+        * `MODULO` - Modulo Operation
+
+        * `IS_SET` - Is set
+
+        * `IS_NOT_SET` - Is not set
+
+        * `IN` - In'
+    Status7a8Enum:
+      enum:
+      - created
+      - running
+      - paused
+      - completed
+      type: string
+      description: '* `created` - Created
+
+        * `running` - Running
+
+        * `paused` - Paused
+
+        * `completed` - Completed'
+    Type975Enum:
+      enum:
+      - int
+      - unicode
+      - bool
+      type: string
+      description: '* `int` - Integer
+
+        * `unicode` - String
+
+        * `bool` - Boolean'
+    _SegmentCohort:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        environment:
+          type: integer
+        environment_api_key:
+          type: string
+          readOnly: true
+        environment_name:
+          type: string
+          readOnly: true
+        source_type:
+          $ref: '#/components/schemas/SourceTypeEnum'
+        version:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+        deletion_requested_at:
           type:
           - string
           - 'null'
           format: date-time
       required:
+      - environment
+    NullEnum:
+      type: 'null'
+    PaginatedRoleList:
+      type: object
+      required:
       - count
-      - last_feature_found_at
-      - last_successful_repository_scanned_at
-      - repository_url
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Role'
+    FeatureHealthEventTypeEnum:
+      enum:
+      - UNHEALTHY
+      - HEALTHY
+      type: string
+      description: '* `UNHEALTHY` - Unhealthy
+
+        * `HEALTHY` - Healthy'
+    FeatureHealthEventReason:
+      type: object
+      properties:
+        text_blocks:
+          type: array
+          items:
+            $ref: '#/components/schemas/FeatureHealthEventReasonTextBlock'
+        url_blocks:
+          type: array
+          items:
+            $ref: '#/components/schemas/FeatureHealthEventReasonUrlBlock'
+      required:
+      - text_blocks
+      - url_blocks
+    Role:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 255
+        description:
+          type:
+          - string
+          - 'null'
+        organisation:
+          type: integer
+          readOnly: true
+        tags:
+          type: array
+          items:
+            type: integer
+      required:
+      - name
+    EnvironmentFeatureVersion:
+      type: object
+      properties:
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        published:
+          type: boolean
+          readOnly: true
+        live_from:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+        is_live:
+          type: boolean
+          readOnly: true
+        published_by:
+          type:
+          - integer
+          - 'null'
+          readOnly: true
+        created_by:
+          type:
+          - integer
+          - 'null'
+          readOnly: true
+        description:
+          type:
+          - string
+          - 'null'
+    MultivariateValue:
+      type: object
+      properties:
+        multivariate_feature_option:
+          type: integer
+        percentage_allocation:
+          type: number
+          format: double
+          maximum: 100
+          minimum: 0
+      required:
+      - multivariate_feature_option
+      - percentage_allocation
+    PaginatedListFeatureList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/ListFeature'
+    PaginatedReleasePipelineList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/ReleasePipeline'
+    Labels:
+      type: object
+      properties:
+        client_application_name:
+          type:
+          - string
+          - 'null'
+        client_application_version:
+          type:
+          - string
+          - 'null'
+        user_agent:
+          type:
+          - string
+          - 'null'
+    ChangeRequestList:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        title:
+          type: string
+          readOnly: true
+        description:
+          type:
+          - string
+          - 'null'
+          readOnly: true
+        user:
+          type:
+          - integer
+          - 'null'
+          readOnly: true
+        committed_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          readOnly: true
+        committed_by:
+          type:
+          - integer
+          - 'null'
+          readOnly: true
+        deleted_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          readOnly: true
+        live_from:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          readOnly: true
+        environment_feature_versions:
+          type: array
+          items:
+            type: string
+            format: uuid
+          readOnly: true
+        ignore_conflicts:
+          type: boolean
+          readOnly: true
+    Segment:
+      type: object
+      description: Functionality for serializers that need to handle metadata
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+        created_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          readOnly: true
+        updated_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          readOnly: true
+        name:
+          type: string
+          maxLength: 2000
+        description:
+          type:
+          - string
+          - 'null'
+        project:
+          type: integer
+          readOnly: true
+        feature:
+          type:
+          - integer
+          - 'null'
+        version_of:
+          type:
+          - integer
+          - 'null'
+        rules:
+          type: array
+          items:
+            $ref: '#/components/schemas/SegmentRule'
+        metadata:
+          type: array
+          items:
+            $ref: '#/components/schemas/Metadata'
+        membership_counts:
+          type: array
+          items:
+            $ref: '#/components/schemas/SegmentMembershipCount'
+          readOnly: true
+        managed_by:
+          readOnly: true
+          oneOf:
+          - $ref: '#/components/schemas/ManagedByEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+        cohort:
+          oneOf:
+          - $ref: '#/components/schemas/_SegmentCohort'
+          - type: 'null'
+          readOnly: true
+        has_overrides:
+          type: boolean
+          readOnly: true
+          description: Whether any feature override points at this segment, counting overrides that are live now or scheduled to go live.
+      required:
+      - name
+      - rules
+    FeatureStateValue:
+      type: object
+      properties:
+        type:
+          oneOf:
+          - $ref: '#/components/schemas/Type975Enum'
+          - $ref: '#/components/schemas/BlankEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        string_value:
+          type:
+          - string
+          - 'null'
+          maxLength: 20000
+        integer_value:
+          type:
+          - integer
+          - 'null'
+          maximum: 2147483647
+          minimum: -2147483648
+        boolean_value:
+          type:
+          - boolean
+          - 'null'
+    ListUserPermissionGroupMembership:
+      type: object
+      properties:
+        id:
+          type: integer
+        email:
+          type: string
+          format: email
+        first_name:
+          type: string
+        last_name:
+          type: string
+        last_login:
+          type: string
+        group_admin:
+          type: boolean
+      required:
+      - email
+      - first_name
+      - id
+      - last_login
+      - last_name
+    WorkflowsError:
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+      - message
+    InviteList:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        email:
+          type: string
+          format: email
+          maxLength: 254
+        date_created:
+          type: string
+          format: date-time
+          readOnly: true
+          title: DateCreated
+        invited_by:
+          $ref: '#/components/schemas/UserList'
+        permission_groups:
+          type: array
+          items:
+            type: integer
+      required:
+      - email
+      - invited_by
+    SegmentMembershipCount:
+      type: object
+      properties:
+        environment:
+          type: integer
+          readOnly: true
+        count:
+          type: integer
+          readOnly: true
+        last_synced_at:
+          type: string
+          format: date-time
+          readOnly: true
+    _MultivariateFeatureStateValue:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        multivariate_feature_option:
+          type: integer
+        percentage_allocation:
+          type: number
+          format: double
+          maximum: 100
+          minimum: 0
+      required:
+      - multivariate_feature_option
+      - percentage_allocation
+    ExperimentRollout:
+      type: object
+      properties:
+        enabled:
+          type: boolean
+        rollout_percentage:
+          type: number
+          format: double
+          maximum: 100
+          minimum: 0
+        feature_state_value:
+          $ref: '#/components/schemas/FeatureValue'
+        multivariate_feature_state_values:
+          type: array
+          items:
+            $ref: '#/components/schemas/MultivariateValue'
+        audience:
+          $ref: '#/components/schemas/ExperimentAudience'
+      required:
+      - enabled
+      - feature_state_value
+      - rollout_percentage
+    Subscription:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        has_active_billing_periods:
+          type: boolean
+          readOnly: true
+        deleted_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          readOnly: true
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+        subscription_id:
+          type:
+          - string
+          - 'null'
+          maxLength: 100
+        subscription_date:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        plan:
+          type:
+          - string
+          - 'null'
+          maxLength: 100
+        max_seats:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+        max_api_calls:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+        cancellation_date:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        customer_id:
+          type:
+          - string
+          - 'null'
+          maxLength: 100
+        billing_status:
+          oneOf:
+          - $ref: '#/components/schemas/BillingStatusEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        payment_method:
+          oneOf:
+          - $ref: '#/components/schemas/PaymentMethodEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        notes:
+          type:
+          - string
+          - 'null'
+          maxLength: 500
+    ProjectChangeRequestList:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        title:
+          type: string
+          readOnly: true
+        description:
+          type:
+          - string
+          - 'null'
+          readOnly: true
+        user:
+          type:
+          - integer
+          - 'null'
+          readOnly: true
+        committed_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          readOnly: true
+        committed_by:
+          type:
+          - integer
+          - 'null'
+          readOnly: true
+        deleted_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          readOnly: true
+        live_from:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          readOnly: true
+    CustomEnvironmentFeatureVersionFeatureState:
+      type: object
+      description: Adds nested create feature
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        feature:
+          type: integer
+          readOnly: true
+        enabled:
+          type: boolean
+        feature_state_value:
+          $ref: '#/components/schemas/FeatureStateValue'
+        feature_segment:
+          oneOf:
+          - $ref: '#/components/schemas/CustomCreateSegmentOverrideFeatureSegment'
+          - type: 'null'
+        deleted_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          readOnly: true
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        live_from:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          readOnly: true
+        environment:
+          type:
+          - integer
+          - 'null'
+          readOnly: true
+        identity:
+          type:
+          - integer
+          - 'null'
+          readOnly: true
+        change_request:
+          type:
+          - integer
+          - 'null'
+          readOnly: true
+        multivariate_feature_state_values:
+          type: array
+          items:
+            $ref: '#/components/schemas/MultivariateFeatureStateValue'
+      required:
+      - feature_state_value
+    StageTrigger:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        trigger_type:
+          $ref: '#/components/schemas/TriggerTypeEnum'
+        trigger_body:
+          oneOf:
+          - {}
+          - type: 'null'
+    FeatureEvaluationData:
+      type: object
+      properties:
+        day:
+          type: string
+        count:
+          type: integer
+        labels:
+          oneOf:
+          - $ref: '#/components/schemas/Labels'
+          - type: 'null'
+      required:
+      - count
+      - day
+      - labels
+    ChangeRequestGroupAssignment:
+      type: object
+      description: Adds nested create feature
+      properties:
+        group:
+          type: integer
+      required:
+      - group
+    SegmentRule:
+      type: object
+      description: Adds nested create feature
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        type:
+          $ref: '#/components/schemas/SegmentRuleTypeEnum'
+        rules:
+          type: array
+          items:
+            $ref: '#/components/schemas/_NestedSegmentRule'
+        conditions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Condition'
+        delete:
+          type: boolean
+          writeOnly: true
+      required:
+      - type
     ProjectRetrieve:
       type: object
       properties:
@@ -2561,474 +3662,20 @@ components:
       required:
       - name
       - organisation
-    ReleasePipeline:
+    ExperimentAudience:
       type: object
       properties:
-        id:
-          type: integer
-          readOnly: true
-        name:
-          type: string
-          maxLength: 255
-        project:
-          type: integer
-          readOnly: true
-        description:
-          type:
-          - string
-          - 'null'
-        stages_count:
-          type: integer
-          readOnly: true
-        published_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-        published_by:
-          type:
-          - integer
-          - 'null'
-        features:
+        match:
+          allOf:
+          - $ref: '#/components/schemas/MatchEnum'
+          default: any
+        segment_ids:
           type: array
           items:
             type: integer
-          readOnly: true
+          maxItems: 1
       required:
-      - name
-    Role:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        name:
-          type: string
-          maxLength: 255
-        description:
-          type:
-          - string
-          - 'null'
-        organisation:
-          type: integer
-          readOnly: true
-        tags:
-          type: array
-          items:
-            type: integer
-      required:
-      - name
-    PaginatedExperimentListList:
-      type: object
-      required:
-      - count
-      - results
-      properties:
-        count:
-          type: integer
-          example: 123
-        next:
-          type: string
-          nullable: true
-          format: uri
-          example: http://api.example.org/accounts/?page=4
-        previous:
-          type: string
-          nullable: true
-          format: uri
-          example: http://api.example.org/accounts/?page=2
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/ExperimentList'
-    PaginatedFeatureSegmentListList:
-      type: object
-      required:
-      - count
-      - results
-      properties:
-        count:
-          type: integer
-          example: 123
-        next:
-          type: string
-          nullable: true
-          format: uri
-          example: http://api.example.org/accounts/?page=4
-        previous:
-          type: string
-          nullable: true
-          format: uri
-          example: http://api.example.org/accounts/?page=2
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/FeatureSegmentList'
-    ProjectChangeRequestList:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        created_at:
-          type: string
-          format: date-time
-          readOnly: true
-        updated_at:
-          type: string
-          format: date-time
-          readOnly: true
-        title:
-          type: string
-          readOnly: true
-        description:
-          type:
-          - string
-          - 'null'
-          readOnly: true
-        user:
-          type:
-          - integer
-          - 'null'
-          readOnly: true
-        committed_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          readOnly: true
-        committed_by:
-          type:
-          - integer
-          - 'null'
-          readOnly: true
-        deleted_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          readOnly: true
-        live_from:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          readOnly: true
-    InviteList:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        email:
-          type: string
-          format: email
-          maxLength: 254
-        date_created:
-          type: string
-          format: date-time
-          readOnly: true
-          title: DateCreated
-        invited_by:
-          $ref: '#/components/schemas/UserList'
-        permission_groups:
-          type: array
-          items:
-            type: integer
-      required:
-      - email
-      - invited_by
-    MultivariateFeatureStateValue:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        multivariate_feature_option:
-          type: integer
-        percentage_allocation:
-          type: number
-          format: double
-          maximum: 100
-          minimum: 0
-      required:
-      - multivariate_feature_option
-      - percentage_allocation
-    ChangeRequestCreate:
-      type: object
-      description: Adds nested create feature
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        created_at:
-          type: string
-          format: date-time
-          readOnly: true
-        updated_at:
-          type: string
-          format: date-time
-          readOnly: true
-        title:
-          type: string
-          maxLength: 500
-        description:
-          type:
-          - string
-          - 'null'
-        feature_states:
-          type: array
-          items:
-            $ref: '#/components/schemas/CreateChangeRequestFeatureState'
-        deleted_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          readOnly: true
-        environment:
-          type:
-          - integer
-          - 'null'
-          readOnly: true
-        committed_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          readOnly: true
-        approvals:
-          type: array
-          items:
-            $ref: '#/components/schemas/ChangeRequestApproval'
-        user:
-          type:
-          - integer
-          - 'null'
-          readOnly: true
-        committed_by:
-          type:
-          - integer
-          - 'null'
-          readOnly: true
-        group_assignments:
-          type: array
-          items:
-            $ref: '#/components/schemas/ChangeRequestGroupAssignment'
-        environment_feature_versions:
-          type: array
-          items:
-            type: string
-            format: uuid
-        change_sets:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/VersionChangeSet'
-        ignore_conflicts:
-          type: boolean
-      required:
-      - feature_states
-      - title
-    Metadata:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        model_field:
-          type: integer
-        field_value:
-          type: string
-          maxLength: 2000
-      required:
-      - field_value
-      - model_field
-    FeatureExternalResourceTypeEnum:
-      enum:
-      - GITHUB_ISSUE
-      - GITHUB_PR
-      - GITLAB_ISSUE
-      - GITLAB_MR
-      type: string
-      description: '* `GITHUB_ISSUE` - GitHub Issue
-
-        * `GITHUB_PR` - GitHub PR
-
-        * `GITLAB_ISSUE` - GitLab Issue
-
-        * `GITLAB_MR` - GitLab MR'
-    FeatureExternalResource:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        url:
-          type: string
-          format: uri
-          maxLength: 200
-        type:
-          $ref: '#/components/schemas/FeatureExternalResourceTypeEnum'
-        metadata:
-          oneOf:
-          - {}
-          - type: 'null'
-        feature:
-          type: integer
-      required:
-      - feature
-      - type
-      - url
-    DirectionEnum:
-      enum:
-      - up
-      - down
-      - informational
-      type: string
-      description: '* `up` - Higher is better
-
-        * `down` - Lower is better
-
-        * `informational` - Informational only'
-    CreateChangeRequestFeatureState:
-      type: object
-      description: Adds nested create feature
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        feature:
-          type: integer
-        feature_segment:
-          type:
-          - integer
-          - 'null'
-        enabled:
-          type: boolean
-        feature_state_value:
-          $ref: '#/components/schemas/_FeatureStateValue'
-        multivariate_feature_state_values:
-          type: array
-          items:
-            $ref: '#/components/schemas/_MultivariateFeatureStateValue'
-        live_from:
-          type:
-          - string
-          - 'null'
-          format: date-time
-      required:
-      - feature
-    MultivariateValue:
-      type: object
-      properties:
-        multivariate_feature_option:
-          type: integer
-        percentage_allocation:
-          type: number
-          format: double
-          maximum: 100
-          minimum: 0
-      required:
-      - multivariate_feature_option
-      - percentage_allocation
-    NullEnum:
-      type: 'null'
-    PaginatedFeatureExternalResourceList:
-      type: object
-      required:
-      - count
-      - results
-      properties:
-        count:
-          type: integer
-          example: 123
-        next:
-          type: string
-          nullable: true
-          format: uri
-          example: http://api.example.org/accounts/?page=4
-        previous:
-          type: string
-          nullable: true
-          format: uri
-          example: http://api.example.org/accounts/?page=2
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/FeatureExternalResource'
-    CustomCreateSegmentOverrideFeatureState:
-      type: object
-      description: Adds nested create feature
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        feature:
-          type: integer
-          readOnly: true
-        enabled:
-          type: boolean
-        feature_state_value:
-          $ref: '#/components/schemas/FeatureStateValue'
-        feature_segment:
-          oneOf:
-          - $ref: '#/components/schemas/CustomCreateSegmentOverrideFeatureSegment'
-          - type: 'null'
-        deleted_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          readOnly: true
-        uuid:
-          type: string
-          format: uuid
-          readOnly: true
-        created_at:
-          type: string
-          format: date-time
-          readOnly: true
-        updated_at:
-          type: string
-          format: date-time
-          readOnly: true
-        live_from:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          readOnly: true
-        environment:
-          type:
-          - integer
-          - 'null'
-          readOnly: true
-        identity:
-          type:
-          - integer
-          - 'null'
-          readOnly: true
-        change_request:
-          type:
-          - integer
-          - 'null'
-          readOnly: true
-        multivariate_feature_state_values:
-          type: array
-          items:
-            $ref: '#/components/schemas/MultivariateFeatureStateValue'
-      required:
-      - feature_state_value
-    RoleEnum:
-      enum:
-      - ADMIN
-      - USER
-      type: string
-      description: '* `ADMIN` - Admin
-
-        * `USER` - User'
+      - segment_ids
     FeatureStateSerializerBasic:
       type: object
       description: Adds nested create feature
@@ -3106,46 +3753,49 @@ components:
           format: uuid
       required:
       - feature
-    CustomEnvironmentFeatureVersionFeatureState:
+    BlankEnum:
+      enum:
+      - ''
+    FeatureHealthEventReasonUrlBlock:
       type: object
-      description: Adds nested create feature
+      properties:
+        url:
+          type: string
+        title:
+          type: string
+      required:
+      - url
+    PaginatedListUserPermissionGroupList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/ListUserPermissionGroup'
+    FeatureHealthEvent:
+      type: object
       properties:
         id:
           type: integer
           readOnly: true
-        feature:
-          type: integer
-          readOnly: true
-        enabled:
-          type: boolean
-        feature_state_value:
-          $ref: '#/components/schemas/FeatureStateValue'
-        feature_segment:
-          oneOf:
-          - $ref: '#/components/schemas/CustomCreateSegmentOverrideFeatureSegment'
-          - type: 'null'
-        deleted_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          readOnly: true
-        uuid:
-          type: string
-          format: uuid
-          readOnly: true
         created_at:
           type: string
-          format: date-time
-          readOnly: true
-        updated_at:
-          type: string
-          format: date-time
-          readOnly: true
-        live_from:
-          type:
-          - string
-          - 'null'
           format: date-time
           readOnly: true
         environment:
@@ -3153,46 +3803,24 @@ components:
           - integer
           - 'null'
           readOnly: true
-        identity:
-          type:
-          - integer
-          - 'null'
-          readOnly: true
-        change_request:
-          type:
-          - integer
-          - 'null'
-          readOnly: true
-        multivariate_feature_state_values:
-          type: array
-          items:
-            $ref: '#/components/schemas/MultivariateFeatureStateValue'
-      required:
-      - feature_state_value
-    ChangeRequestApproval:
-      type: object
-      description: Adds nested create feature
-      properties:
-        id:
+        feature:
           type: integer
           readOnly: true
-        user:
-          type: integer
-        approved_at:
+        provider_name:
           type:
           - string
           - 'null'
-          format: date-time
+          readOnly: true
+        reason:
+          oneOf:
+          - $ref: '#/components/schemas/FeatureHealthEventReason'
+          - type: 'null'
+        type:
+          allOf:
+          - $ref: '#/components/schemas/FeatureHealthEventTypeEnum'
           readOnly: true
       required:
-      - user
-    ManagedByEnum:
-      enum:
-      - cohort
-      type: string
-      description: '* `` - Unmanaged
-
-        * `cohort` - Cohort'
+      - reason
     ProjectUpdate:
       type: object
       description: "Mixin to add read only status to fields in a given serializer based on the existence\nof a subscription and a black list of plan ids\n\nExample usage:\n\n    class MySerializer(ReadOnlyIfNotValidPlanMixin, ModelSerializer):\n        class Meta:\n            model = MyModel\n            fields = (\"my_field\",)\n\n        invalid_plans = (\"free\",)\n        field_names = (\"my_field\",)\n\n        def get_subscription(self):\n            return subscription"
@@ -3274,6 +3902,472 @@ components:
           description: Require at least one user or group owner when creating a feature.
       required:
       - name
+    DirectionEnum:
+      enum:
+      - up
+      - down
+      - informational
+      type: string
+      description: '* `up` - Higher is better
+
+        * `down` - Lower is better
+
+        * `informational` - Informational only'
+    PaginatedExperimentListList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/ExperimentList'
+    FeatureLifecycleCounts:
+      type: object
+      description: Number of features in each lifecycle stage for an environment
+      properties:
+        new:
+          type: integer
+        live:
+          type: integer
+        stale:
+          type: integer
+        permanent:
+          type: integer
+        needs_monitoring:
+          type: integer
+        to_remove:
+          type: integer
+      required:
+      - live
+      - needs_monitoring
+      - new
+      - permanent
+      - stale
+      - to_remove
+    _CodeReferenceDetail:
+      type: object
+      properties:
+        file_path:
+          type: string
+          maxLength: 4096
+        line_number:
+          type: integer
+          minimum: 1
+        scanned_at:
+          type: string
+          format: date-time
+        vcs_provider:
+          $ref: '#/components/schemas/VcsProviderEnum'
+        repository_url:
+          type: string
+          format: uri
+        revision:
+          type: string
+        permalink:
+          type: string
+          format: uri
+      required:
+      - file_path
+      - line_number
+      - permalink
+      - repository_url
+      - revision
+      - scanned_at
+      - vcs_provider
+    TriggerTypeEnum:
+      enum:
+      - ON_ENTER
+      - WAIT_FOR
+      type: string
+      description: '* `ON_ENTER` - Trigger when flag enters stage
+
+        * `WAIT_FOR` - Trigger after waiting for x amount of time'
+    ChangeRequestApproval:
+      type: object
+      description: Adds nested create feature
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        user:
+          type: integer
+        approved_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          readOnly: true
+      required:
+      - user
+    RoleEnum:
+      enum:
+      - ADMIN
+      - USER
+      type: string
+      description: '* `ADMIN` - Admin
+
+        * `USER` - User'
+    SegmentRuleTypeEnum:
+      enum:
+      - ALL
+      - ANY
+      - NONE
+      type: string
+      description: '* `ALL` - all
+
+        * `ANY` - any
+
+        * `NONE` - none'
+    _NestedSegmentRule:
+      type: object
+      description: Adds nested create feature
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        type:
+          $ref: '#/components/schemas/SegmentRuleTypeEnum'
+        conditions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Condition'
+        delete:
+          type: boolean
+          writeOnly: true
+      required:
+      - type
+    FeatureHealthEventReasonTextBlock:
+      type: object
+      properties:
+        text:
+          type: string
+        title:
+          type: string
+      required:
+      - text
+    CustomCreateSegmentOverrideFeatureState:
+      type: object
+      description: Adds nested create feature
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        feature:
+          type: integer
+          readOnly: true
+        enabled:
+          type: boolean
+        feature_state_value:
+          $ref: '#/components/schemas/FeatureStateValue'
+        feature_segment:
+          oneOf:
+          - $ref: '#/components/schemas/CustomCreateSegmentOverrideFeatureSegment'
+          - type: 'null'
+        deleted_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          readOnly: true
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        live_from:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          readOnly: true
+        environment:
+          type:
+          - integer
+          - 'null'
+          readOnly: true
+        identity:
+          type:
+          - integer
+          - 'null'
+          readOnly: true
+        change_request:
+          type:
+          - integer
+          - 'null'
+          readOnly: true
+        multivariate_feature_state_values:
+          type: array
+          items:
+            $ref: '#/components/schemas/MultivariateFeatureStateValue'
+      required:
+      - feature_state_value
+    SourceTypeEnum:
+      enum:
+      - csv
+      - amplitude
+      - mixpanel
+      type: string
+      description: '* `csv` - CSV
+
+        * `amplitude` - Amplitude
+
+        * `mixpanel` - Mixpanel'
+    FeatureStateSerializerSmall:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        feature_state_value:
+          type:
+          - string
+          - integer
+          - boolean
+          - 'null'
+          readOnly: true
+        environment:
+          type:
+          - integer
+          - 'null'
+        identity:
+          type:
+          - integer
+          - 'null'
+        feature_segment:
+          type:
+          - integer
+          - 'null'
+        enabled:
+          type: boolean
+    PaginatedFeatureExternalResourceList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/FeatureExternalResource'
+    TypeD77Enum:
+      enum:
+      - STANDARD
+      - MULTIVARIATE
+      type: string
+      description: '* `STANDARD` - STANDARD
+
+        * `MULTIVARIATE` - MULTIVARIATE'
+    FeatureExternalResource:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        url:
+          type: string
+          format: uri
+          maxLength: 200
+        type:
+          $ref: '#/components/schemas/FeatureExternalResourceTypeEnum'
+        metadata:
+          oneOf:
+          - {}
+          - type: 'null'
+        feature:
+          type: integer
+      required:
+      - feature
+      - type
+      - url
+    VersionChangeSet:
+      type: object
+      description: Adds nested create feature
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        feature:
+          type: integer
+        live_from:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        feature_states_to_update:
+          type: array
+          items: {}
+          description: List of feature states to update as part of this change.
+        feature_states_to_create:
+          type: array
+          items: {}
+          description: List of feature states to create as part of this change.
+        segment_ids_to_delete_overrides:
+          type: array
+          items:
+            type: integer
+          description: List of segment IDs for which the overrides should be deleted as part of this change.
+      required:
+      - feature
+      - feature_states_to_create
+      - feature_states_to_update
+      - segment_ids_to_delete_overrides
+    LifecycleStageEnum:
+      enum:
+      - new
+      - live
+      - stale
+      - permanent
+      - needs_monitoring
+      - to_remove
+      type: string
+      description: '* `new` - new
+
+        * `live` - live
+
+        * `stale` - stale
+
+        * `permanent` - permanent
+
+        * `needs_monitoring` - needs_monitoring
+
+        * `to_remove` - to_remove'
+    PaginatedEnvironmentSerializerWithMetadataList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/EnvironmentSerializerWithMetadata'
+    VcsProviderEnum:
+      enum:
+      - github
+      type: string
+      description: '* `github` - GitHub'
+    ReleasePipeline:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 255
+        project:
+          type: integer
+          readOnly: true
+        description:
+          type:
+          - string
+          - 'null'
+        stages_count:
+          type: integer
+          readOnly: true
+        published_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        published_by:
+          type:
+          - integer
+          - 'null'
+        features:
+          type: array
+          items:
+            type: integer
+          readOnly: true
+      required:
+      - name
+    FeatureExternalResourceTypeEnum:
+      enum:
+      - GITHUB_ISSUE
+      - GITHUB_PR
+      - GITLAB_ISSUE
+      - GITLAB_MR
+      type: string
+      description: '* `GITHUB_ISSUE` - GitHub Issue
+
+        * `GITHUB_PR` - GitHub PR
+
+        * `GITLAB_ISSUE` - GitLab Issue
+
+        * `GITLAB_MR` - GitLab MR'
+    Invite:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        email:
+          type: string
+          format: email
+          maxLength: 254
+        role:
+          $ref: '#/components/schemas/RoleEnum'
+        date_created:
+          type: string
+          format: date-time
+          readOnly: true
+          title: DateCreated
+        permission_groups:
+          type: array
+          items:
+            type:
+            - integer
+            - 'null'
+      required:
+      - email
     PaginatedMetricList:
       type: object
       required:
@@ -3297,110 +4391,43 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Metric'
-    FeatureHealthEventReasonUrlBlock:
+    AggregationEnum:
+      enum:
+      - count
+      - sum
+      - mean
+      - occurrence
+      type: string
+      description: '* `count` - Count
+
+        * `sum` - Sum
+
+        * `mean` - Mean
+
+        * `occurrence` - Occurrence (event happened at least once)'
+    PaginatedOrganisationSerializerFullList:
       type: object
-      properties:
-        url:
-          type: string
-        title:
-          type: string
       required:
-      - url
-    ExperimentList:
-      type: object
+      - count
+      - results
       properties:
-        id:
+        count:
           type: integer
-          readOnly: true
-        feature:
-          allOf:
-          - $ref: '#/components/schemas/ExperimentFeature'
-          readOnly: true
-        name:
+          example: 123
+        next:
           type: string
-          maxLength: 255
-        hypothesis:
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
           type: string
-        status:
-          allOf:
-          - $ref: '#/components/schemas/Status7a8Enum'
-          readOnly: true
-        metrics:
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
           type: array
           items:
-            $ref: '#/components/schemas/ExperimentMetric'
-          readOnly: true
-        experiment_rollout:
-          allOf:
-          - $ref: '#/components/schemas/ExperimentRollout'
-          writeOnly: true
-        created_at:
-          type: string
-          format: date-time
-          readOnly: true
-        updated_at:
-          type: string
-          format: date-time
-          readOnly: true
-        started_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          readOnly: true
-        ended_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          readOnly: true
-      required:
-      - hypothesis
-      - name
-    ConditionOperatorEnum:
-      enum:
-      - EQUAL
-      - GREATER_THAN
-      - LESS_THAN
-      - CONTAINS
-      - GREATER_THAN_INCLUSIVE
-      - LESS_THAN_INCLUSIVE
-      - NOT_CONTAINS
-      - NOT_EQUAL
-      - REGEX
-      - PERCENTAGE_SPLIT
-      - MODULO
-      - IS_SET
-      - IS_NOT_SET
-      - IN
-      type: string
-      description: '* `EQUAL` - Exactly Matches
-
-        * `GREATER_THAN` - Greater than
-
-        * `LESS_THAN` - Less than
-
-        * `CONTAINS` - Contains
-
-        * `GREATER_THAN_INCLUSIVE` - Greater than or equal to
-
-        * `LESS_THAN_INCLUSIVE` - Less than or equal to
-
-        * `NOT_CONTAINS` - Does not contain
-
-        * `NOT_EQUAL` - Does not match
-
-        * `REGEX` - Matches regex
-
-        * `PERCENTAGE_SPLIT` - Percentage split
-
-        * `MODULO` - Modulo Operation
-
-        * `IS_SET` - Is set
-
-        * `IS_NOT_SET` - Is not set
-
-        * `IN` - In'
+            $ref: '#/components/schemas/OrganisationSerializerFull'
     ExperimentDetail:
       type: object
       properties:
@@ -3454,62 +4481,6 @@ components:
       required:
       - hypothesis
       - name
-    EnvironmentFeatureVersionPublish:
-      type: object
-      properties:
-        live_from:
-          type: string
-          format: date-time
-    FeatureEvaluationData:
-      type: object
-      properties:
-        day:
-          type: string
-        count:
-          type: integer
-        labels:
-          oneOf:
-          - $ref: '#/components/schemas/Labels'
-          - type: 'null'
-      required:
-      - count
-      - day
-      - labels
-    _SegmentCohort:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        environment:
-          type: integer
-        environment_api_key:
-          type: string
-          readOnly: true
-        environment_name:
-          type: string
-          readOnly: true
-        source_type:
-          $ref: '#/components/schemas/SourceTypeEnum'
-        version:
-          type: integer
-          maximum: 2147483647
-          minimum: 0
-        deletion_requested_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-      required:
-      - environment
-    TriggerTypeEnum:
-      enum:
-      - ON_ENTER
-      - WAIT_FOR
-      type: string
-      description: '* `ON_ENTER` - Trigger when flag enters stage
-
-        * `WAIT_FOR` - Trigger after waiting for x amount of time'
     PaginatedInviteListList:
       type: object
       required:
@@ -3533,341 +4504,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/InviteList'
-    FeatureLifecycleCounts:
-      type: object
-      description: Number of features in each lifecycle stage for an environment
-      properties:
-        new:
-          type: integer
-        live:
-          type: integer
-        stale:
-          type: integer
-        permanent:
-          type: integer
-        needs_monitoring:
-          type: integer
-        to_remove:
-          type: integer
-      required:
-      - live
-      - needs_monitoring
-      - new
-      - permanent
-      - stale
-      - to_remove
-    FeatureHealthEvent:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        created_at:
-          type: string
-          format: date-time
-          readOnly: true
-        environment:
-          type:
-          - integer
-          - 'null'
-          readOnly: true
-        feature:
-          type: integer
-          readOnly: true
-        provider_name:
-          type:
-          - string
-          - 'null'
-          readOnly: true
-        reason:
-          oneOf:
-          - $ref: '#/components/schemas/FeatureHealthEventReason'
-          - type: 'null'
-        type:
-          allOf:
-          - $ref: '#/components/schemas/FeatureHealthEventTypeEnum'
-          readOnly: true
-      required:
-      - reason
-    PaginatedSegmentList:
-      type: object
-      required:
-      - count
-      - results
-      properties:
-        count:
-          type: integer
-          example: 123
-        next:
-          type: string
-          nullable: true
-          format: uri
-          example: http://api.example.org/accounts/?page=4
-        previous:
-          type: string
-          nullable: true
-          format: uri
-          example: http://api.example.org/accounts/?page=2
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/Segment'
-    PaginatedListUserPermissionGroupList:
-      type: object
-      required:
-      - count
-      - results
-      properties:
-        count:
-          type: integer
-          example: 123
-        next:
-          type: string
-          nullable: true
-          format: uri
-          example: http://api.example.org/accounts/?page=4
-        previous:
-          type: string
-          nullable: true
-          format: uri
-          example: http://api.example.org/accounts/?page=2
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/ListUserPermissionGroup'
-    WritableNestedFeatureState:
-      type: object
-      description: Adds nested create feature
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        feature_state_value:
-          $ref: '#/components/schemas/FeatureStateValue'
-        multivariate_feature_state_values:
-          type: array
-          items:
-            $ref: '#/components/schemas/MultivariateFeatureStateValue'
-        identifier:
-          type: string
-          description: Can be passed as an alternative to `identity`
-        deleted_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          readOnly: true
-        uuid:
-          type: string
-          format: uuid
-          readOnly: true
-        enabled:
-          type: boolean
-        created_at:
-          type: string
-          format: date-time
-          readOnly: true
-        updated_at:
-          type: string
-          format: date-time
-          readOnly: true
-        live_from:
-          type:
-          - string
-          - 'null'
-          format: date-time
-        version:
-          type:
-          - integer
-          - 'null'
-          readOnly: true
-        feature:
-          type: integer
-        environment:
-          type:
-          - integer
-          - 'null'
-        identity:
-          type:
-          - integer
-          - 'null'
-        feature_segment:
-          type:
-          - integer
-          - 'null'
-        change_request:
-          type:
-          - integer
-          - 'null'
-        environment_feature_version:
-          type:
-          - string
-          - 'null'
-          format: uuid
-      required:
-      - environment
-      - feature
-    FeatureStateValue:
-      type: object
-      properties:
-        type:
-          oneOf:
-          - $ref: '#/components/schemas/Type975Enum'
-          - $ref: '#/components/schemas/BlankEnum'
-          - $ref: '#/components/schemas/NullEnum'
-        string_value:
-          type:
-          - string
-          - 'null'
-          maxLength: 20000
-        integer_value:
-          type:
-          - integer
-          - 'null'
-          maximum: 2147483647
-          minimum: -2147483648
-        boolean_value:
-          type:
-          - boolean
-          - 'null'
-    ActionTypeEnum:
-      enum:
-      - TOGGLE_FEATURE
-      - UPDATE_FEATURE_VALUE
-      - TOGGLE_FEATURE_FOR_SEGMENT
-      - UPDATE_FEATURE_VALUE_FOR_SEGMENT
-      - PHASED_ROLLOUT
-      type: string
-      description: '* `TOGGLE_FEATURE` - Enable/Disable Feature for the environment
-
-        * `UPDATE_FEATURE_VALUE` - Update Feature Value for the environment
-
-        * `TOGGLE_FEATURE_FOR_SEGMENT` - Enable/Disable Feature for a specific segment
-
-        * `UPDATE_FEATURE_VALUE_FOR_SEGMENT` - Update Feature Value for a specific segment
-
-        * `PHASED_ROLLOUT` - Create Phased Rollout'
-    FeatureFlagCodeReferencesRepositorySummary:
-      type: object
-      properties:
-        repository_url:
-          type: string
-          format: uri
-        vcs_provider:
-          $ref: '#/components/schemas/VcsProviderEnum'
-        revision:
-          type: string
-        last_successful_repository_scanned_at:
-          type: string
-          format: date-time
-        last_feature_found_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-        code_references:
-          type: array
-          items:
-            $ref: '#/components/schemas/_CodeReferenceDetail'
-      required:
-      - code_references
-      - last_feature_found_at
-      - last_successful_repository_scanned_at
-      - repository_url
-      - revision
-      - vcs_provider
-    SegmentRuleTypeEnum:
-      enum:
-      - ALL
-      - ANY
-      - NONE
-      type: string
-      description: '* `ALL` - all
-
-        * `ANY` - any
-
-        * `NONE` - none'
-    Type975Enum:
-      enum:
-      - int
-      - unicode
-      - bool
-      type: string
-      description: '* `int` - Integer
-
-        * `unicode` - String
-
-        * `bool` - Boolean'
-    PaginatedEnvironmentFeatureVersionList:
-      type: object
-      required:
-      - count
-      - results
-      properties:
-        count:
-          type: integer
-          example: 123
-        next:
-          type: string
-          nullable: true
-          format: uri
-          example: http://api.example.org/accounts/?page=4
-        previous:
-          type: string
-          nullable: true
-          format: uri
-          example: http://api.example.org/accounts/?page=2
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/EnvironmentFeatureVersion'
-    SegmentRule:
-      type: object
-      description: Adds nested create feature
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        type:
-          $ref: '#/components/schemas/SegmentRuleTypeEnum'
-        rules:
-          type: array
-          items:
-            $ref: '#/components/schemas/_NestedSegmentRule'
-        conditions:
-          type: array
-          items:
-            $ref: '#/components/schemas/Condition'
-        delete:
-          type: boolean
-          writeOnly: true
-      required:
-      - type
-    ListUserPermissionGroup:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        name:
-          type: string
-          maxLength: 200
-        users:
-          type: array
-          items:
-            $ref: '#/components/schemas/ListUserPermissionGroupMembership'
-          readOnly: true
-        is_default:
-          type: boolean
-          description: If set to true, all new users will be added to this group
-        external_id:
-          type:
-          - string
-          - 'null'
-          description: Unique ID of the group in an external system
-          maxLength: 255
-      required:
-      - name
     PipelineStage:
       type: object
       description: Adds nested create feature
@@ -3902,168 +4538,30 @@ components:
       - name
       - order
       - trigger
-    EdgeV2MigrationStatusEnum:
-      enum:
-      - NOT_STARTED
-      - IN_PROGRESS
-      - COMPLETE
-      - INCOMPLETE
-      type: string
-      description: '* `NOT_STARTED` - Not Started
-
-        * `IN_PROGRESS` - In Progress
-
-        * `COMPLETE` - Complete
-
-        * `INCOMPLETE` - Incomplete (identity overrides skipped)'
-    FeatureValue:
-      type: object
-      properties:
-        type:
-          $ref: '#/components/schemas/FeatureValueTypeEnum'
-        value:
-          type: string
-      required:
-      - type
-      - value
-    ListUserPermissionGroupMembership:
-      type: object
-      properties:
-        id:
-          type: integer
-        email:
-          type: string
-          format: email
-        first_name:
-          type: string
-        last_name:
-          type: string
-        last_login:
-          type: string
-        group_admin:
-          type: boolean
-      required:
-      - email
-      - first_name
-      - id
-      - last_login
-      - last_name
-    VersionChangeSet:
-      type: object
-      description: Adds nested create feature
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        feature:
-          type: integer
-        live_from:
-          type:
-          - string
-          - 'null'
-          format: date-time
-        feature_states_to_update:
-          type: array
-          items: {}
-          description: List of feature states to update as part of this change.
-        feature_states_to_create:
-          type: array
-          items: {}
-          description: List of feature states to create as part of this change.
-        segment_ids_to_delete_overrides:
-          type: array
-          items:
-            type: integer
-          description: List of segment IDs for which the overrides should be deleted as part of this change.
-      required:
-      - feature
-      - feature_states_to_create
-      - feature_states_to_update
-      - segment_ids_to_delete_overrides
-    FeatureValueTypeEnum:
-      enum:
-      - integer
-      - string
-      - boolean
-      type: string
-      description: '* `integer` - integer
-
-        * `string` - string
-
-        * `boolean` - boolean'
-    Labels:
-      type: object
-      properties:
-        client_application_name:
-          type:
-          - string
-          - 'null'
-        client_application_version:
-          type:
-          - string
-          - 'null'
-        user_agent:
-          type:
-          - string
-          - 'null'
-    PaginatedRoleList:
-      type: object
-      required:
-      - count
-      - results
-      properties:
-        count:
-          type: integer
-          example: 123
-        next:
-          type: string
-          nullable: true
-          format: uri
-          example: http://api.example.org/accounts/?page=4
-        previous:
-          type: string
-          nullable: true
-          format: uri
-          example: http://api.example.org/accounts/?page=2
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/Role'
-    BillingStatusEnum:
-      enum:
-      - ACTIVE
-      - DUNNING
-      type: string
-      description: '* `ACTIVE` - Active
-
-        * `DUNNING` - Dunning'
-    FeatureStateSerializerSmall:
+    MultivariateFeatureStateValue:
       type: object
       properties:
         id:
           type: integer
           readOnly: true
-        feature_state_value:
-          type:
-          - string
-          - integer
-          - boolean
-          - 'null'
-          readOnly: true
-        environment:
-          type:
-          - integer
-          - 'null'
-        identity:
-          type:
-          - integer
-          - 'null'
-        feature_segment:
-          type:
-          - integer
-          - 'null'
-        enabled:
-          type: boolean
+        multivariate_feature_option:
+          type: integer
+        percentage_allocation:
+          type: number
+          format: double
+          maximum: 100
+          minimum: 0
+      required:
+      - multivariate_feature_option
+      - percentage_allocation
+    MatchEnum:
+      enum:
+      - any
+      - all
+      type: string
+      description: '* `any` - Any
+
+        * `all` - All'
     UpdateFeature:
       type: object
       description: prevent users from changing certain values after creation
@@ -4176,490 +4674,6 @@ components:
           allOf:
           - $ref: '#/components/schemas/LifecycleStageEnum'
           readOnly: true
-    ExperimentFeature:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        name:
-          type: string
-          readOnly: true
-        type:
-          allOf:
-          - $ref: '#/components/schemas/TypeD77Enum'
-          readOnly: true
-        initial_value:
-          type:
-          - string
-          - 'null'
-          readOnly: true
-        multivariate_options:
-          type: array
-          items:
-            type: object
-            additionalProperties: {}
-          readOnly: true
-    EnvironmentFeatureVersion:
-      type: object
-      properties:
-        created_at:
-          type: string
-          format: date-time
-          readOnly: true
-        updated_at:
-          type: string
-          format: date-time
-          readOnly: true
-        published:
-          type: boolean
-          readOnly: true
-        live_from:
-          type:
-          - string
-          - 'null'
-          format: date-time
-        uuid:
-          type: string
-          format: uuid
-          readOnly: true
-        is_live:
-          type: boolean
-          readOnly: true
-        published_by:
-          type:
-          - integer
-          - 'null'
-          readOnly: true
-        created_by:
-          type:
-          - integer
-          - 'null'
-          readOnly: true
-        description:
-          type:
-          - string
-          - 'null'
-    PaginatedListFeatureList:
-      type: object
-      required:
-      - count
-      - results
-      properties:
-        count:
-          type: integer
-          example: 123
-        next:
-          type: string
-          nullable: true
-          format: uri
-          example: http://api.example.org/accounts/?page=4
-        previous:
-          type: string
-          nullable: true
-          format: uri
-          example: http://api.example.org/accounts/?page=2
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/ListFeature'
-    ChangeRequestGroupAssignment:
-      type: object
-      description: Adds nested create feature
-      properties:
-        group:
-          type: integer
-      required:
-      - group
-    PaginatedProjectChangeRequestListList:
-      type: object
-      required:
-      - count
-      - results
-      properties:
-        count:
-          type: integer
-          example: 123
-        next:
-          type: string
-          nullable: true
-          format: uri
-          example: http://api.example.org/accounts/?page=4
-        previous:
-          type: string
-          nullable: true
-          format: uri
-          example: http://api.example.org/accounts/?page=2
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/ProjectChangeRequestList'
-    ExperimentAudience:
-      type: object
-      properties:
-        match:
-          allOf:
-          - $ref: '#/components/schemas/MatchEnum'
-          default: any
-        segment_ids:
-          type: array
-          items:
-            type: integer
-          maxItems: 1
-      required:
-      - segment_ids
-    StageAction:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        action_type:
-          $ref: '#/components/schemas/ActionTypeEnum'
-        action_body:
-          oneOf:
-          - {}
-          - type: 'null'
-    FeatureSegmentList:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        uuid:
-          type: string
-          format: uuid
-          readOnly: true
-        segment:
-          type: integer
-          readOnly: true
-        priority:
-          type: integer
-          readOnly: true
-        environment:
-          type: integer
-          readOnly: true
-        segment_name:
-          type: string
-          readOnly: true
-        is_feature_specific:
-          type: boolean
-          readOnly: true
-    _CodeReferenceDetail:
-      type: object
-      properties:
-        file_path:
-          type: string
-          maxLength: 4096
-        line_number:
-          type: integer
-          minimum: 1
-        scanned_at:
-          type: string
-          format: date-time
-        vcs_provider:
-          $ref: '#/components/schemas/VcsProviderEnum'
-        repository_url:
-          type: string
-          format: uri
-        revision:
-          type: string
-        permalink:
-          type: string
-          format: uri
-      required:
-      - file_path
-      - line_number
-      - permalink
-      - repository_url
-      - revision
-      - scanned_at
-      - vcs_provider
-    BlankEnum:
-      enum:
-      - ''
-    PaymentMethodEnum:
-      enum:
-      - CHARGEBEE
-      - XERO
-      - AWS_MARKETPLACE
-      type: string
-      description: '* `CHARGEBEE` - Chargebee
-
-        * `XERO` - Xero
-
-        * `AWS_MARKETPLACE` - AWS Marketplace'
-    ReleasePipelineDetail:
-      type: object
-      description: Adds nested create feature
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        name:
-          type: string
-          maxLength: 255
-        project:
-          type: integer
-          readOnly: true
-        description:
-          type:
-          - string
-          - 'null'
-        stages_count:
-          type: integer
-          readOnly: true
-        published_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-        published_by:
-          type:
-          - integer
-          - 'null'
-        features:
-          type: array
-          items:
-            type: integer
-          readOnly: true
-        stages:
-          type: array
-          items:
-            $ref: '#/components/schemas/PipelineStage'
-        completed_features:
-          type: string
-          readOnly: true
-      required:
-      - name
-      - stages
-    FeatureHealthEventReason:
-      type: object
-      properties:
-        text_blocks:
-          type: array
-          items:
-            $ref: '#/components/schemas/FeatureHealthEventReasonTextBlock'
-        url_blocks:
-          type: array
-          items:
-            $ref: '#/components/schemas/FeatureHealthEventReasonUrlBlock'
-      required:
-      - text_blocks
-      - url_blocks
-    Status7a8Enum:
-      enum:
-      - created
-      - running
-      - paused
-      - completed
-      type: string
-      description: '* `created` - Created
-
-        * `running` - Running
-
-        * `paused` - Paused
-
-        * `completed` - Completed'
-    MatchEnum:
-      enum:
-      - any
-      - all
-      type: string
-      description: '* `any` - Any
-
-        * `all` - All'
-    StageTrigger:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        trigger_type:
-          $ref: '#/components/schemas/TriggerTypeEnum'
-        trigger_body:
-          oneOf:
-          - {}
-          - type: 'null'
-    MultivariateFeatureOption:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        uuid:
-          type: string
-          format: uuid
-          readOnly: true
-        type:
-          oneOf:
-          - $ref: '#/components/schemas/Type975Enum'
-          - $ref: '#/components/schemas/BlankEnum'
-          - $ref: '#/components/schemas/NullEnum'
-        integer_value:
-          type:
-          - integer
-          - 'null'
-          maximum: 2147483647
-          minimum: -2147483648
-        string_value:
-          type:
-          - string
-          - 'null'
-          maxLength: 20000
-        boolean_value:
-          type:
-          - boolean
-          - 'null'
-        default_percentage_allocation:
-          type: number
-          format: double
-          maximum: 100
-          minimum: 0
-        key:
-          type:
-          - string
-          - 'null'
-          description: A stable, human-readable identifier for the variant.
-          pattern: ^[-a-zA-Z0-9_]+$
-          maxLength: 255
-        feature:
-          type: integer
-      required:
-      - feature
-    SegmentMembershipCount:
-      type: object
-      properties:
-        environment:
-          type: integer
-          readOnly: true
-        count:
-          type: integer
-          readOnly: true
-        last_synced_at:
-          type: string
-          format: date-time
-          readOnly: true
-    PaginatedEnvironmentSerializerWithMetadataList:
-      type: object
-      required:
-      - count
-      - results
-      properties:
-        count:
-          type: integer
-          example: 123
-        next:
-          type: string
-          nullable: true
-          format: uri
-          example: http://api.example.org/accounts/?page=4
-        previous:
-          type: string
-          nullable: true
-          format: uri
-          example: http://api.example.org/accounts/?page=2
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/EnvironmentSerializerWithMetadata'
-    SourceTypeEnum:
-      enum:
-      - csv
-      - amplitude
-      - mixpanel
-      type: string
-      description: '* `csv` - CSV
-
-        * `amplitude` - Amplitude
-
-        * `mixpanel` - Mixpanel'
-    CustomCreateSegmentOverrideFeatureSegment:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        segment:
-          type: integer
-        priority:
-          type: integer
-          minimum: 0
-        uuid:
-          type: string
-          format: uuid
-          readOnly: true
-      required:
-      - segment
-    ChangeRequestList:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        created_at:
-          type: string
-          format: date-time
-          readOnly: true
-        updated_at:
-          type: string
-          format: date-time
-          readOnly: true
-        title:
-          type: string
-          readOnly: true
-        description:
-          type:
-          - string
-          - 'null'
-          readOnly: true
-        user:
-          type:
-          - integer
-          - 'null'
-          readOnly: true
-        committed_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          readOnly: true
-        committed_by:
-          type:
-          - integer
-          - 'null'
-          readOnly: true
-        deleted_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          readOnly: true
-        live_from:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          readOnly: true
-        environment_feature_versions:
-          type: array
-          items:
-            type: string
-            format: uuid
-          readOnly: true
-        ignore_conflicts:
-          type: boolean
-          readOnly: true
-    ExperimentMetricInline:
-      type: object
-      properties:
-        metric:
-          type: string
-        expected_direction:
-          $ref: '#/components/schemas/ExpectedDirectionEnum'
-      required:
-      - expected_direction
-      - metric
     Condition:
       type: object
       properties:
@@ -4687,92 +4701,39 @@ components:
           writeOnly: true
       required:
       - operator
-    Subscription:
+    ExperimentMetricInline:
       type: object
       properties:
-        id:
-          type: integer
-          readOnly: true
-        has_active_billing_periods:
-          type: boolean
-          readOnly: true
-        deleted_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          readOnly: true
-        uuid:
+        metric:
           type: string
-          format: uuid
-          readOnly: true
-        subscription_id:
-          type:
-          - string
-          - 'null'
-          maxLength: 100
-        subscription_date:
-          type:
-          - string
-          - 'null'
-          format: date-time
-        plan:
-          type:
-          - string
-          - 'null'
-          maxLength: 100
-        max_seats:
-          type: integer
-          maximum: 2147483647
-          minimum: -2147483648
-        max_api_calls:
-          type: integer
-          maximum: 9223372036854775807
-          minimum: -9223372036854775808
-          format: int64
-        cancellation_date:
-          type:
-          - string
-          - 'null'
-          format: date-time
-        customer_id:
-          type:
-          - string
-          - 'null'
-          maxLength: 100
-        billing_status:
-          oneOf:
-          - $ref: '#/components/schemas/BillingStatusEnum'
-          - $ref: '#/components/schemas/BlankEnum'
-          - $ref: '#/components/schemas/NullEnum'
-        payment_method:
-          oneOf:
-          - $ref: '#/components/schemas/PaymentMethodEnum'
-          - $ref: '#/components/schemas/BlankEnum'
-          - $ref: '#/components/schemas/NullEnum'
-        notes:
-          type:
-          - string
-          - 'null'
-          maxLength: 500
-    _NestedSegmentRule:
+        expected_direction:
+          $ref: '#/components/schemas/ExpectedDirectionEnum'
+      required:
+      - expected_direction
+      - metric
+    PaginatedMultivariateFeatureOptionList:
       type: object
-      description: Adds nested create feature
+      required:
+      - count
+      - results
       properties:
-        id:
+        count:
           type: integer
-          readOnly: true
-        type:
-          $ref: '#/components/schemas/SegmentRuleTypeEnum'
-        conditions:
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
           type: array
           items:
-            $ref: '#/components/schemas/Condition'
-        delete:
-          type: boolean
-          writeOnly: true
-      required:
-      - type
+            $ref: '#/components/schemas/MultivariateFeatureOption'
     EnvironmentFeatureVersionCreate:
       type: object
       properties:
@@ -4842,57 +4803,82 @@ components:
           writeOnly: true
           default: false
           description: Boolean to confirm whether the new version should be publish immediately or not.
-    TypeD77Enum:
-      enum:
-      - STANDARD
-      - MULTIVARIATE
-      type: string
-      description: '* `STANDARD` - STANDARD
-
-        * `MULTIVARIATE` - MULTIVARIATE'
-    LifecycleStageEnum:
-      enum:
-      - new
-      - live
-      - stale
-      - permanent
-      - needs_monitoring
-      - to_remove
-      type: string
-      description: '* `new` - new
-
-        * `live` - live
-
-        * `stale` - stale
-
-        * `permanent` - permanent
-
-        * `needs_monitoring` - needs_monitoring
-
-        * `to_remove` - to_remove'
-    PaginatedReleasePipelineList:
+    FeatureSegmentList:
       type: object
-      required:
-      - count
-      - results
       properties:
-        count:
+        id:
           type: integer
-          example: 123
-        next:
+          readOnly: true
+        uuid:
           type: string
-          nullable: true
-          format: uri
-          example: http://api.example.org/accounts/?page=4
-        previous:
+          format: uuid
+          readOnly: true
+        segment:
+          type: integer
+          readOnly: true
+        priority:
+          type: integer
+          readOnly: true
+        environment:
+          type: integer
+          readOnly: true
+        segment_name:
           type: string
-          nullable: true
-          format: uri
-          example: http://api.example.org/accounts/?page=2
-        results:
+          readOnly: true
+        is_feature_specific:
+          type: boolean
+          readOnly: true
+    CreateChangeRequestFeatureState:
+      type: object
+      description: Adds nested create feature
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        feature:
+          type: integer
+        feature_segment:
+          type:
+          - integer
+          - 'null'
+        enabled:
+          type: boolean
+        feature_state_value:
+          $ref: '#/components/schemas/_FeatureStateValue'
+        multivariate_feature_state_values:
           type: array
           items:
-            $ref: '#/components/schemas/ReleasePipeline'
+            $ref: '#/components/schemas/_MultivariateFeatureStateValue'
+        live_from:
+          type:
+          - string
+          - 'null'
+          format: date-time
+      required:
+      - feature
+    _FeatureStateValue:
+      type: object
+      properties:
+        type:
+          oneOf:
+          - $ref: '#/components/schemas/Type975Enum'
+          - $ref: '#/components/schemas/BlankEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        string_value:
+          type:
+          - string
+          - 'null'
+          maxLength: 20000
+        integer_value:
+          type:
+          - integer
+          - 'null'
+          maximum: 2147483647
+          minimum: -2147483648
+        boolean_value:
+          type:
+          - boolean
+          - 'null'
     EnvironmentSerializerWithMetadata:
       type: object
       description: Functionality for serializers that need to handle metadata
@@ -4977,83 +4963,6 @@ components:
       required:
       - name
       - project
-    NestedMultivariateFeatureOption:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        uuid:
-          type: string
-          format: uuid
-          readOnly: true
-        type:
-          oneOf:
-          - $ref: '#/components/schemas/Type975Enum'
-          - $ref: '#/components/schemas/BlankEnum'
-          - $ref: '#/components/schemas/NullEnum'
-        integer_value:
-          type:
-          - integer
-          - 'null'
-          maximum: 2147483647
-          minimum: -2147483648
-        string_value:
-          type:
-          - string
-          - 'null'
-          maxLength: 20000
-        boolean_value:
-          type:
-          - boolean
-          - 'null'
-        default_percentage_allocation:
-          type: number
-          format: double
-          maximum: 100
-          minimum: 0
-        key:
-          type:
-          - string
-          - 'null'
-          readOnly: true
-          description: A stable, human-readable identifier for the variant.
-    PaginatedOrganisationSerializerFullList:
-      type: object
-      required:
-      - count
-      - results
-      properties:
-        count:
-          type: integer
-          example: 123
-        next:
-          type: string
-          nullable: true
-          format: uri
-          example: http://api.example.org/accounts/?page=4
-        previous:
-          type: string
-          nullable: true
-          format: uri
-          example: http://api.example.org/accounts/?page=2
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/OrganisationSerializerFull'
-    FeatureHealthEventTypeEnum:
-      enum:
-      - UNHEALTHY
-      - HEALTHY
-      type: string
-      description: '* `UNHEALTHY` - Unhealthy
-
-        * `HEALTHY` - Healthy'
-    VcsProviderEnum:
-      enum:
-      - github
-      type: string
-      description: '* `github` - GitHub'
     Metric:
       type: object
       properties:
@@ -5100,7 +5009,84 @@ components:
       required:
       - definition
       - name
-    ProjectList:
+    EdgeV2MigrationStatusEnum:
+      enum:
+      - NOT_STARTED
+      - IN_PROGRESS
+      - COMPLETE
+      - INCOMPLETE
+      type: string
+      description: '* `NOT_STARTED` - Not Started
+
+        * `IN_PROGRESS` - In Progress
+
+        * `COMPLETE` - Complete
+
+        * `INCOMPLETE` - Incomplete (identity overrides skipped)'
+    PaginatedFeatureSegmentListList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/FeatureSegmentList'
+    ActionTypeEnum:
+      enum:
+      - TOGGLE_FEATURE
+      - UPDATE_FEATURE_VALUE
+      - TOGGLE_FEATURE_FOR_SEGMENT
+      - UPDATE_FEATURE_VALUE_FOR_SEGMENT
+      - PHASED_ROLLOUT
+      type: string
+      description: '* `TOGGLE_FEATURE` - Enable/Disable Feature for the environment
+
+        * `UPDATE_FEATURE_VALUE` - Update Feature Value for the environment
+
+        * `TOGGLE_FEATURE_FOR_SEGMENT` - Enable/Disable Feature for a specific segment
+
+        * `UPDATE_FEATURE_VALUE_FOR_SEGMENT` - Update Feature Value for a specific segment
+
+        * `PHASED_ROLLOUT` - Create Phased Rollout'
+    PaginatedSegmentList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Segment'
+    OrganisationSerializerFull:
       type: object
       properties:
         id:
@@ -5113,146 +5099,216 @@ components:
         name:
           type: string
           maxLength: 2000
-        organisation:
-          type: integer
-        hide_disabled_flags:
-          type: boolean
-          description: If true will exclude flags from SDK which are disabled
-        enable_dynamo_db:
-          type: boolean
-          readOnly: true
-          description: If true will sync environment data with dynamodb and allow access to dynamodb identities
-        migration_status:
+        created_date:
           type: string
+          format: date-time
           readOnly: true
-          description: 'Edge migration status of the project; can be one of: MIGRATION_SCHEDULED, MIGRATION_COMPLETED, MIGRATION_IN_PROGRESS, MIGRATION_NOT_STARTED, NOT_APPLICABLE'
-        use_edge_identities:
-          type: boolean
-          readOnly: true
-        prevent_flag_defaults:
-          type: boolean
-          description: Prevent defaults from being set in all environments when creating a feature.
-        enable_realtime_updates:
-          type: boolean
-          description: Enable this to trigger a realtime(sse) event whenever the value of a flag changes
-        only_allow_lower_case_feature_names:
-          type: boolean
-          description: Used by UI to validate feature names
-        feature_name_regex:
+          title: DateCreated
+        webhook_notification_email:
           type:
           - string
           - 'null'
-          description: Used for validating feature names
-          maxLength: 255
-        show_edge_identity_overrides_for_feature:
-          type: boolean
-          readOnly: true
-        stale_flags_limit_days:
+          format: email
+          maxLength: 254
+        num_seats:
           type: integer
-          maximum: 2147483647
-          minimum: -2147483648
-          description: Number of days without modification in any environment before a flag is considered stale.
-        edge_v2_migration_status:
-          allOf:
-          - $ref: '#/components/schemas/EdgeV2MigrationStatusEnum'
           readOnly: true
-          description: '[Edge V2 migration] Project migration status. Set to `IN_PROGRESS` to trigger migration start.
-
-
-            * `NOT_STARTED` - Not Started
-
-            * `IN_PROGRESS` - In Progress
-
-            * `COMPLETE` - Complete
-
-            * `INCOMPLETE` - Incomplete (identity overrides skipped)'
-        minimum_change_request_approvals:
+        subscription:
+          $ref: '#/components/schemas/Subscription'
+        role:
           type:
-          - integer
+          - string
           - 'null'
-          maximum: 2147483647
-          minimum: -2147483648
-        enforce_feature_owners:
+          readOnly: true
+        persist_trait_data:
           type: boolean
-          description: Require at least one user or group owner when creating a feature.
+          readOnly: true
+          description: Disable this if you don't want Flagsmith to store trait data for this org's identities.
+        block_access_to_admin:
+          type: boolean
+          readOnly: true
+          description: Enable this to block all the access to admin interface for the organisation
+        restrict_project_create_to_admin:
+          type: boolean
+        force_2fa:
+          type: boolean
+        targeting_key:
+          type:
+          - string
+          - 'null'
+          writeOnly: true
+          description: Flagsmith-on-Flagsmith targeting key. Immutable; org.<id> is used when unset.
+          maxLength: 64
       required:
       - name
-      - organisation
-    _MultivariateFeatureStateValue:
+    FeatureFlagCodeReferencesRepositoryCount:
+      type: object
+      properties:
+        repository_url:
+          type: string
+          format: uri
+        count:
+          type: integer
+        last_successful_repository_scanned_at:
+          type: string
+          format: date-time
+        last_feature_found_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+      required:
+      - count
+      - last_feature_found_at
+      - last_successful_repository_scanned_at
+      - repository_url
+    PaginatedProjectChangeRequestListList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProjectChangeRequestList'
+    ExperimentMetric:
       type: object
       properties:
         id:
           type: integer
           readOnly: true
-        multivariate_feature_option:
+        metric:
           type: integer
-        percentage_allocation:
-          type: number
-          format: double
-          maximum: 100
-          minimum: 0
+        metric_name:
+          type: string
+          readOnly: true
+        aggregation:
+          type: string
+          readOnly: true
+        direction:
+          allOf:
+          - $ref: '#/components/schemas/DirectionEnum'
+          readOnly: true
+        expected_direction:
+          $ref: '#/components/schemas/ExpectedDirectionEnum'
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
       required:
-      - multivariate_feature_option
-      - percentage_allocation
-    _FeatureStateValue:
+      - expected_direction
+      - metric
+    ExperimentList:
       type: object
       properties:
-        type:
-          oneOf:
-          - $ref: '#/components/schemas/Type975Enum'
-          - $ref: '#/components/schemas/BlankEnum'
-          - $ref: '#/components/schemas/NullEnum'
-        string_value:
+        id:
+          type: integer
+          readOnly: true
+        feature:
+          allOf:
+          - $ref: '#/components/schemas/ExperimentFeature'
+          readOnly: true
+        name:
+          type: string
+          maxLength: 255
+        hypothesis:
+          type: string
+        status:
+          allOf:
+          - $ref: '#/components/schemas/Status7a8Enum'
+          readOnly: true
+        metrics:
+          type: array
+          items:
+            $ref: '#/components/schemas/ExperimentMetric'
+          readOnly: true
+        experiment_rollout:
+          allOf:
+          - $ref: '#/components/schemas/ExperimentRollout'
+          writeOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        started_at:
           type:
           - string
           - 'null'
-          maxLength: 20000
-        integer_value:
+          format: date-time
+          readOnly: true
+        ended_at:
           type:
-          - integer
+          - string
           - 'null'
-          maximum: 2147483647
-          minimum: -2147483648
-        boolean_value:
-          type:
-          - boolean
-          - 'null'
-    ExpectedDirectionEnum:
-      enum:
-      - increase
-      - decrease
-      - not_increase
-      - not_decrease
-      type: string
-      description: '* `increase` - Increase
-
-        * `decrease` - Decrease
-
-        * `not_increase` - Should not increase
-
-        * `not_decrease` - Should not decrease'
-    ExperimentRollout:
+          format: date-time
+          readOnly: true
+      required:
+      - hypothesis
+      - name
+    StageAction:
       type: object
       properties:
-        enabled:
-          type: boolean
-        rollout_percentage:
-          type: number
-          format: double
-          maximum: 100
-          minimum: 0
-        feature_state_value:
-          $ref: '#/components/schemas/FeatureValue'
-        multivariate_feature_state_values:
+        id:
+          type: integer
+          readOnly: true
+        action_type:
+          $ref: '#/components/schemas/ActionTypeEnum'
+        action_body:
+          oneOf:
+          - {}
+          - type: 'null'
+    PaymentMethodEnum:
+      enum:
+      - CHARGEBEE
+      - XERO
+      - AWS_MARKETPLACE
+      type: string
+      description: '* `CHARGEBEE` - Chargebee
+
+        * `XERO` - Xero
+
+        * `AWS_MARKETPLACE` - AWS Marketplace'
+    PaginatedEnvironmentFeatureVersionList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
           type: array
           items:
-            $ref: '#/components/schemas/MultivariateValue'
-        audience:
-          $ref: '#/components/schemas/ExperimentAudience'
-      required:
-      - enabled
-      - feature_state_value
-      - rollout_percentage
+            $ref: '#/components/schemas/EnvironmentFeatureVersion'
     UserList:
       type: object
       properties:
@@ -5282,104 +5338,48 @@ components:
       - email
       - first_name
       - last_name
-    ExperimentMetric:
+    FeatureValueTypeEnum:
+      enum:
+      - integer
+      - string
+      - boolean
+      type: string
+      description: '* `integer` - integer
+
+        * `string` - string
+
+        * `boolean` - boolean'
+    ManagedByEnum:
+      enum:
+      - cohort
+      type: string
+      description: '* `` - Unmanaged
+
+        * `cohort` - Cohort'
+    ExperimentFeature:
       type: object
       properties:
         id:
           type: integer
-          readOnly: true
-        metric:
-          type: integer
-        metric_name:
-          type: string
-          readOnly: true
-        aggregation:
-          type: string
-          readOnly: true
-        direction:
-          allOf:
-          - $ref: '#/components/schemas/DirectionEnum'
-          readOnly: true
-        expected_direction:
-          $ref: '#/components/schemas/ExpectedDirectionEnum'
-        created_at:
-          type: string
-          format: date-time
-          readOnly: true
-      required:
-      - expected_direction
-      - metric
-    Segment:
-      type: object
-      description: Functionality for serializers that need to handle metadata
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        uuid:
-          type: string
-          format: uuid
-          readOnly: true
-        created_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          readOnly: true
-        updated_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
           readOnly: true
         name:
           type: string
-          maxLength: 2000
-        description:
+          readOnly: true
+        type:
+          allOf:
+          - $ref: '#/components/schemas/TypeD77Enum'
+          readOnly: true
+        initial_value:
           type:
           - string
           - 'null'
-        project:
-          type: integer
           readOnly: true
-        feature:
-          type:
-          - integer
-          - 'null'
-        version_of:
-          type:
-          - integer
-          - 'null'
-        rules:
+        multivariate_options:
           type: array
           items:
-            $ref: '#/components/schemas/SegmentRule'
-        metadata:
-          type: array
-          items:
-            $ref: '#/components/schemas/Metadata'
-        membership_counts:
-          type: array
-          items:
-            $ref: '#/components/schemas/SegmentMembershipCount'
+            type: object
+            additionalProperties: {}
           readOnly: true
-        managed_by:
-          readOnly: true
-          oneOf:
-          - $ref: '#/components/schemas/ManagedByEnum'
-          - $ref: '#/components/schemas/BlankEnum'
-        cohort:
-          oneOf:
-          - $ref: '#/components/schemas/_SegmentCohort'
-          - type: 'null'
-          readOnly: true
-        has_overrides:
-          type: boolean
-          readOnly: true
-          description: Whether any feature override points at this segment, counting overrides that are live now or scheduled to go live.
-      required:
-      - name
-      - rules
   securitySchemes:
     Cohort_Sync_Key:
       type: http
