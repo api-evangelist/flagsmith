@@ -2,11 +2,18 @@ generated: '2026-10-14'
 method: searched
 checked:
 - datadog/integrations/datadog-integration-edges.yml
+- https://api.nuget.org/v3
+- https://crates.io/api/v1
 - https://focus.finops.org/data-generators/
 - https://github.com/cncf/k8s-conformance
 - https://github.com/cncf/landscape
 - https://github.com/marketplace?type=apps
 - https://marketplace.atlassian.com/
+- https://proxy.golang.org
+- https://pypi.org/pypi
+- https://registry.npmjs.org
+- https://repo1.maven.org/maven2
+- https://rubygems.org/api/v1
 marketplace_apps: []
 edges:
 - partner_name: GitHub Marketplace (apps)
@@ -92,6 +99,201 @@ edges:
     detected: '2026-10-15'
   detected_by: sweep-cloud-native.py
   first_seen: '2026-10-15'
+- partner_name: Go module proxy
+  partner: null
+  partner_match: null
+  type: register
+  direction: provider-built
+  category: official SDK (Go)
+  evidence: https://pkg.go.dev/github.com/Flagsmith/flagsmith-go-client/v5
+  channel: package-registry
+  relationship: distribution-channel
+  contract_reference:
+    register: Go module proxy (public registry JSON)
+    spec_file: null
+    language: Go
+    packages:
+    - name: github.com/Flagsmith/flagsmith-go-client/v5
+      version: v5.3.0
+      released: '2026-10-05'
+      released_field: Time
+      lapsed: false
+      page: https://pkg.go.dev/github.com/Flagsmith/flagsmith-go-client/v5
+      repo_leg: github-org:flagsmith
+      publisher_leg: org:flagsmith
+      matched_by: github-org
+    current: true
+    signal_note: 'an official package on the registry: distribution, not an integration; lapsed = no release in
+      24 months'
+    detected_by: sweep-official-sdks.py
+    detected: '2026-10-18'
+  detected_by: sweep-official-sdks.py
+  first_seen: '2026-10-18'
+- partner_name: Maven Central
+  partner: maven-central
+  partner_match: register
+  type: register
+  direction: provider-built
+  category: official SDK (Java/JVM)
+  evidence: https://central.sonatype.com/artifact/com.flagsmith/flagsmith-java-client
+  channel: package-registry
+  relationship: distribution-channel
+  contract_reference:
+    register: Maven Central (public registry JSON)
+    spec_file: null
+    language: Java/JVM
+    packages:
+    - name: com.flagsmith:flagsmith-java-client
+      version: 8.2.0
+      released: '2026-10-05'
+      released_field: lastUpdated
+      lapsed: false
+      page: https://central.sonatype.com/artifact/com.flagsmith/flagsmith-java-client
+      repo_leg: domain:flagsmith.com
+      publisher_leg: groupId:flagsmith.com
+      matched_by: domain
+    - name: com.flagsmith:flagsmith-kotlin-android-client
+      version: 1.9.0
+      released: '2026-04-15'
+      released_field: lastUpdated
+      lapsed: false
+      page: https://central.sonatype.com/artifact/com.flagsmith/flagsmith-kotlin-android-client
+      repo_leg: github-org:flagsmith
+      publisher_leg: groupId:flagsmith.com
+      matched_by: domain
+    - name: com.flagsmith:flagsmith-kotlin-client
+      version: 5.0.2
+      released: '2022-08-09'
+      released_field: lastUpdated
+      lapsed: true
+      page: https://central.sonatype.com/artifact/com.flagsmith/flagsmith-kotlin-client
+      repo_leg: github-org:flagsmith
+      publisher_leg: groupId:flagsmith.com
+      matched_by: domain
+    current: true
+    signal_note: 'an official package on the registry: distribution, not an integration; lapsed = no release in
+      24 months'
+    detected_by: sweep-official-sdks.py
+    detected: '2026-10-18'
+  detected_by: sweep-official-sdks.py
+  first_seen: '2026-10-18'
+- partner_name: npm registry
+  partner: npm
+  partner_match: register
+  type: register
+  direction: provider-built
+  category: official SDK (JavaScript/TypeScript)
+  evidence: https://www.npmjs.com/package/@flagsmith/cli
+  channel: package-registry
+  relationship: distribution-channel
+  contract_reference:
+    register: npm registry (public registry JSON)
+    spec_file: null
+    language: JavaScript/TypeScript
+    packages:
+    - name: '@flagsmith/cli'
+      version: 2.0.0
+      released: '2026-08-21'
+      released_field: modified
+      lapsed: false
+      page: https://www.npmjs.com/package/@flagsmith/cli
+      repo_leg: github-org:flagsmith
+      publisher_leg: email:flagsmith.com
+      matched_by: domain
+    - name: flagsmith
+      version: 10.0.0
+      released: '2026-01-28'
+      released_field: modified
+      lapsed: false
+      page: https://www.npmjs.com/package/flagsmith
+      repo_leg: domain:flagsmith.com
+      publisher_leg: email:flagsmith.com
+      matched_by: domain
+    - name: flagsmith-nodejs
+      version: 8.1.2
+      released: '2026-09-17'
+      released_field: modified
+      lapsed: false
+      page: https://www.npmjs.com/package/flagsmith-nodejs
+      repo_leg: domain:flagsmith.com
+      publisher_leg: email:flagsmith.com
+      matched_by: domain
+    - name: react-native-flagsmith
+      version: 10.0.0
+      released: '2026-01-28'
+      released_field: modified
+      lapsed: false
+      page: https://www.npmjs.com/package/react-native-flagsmith
+      repo_leg: domain:flagsmith.com
+      publisher_leg: email:flagsmith.com
+      matched_by: domain
+    current: true
+    signal_note: 'an official package on the registry: distribution, not an integration; lapsed = no release in
+      24 months'
+    detected_by: sweep-official-sdks.py
+    detected: '2026-10-18'
+  detected_by: sweep-official-sdks.py
+  first_seen: '2026-10-18'
+- partner_name: NuGet Gallery
+  partner: nuget
+  partner_match: register
+  type: register
+  direction: provider-built
+  category: official SDK (.NET)
+  evidence: https://www.nuget.org/packages/Flagsmith
+  channel: package-registry
+  relationship: distribution-channel
+  contract_reference:
+    register: NuGet Gallery (public registry JSON)
+    spec_file: null
+    language: .NET
+    packages:
+    - name: Flagsmith
+      version: 9.0.0
+      released: '2025-12-05'
+      released_field: published
+      lapsed: false
+      page: https://www.nuget.org/packages/Flagsmith
+      repo_leg: domain:flagsmith.com
+      publisher_leg: org:flagsmith
+      matched_by: domain
+    current: true
+    signal_note: 'an official package on the registry: distribution, not an integration; lapsed = no release in
+      24 months'
+    detected_by: sweep-official-sdks.py
+    detected: '2026-10-18'
+  detected_by: sweep-official-sdks.py
+  first_seen: '2026-10-18'
+- partner_name: PyPI
+  partner: pypi
+  partner_match: register
+  type: register
+  direction: provider-built
+  category: official SDK (Python)
+  evidence: https://pypi.org/project/flagsmith/
+  channel: package-registry
+  relationship: distribution-channel
+  contract_reference:
+    register: PyPI (public registry JSON)
+    spec_file: null
+    language: Python
+    packages:
+    - name: flagsmith
+      version: 6.3.0
+      released: '2026-09-23'
+      released_field: upload_time
+      lapsed: false
+      page: https://pypi.org/project/flagsmith/
+      repo_leg: domain:flagsmith.com
+      publisher_leg: email:flagsmith.com
+      matched_by: domain
+    current: true
+    signal_note: 'an official package on the registry: distribution, not an integration; lapsed = no release in
+      24 months'
+    detected_by: sweep-official-sdks.py
+    detected: '2026-10-18'
+  detected_by: sweep-official-sdks.py
+  first_seen: '2026-10-18'
 source:
 - https://github.com/marketplace?type=apps
 - https://marketplace.atlassian.com/
