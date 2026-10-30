@@ -1,4 +1,4 @@
-# flagsmith (flagsmith)
+# Flagsmith
 
 <!-- API-EVANGELIST-PROVENANCE:BEGIN -->
 > ### About this repository
@@ -64,64 +64,235 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-Flagsmith is an open-source feature flag and remote configuration platform that helps developers manage feature flags across web, mobile, and server-side applications.
+Flagsmith is an open-source feature flag, remote configuration and experimentation platform built by Bullet Train Ltd. Teams use it to release features safely, run A/B and multivariate tests, and segment users without redeploying code, across web, mobile and server-side applications. It ships as a hosted cloud service on a global low-latency Edge API, as a private cloud deployment, or self-hosted on the customer's own infrastructure, with the core product open source under BSD-3-Clause. Two public API surfaces back it: a non-secret SDK/Flags API for evaluating flags, and a 615-operation Management API that does everything the dashboard does. Flagsmith is OpenFeature compatible, publishes first-party SDKs for thirteen language ecosystems, and operates a remote MCP server exposing 54 tools to AI agents over OAuth.
 
-**APIs.json:** [https://raw.githubusercontent.com/api-evangelist/flagsmith/refs/heads/main/apis.yml](https://raw.githubusercontent.com/api-evangelist/flagsmith/refs/heads/main/apis.yml)
+**Areas:** Feature Flags · Remote Config · Release Management · A/B Testing · Experimentation · Segmentation · Developer Tools · DevOps · Open Source · Software-as-a-Service · MCP · Agent Ready
 
-## Timestamps
+## Flagsmith on APIs.io
 
-- **Modified:** 2026-05-19
+Everything profiled for Flagsmith is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/flagsmith/](https://apis.io/providers/flagsmith/)** — or go straight to one of the APIs or properties below.
 
-## APIs
+### APIs (24)
 
-### Flagsmith Flags API
+- [Flagsmith Flags API](https://apis.io/apis/flagsmith/flags-api/) — The Flagsmith Flags API is the public-facing REST API that client-side and server-side SDKs use to retrieve feature flag values and remote configuration for…
+- [flagsmith Environments API](https://apis.io/apis/flagsmith/flagsmith-environments-api/) — Manage environments within a project. Environments represent deployment stages such as development, staging, and production.
+- [flagsmith Features API](https://apis.io/apis/flagsmith/flagsmith-features-api/) — Manage feature flags within a project. Features can be toggled on or off and can have remote configuration values.
+- [flagsmith Identities API](https://apis.io/apis/flagsmith/flagsmith-identities-api/) — Manage user identities within an environment. Identities represent individual users and their associated traits.
+- [flagsmith Organisations API](https://apis.io/apis/flagsmith/flagsmith-organisations-api/) — Manage organisations within Flagsmith. Organisations are the top-level container for projects, users, and billing.
+- [flagsmith Projects API](https://apis.io/apis/flagsmith/flagsmith-projects-api/) — Manage projects within an organisation. Projects contain environments and feature flags.
+- [flagsmith Segments API](https://apis.io/apis/flagsmith/flagsmith-segments-api/) — Manage segments within a project. Segments define groups of users based on traits and rules for targeted flag delivery.
+- [flagsmith Users API](https://apis.io/apis/flagsmith/flagsmith-users-api/) — Manage organisation users and their permissions within Flagsmith.
+- [flagsmith Webhooks API](https://apis.io/apis/flagsmith/flagsmith-webhooks-api/) — Configure webhooks for environments and organisations to receive notifications about flag changes and audit log events.
+- [Flagsmith Admin dashboard API](https://apis.io/apis/flagsmith/flagsmith-admin-dashboard-api/) — Platform hub admin dashboard endpoints.
+- [Flagsmith Analytics API](https://apis.io/apis/flagsmith/flagsmith-analytics-api/) — SDK analytics and telemetry.
+- [Flagsmith Audit API](https://apis.io/apis/flagsmith/flagsmith-audit-api/) — Access audit logs.
+- [Flagsmith Authentication API](https://apis.io/apis/flagsmith/flagsmith-authentication-api/) — Authentication, MFA, OAuth, and token management.
+- [Flagsmith Experimental API](https://apis.io/apis/flagsmith/flagsmith-experimental-api/) — Experimental endpoints subject to change.
+- [Flagsmith Feature states API](https://apis.io/apis/flagsmith/flagsmith-feature-states-api/) — Manage feature states and feature versioning.
+- [Flagsmith Integrations API](https://apis.io/apis/flagsmith/flagsmith-integrations-api/) — Configure third-party integrations (Amplitude, DataDog, Slack, etc.).
+- [Flagsmith MCP API](https://apis.io/apis/flagsmith/flagsmith-mcp-api/) — MCP-compatible endpoints.
+- [Flagsmith Metadata API](https://apis.io/apis/flagsmith/flagsmith-metadata-api/) — Manage metadata fields and model configuration.
+- [Flagsmith O API](https://apis.io/apis/flagsmith/flagsmith-o-api/) — The o API from Flagsmith — 1 operation(s) for o.
+- [Flagsmith Onboarding API](https://apis.io/apis/flagsmith/flagsmith-onboarding-api/) — Onboarding flows.
+- [Flagsmith Other API](https://apis.io/apis/flagsmith/flagsmith-other-api/) — Other endpoints.
+- [Flagsmith Permissions API](https://apis.io/apis/flagsmith/flagsmith-permissions-api/) — Manage user and group permissions across organisations, projects, and environments.
+- [Flagsmith Processor API](https://apis.io/apis/flagsmith/flagsmith-processor-api/) — The processor API from Flagsmith — 1 operation(s) for processor.
+- [Flagsmith SDK API](https://apis.io/apis/flagsmith/flagsmith-sdk-api/) — SDK endpoints for flags, identities, and traits.
 
-The Flagsmith Flags API is the public-facing REST API that client-side and server-side SDKs use to retrieve feature flag values and remote configuration for environments and users. It uses a non-secret Environment Key for authentication and is designed to be fast, scalable, and publicly accessible. The Edge API endpoint at edge.api.flagsmith.com serves requests from AWS Lambda functions running in data centers near the client, providing low-latency global access to flag evaluations.
+### Published properties
 
-- **Human URL:** [https://docs.flagsmith.com/clients/rest](https://docs.flagsmith.com/clients/rest)
-- **Base URL:** `https://edge.api.flagsmith.com`
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
 
-#### Tags
+#### AsyncAPI (1)
 
-- Edge
-- Feature Flags
-- Flags
-- Remote Config
-- SDKs
+Event-driven and webhook contracts.
 
-#### Properties
+- [Flagsmith Webhook Events](https://apis.io/asyncapis/flagsmith/flagsmith-webhooks-asyncapi/)
 
-- [Documentation](https://docs.flagsmith.com/clients/rest)
-- [OpenAPI](openapi/flagsmith-flags-api-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/flagsmith-flags-api.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/flagsmith-flags-api.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
+#### Event channels (2)
 
-### Flagsmith Admin API
+Individual events and webhooks the provider emits.
 
-The Flagsmith Admin API allows developers to programmatically manage all aspects of their Flagsmith projects. Anything that can be done through the Flagsmith dashboard can also be accomplished via this API, including creating, updating, and deleting projects, environments, feature flags, segments, and users. It uses a secret Organisation API Token for authentication and provides a Swagger interface at api.flagsmith.com/api/v1/docs for interactive exploration.
+- [/environment-webhook](https://apis.io/channels/flagsmith/environment-webhook/)
+- [/organisation-webhook](https://apis.io/channels/flagsmith/organisation-webhook/)
 
-- **Human URL:** [https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/admin-api](https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/admin-api)
-- **Base URL:** `https://api.flagsmith.com/api/v1`
+#### MCP servers (1)
 
-#### Tags
+Model Context Protocol servers that expose the API to agents.
 
-- Administration
-- Environments
-- Feature Flags
-- Projects
-- Segments
+- [flagsmith](https://apis.io/servers/flagsmith/flagsmith/)
 
-#### Properties
+#### Agentic access (1)
 
-- [Documentation](https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/admin-api)
-- [OpenAPI](openapi/flagsmith-admin-api-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/flagsmith-admin-api.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/flagsmith-admin-api.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-- [AsyncAPI](asyncapi/flagsmith-webhooks-asyncapi.yml) — [AsyncAPI Specification](https://www.asyncapi.com/docs/reference/specification/latest)
+Which operations an agent can call, which act, and which need a human in the loop.
 
-## Common Properties
+- [Flagsmith Agentic Access](https://apis.io/agentic-access/flagsmith/flagsmith-agentic-access/)
 
-- [GitHub Organization](https://github.com/Flagsmith)
-- [LinkedIn](https://www.linkedin.com/company/flagsmith)
-- [JSON-LD](json-ld/flagsmith-context.jsonld) — [JSON-LD](https://www.w3.org/TR/json-ld11/)
-- [JSON Schema](json-schema/flagsmith-feature-flag-schema.json) — [JSON Schema](https://json-schema.org/specification)
+#### JSON Schema (1)
+
+The data models the API reads and writes.
+
+- [Flagsmith Feature Flag](https://apis.io/schemas/flagsmith/flagsmith-feature-flag/)
+
+#### JSON-LD (1)
+
+Linked-data contexts for the provider's vocabulary.
+
+- [Flagsmith Context](https://apis.io/jsonld/flagsmith/flagsmith-context/)
+
+#### Collections (10)
+
+Postman and Open Collection request collections.
+
+- [Flagsmith Admin API](https://apis.io/collections/flagsmith/open-flagsmith-admin-api/)
+- [Flagsmith Admin Environments API](https://apis.io/collections/flagsmith/open-flagsmith-environments-api/)
+- [Flagsmith Admin Environments Features API](https://apis.io/collections/flagsmith/open-flagsmith-features-api/)
+- [Flagsmith Admin Environments Flags API](https://apis.io/collections/flagsmith/open-flagsmith-flags-api/)
+- [Flagsmith Admin Environments Identities API](https://apis.io/collections/flagsmith/open-flagsmith-identities-api/)
+- [Flagsmith Admin Environments Organisations API](https://apis.io/collections/flagsmith/open-flagsmith-organisations-api/)
+- [Flagsmith Admin Environments Projects API](https://apis.io/collections/flagsmith/open-flagsmith-projects-api/)
+- [Flagsmith Admin Environments Segments API](https://apis.io/collections/flagsmith/open-flagsmith-segments-api/)
+- [Flagsmith Admin Environments Users API](https://apis.io/collections/flagsmith/open-flagsmith-users-api/)
+- [Flagsmith Admin Environments Webhooks API](https://apis.io/collections/flagsmith/open-flagsmith-webhooks-api/)
+
+#### Overlays (33)
+
+OpenAPI overlays, including conversational phrasing for each operation.
+
+- [Flagsmith Admin Dashboard Api Phrasing Overlay](https://apis.io/overlays/flagsmith/flagsmith-admin-dashboard-api-phrasing-overlay/)
+- [Flagsmith Analytics Api Phrasing Overlay](https://apis.io/overlays/flagsmith/flagsmith-analytics-api-phrasing-overlay/)
+- [Flagsmith Audit Api Phrasing Overlay](https://apis.io/overlays/flagsmith/flagsmith-audit-api-phrasing-overlay/)
+- [Flagsmith Authentication Api Phrasing Overlay](https://apis.io/overlays/flagsmith/flagsmith-authentication-api-phrasing-overlay/)
+- [Flagsmith Environments Api Overlay](https://apis.io/overlays/flagsmith/flagsmith-environments-api-overlay/)
+- [Flagsmith Environments Api Phrasing Overlay](https://apis.io/overlays/flagsmith/flagsmith-environments-api-phrasing-overlay/)
+- [Flagsmith Experimental Api Phrasing Overlay](https://apis.io/overlays/flagsmith/flagsmith-experimental-api-phrasing-overlay/)
+- [Flagsmith Feature States Api Phrasing Overlay](https://apis.io/overlays/flagsmith/flagsmith-feature-states-api-phrasing-overlay/)
+- [Flagsmith Features Api Overlay](https://apis.io/overlays/flagsmith/flagsmith-features-api-overlay/)
+- [Flagsmith Features Api Phrasing Overlay](https://apis.io/overlays/flagsmith/flagsmith-features-api-phrasing-overlay/)
+- [Flagsmith Flags Api Overlay](https://apis.io/overlays/flagsmith/flagsmith-flags-api-overlay/)
+- [Flagsmith Flags Api Phrasing Overlay](https://apis.io/overlays/flagsmith/flagsmith-flags-api-phrasing-overlay/)
+- [Flagsmith Identities Api Overlay](https://apis.io/overlays/flagsmith/flagsmith-identities-api-overlay/)
+- [Flagsmith Identities Api Phrasing Overlay](https://apis.io/overlays/flagsmith/flagsmith-identities-api-phrasing-overlay/)
+- [Flagsmith Integrations Api Phrasing Overlay](https://apis.io/overlays/flagsmith/flagsmith-integrations-api-phrasing-overlay/)
+- [Flagsmith Mcp Api Phrasing Overlay](https://apis.io/overlays/flagsmith/flagsmith-mcp-api-phrasing-overlay/)
+- [Flagsmith Metadata Api Phrasing Overlay](https://apis.io/overlays/flagsmith/flagsmith-metadata-api-phrasing-overlay/)
+- [Flagsmith O Api Phrasing Overlay](https://apis.io/overlays/flagsmith/flagsmith-o-api-phrasing-overlay/)
+- [Flagsmith Onboarding Api Phrasing Overlay](https://apis.io/overlays/flagsmith/flagsmith-onboarding-api-phrasing-overlay/)
+- [Flagsmith Organisations Api Overlay](https://apis.io/overlays/flagsmith/flagsmith-organisations-api-overlay/)
+- [Flagsmith Organisations Api Phrasing Overlay](https://apis.io/overlays/flagsmith/flagsmith-organisations-api-phrasing-overlay/)
+- [Flagsmith Other Api Phrasing Overlay](https://apis.io/overlays/flagsmith/flagsmith-other-api-phrasing-overlay/)
+- [Flagsmith Permissions Api Phrasing Overlay](https://apis.io/overlays/flagsmith/flagsmith-permissions-api-phrasing-overlay/)
+- [Flagsmith Processor Api Phrasing Overlay](https://apis.io/overlays/flagsmith/flagsmith-processor-api-phrasing-overlay/)
+- [Flagsmith Projects Api Overlay](https://apis.io/overlays/flagsmith/flagsmith-projects-api-overlay/)
+- …and 8 more published on APIs.io
+
+#### Governance rules (2)
+
+Spectral rulesets for the provider's contracts.
+
+- [Flagsmith — asyncapi rules](https://apis.io/rules/flagsmith/flagsmith-asyncapi-spectral-rules/)
+- [Flagsmith — jsonschema rules](https://apis.io/rules/flagsmith/flagsmith-jsonschema-spectral-rules/)
+
+#### Security (4)
+
+Authentication, trust centre, and vulnerability disclosure.
+
+- [Flagsmith Authentication](https://apis.io/security/flagsmith/flagsmith-authentication/)
+- [Flagsmith Domain Security](https://apis.io/security/flagsmith/flagsmith-domain-security/)
+- [Flagsmith Trust Center](https://apis.io/security/flagsmith/flagsmith-trust-center/)
+- [Flagsmith Vulnerability Disclosure](https://apis.io/security/flagsmith/flagsmith-vulnerability-disclosure/)
+
+#### OAuth scopes (1)
+
+The permissions the API asks for.
+
+- [Flagsmith Scopes](https://apis.io/scopes/flagsmith/flagsmith-scopes/)
+
+#### Plans and pricing (1)
+
+Published plans, tiers and prices.
+
+- [Flagsmith Plans Pricing](https://apis.io/plans/flagsmith/flagsmith-plans-pricing/)
+
+#### Rate limits (1)
+
+Published request limits.
+
+- [Flagsmith Rate Limits](https://apis.io/rate-limits/flagsmith/flagsmith-rate-limits/)
+
+#### FinOps (1)
+
+What the API costs to run, by operation.
+
+- [Flagsmith Finops](https://apis.io/finops/flagsmith/flagsmith-finops/)
+
+## Where to find this API
+
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
+
+- [Website](https://flagsmith.com)
+- [Documentation](https://docs.flagsmith.com)
+- [Getting started](https://docs.flagsmith.com/getting-started/quick-start)
+- [API reference](https://docs.flagsmith.com/integrating-with-flagsmith/flagsmith-api-overview/)
+- [Pricing](https://flagsmith.com/pricing)
+- [Support](https://docs.flagsmith.com/support/faq)
+- [Blog](https://flagsmith.com/blog)
+- [Terms of service](https://flagsmith.com/terms-of-service)
+- [Privacy policy](https://flagsmith.com/privacy-policy)
+- [GitHub](https://github.com/Flagsmith)
+- [Status](https://status.flagsmith.com)
+
+## API Evangelist rating
+
+**Kin Score 77.0** — exemplar · rubric 0.25.0 · scored 2026-10-23
+
+| Facet | Score |
+|---|---|
+| Discoverability | 75.0 |
+| Contract quality | 56.9 |
+| Contract governance | 31.8 |
+| Operational transparency | 92.1 |
+| Developer ergonomics | 79.2 |
+| Access clarity | 85.5 |
+
+**Agent readiness 48.3** — agent-ready (gated down from agent-native)
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | yes |
+| Agentic Access | derived (partial credit) |
+| Reversibility Documented | — |
+| MCP Server | documented (partial credit) |
+| Auth Clarity | served (partial credit) |
+| Idempotency | — |
+| Error Semantics | verified |
+| OpenAPI Examples | — |
+| Rate Limit Signal | documented (partial credit) |
+| Event Surface Described | derived (partial credit) |
+| Agent Skills | derived (partial credit) |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | served (partial credit) |
+| Protected Resource Metadata | verified |
+| Dynamic Client Registration | yes |
+| Agentic Commerce | — |
+| Pagination Ratio | partial |
+| Operation Distinctiveness | distinct |
+
+**Regulatory alignment 45.1** — Horizontal (data, software, accessibility, platform)
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/flagsmith/](https://apis.io/providers/flagsmith/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for Flagsmith: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/flagsmith/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
