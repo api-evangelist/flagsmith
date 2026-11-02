@@ -1,0 +1,129 @@
+# Pricing transcribed from the provider's own page — see provenance. Numbers are quoted, not derived.
+generated: '2026-10-28'
+method: searched
+source: https://www.flagsmith.com/pricing
+sources:
+- https://www.flagsmith.com/pricing
+- https://flagsmith.com/pricing
+provenance:
+  tool: engine/economics/harvest_pricing.py
+  run: 20261028T120612
+  grounding: every price_text was found verbatim in the fetched page text
+audience: developer-api
+pricing_basis: tiered-subscription
+delivery:
+  delivery: managed+licensed
+  method: page
+  read: '2026-10-28'
+  evidence: Self Hosted On-prem or in your own cloud Contact Sales
+  managed_tier: Start-Up
+published: true
+note: Tiered SaaS pricing with monthly/yearly toggle; overage billed per requests. Self-hosted/private
+  cloud offered under Enterprise with premium support (no free OSS price listed on page).
+plan_count: 6
+currency: USD
+plans:
+- name: Free
+  price_text: $ 0
+  price: 0
+  currency: USD
+  period: month
+  unit: plan
+  included_quota: Up to 50,000 Requests Per Month*, Up to 100,000 Users in Experiments, 1 Team Member
+  overage: Additional API calls start at $50 per million per month and decrease with volume
+- name: Start-Up (yearly)
+  price_text: $ 40 /mo
+  price: 40
+  currency: USD
+  period: month
+  unit: plan
+  included_quota: Up to 1,000,000 Requests Per Month*, 3 Team Members
+  overage: 'Start-Up: $7/100k requests'
+- name: Start-Up (monthly)
+  price_text: $ 45 /mo
+  price: 45
+  currency: USD
+  period: month
+  unit: plan
+  included_quota: Up to 1,000,000 Requests Per Month*, 3 Team Members
+  overage: 'Start-Up: $7/100k requests'
+- name: Scale-Up (yearly)
+  price_text: $ 250 /mo
+  price: 250
+  currency: USD
+  period: month
+  unit: plan
+  included_quota: 5,000,000+ Requests Per Month*, 5 Team Members included
+  overage: Up to 20 Team Members ( $60 $50 /member/month)
+- name: Scale-Up (monthly)
+  price_text: $ 300 /mo
+  price: 300
+  currency: USD
+  period: month
+  unit: plan
+  included_quota: 5,000,000+ Requests Per Month*, 5 Team Members included
+  overage: Up to 20 Team Members ( $60 $50 /member/month)
+- name: Enterprise
+  price_text: Contact Sales
+  period: none
+  included_quota: 5,000,000+ Requests Per Month, 20+ Team Members, Tailored Hosting Solutions
+  overage: 'enterprise: rate specified in your contract'
+rate_limit_statements:
+- Up to 50,000 Requests Per Month*
+- Up to 1,000,000 Requests Per Month*
+- 5,000,000+ Requests Per Month*
+x-canonical:
+  generated: '2026-11-01'
+  vocabulary: engine/economics/plans-canonical.yml
+  models:
+  - hybrid
+  - metered
+  units: []
+  plans:
+  - name: Free
+    access: other
+    model: metered
+    model_how: derived
+    units:
+    - other
+    periods:
+    - month
+  - name: Start-Up (yearly)
+    access: other
+    model: hybrid
+    model_how: derived
+    units:
+    - other
+    periods:
+    - month
+  - name: Start-Up (monthly)
+    access: other
+    model: hybrid
+    model_how: derived
+    units:
+    - other
+    periods:
+    - month
+  - name: Scale-Up (yearly)
+    access: other
+    model: hybrid
+    model_how: derived
+    units:
+    - other
+    periods:
+    - month
+  - name: Scale-Up (monthly)
+    access: other
+    model: hybrid
+    model_how: derived
+    units:
+    - other
+    periods:
+    - month
+  - name: Enterprise
+    access: other
+    model: metered
+    model_how: derived
+    units: []
+    periods:
+    - none
