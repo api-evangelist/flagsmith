@@ -73,7 +73,7 @@ rate_limit_statements:
 - Up to 1,000,000 Requests Per Month*
 - 5,000,000+ Requests Per Month*
 x-canonical:
-  generated: '2026-11-02'
+  generated: '2026-11-06'
   vocabulary: engine/economics/plans-canonical.yml
   models:
   - hybrid
