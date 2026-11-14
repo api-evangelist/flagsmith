@@ -14,6 +14,12 @@ artifacts:
   capabilities/flagsmith-capability-edges.yml:
     method: unknown
     evidence: no authorship recorded
+  certification/observations-2026-11-11.jsonl:
+    method: unknown
+    evidence: no authorship recorded
+  certification/status.yml:
+    method: unknown
+    evidence: no authorship recorded
   changelog/flagsmith-changelog.yml:
     method: searched
     evidence: declared in the artifact
@@ -80,14 +86,23 @@ artifacts:
   collections/flagsmith-webhooks-api.postman_collection.json:
     method: derived
     evidence: openapi/flagsmith-webhooks-api
+  compliance/flagsmith-compliance.yml:
+    method: harvested
+    evidence: declared in the artifact
   conformance/flagsmith-conformance.yml:
     method: searched
     evidence: declared in the artifact
   conventions/flagsmith-conventions.yml:
     method: searched
     evidence: declared in the artifact
+  data-license/flagsmith-data-license.yml:
+    method: harvested
+    evidence: declared in the artifact
   data-model/flagsmith-data-model.yml:
     method: derived
+    evidence: declared in the artifact
+  eligibility/flagsmith-eligibility.yml:
+    method: harvested
     evidence: declared in the artifact
   errors/flagsmith-problem-types.yml:
     method: derived
@@ -102,6 +117,9 @@ artifacts:
     method: unknown
     evidence: no authorship recorded
   heartbeat/2026-11-06.yml:
+    method: unknown
+    evidence: no authorship recorded
+  heartbeat/2026-11-13.yml:
     method: unknown
     evidence: no authorship recorded
   integrations/_index.yml:
@@ -119,7 +137,7 @@ artifacts:
   kin/checks-2026-10-23T222754.yml:
     method: generated
     evidence: Kin Score snapshot written by score.rb
-  kin/checks-2026-11-02T082323.yml:
+  kin/checks-2026-11-06T143934.yml:
     method: generated
     evidence: Kin Score snapshot written by score.rb
   kin/score-2026-09-23T000603.yml:
@@ -183,6 +201,9 @@ artifacts:
     method: generated
     evidence: Kin Score snapshot written by score.rb
   kin/score-2026-11-02T082323.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-11-06T143934.yml:
     method: generated
     evidence: Kin Score snapshot written by score.rb
   lifecycle/flagsmith-lifecycle.yml:
@@ -385,6 +406,9 @@ artifacts:
   plans/flagsmith-price-estimates.yml:
     method: unknown
     evidence: no authorship recorded
+  privacy/flagsmith-privacy-policy.yml:
+    method: harvested
+    evidence: declared in the artifact
   rate-limits/flagsmith-rate-limits.yml:
     method: searched
     evidence: declared in the artifact
@@ -426,6 +450,9 @@ artifacts:
     evidence: declared in the artifact
   sla/flagsmith-sla.yml:
     method: generated
+    evidence: declared in the artifact
+  terms/flagsmith-terms-of-service.yml:
+    method: harvested
     evidence: declared in the artifact
   well-known/flagsmith-api-oauth-authorization-server.json:
     method: unknown
